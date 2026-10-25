@@ -1,0 +1,2502 @@
+{
+  "AUTH-001": {
+    "id": "AUTH-001",
+    "domain": "账户",
+    "name": "离线名称与稳定UUID",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageLaunch",
+    "sourceEvidence": "公开源码入口；细节见source-ui-inventory.json，删节功能单列",
+    "macImplementation": "src/Pcl.Core/Accounts.cs; src/Pcl.Core/GameLaunchAuthorization.cs; src/Pcl.Desktop/MainWindow.axaml.cs",
+    "ui": "首页 → 历史账户管理",
+    "status": "已验收",
+    "testEvidence": [
+      "artifacts/microsoft-integration-preflight/release-tests/test-results.json",
+      "artifacts/microsoft-integration-preflight/ownership-ui/evidence/account-ui-flow.json",
+      "docs/0.19离线登录恢复与验收.md",
+      "artifacts/verification-0.19/regression/test-results.json",
+      "artifacts/verification-0.19/offline-world-roundtrip.json",
+      "artifacts/verification-0.19/offline-data/evidence/offline-ui.json"
+    ],
+    "remaining": "按用户最新要求恢复本地离线身份及启动；原版稳定 UUID 算法、多名称切换/删除和重开恢复已验证。离线身份不提供微软购买证明；第二次游戏退出有已知 OpenAL 音频错误。",
+    "externalConditions": [],
+    "implementationSummary": "保留旧账户记录与管理；按用户确认的微软申请要求，不再允许旧离线/外置账户作为游戏启动凭据。"
+  },
+  "AUTH-002": {
+    "id": "AUTH-002",
+    "domain": "账户",
+    "name": "多离线账户切换和删除",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageLaunch",
+    "sourceEvidence": "公开源码入口；细节见source-ui-inventory.json，删节功能单列",
+    "macImplementation": "src/Pcl.Core/Accounts.cs; src/Pcl.Core/GameLaunchAuthorization.cs; src/Pcl.Desktop/MainWindow.axaml.cs",
+    "ui": "首页 → 历史账户管理",
+    "status": "已验收",
+    "testEvidence": [
+      "artifacts/microsoft-integration-preflight/release-tests/test-results.json",
+      "artifacts/microsoft-integration-preflight/ownership-ui/evidence/account-ui-flow.json",
+      "docs/0.19离线登录恢复与验收.md",
+      "artifacts/verification-0.19/regression/test-results.json",
+      "artifacts/verification-0.19/offline-world-roundtrip.json",
+      "artifacts/verification-0.19/offline-data/evidence/offline-ui.json"
+    ],
+    "remaining": "按用户最新要求恢复本地离线身份及启动；原版稳定 UUID 算法、多名称切换/删除和重开恢复已验证。离线身份不提供微软购买证明；第二次游戏退出有已知 OpenAL 音频错误。",
+    "externalConditions": [],
+    "implementationSummary": "保留旧账户记录与管理；按用户确认的微软申请要求，不再允许旧离线/外置账户作为游戏启动凭据。"
+  },
+  "AUTH-003": {
+    "id": "AUTH-003",
+    "domain": "账户",
+    "name": "微软设备码授权",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageLaunch",
+    "sourceEvidence": "公开源码入口；细节见source-ui-inventory.json，删节功能单列",
+    "macImplementation": "src/Pcl.Core/MicrosoftApplication.cs; src/Pcl.Core/MicrosoftAuthentication.cs; src/Pcl.Core/GameLaunchAuthorization.cs; src/Pcl.Core/Accounts.cs",
+    "ui": "首页 → 微软账号 → 登录微软账号",
+    "status": "已验收",
+    "testEvidence": [
+      "artifacts/microsoft-integration-preflight/release-tests/test-results.json",
+      "artifacts/microsoft-live-0.12-retry/evidence/last-error.json",
+      "artifacts/verification-0.16/microsoft-login-result.json",
+      "artifacts/verification-0.16/microsoft-cold-refresh-0.16.json",
+      "artifacts/verification-0.16/desktop-manual-launch.json",
+      "artifacts/verification-0.16/user-world-acceptance.json",
+      "artifacts/verification-0.16/final-tests/test-results.json",
+      "docs/0.16实现与验收.md",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/microsoft-lifecycle-0.17.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json"
+    ],
+    "remaining": "0.16 完成单账户首次授权与世界存档验收；0.17 追加实际退出重登、权益重新校验、钥匙串冷恢复及多版本正版启动。不代表所有账号、网络或双账户人工切换已验收。",
+    "externalConditions": [],
+    "implementationSummary": "使用内置且获批的公开 client ID；访问令牌驻留内存，记住登录仅保存刷新令牌到 macOS 钥匙串。",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.17/release-tests/test-results.json"
+    }
+  },
+  "AUTH-004": {
+    "id": "AUTH-004",
+    "domain": "账户",
+    "name": "微软刷新和Keychain",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageLaunch",
+    "sourceEvidence": "公开源码入口；细节见source-ui-inventory.json，删节功能单列",
+    "macImplementation": "src/Pcl.Core/MicrosoftApplication.cs; src/Pcl.Core/MicrosoftAuthentication.cs; src/Pcl.Core/GameLaunchAuthorization.cs; src/Pcl.Core/Accounts.cs",
+    "ui": "首页 → 微软账号 → 登录微软账号",
+    "status": "已验收",
+    "testEvidence": [
+      "artifacts/microsoft-integration-preflight/release-tests/test-results.json",
+      "artifacts/microsoft-live-0.12-retry/evidence/last-error.json",
+      "artifacts/verification-0.16/microsoft-login-result.json",
+      "artifacts/verification-0.16/microsoft-cold-refresh-0.16.json",
+      "artifacts/verification-0.16/desktop-manual-launch.json",
+      "artifacts/verification-0.16/user-world-acceptance.json",
+      "artifacts/verification-0.16/final-tests/test-results.json",
+      "docs/0.16实现与验收.md",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/microsoft-lifecycle-0.17.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json"
+    ],
+    "remaining": "0.16 完成单账户首次授权与世界存档验收；0.17 追加实际退出重登、权益重新校验、钥匙串冷恢复及多版本正版启动。不代表所有账号、网络或双账户人工切换已验收。",
+    "externalConditions": [],
+    "implementationSummary": "使用内置且获批的公开 client ID；访问令牌驻留内存，记住登录仅保存刷新令牌到 macOS 钥匙串。",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.17/release-tests/test-results.json"
+    }
+  },
+  "AUTH-005": {
+    "id": "AUTH-005",
+    "domain": "账户",
+    "name": "微软权益与档案",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageLaunch",
+    "sourceEvidence": "公开源码入口；细节见source-ui-inventory.json，删节功能单列",
+    "macImplementation": "src/Pcl.Core/MicrosoftApplication.cs; src/Pcl.Core/MicrosoftAuthentication.cs; src/Pcl.Core/GameLaunchAuthorization.cs; src/Pcl.Core/Accounts.cs",
+    "ui": "首页 → 微软账号 → 登录微软账号",
+    "status": "已验收",
+    "testEvidence": [
+      "artifacts/microsoft-integration-preflight/release-tests/test-results.json",
+      "artifacts/microsoft-live-0.12-retry/evidence/last-error.json",
+      "artifacts/verification-0.16/microsoft-login-result.json",
+      "artifacts/verification-0.16/microsoft-cold-refresh-0.16.json",
+      "artifacts/verification-0.16/desktop-manual-launch.json",
+      "artifacts/verification-0.16/user-world-acceptance.json",
+      "artifacts/verification-0.16/final-tests/test-results.json",
+      "docs/0.16实现与验收.md",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/microsoft-lifecycle-0.17.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json"
+    ],
+    "remaining": "0.16 完成单账户首次授权与世界存档验收；0.17 追加实际退出重登、权益重新校验、钥匙串冷恢复及多版本正版启动。不代表所有账号、网络或双账户人工切换已验收。",
+    "externalConditions": [],
+    "implementationSummary": "使用内置且获批的公开 client ID；访问令牌驻留内存，记住登录仅保存刷新令牌到 macOS 钥匙串。",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.17/release-tests/test-results.json"
+    }
+  },
+  "AUTH-006": {
+    "id": "AUTH-006",
+    "domain": "账户",
+    "name": "多微软账户与退出",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageLaunch",
+    "sourceEvidence": "公开源码入口；细节见source-ui-inventory.json，删节功能单列",
+    "macImplementation": "src/Pcl.Core/MicrosoftApplication.cs; src/Pcl.Core/MicrosoftAuthentication.cs; src/Pcl.Core/GameLaunchAuthorization.cs; src/Pcl.Core/Accounts.cs",
+    "ui": "首页 → 微软账号 → 登录微软账号",
+    "status": "部分实现",
+    "testEvidence": [
+      "artifacts/microsoft-integration-preflight/release-tests/test-results.json",
+      "artifacts/microsoft-live-0.12-retry/evidence/last-error.json",
+      "artifacts/verification-0.16/microsoft-login-result.json",
+      "artifacts/verification-0.16/microsoft-cold-refresh-0.16.json",
+      "artifacts/verification-0.16/desktop-manual-launch.json",
+      "artifacts/verification-0.16/user-world-acceptance.json",
+      "artifacts/verification-0.16/final-tests/test-results.json",
+      "docs/0.16实现与验收.md",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/microsoft-lifecycle-0.17.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json"
+    ],
+    "remaining": "0.17 已实测同一真实微软正版账户退出、钥匙串与内存清除、退出后拒绝启动、网页重新授权、去重及冷启动刷新。用户没有第二个可用账户，真人双账户切换仍待验收；两独立账户协议夹具已通过。",
+    "externalConditions": [],
+    "implementationSummary": "以所选账户凭据状态控制启动按钮，退出保留账户记录但标为需重新登录；核心仍执行正版检查。回归检查不同账户的缓存、client ID、刷新令牌和注销隔离。",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.17/release-tests/test-results.json"
+    }
+  },
+  "AUTH-007": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/Accounts.cs; src/Pcl.Core/GameLaunchAuthorization.cs; src/Pcl.Desktop/MainWindow.axaml.cs",
+    "ui": "首页 → 历史账户管理",
+    "implementationSummary": "保留旧账户记录与管理；按用户确认的微软申请要求，不再允许旧离线/外置账户作为游戏启动凭据。",
+    "testEvidence": [
+      "artifacts/microsoft-integration-preflight/release-tests/test-results.json",
+      "artifacts/microsoft-integration-preflight/ownership-ui/evidence/account-ui-flow.json"
+    ],
+    "remaining": "0.12明确取消未验证启动，不再承诺与PCL2离线启动一比一相同。历史运行证据只适用于旧版。",
+    "externalConditions": []
+  },
+  "AUTH-008": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/Accounts.cs; src/Pcl.Core/GameLaunchAuthorization.cs; src/Pcl.Desktop/MainWindow.axaml.cs",
+    "ui": "首页 → 历史账户管理",
+    "implementationSummary": "保留旧账户记录与管理；按用户确认的微软申请要求，不再允许旧离线/外置账户作为游戏启动凭据。",
+    "testEvidence": [
+      "artifacts/microsoft-integration-preflight/release-tests/test-results.json",
+      "artifacts/microsoft-integration-preflight/ownership-ui/evidence/account-ui-flow.json"
+    ],
+    "remaining": "0.12明确取消未验证启动，不再承诺与PCL2离线启动一比一相同。历史运行证据只适用于旧版。",
+    "externalConditions": []
+  },
+  "AUTH-009": {
+    "status": "未实现",
+    "macImplementation": "src/Pcl.Core/ExternalAuthentication.cs",
+    "ui": "外置账户与皮肤",
+    "testEvidence": [],
+    "remaining": "尚未实现统一通行证专属预设/协议；现有 Yggdrasil 不等于此功能",
+    "externalConditions": [
+      "服务方现行协议与可用服务器标识"
+    ],
+    "implementationSummary": "",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "AUTH-010": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/MicrosoftSkinService.cs; src/Pcl.Core/OfflineSkinService.cs; src/Pcl.Desktop/SkinManagerWindow.cs",
+    "ui": "微软与离线皮肤 / 外置账户与皮肤",
+    "testEvidence": [
+      "tests/Pcl.Tests/AccountAppearanceTests.cs#microsoft_skin_profile_upload_selection_reset_and_owned_cape",
+      "artifacts/evidence-0.8/full-regression/test-results.json#external_skin_capability_bearer_and_png_bounds"
+    ],
+    "remaining": "已有二维皮肤预览、离线内容寻址缓存；缺完整在线皮肤磁盘缓存与 3D 人物预览；账号操作无真人验收",
+    "externalConditions": [],
+    "implementationSummary": "",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "AUTH-011": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/MicrosoftSkinService.cs; src/Pcl.Core/ExternalAuthentication.cs",
+    "ui": "微软与离线皮肤 → 上传/选择/恢复；外置 → 上传/重置",
+    "testEvidence": [
+      "tests/Pcl.Tests/AccountAppearanceTests.cs#microsoft_skin_profile_upload_selection_reset_and_owned_cape",
+      "artifacts/evidence-0.8/full-regression/test-results.json#external_skin_capability_bearer_and_png_bounds"
+    ],
+    "remaining": "模拟 API fixtures 通过；真实微软/外置账户上传与游戏内外观仍待验证",
+    "externalConditions": [
+      "微软需合法 client ID 与账号；外置需角色上传权限"
+    ],
+    "implementationSummary": "",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "AUTH-012": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/MicrosoftSkinService.cs; src/Pcl.Core/ExternalAuthentication.cs",
+    "ui": "微软与离线皮肤 → 使用所选披风/隐藏；外置 → 上传/清除",
+    "testEvidence": [
+      "tests/Pcl.Tests/AccountAppearanceTests.cs#microsoft_skin_profile_upload_selection_reset_and_owned_cape"
+    ],
+    "remaining": "仅操作拥有/授权的披风；模拟 API 通过，无真人账户验收",
+    "externalConditions": [
+      "拥有披风的微软账户或授权外置角色"
+    ],
+    "implementationSummary": "",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "AUTH-013": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/OfflineSkinService.cs; src/Pcl.Desktop/SkinManagerWindow.cs",
+    "ui": "微软与离线皮肤 → 离线账户 → 导入/恢复",
+    "testEvidence": [
+      "tests/Pcl.Tests/AccountAppearanceTests.cs#offline_skin_pack_uses_client_metadata_preserves_uuid_and_options",
+      "tests/Pcl.Tests/AccountAppearanceTests.cs#offline_skin_legacy_and_new_major_minor_pack_formats",
+      "tests/Pcl.Tests/AccountAppearanceTests.cs#offline_skin_corruption_and_filename_collision_preserve_user_files"
+    ],
+    "remaining": "已实现本地默认材质资源包；保留 UUID，模型由游戏决定，其他默认皮肤也可能被替换；不是网络同步皮肤。需游戏内人物视觉验收",
+    "externalConditions": [],
+    "implementationSummary": "Desktop/CLI 启动准备，读取客户端资源包格式，保留 options/其他资源包，清除时只删自产包。",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "INST-001": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/InstanceManager.cs",
+    "ui": "实例管理 → 导入目录",
+    "testEvidence": [
+      "artifacts/evidence-0.8/tests-instance-fixes/test-results.json#instance_import_scan_rejects_unresolved_inherited_metadata_and_symlinks"
+    ],
+    "remaining": "支持扫描完整原版目录及本启动器格式并复制导入；不支持任意第三方 inheritsFrom 链、多个外部目录原地注册",
+    "externalConditions": [],
+    "implementationSummary": "",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "INST-002": {
+    "id": "INST-002",
+    "domain": "实例",
+    "name": "实例搜索与分类",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageInstance",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Desktop/InstanceWorkspace.cs",
+    "ui": "实例管理 → 搜索",
+    "status": "已验收",
+    "testEvidence": [
+      "tests/Pcl.Tests/InstanceManagementTests.cs#instance_filters_combine_loader_favorite_hidden_and_search",
+      "artifacts/verification-0.18/final-regression2/test-results.json",
+      "docs/0.18实现与验收.md",
+      "artifacts/verification-0.18/group-ui-final/evidence/instance-groups.json"
+    ],
+    "remaining": "通过实际控件保存、分组筛选、重开和清除验收；每实例一个分组，不提供嵌套分组或一次多组选中。",
+    "externalConditions": [],
+    "implementationSummary": "每实例自定义分组，名称规范化/长度与控制字符校验；分组与查询、加载器、收藏、隐藏组合筛选，显示选项不与保留项混淆。",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.18/final-regression2/test-results.json"
+    }
+  },
+  "INST-003": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/LauncherSettings.cs; src/Pcl.Core/InstanceRegistry.cs",
+    "ui": "实例管理 → 收藏/在首页隐藏",
+    "testEvidence": [
+      "artifacts/evidence-0.8/tests-instance-fixes/test-results.json#instance_favorite_hidden_persisted_and_management_still_finds_hidden"
+    ],
+    "remaining": "持久化与首页过滤 fixtures 通过；管理窗口仍可找到隐藏项，完整 GUI 多次重启验收待整合记录",
+    "externalConditions": [],
+    "implementationSummary": "",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "INST-004": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/LauncherSettings.cs; src/Pcl.Core/InstanceIconService.cs; src/Pcl.Desktop/InstanceWorkspace.cs",
+    "ui": "实例管理 → 名称/描述 → 保存",
+    "testEvidence": [
+      "tests/Pcl.Tests/InstanceManagementTests.cs#instance_icon_is_passive_bounded_and_follows_copy_backup"
+    ],
+    "remaining": "名称、描述、PNG/JPEG图标导入/恢复已实现；图标被动存入实例、复制/备份随行，大小与尺寸先检查再GUI解码重编码；待最终fixture及图标GUI验收。",
+    "externalConditions": [],
+    "implementationSummary": "",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "INST-005": {
+    "id": "INST-005",
+    "domain": "实例",
+    "name": "复制实例",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageInstance",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/InstanceManager.cs",
+    "ui": "实例管理 → 复制实例",
+    "status": "已实现待验收",
+    "testEvidence": [
+      "artifacts/evidence-0.8/tests-instance-fixes/test-results.json#instance_copy_preserves_save_excludes_credentials_and_shared_cache",
+      "artifacts/verification-0.18/final-regression2/test-results.json",
+      "docs/0.18实现与验收.md",
+      "docs/0.18.1实现与验收.md",
+      "artifacts/verification-0.18.1/regression/test-results.json",
+      "artifacts/verification-0.18/worlds/neo1211-fixed-roundtrip.json"
+    ],
+    "remaining": "0.18 产品 CLI 为 Forge/NeoForge/Quilt/26.3 创建独立副本，分组随复制保留；不把复制成功当作所有副本世界兼容验收。 0.18.1 修复复制/恢复后客户端 JAR 排除项错绑；NeoForge 1.21.1 独立副本世界保存和重进通过，两次退出均有 OpenAL 音频错误，保留此已知问题。",
+    "externalConditions": [],
+    "implementationSummary": "",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.18/final-regression2/test-results.json"
+    }
+  },
+  "INST-006": {
+    "id": "INST-006",
+    "domain": "实例",
+    "name": "实例备份恢复",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageInstance",
+    "sourceEvidence": "公开源码入口；细节见source-ui-inventory.json，删节功能单列",
+    "macImplementation": "src/Pcl.Core/InstanceManager.cs; src/Pcl.Core/InstanceBackupArchive.cs; src/Pcl.Core/LauncherSettings.cs; src/Pcl.Desktop/InstanceWorkspace.cs",
+    "ui": "实例管理 → 备份 ZIP / 恢复备份",
+    "status": "部分实现",
+    "testEvidence": [
+      "artifacts/verification-0.13/final-tests/test-results.json",
+      "artifacts/verification-0.13/live/evidence/search-backup-result.json",
+      "artifacts/verification-0.13/final-zip/evidence/search-backup-result.json",
+      "docs/0.13实现与验收.md",
+      "artifacts/verification-0.18/final-regression2/test-results.json",
+      "docs/0.18实现与验收.md",
+      "artifacts/verification-0.18/world-backup-restore.json",
+      "artifacts/verification-0.18/worlds/fabric1211-roundtrip.json",
+      "docs/0.18.1实现与验收.md",
+      "artifacts/verification-0.18.1/regression/test-results.json",
+      "artifacts/verification-0.18/worlds/neo1211-fixed-roundtrip.json",
+      "artifacts/verification-0.18.1/vanilla263-backup-restore.json"
+    ],
+    "remaining": "0.18 将真实光影实例备份并恢复为新副本，23 个存档文件逐字节相同；恢复的 Fabric 1.21.1 通过世界进入、正常保存退出、独立进程重读和用户标记确认。仍不包含全部共享资产/Java，不保证跨设备离线恢复。 0.18.1 修复复制/恢复后客户端 JAR 排除项错绑；NeoForge 1.21.1 独立副本世界保存和重进通过，两次退出均有 OpenAL 音频错误，保留此已知问题。 26.3 新维度/玩家布局的48个存档文件备份恢复逐字节一致。",
+    "externalConditions": [
+      "缺失共享父版/依赖时需网络"
+    ],
+    "implementationSummary": "0.13 schema 3 逐文件哈希、离线检查、先校验后修复与新目录提交、原子设置；真实资源及存档字节夹具恢复通过。",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.18/final-regression2/test-results.json"
+    }
+  },
+  "INST-007": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/InstanceManager.cs",
+    "ui": "实例管理 → 移入回收站 / 回收站 → 恢复",
+    "testEvidence": [
+      "artifacts/evidence-0.8/tests-instance-fixes/test-results.json#instance_trash_restore_preserves_save_and_parent_dependencies",
+      "tests/Pcl.Tests/InstanceManagementTests.cs#instance_trash_restore_rejects_replaced_data_symlink"
+    ],
+    "remaining": "私有实例移走并恢复，默认共享实例只逻辑删除；fixtures 通过。新增回收数据 symlink 替换拒绝用例待最终回归",
+    "externalConditions": [],
+    "implementationSummary": "",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "INST-008": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/InstanceManager.cs",
+    "ui": "实例管理 → 校验并修复",
+    "testEvidence": [
+      "src/Pcl.Core/InstanceManager.cs#RepairAsync"
+    ],
+    "remaining": "补全官方父版及可验证下载的库；安装器生成的缺失 file:// 文件需用组件管理重新安装，未实现所有安装器自动原地重建",
+    "externalConditions": [
+      "缺失资源时需网络"
+    ],
+    "implementationSummary": "",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "INST-010": {
+    "status": "未实现",
+    "macImplementation": "src/Pcl.Core/InstanceManager.cs; src/Pcl.Core/GameLaunchAuthorization.cs",
+    "ui": "0.12已移除入口",
+    "implementationSummary": "按用户确认取消绕过正版验证的离线脚本导出；旧调用明确拒绝且不写文件。",
+    "testEvidence": [
+      "artifacts/microsoft-integration-preflight/release-tests/test-results.json#offline_script_export_is_blocked_before_writes"
+    ],
+    "remaining": "这是明确的产品取舍，不从PCL2对照矩阵中删除该行；未实现带安全登录的快捷启动脚本。",
+    "externalConditions": []
+  },
+  "INST-011": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Desktop/InstanceWorkspace.cs",
+    "ui": "实例管理 → 打开目录",
+    "testEvidence": [
+      "src/Pcl.Desktop/InstanceWorkspace.cs#OpenFolder"
+    ],
+    "remaining": "使用 macOS open 且 ArgumentList 传参；实际 Finder 打开验收待整合记录",
+    "externalConditions": [],
+    "implementationSummary": "",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "INST-012": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/InstanceRegistry.cs; src/Pcl.Core/InstanceManager.cs",
+    "ui": "自动用于实例启动/复制/删除",
+    "testEvidence": [
+      "artifacts/evidence-0.8/tests-instance-fixes/test-results.json#instance_copy_preserves_save_excludes_credentials_and_shared_cache",
+      "artifacts/evidence-0.8/tests-instance-fixes/test-results.json#instance_trash_restore_preserves_save_and_parent_dependencies"
+    ],
+    "remaining": "共享客户端与 assets 保留，加载器私有库按 receipt 读取；没有引用计数 GC，不执行可能破坏其他实例的共享清理",
+    "externalConditions": [],
+    "implementationSummary": "",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "JAVA-007": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/LauncherSettings.cs; src/Pcl.Core/JavaService.cs; src/Pcl.Desktop/InstanceWorkspace.cs",
+    "ui": "实例管理 → 启动设置 → 选择并检查 Java",
+    "testEvidence": [
+      "artifacts/evidence-0.8/tests-instance-fixes/test-results.json#java_inspection_accepts_both_streams_and_arch_aliases",
+      "artifacts/evidence-0.8/tests-instance-fixes/test-results.json#java_inspection_process_exit_and_cancellation"
+    ],
+    "remaining": "真实 Java 主版本/架构检查已有回归；手选不同 JDK 并游戏启动的 GUI 全链路待矩阵关联",
+    "externalConditions": [],
+    "implementationSummary": "",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "JAVA-008": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/JavaDiscovery.cs; src/Pcl.Desktop/InstanceWorkspace.cs",
+    "ui": "实例管理 → 启动设置 → 查找已安装 Java",
+    "testEvidence": [
+      "tests/Pcl.Tests/AccountAppearanceTests.cs#java_discovery_rejects_escaping_receipts_and_macos_stub"
+    ],
+    "remaining": "支持启动器 runtime、系统/用户 JDK、Homebrew、JAVA_HOME，跳过安装弹窗 stub；待最终 fixture 和实际发现/选择验收，不承诺遍历所有第三方管理器路径",
+    "externalConditions": [],
+    "implementationSummary": "",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "JAVA-009": {
+    "status": "已验收",
+    "macImplementation": "src/Pcl.Core/LaunchSettingsPatch.cs; src/Pcl.Core/LauncherSettings.cs; src/Pcl.Desktop/InstanceWorkspace.cs",
+    "ui": "实例管理 → 全局启动设置 / 启动设置 → 每项自定义",
+    "testEvidence": [
+      "artifacts/evidence-0.9/regression-2/test-results.json",
+      "artifacts/optional-gui-retry-0.9/evidence/optional-features-result.json",
+      "artifacts/final-optional-0.9/evidence/optional-features-result.json"
+    ],
+    "implementationSummary": "逐字段继承；显式空值/false；schema 1无损备份迁移；复制和备份保留继承；全局冲突原子拒绝。",
+    "remaining": "已用实际GUI编辑、保存、重开并确认启动参数生效；自定义Java/参数/服务器仍按对应矩阵项分别验收，不推定所有游戏行为。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.9/regression-2/test-results.json",
+      "gui": "artifacts/final-optional-0.9/evidence/optional-features-result.json",
+      "realGame": "恢复的Fabric 1.21.1 + Fabric API；45秒图形初始化",
+      "world": "本版没有世界内操作验收"
+    }
+  },
+  "RES-001": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/ResourceCatalog.cs; src/Pcl.Desktop/ResourceBrowser.cs",
+    "ui": "Modrinth → 资源类型 → 分类/搜索/分页",
+    "implementationScope": "实例版本、加载器、分类、分页；中文别名显示和检索",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: modrinth_datapack_filters_need_no_fabric_loader；主测试 modrinth_facets_and_query_escaping",
+      "artifacts/evidence-complete/pack-live-3/pack-live-result.json（真实 Modrinth 下载、导出/导入/更新；无游戏世界验收）",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "modrinth_datapack_filters_need_no_fabric_loader；主测试 modrinth_facets_and_query_escaping",
+      "realNetworkAndFiles": "artifacts/evidence-complete/pack-live-3/pack-live-result.json（真实 Modrinth 下载、导出/导入/更新；无游戏世界验收）",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过",
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "remaining": "需完成该入口的真实 GUI 操作验收；不保证任意第三方资源兼容",
+    "externalConditions": [],
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "RES-002": {
+    "status": "外部条件阻塞",
+    "macImplementation": "src/Pcl.Core/CurseForgeCatalog.cs; src/Pcl.Desktop/CurseForgeWindow.cs",
+    "ui": "CurseForge → 本次 API Key → 类型/搜索/版本",
+    "implementationScope": "官方 API、类型/版本/加载器筛选、分页、版本文件、官方网页、必需依赖、受限文件手动匹配；Key 仅窗口内存",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: curse_catalog_filters_dependencies_and_file_restrictions",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "curse_catalog_filters_dependencies_and_file_restrictions",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过",
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "remaining": "真实 API 凭据和网络链路未验收；未内置他人密钥",
+    "externalConditions": [
+      "用户自有有效 CurseForge API Key"
+    ],
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "RES-003": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/UnifiedResourceSearch.cs; src/Pcl.Core/UnifiedSearchSession.cs; src/Pcl.Desktop/UnifiedSearchWindow.cs",
+    "ui": "侧栏 → MC百科 / 多源搜索",
+    "implementationSummary": "0.13 跨页身份去重、来源补充合并、查询快照、缓存翻页、失败来源重试与筛选重置；真实资源分页及界面安装通过。",
+    "testEvidence": [
+      "artifacts/verification-0.13/final-tests/test-results.json",
+      "artifacts/verification-0.13/live/evidence/search-backup-result.json",
+      "artifacts/verification-0.13/final-zip/evidence/search-backup-result.json",
+      "docs/0.13实现与验收.md"
+    ],
+    "remaining": "不按同名猜测跨商店映射；CF 在线依赖密钥未实测，百科仍为静态独立索引。",
+    "externalConditions": [
+      "CF在线双源实测需要自己的API Key"
+    ]
+  },
+  "RES-004": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/ResourceAliases.cs; vendor/PCLCS/Resource/WikiEntry.cs",
+    "ui": "Modrinth / CurseForge → 中文搜索",
+    "implementationScope": "复用固定基线 WikiEntries；中文名称映射检索词及显示别名；修正 Unix 嵌入资源分隔符",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: resource_alias_embedded_database_and_explicit_cross_platform_identity",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "resource_alias_embedded_database_and_explicit_cross_platform_identity",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过",
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "remaining": "固定词库可能过时；未实现在线自动刷新或用户词库编辑",
+    "externalConditions": [],
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "RES-005": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/ResourceAliases.cs; src/Pcl.Desktop/ResourceBrowser.cs",
+    "ui": "Modrinth → 项目 → MC 百科",
+    "implementationScope": "已知条目直达 class/id，未知条目进入百科搜索",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: resource_alias_embedded_database_and_explicit_cross_platform_identity",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "resource_alias_embedded_database_and_explicit_cross_platform_identity",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过",
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "remaining": "浏览器跳转需最终 GUI 验收",
+    "externalConditions": [],
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "RES-006": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/ResourceCatalog.cs; src/Pcl.Desktop/ResourceBrowser.cs",
+    "ui": "Modrinth → 项目 → 详情/更新日志/版本/另存为",
+    "implementationScope": "官方项目正文、更新日志以纯文本查看；版本列表及校验下载后另存为",
+    "testEvidence": [],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "未专门覆盖",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过",
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "remaining": "各按钮需最终 GUI 验收；CurseForge 详情主要使用官方网页",
+    "externalConditions": [],
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "RES-007": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/QuiltDependencies.cs; src/Pcl.Core/QuiltModPlanner.cs; src/Pcl.Core/JarJarResolver.cs; src/Pcl.Core/ResourceDependencyPlanner.cs; src/Pcl.Core/LocalResourceService.cs; src/Pcl.Core/QuiltDependencyOverrides.cs",
+    "ui": "资源版本 → 安装",
+    "implementationScope": "按版本/加载器递归解析必需前置并排序；冲突和发布限制明确失败",
+    "testEvidence": [
+      "artifacts/verification-0.14/release-tests/test-results.json",
+      "artifacts/verification-0.14/live/dependency-acceptance.json",
+      "artifacts/verification-0.14/live/evidence/dependency-pack-ui-result.json",
+      "artifacts/release-verification-0.14.json",
+      "docs/0.14实现与验收.md",
+      "artifacts/verification-0.15/release-tests/test-results.json",
+      "artifacts/verification-0.15/oracle/official-results.json",
+      "artifacts/verification-0.15/live/evidence/quilt-overrides-ui-result.json",
+      "artifacts/release-verification-0.15.json",
+      "docs/0.15实现与验收.md"
+    ],
+    "evidenceLevels": {
+      "source": "Quilt Loader 0.27.1 固定实现对照",
+      "fixture": "覆盖语义、严格元数据、事务回滚与异常边界；八组官方集合变换",
+      "realNetworkAndFiles": "真实QFAPI发布s8dfz9Xa及1.20.1/Quilt0.27.1；官方缓存复用并校验",
+      "gui": "程序驱动实际Avalonia窗口，截图审阅；最终包另行验收",
+      "inGame": "未启动游戏"
+    },
+    "remaining": "Quilt path/pattern/version覆盖、Fabric覆盖及schema0、自定义插件、全根联合择版、JarJar完整模块身份、自定义包任意入口仍未完成；JSON5为官方生产限制。无新游戏运行证据。",
+    "externalConditions": [],
+    "implementationSummary": "0.15 支持 Quilt 精确 id 依赖覆盖、配置变更保护和原实例库上下文；真实 QFAPI 下载、GUI检查、批量提交及mrpack往返通过。保留0.14能力。",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "RES-008": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/FabricModPlanner.cs; src/Pcl.Core/LocalResourceService.cs",
+    "ui": "模组安装 / 本地资源 → 检查依赖关系",
+    "implementationScope": "Fabric depends/breaks/provides、嵌套模组、重复外部 ID；安装和批量启停提交前校验",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: local_scan_toggle_and_dependency_rollback；既有 Fabric 语义版本测试",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "local_scan_toggle_and_dependency_rollback；既有 Fabric 语义版本测试",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过",
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "remaining": "依赖声明不能覆盖动态代码及模组自行下载的原生库",
+    "externalConditions": [],
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "RES-009": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/QuiltDependencies.cs; src/Pcl.Core/QuiltModPlanner.cs; src/Pcl.Core/JarJarResolver.cs; src/Pcl.Core/ResourceDependencyPlanner.cs; src/Pcl.Core/LocalResourceService.cs; src/Pcl.Core/QuiltDependencyOverrides.cs",
+    "ui": "资源安装/启停时检查；本地资源 → 检查依赖",
+    "implementationSummary": "0.15 支持 Quilt 精确 id 依赖覆盖、配置变更保护和原实例库上下文；真实 QFAPI 下载、GUI检查、批量提交及mrpack往返通过。保留0.14能力。",
+    "testEvidence": [
+      "artifacts/verification-0.14/release-tests/test-results.json",
+      "artifacts/verification-0.14/live/dependency-acceptance.json",
+      "artifacts/verification-0.14/live/evidence/dependency-pack-ui-result.json",
+      "artifacts/release-verification-0.14.json",
+      "docs/0.14实现与验收.md",
+      "artifacts/verification-0.15/release-tests/test-results.json",
+      "artifacts/verification-0.15/oracle/official-results.json",
+      "artifacts/verification-0.15/live/evidence/quilt-overrides-ui-result.json",
+      "artifacts/release-verification-0.15.json",
+      "docs/0.15实现与验收.md"
+    ],
+    "remaining": "Quilt path/pattern/version覆盖、Fabric覆盖及schema0、自定义插件、全根联合择版、JarJar完整模块身份、自定义包任意入口仍未完成；JSON5为官方生产限制。无新游戏运行证据。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "source": "Quilt Loader 0.27.1 固定实现对照",
+      "fixture": "覆盖语义、严格元数据、事务回滚与异常边界；八组官方集合变换",
+      "realNetworkAndFiles": "真实QFAPI发布s8dfz9Xa及1.20.1/Quilt0.27.1；官方缓存复用并校验",
+      "gui": "程序驱动实际Avalonia窗口，截图审阅；最终包另行验收",
+      "inGame": "未启动游戏"
+    }
+  },
+  "RES-010": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/ResourceInstaller.cs; src/Pcl.Core/ResourceHistory.cs; src/Pcl.Desktop/ResourceBrowser.cs",
+    "ui": "光影 → 下载/应用/撤销应用",
+    "implementationScope": "下载校验；Fabric/Iris 配置写入，备份与最后一次应用撤销；配置若被游戏修改则拒绝覆盖",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: resource_activation_undo_history_and_external_change_protection",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "resource_activation_undo_history_and_external_change_protection",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过",
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "remaining": "撤销文件事务有资源包夹具；实际光影撤销仍需 GUI/世界复测。Forge/NeoForge 光影后端未自动搭建",
+    "externalConditions": [],
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "RES-011": {
+    "status": "已验收",
+    "macImplementation": "src/Pcl.Core/MacShaderCompatibility.cs; docs/Mac依赖与光影适配.md",
+    "ui": "光影页 / 1.21.1 光影",
+    "implementationScope": "明确 Apple OpenGL/Iris 支持限制；已知 required GPU 功能拦截",
+    "testEvidence": [
+      "docs/Mac依赖与光影适配.md：0.3 用户已进入世界并确认画面正常；本轮未重复人工验收"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "未专门覆盖",
+      "realNetworkAndFiles": "docs/Mac依赖与光影适配.md：0.3 用户已进入世界并确认画面正常；本轮未重复人工验收",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过",
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "remaining": "仅已指定组合有历史人工世界验收，不能推广为任意光影和所有 Mac",
+    "externalConditions": [],
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "RES-012": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/ResourceInstaller.cs; src/Pcl.Desktop/ResourceBrowser.cs",
+    "ui": "资源包 → 安装 → 应用",
+    "implementationScope": "ZIP/pack.mcmeta 校验、写 options.txt、保存原配置及撤销",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: resource_activation_undo_history_and_external_change_protection",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "resource_activation_undo_history_and_external_change_protection",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过",
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "remaining": "游戏内材质显示需实际验收",
+    "externalConditions": [],
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "RES-013": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/DataPackService.cs; src/Pcl.Desktop/ResourceBrowser.cs; src/Pcl.Desktop/LocalResourcesWindow.cs",
+    "ui": "数据包 → 版本 → 选择当前实例存档；本地资源 → 数据包",
+    "implementationScope": "Modrinth 联网检索及下载前置；按世界安全安装、启停和备份移除",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: world_datapack_install_toggle_backup_and_target_validation；modrinth_datapack_filters_need_no_fabric_loader",
+      "artifacts/evidence-complete/pack-live-3/pack-live-result.json（真实 Modrinth 下载、导出/导入/更新；无游戏世界验收）：TreeMiner 5.0.0 / 19,397 bytes / SHA1 a9e9a1a63c70f5cefc7bbf333c286a872e70896f",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "world_datapack_install_toggle_backup_and_target_validation；modrinth_datapack_filters_need_no_fabric_loader",
+      "realNetworkAndFiles": "artifacts/evidence-complete/pack-live-3/pack-live-result.json（真实 Modrinth 下载、导出/导入/更新；无游戏世界验收）：TreeMiner 5.0.0 / 19,397 bytes / SHA1 a9e9a1a63c70f5cefc7bbf333c286a872e70896f",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过",
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "remaining": "真实下载与 staging 存档目录安装已过；尚未在游戏世界内观察数据包行为",
+    "externalConditions": [],
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "RES-014": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/LocalResourceService.cs; src/Pcl.Desktop/LocalResourcesWindow.cs",
+    "ui": "本地资源 → 分类/搜索",
+    "implementationScope": "扫描未登记外部 JAR/ZIP/disabled；Fabric/Quilt/Forge/NeoForge/LiteLoader 元数据、大小哈希、损坏状态",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: local_scan_toggle_and_dependency_rollback；resource_metadata_legacy_forge_neoforge_quilt_liteloader",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "local_scan_toggle_and_dependency_rollback；resource_metadata_legacy_forge_neoforge_quilt_liteloader",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过",
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "remaining": "各加载器的身份扫描不代表其所有依赖已被分析",
+    "externalConditions": [],
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "RES-015": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/QuiltDependencies.cs; src/Pcl.Core/QuiltModPlanner.cs; src/Pcl.Core/JarJarResolver.cs; src/Pcl.Core/ResourceDependencyPlanner.cs; src/Pcl.Core/LocalResourceService.cs; src/Pcl.Core/QuiltDependencyOverrides.cs",
+    "ui": "本地资源 → 多选 → 启用/停用/移除",
+    "implementationScope": "批量事务、错误回滚、备份移除；Fabric 与现代 Forge/NeoForge 声明依赖保护",
+    "testEvidence": [
+      "artifacts/verification-0.14/release-tests/test-results.json",
+      "artifacts/verification-0.14/live/dependency-acceptance.json",
+      "artifacts/verification-0.14/live/evidence/dependency-pack-ui-result.json",
+      "artifacts/release-verification-0.14.json",
+      "docs/0.14实现与验收.md",
+      "artifacts/verification-0.15/release-tests/test-results.json",
+      "artifacts/verification-0.15/oracle/official-results.json",
+      "artifacts/verification-0.15/live/evidence/quilt-overrides-ui-result.json",
+      "artifacts/release-verification-0.15.json",
+      "docs/0.15实现与验收.md"
+    ],
+    "evidenceLevels": {
+      "source": "Quilt Loader 0.27.1 固定实现对照",
+      "fixture": "覆盖语义、严格元数据、事务回滚与异常边界；八组官方集合变换",
+      "realNetworkAndFiles": "真实QFAPI发布s8dfz9Xa及1.20.1/Quilt0.27.1；官方缓存复用并校验",
+      "gui": "程序驱动实际Avalonia窗口，截图审阅；最终包另行验收",
+      "inGame": "未启动游戏"
+    },
+    "remaining": "Quilt path/pattern/version覆盖、Fabric覆盖及schema0、自定义插件、全根联合择版、JarJar完整模块身份、自定义包任意入口仍未完成；JSON5为官方生产限制。无新游戏运行证据。",
+    "externalConditions": [],
+    "implementationSummary": "0.15 支持 Quilt 精确 id 依赖覆盖、配置变更保护和原实例库上下文；真实 QFAPI 下载、GUI检查、批量提交及mrpack往返通过。保留0.14能力。",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "RES-016": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/QuiltDependencies.cs; src/Pcl.Core/QuiltModPlanner.cs; src/Pcl.Core/JarJarResolver.cs; src/Pcl.Core/ResourceDependencyPlanner.cs; src/Pcl.Core/LocalResourceService.cs; src/Pcl.Core/QuiltDependencyOverrides.cs",
+    "ui": "本地资源 → 检查更新 → 多选 → 批量更新所选 → 预览 → 提交整批更新",
+    "implementationScope": "按现有文件 SHA1 向 Modrinth 识别身份，匹配当前版本/加载器；更新前计划与备份；批量暂存全部文件后核验合并依赖，预览版本及文件，目录提交备份，提交前检查外部修改并保护",
+    "testEvidence": [
+      "artifacts/verification-0.14/release-tests/test-results.json",
+      "artifacts/verification-0.14/live/dependency-acceptance.json",
+      "artifacts/verification-0.14/live/evidence/dependency-pack-ui-result.json",
+      "artifacts/release-verification-0.14.json",
+      "docs/0.14实现与验收.md",
+      "artifacts/verification-0.15/release-tests/test-results.json",
+      "artifacts/verification-0.15/oracle/official-results.json",
+      "artifacts/verification-0.15/live/evidence/quilt-overrides-ui-result.json",
+      "artifacts/release-verification-0.15.json",
+      "docs/0.15实现与验收.md"
+    ],
+    "evidenceLevels": {
+      "source": "Quilt Loader 0.27.1 固定实现对照",
+      "fixture": "覆盖语义、严格元数据、事务回滚与异常边界；八组官方集合变换",
+      "realNetworkAndFiles": "真实QFAPI发布s8dfz9Xa及1.20.1/Quilt0.27.1；官方缓存复用并校验",
+      "gui": "程序驱动实际Avalonia窗口，截图审阅；最终包另行验收",
+      "inGame": "未启动游戏"
+    },
+    "remaining": "Quilt path/pattern/version覆盖、Fabric覆盖及schema0、自定义插件、全根联合择版、JarJar完整模块身份、自定义包任意入口仍未完成；JSON5为官方生产限制。无新游戏运行证据。",
+    "externalConditions": [],
+    "implementationSummary": "0.15 支持 Quilt 精确 id 依赖覆盖、配置变更保护和原实例库上下文；真实 QFAPI 下载、GUI检查、批量提交及mrpack往返通过。保留0.14能力。",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "RES-017": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/LocalResourceService.cs; src/Pcl.Desktop/LocalResourcesWindow.cs",
+    "ui": "本地资源 → 可更新列表 → 忽略此版本",
+    "implementationScope": "实例持久化忽略特定项目+版本，下次检查不重复提醒",
+    "testEvidence": [],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "未专门覆盖",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过",
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "remaining": "需 GUI 保存/重开验证",
+    "externalConditions": [],
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "RES-018": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/ResourceInstaller.cs; src/Pcl.Core/DataPackService.cs; src/Pcl.Desktop/ResourceBrowser.cs",
+    "ui": "资源页 → 导入；本地资源 → 导入数据包",
+    "implementationScope": "本地模组/光影/资源包/数据包导入，校验元数据和依赖；LiteLoader 扩展名适配",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: resource_metadata_legacy_forge_neoforge_quilt_liteloader；world_datapack_install_toggle_backup_and_target_validation；resource_activation_undo_history_and_external_change_protection",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "resource_metadata_legacy_forge_neoforge_quilt_liteloader；world_datapack_install_toggle_backup_and_target_validation；resource_activation_undo_history_and_external_change_protection",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过",
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "remaining": "OptiFine 独立实例不当作通用 mods 加载器",
+    "externalConditions": [],
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "PACK-001": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/ResourceCatalog.cs; src/Pcl.Desktop/ResourceBrowser.cs",
+    "ui": "整合包 → 搜索/版本 → 安装",
+    "implementationScope": "Modrinth 项目搜索、对应游戏版本和包文件下载",
+    "testEvidence": [
+      "docs/Forge-NeoForge与整合包适配.md：0.4 Adrenaline 真实包下载与图形初始化历史证据"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "未专门覆盖",
+      "realNetworkAndFiles": "docs/Forge-NeoForge与整合包适配.md：0.4 Adrenaline 真实包下载与图形初始化历史证据",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过",
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "remaining": "新分类/详情等 UI 需最终验收",
+    "externalConditions": [],
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "PACK-002": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/CustomPackMetadata.cs; src/Pcl.Core/PackMetadataCompatibility.cs; src/Pcl.Core/PortableModpackService.cs; src/Pcl.Core/ModpackService.cs; src/Pcl.Core/QuiltDependencyOverrides.cs",
+    "ui": "整合包下载/导入",
+    "implementationSummary": "0.15 支持 Quilt 精确 id 依赖覆盖、配置变更保护和原实例库上下文；真实 QFAPI 下载、GUI检查、批量提交及mrpack往返通过。保留0.14能力。",
+    "testEvidence": [
+      "artifacts/verification-0.14/release-tests/test-results.json",
+      "artifacts/verification-0.14/live/dependency-acceptance.json",
+      "artifacts/verification-0.14/live/evidence/dependency-pack-ui-result.json",
+      "artifacts/release-verification-0.14.json",
+      "docs/0.14实现与验收.md",
+      "artifacts/verification-0.15/release-tests/test-results.json",
+      "artifacts/verification-0.15/oracle/official-results.json",
+      "artifacts/verification-0.15/live/evidence/quilt-overrides-ui-result.json",
+      "artifacts/release-verification-0.15.json",
+      "docs/0.15实现与验收.md"
+    ],
+    "remaining": "Quilt path/pattern/version覆盖、Fabric覆盖及schema0、自定义插件、全根联合择版、JarJar完整模块身份、自定义包任意入口仍未完成；JSON5为官方生产限制。无新游戏运行证据。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "source": "Quilt Loader 0.27.1 固定实现对照",
+      "fixture": "覆盖语义、严格元数据、事务回滚与异常边界；八组官方集合变换",
+      "realNetworkAndFiles": "真实QFAPI发布s8dfz9Xa及1.20.1/Quilt0.27.1；官方缓存复用并校验",
+      "gui": "程序驱动实际Avalonia窗口，截图审阅；最终包另行验收",
+      "inGame": "未启动游戏"
+    }
+  },
+  "PACK-003": {
+    "status": "外部条件阻塞",
+    "macImplementation": "src/Pcl.Core/PortableModpackService.cs; src/Pcl.Desktop/PackManagerWindow.cs",
+    "ui": "整合包管理 → CurseForge ZIP → API Key/手动文件",
+    "implementationScope": "官方 manifest v1 转换，API 元数据与文件 SHA1/大小验证，受限下载明确列出缺失；无 Key 可由用户逐项匹配本地 JAR",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: pack_import_all_declared_formats；curse_api_metadata_and_publisher_disabled_download；curse_missing_credentials_blocks_before_instance_install",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "pack_import_all_declared_formats；curse_api_metadata_and_publisher_disabled_download；curse_missing_credentials_blocks_before_instance_install",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过",
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "remaining": "真实 CF API 端到端未验收；无 API 时手动匹配只记录本地哈希，不能称远程项目身份已认证",
+    "externalConditions": [
+      "自动安装需用户自有有效 CurseForge API Key；或用户合法取得的必需本地文件"
+    ],
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "PACK-004": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/CustomPackMetadata.cs; src/Pcl.Core/PackMetadataCompatibility.cs; src/Pcl.Core/PortableModpackService.cs; src/Pcl.Core/ModpackService.cs",
+    "ui": "整合包管理 → 选择ZIP → 检查内容 → 安装",
+    "implementationSummary": "0.14 保留HMCL附加校验库及限定属性、MultiMC声明式自定义组件；正确使用Forge私有库根；导出扩展并再导入，提交前验证依赖。",
+    "testEvidence": [
+      "artifacts/verification-0.14/release-tests/test-results.json",
+      "artifacts/verification-0.14/live/dependency-acceptance.json",
+      "artifacts/verification-0.14/live/evidence/dependency-pack-ui-result.json",
+      "artifacts/release-verification-0.14.json",
+      "docs/0.14实现与验收.md"
+    ],
+    "remaining": "任意自定义入口/客户端/jarmods/安装器未支持；自定义扩展需PCL Mac0.14+导入；跨版本大量真实包及游戏启动待验收。",
+    "externalConditions": []
+  },
+  "PACK-005": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/CustomPackMetadata.cs; src/Pcl.Core/PackMetadataCompatibility.cs; src/Pcl.Core/PortableModpackService.cs; src/Pcl.Core/ModpackService.cs",
+    "ui": "整合包管理 → 选择ZIP → 检查内容 → 安装",
+    "implementationSummary": "0.14 保留HMCL附加校验库及限定属性、MultiMC声明式自定义组件；正确使用Forge私有库根；导出扩展并再导入，提交前验证依赖。",
+    "testEvidence": [
+      "artifacts/verification-0.14/release-tests/test-results.json",
+      "artifacts/verification-0.14/live/dependency-acceptance.json",
+      "artifacts/verification-0.14/live/evidence/dependency-pack-ui-result.json",
+      "artifacts/release-verification-0.14.json",
+      "docs/0.14实现与验收.md"
+    ],
+    "remaining": "任意自定义入口/客户端/jarmods/安装器未支持；自定义扩展需PCL Mac0.14+导入；跨版本大量真实包及游戏启动待验收。",
+    "externalConditions": []
+  },
+  "PACK-006": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/PortableModpackService.cs; src/Pcl.Desktop/PackManagerWindow.cs",
+    "ui": "整合包管理 → MCBBS ZIP",
+    "implementationScope": "识别 mcbbs.packmeta addons/overrides；转换到统一安装链路",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: pack_import_all_declared_formats",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "pack_import_all_declared_formats",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过",
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "remaining": "旧 OptiFine/LiteLoader 作为包组件尚不支持；不是所有发行版包格式保证",
+    "externalConditions": [],
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "PACK-007": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/PortableModpackService.cs; src/Pcl.Desktop/PackManagerWindow.cs",
+    "ui": "整合包管理 → 普通 ZIP → 填游戏/加载器版本",
+    "implementationScope": "仅导入已知游戏数据目录；支持 .minecraft 包装层；不覆盖启动器目录",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: pack_import_all_declared_formats",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "pack_import_all_declared_formats",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过",
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "remaining": "缺少元数据无法自动推断所有组件；需用真实外部包做 GUI/启动验证",
+    "externalConditions": [],
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "PACK-008": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/PortableModpackService.cs; src/Pcl.Desktop/PackManagerWindow.cs",
+    "ui": "整合包管理 → 检查内容",
+    "implementationScope": "可以识别并跳过 launcher.exe/start.sh 等非数据内容，导入游戏数据，拒绝危险路径",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: pack_import_all_declared_formats；pack_rejects_traversal_symlink_case_collision_and_custom_patch",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "pack_import_all_declared_formats；pack_rejects_traversal_symlink_case_collision_and_custom_patch",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过",
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "remaining": "不运行包内启动脚本，未实现任意第三方启动器配置的完整迁移",
+    "externalConditions": [],
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "PACK-009": {
+    "status": "已验收",
+    "macImplementation": "src/Pcl.Core/ModpackService.cs; src/Pcl.Core/PortableModpackService.cs; src/Pcl.Desktop/PackSelectionWindow.cs; src/Pcl.Desktop/PackManagerWindow.cs",
+    "sourceEntry": "Modules/Minecraft/ModModpack.vb:274-280,417-425",
+    "sourceEvidence": "已核对逐文件询问、optional跳过和unsupported排除；Mac集中列表选择等效实现。",
+    "ui": "整合包下载/导入 → 可选文件列表；整合包管理 → 逐项勾选",
+    "testEvidence": [
+      "artifacts/evidence-0.9/regression-2/test-results.json",
+      "artifacts/optional-gui-retry-0.9/evidence/optional-features-result.json",
+      "artifacts/final-optional-0.9/evidence/optional-features-result.json"
+    ],
+    "implementationScope": "Modrinth/CF可选文件逐项、全选/全不选；必需项自动；预览变化拒绝；不同组合独立实例。",
+    "implementationSummary": "GUI安装真实Modrinth文件并排除未选文件；CF使用无密钥本地匹配夹具，重复/过期选择拒绝。",
+    "remaining": "真实网络测试为本地组合验收包；CF逐文件过滤有本地JAR夹具，未做有密钥在线安装，不代表任意整合包兼容。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.9/regression-2/test-results.json",
+      "fixture": "mrpack选项及CF手动匹配/过滤",
+      "realNetworkAndFiles": "artifacts/final-optional-0.9/evidence/optional-features-result.json",
+      "gui": "artifacts/final-optional-0.9/evidence/optional-features-result.json",
+      "inGame": "1.21.1/Fabric 0.20.1/Fabric API图形初始化45秒；无本版世界验收"
+    }
+  },
+  "PACK-010": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/CustomPackMetadata.cs; src/Pcl.Core/PackMetadataCompatibility.cs; src/Pcl.Core/PortableModpackService.cs; src/Pcl.Core/ModpackService.cs; src/Pcl.Core/QuiltDependencyOverrides.cs",
+    "ui": "整合包管理 → 导出 .mrpack",
+    "implementationScope": "合法索引和 overrides，按实际 ZIP 写入字节生成 SHA1/SHA512 记录，保存后重检",
+    "testEvidence": [
+      "artifacts/verification-0.14/release-tests/test-results.json",
+      "artifacts/verification-0.14/live/dependency-acceptance.json",
+      "artifacts/verification-0.14/live/evidence/dependency-pack-ui-result.json",
+      "artifacts/release-verification-0.14.json",
+      "docs/0.14实现与验收.md",
+      "artifacts/verification-0.15/release-tests/test-results.json",
+      "artifacts/verification-0.15/oracle/official-results.json",
+      "artifacts/verification-0.15/live/evidence/quilt-overrides-ui-result.json",
+      "artifacts/release-verification-0.15.json",
+      "docs/0.15实现与验收.md"
+    ],
+    "evidenceLevels": {
+      "source": "Quilt Loader 0.27.1 固定实现对照",
+      "fixture": "覆盖语义、严格元数据、事务回滚与异常边界；八组官方集合变换",
+      "realNetworkAndFiles": "真实QFAPI发布s8dfz9Xa及1.20.1/Quilt0.27.1；官方缓存复用并校验",
+      "gui": "程序驱动实际Avalonia窗口，截图审阅；最终包另行验收",
+      "inGame": "未启动游戏"
+    },
+    "remaining": "Quilt path/pattern/version覆盖、Fabric覆盖及schema0、自定义插件、全根联合择版、JarJar完整模块身份、自定义包任意入口仍未完成；JSON5为官方生产限制。无新游戏运行证据。",
+    "externalConditions": [],
+    "implementationSummary": "0.15 支持 Quilt 精确 id 依赖覆盖、配置变更保护和原实例库上下文；真实 QFAPI 下载、GUI检查、批量提交及mrpack往返通过。保留0.14能力。",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "PACK-011": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/PortableModpackService.cs; src/Pcl.Desktop/PackManagerWindow.cs",
+    "ui": "整合包管理 → 导出目录/存档/选项复选框",
+    "implementationScope": "默认排除存档、options、账号、token、日志和服务器列表；已知数据目录可选，私密文件名过滤",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: pack_export_privacy_hashes_and_roundtrip；pack_export_recipe_selection_and_exact_payload_hash",
+      "artifacts/evidence-complete/pack-live-3/pack-live-result.json（真实 Modrinth 下载、导出/导入/更新；无游戏世界验收）",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "pack_export_privacy_hashes_and_roundtrip；pack_export_recipe_selection_and_exact_payload_hash",
+      "realNetworkAndFiles": "artifacts/evidence-complete/pack-live-3/pack-live-result.json（真实 Modrinth 下载、导出/导入/更新；无游戏世界验收）",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过",
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "remaining": "任意自定义 config 内容里的秘密无法自动识别，发布前需自行检查",
+    "externalConditions": [],
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "PACK-012": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/PortableModpackService.cs; src/Pcl.Desktop/PackManagerWindow.cs",
+    "ui": "整合包管理 → 保存/读取导出配置",
+    "implementationScope": "实例内保存名称版本、文件夹集合、存档/选项开关；校验选项路径",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: pack_export_recipe_selection_and_exact_payload_hash",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "pack_export_recipe_selection_and_exact_payload_hash",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过",
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "remaining": "需 GUI 保存/读取验收",
+    "externalConditions": [],
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "PACK-013": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/CustomPackMetadata.cs; src/Pcl.Core/PackMetadataCompatibility.cs; src/Pcl.Core/PortableModpackService.cs; src/Pcl.Core/ModpackService.cs",
+    "ui": "整合包管理 → 更新当前整合包（保留原实例）",
+    "implementationScope": "初次安装基线 SHA256；展示新增/修改/删除；更新为新实例并选择保留用户改动和删除；源实例留存",
+    "testEvidence": [
+      "artifacts/verification-0.14/release-tests/test-results.json",
+      "artifacts/verification-0.14/live/dependency-acceptance.json",
+      "artifacts/verification-0.14/live/evidence/dependency-pack-ui-result.json",
+      "artifacts/release-verification-0.14.json",
+      "docs/0.14实现与验收.md"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "pack_update_baseline_distinguishes_modified_added_deleted_and_private",
+      "realNetworkAndFiles": "artifacts/evidence-complete/pack-live-3/pack-live-result.json（真实 Modrinth 下载、导出/导入/更新；无游戏世界验收）：pack-update-c5e40805afbe；验证 config 新增与 Mod Menu 用户删除仍保留",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过",
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "remaining": "任意自定义入口/客户端/jarmods/安装器未支持；自定义扩展需PCL Mac0.14+导入；跨版本大量真实包及游戏启动待验收。",
+    "externalConditions": [],
+    "implementationSummary": "0.14 保留HMCL附加校验库及限定属性、MultiMC声明式自定义组件；正确使用Forge私有库根；导出扩展并再导入，提交前验证依赖。",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "PACK-014": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/PortableModpackService.cs; src/Pcl.Desktop/PackManagerWindow.cs; src/Pcl.Desktop/CurseForgeWindow.cs",
+    "ui": "CurseForge 项目/包 → 官方文件页 → 匹配本地文件",
+    "implementationScope": "有 API 元数据时比对官方 SHA1/大小；无 API 包手动选择则标明仅用户匹配并记录本地哈希",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: curse_api_metadata_and_publisher_disabled_download；curse_catalog_filters_dependencies_and_file_restrictions；curse_missing_credentials_blocks_before_instance_install",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "curse_api_metadata_and_publisher_disabled_download；curse_catalog_filters_dependencies_and_file_restrictions；curse_missing_credentials_blocks_before_instance_install",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过",
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "remaining": "无 Key 无法证明手动文件属于所列 project/file；真实受限发布文件需要用户材料",
+    "externalConditions": [
+      "受限项目文件需用户按其授权从官方页面取得"
+    ],
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "NET-013": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/NetworkDiagnosticsService.cs; src/Pcl.Desktop/CacheNetworkWindow.cs",
+    "ui": "网络检查与临时缓存 → 网络检查；CLI network-probe",
+    "testEvidence": [
+      "tests/Pcl.Tests/AccountNetworkDiagnosticsTests.cs#network_probe_caps_ignored_range_and_never_queues_install",
+      "tests/Pcl.Tests/AccountNetworkDiagnosticsTests.cs#network_probe_reports_redirect_and_bad_range_without_reading_body",
+      "artifacts/network-probe-0.8/evidence/network-probe.json"
+    ],
+    "remaining": "真实官方清单小样本请求结果单独记录；64KiB上限及10秒超时，小样本不是持续带宽。",
+    "externalConditions": [
+      "可用网络与目标源"
+    ],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "UI-011": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/TemporaryDownloadCache.cs; src/Pcl.Desktop/CacheNetworkWindow.cs",
+    "ui": "网络检查与临时缓存 → 临时缓存 / 缓存回收目录",
+    "testEvidence": [
+      "tests/Pcl.Tests/AccountNetworkDiagnosticsTests.cs#temporary_cache_excludes_active_recent_shared_and_symlink_files",
+      "tests/Pcl.Tests/AccountNetworkDiagnosticsTests.cs#temporary_cache_rechecks_preview_and_restores_without_overwrite"
+    ],
+    "remaining": "仅清理超过24小时的cache与实例.pcl-downloads临时下载；预览、逐文件重检/独占/活动任务排除、可恢复移动。已验证缓存、共享Java/libraries/assets不清理；完整引用计数清理未实现。",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "NET-014": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/SegmentedDownload.cs; src/Pcl.Core/DownloadService.cs; src/Pcl.Core/DownloadTasks.cs",
+    "ui": "任务与诊断 → 网络 → 大文件分段下载（默认关闭）",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：5个segmented tests通过（HTTP fixture/本地文件）",
+      "artifacts/evidence-complete/segmented-live-1/segmented-live-result.json：官方26.3客户端41,483,720bytes，10分块4并发，取消后复用1块，完整官方SHA1通过，Completed=true",
+      "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
+    ],
+    "evidenceLevels": {
+      "fixture": "范围验证/顺序回退/总限速/取消/复用/缓存篡改/错误hash保旧文件/链接拒绝已通过",
+      "realNetworkAndFiles": "官方client另存真实下载，含206请求记录及分块回执，无顺序回退",
+      "gui": "设置入口已实现；此模块未独立完成GUI点击保存验收",
+      "inGame": "只下载不执行，此项不要求游戏运行证据",
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "remaining": "最终GUI已增加保存并重读设置验收；仅复用完整块，未完成块重下，默认关闭。",
+    "externalConditions": [],
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "VER-004": {
+    "id": "VER-004",
+    "domain": "游戏与加载器",
+    "name": "旧minecraftArguments适配",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageDownload",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/VersionInstaller.cs",
+    "ui": "下载版本 / 加载器",
+    "status": "部分实现",
+    "testEvidence": [
+      "artifacts/evidence-0.8-compat/compatibility-results.json",
+      "tests/Pcl.Tests/LegacyCompatibilityTests.cs",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/owned-launches/matrix.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json"
+    ],
+    "remaining": "0.17 真实正版账户启动 1.12.2，旧 minecraftArguments 路径完成图形初始化；其他远古参数和资源布局仍需逐版验收。",
+    "externalConditions": [],
+    "implementationSummary": "LegacyLaunchAdapter.NormalizeMetadata/SplitArguments、FabricService.Merge，老参数替换及变量适配",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.17/release-tests/test-results.json"
+    }
+  },
+  "VER-005": {
+    "id": "VER-005",
+    "domain": "游戏与加载器",
+    "name": "LWJGL2 ARM64",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageDownload",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/VersionInstaller.cs",
+    "ui": "下载版本 / 加载器",
+    "status": "部分实现",
+    "testEvidence": [
+      "artifacts/evidence-0.8-compat/compatibility-results.json",
+      "src/Pcl.Core/Compatibility/xmcl-macos-arm64.json",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/owned-launches/matrix.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json"
+    ],
+    "remaining": "0.17 原版 1.12.2 使用 ARM64 Java 8 与 LWJGL2 兼容层通过图形初始化；不声明全部 LWJGL2 游戏、旁白或手柄兼容。",
+    "externalConditions": [],
+    "implementationSummary": "固定XMCL osx-arm64映射、HMCL LWJGL2 natives、逐Mach-O审核、第一线程规则",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.17/release-tests/test-results.json"
+    }
+  },
+  "VER-006": {
+    "id": "VER-006",
+    "domain": "游戏与加载器",
+    "name": "Fabric安装",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageDownload",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/VersionInstaller.cs",
+    "ui": "下载版本 / 加载器",
+    "status": "部分实现",
+    "testEvidence": [
+      "artifacts/evidence-0.8-compat/migration-smoke/result.json",
+      "artifacts/evidence-0.7/acceptance.json",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/owned-launches/matrix.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json",
+      "artifacts/verification-0.18/final-regression2/test-results.json",
+      "docs/0.18实现与验收.md"
+    ],
+    "remaining": "0.18 Fabric 1.21.1 光影备份恢复副本通过世界保存和独立进程重进，用户确认标记与位置正常；本轮 Fabric 1.20.1 手动会话只有标题/退出记录，未核实进世界，不覆盖整个目录。",
+    "externalConditions": [],
+    "implementationSummary": "官方Meta/Maven校验、独立实例，显式版本更换走新副本",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.18/final-regression2/test-results.json"
+    }
+  },
+  "VER-007": {
+    "id": "VER-007",
+    "domain": "游戏与加载器",
+    "name": "Forge现代安装",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageDownload",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/VersionInstaller.cs",
+    "ui": "下载版本 / 加载器",
+    "status": "部分实现",
+    "testEvidence": [
+      "artifacts/evidence-0.7/acceptance.json",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/owned-launches/matrix.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json",
+      "artifacts/verification-0.18/final-regression2/test-results.json",
+      "docs/0.18实现与验收.md",
+      "artifacts/verification-0.18/worlds/forge1211-first/result.json",
+      "artifacts/verification-0.18/worlds/forge1211-isolated-first/result.json",
+      "docs/0.18.1实现与验收.md",
+      "artifacts/verification-0.18/worlds/forge1211-menu-retest/result.json",
+      "artifacts/verification-0.18/worlds/forge1211-menu-roundtrip.json"
+    ],
+    "remaining": "Forge 1.21.1 普通菜单的两进程世界保存重进通过，用户确认标记；两次正常退出且无 ERROR/FATAL。单人 Quick Play 仍禁用，其他 Forge 版本未据此外推。",
+    "externalConditions": [],
+    "implementationSummary": "官方installer --installClient、私有库及生成文件收据",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.18/final-regression2/test-results.json"
+    }
+  },
+  "VER-008": {
+    "status": "部分实现",
+    "implementationSummary": "兼容1.12.2 installer version.json与完整minecraftArguments",
+    "testEvidence": [
+      "artifacts/evidence-0.8-compat/compatibility-results.json"
+    ],
+    "remaining": "1.12.2 14.23.5.2864安装器退出0并启动；更早仅versionInfo格式仍明确拒绝。",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "VER-009": {
+    "id": "VER-009",
+    "domain": "游戏与加载器",
+    "name": "NeoForge现代安装",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageDownload",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/VersionInstaller.cs",
+    "ui": "下载版本 / 加载器",
+    "status": "部分实现",
+    "testEvidence": [
+      "artifacts/evidence-0.7/acceptance.json",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/owned-launches/matrix.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json",
+      "docs/0.18.1实现与验收.md",
+      "artifacts/verification-0.18.1/regression/test-results.json",
+      "artifacts/verification-0.18/worlds/neo1211-fixed-roundtrip.json"
+    ],
+    "remaining": "0.17 正版启动 NeoForge 1.20.4-20.4.253 与 1.21.1-21.1.264，图形与材质初始化通过；未覆盖全部现代版本。 0.18.1 修复复制/恢复后客户端 JAR 排除项错绑；NeoForge 1.21.1 独立副本世界保存和重进通过，两次退出均有 OpenAL 音频错误，保留此已知问题。",
+    "externalConditions": [],
+    "implementationSummary": "现代net.neoforged:neoforge坐标与官方installer",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.17/release-tests/test-results.json"
+    }
+  },
+  "VER-010": {
+    "status": "部分实现",
+    "implementationSummary": "旧net.neoforged:forge与forge文件名/--installClient",
+    "testEvidence": [
+      "artifacts/evidence-0.8-compat/compatibility-results.json"
+    ],
+    "remaining": "1.20.1 47.1.106启动通过；未保证全部旧NeoForge构建。",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "VER-011": {
+    "status": "部分实现",
+    "implementationSummary": "作者adloadx/downloadx、Patcher、内置LaunchWrapper、私有库",
+    "testEvidence": [
+      "artifacts/evidence-0.8-compat/compatibility-results.json",
+      "src/Pcl.Core/OptiFineService.cs"
+    ],
+    "remaining": "独立1.12.2 G5/1.20.1 I6与固定1.20.1 OptiFabric组合通过；Forge+OptiFine任意组合尚未适配，二进制不再分发。",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "VER-012": {
+    "status": "部分实现",
+    "implementationSummary": "官方目录及Maven快照/SHA1，旧Sponge地址升级官方现址",
+    "testEvidence": [
+      "artifacts/evidence-0.8-compat/compatibility-results.json",
+      "src/Pcl.Core/LiteLoaderService.cs"
+    ],
+    "remaining": "1.12.2构建实测；其他历史构建未逐项验证。",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "VER-013": {
+    "status": "部分实现",
+    "implementationSummary": "FabricModPlanner按fabric.mod.json解析和安装所需依赖；MacSetup已有固定版本方案",
+    "testEvidence": [
+      "src/Pcl.Core/FabricModPlanner.cs",
+      "src/Pcl.Core/MacSetupService.cs"
+    ],
+    "remaining": "资源领域证据由资源agent汇总；未增加安装器内任意Fabric API组合一步安装。",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "VER-014": {
+    "status": "部分实现",
+    "implementationSummary": "OptiFabricService/Window：固定1.20.1、Fabric0.16.14、OptiFabric1.14.3、OptiFineI6；新实例、作者手动文件或合法CF API、冲突/指纹预检",
+    "testEvidence": [
+      "artifacts/evidence-0.8-compat/optifabric/service-result.json",
+      "artifacts/evidence-0.8-compat/optifabric/probe-result.json",
+      "tests/Pcl.Tests/OptiFabricTests.cs",
+      "docs/OptiFabric固定组合与文件另存为.md",
+      "artifacts/evidence-0.8-compat/optifabric/service-result.json"
+    ],
+    "remaining": "产品服务创建1.20.1/Fabric0.16.14/OptiFabric1.14.3/OptiFineI6独立实例并图形初始化45秒；未知版本不启用，未做世界内验收。",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "VER-015": {
+    "status": "部分实现",
+    "implementationSummary": "ArtifactDownloadService/Window，官方元数据、已知SHA1、无覆盖原子保存、纯文本官方更新日志",
+    "testEvidence": [
+      "src/Pcl.Core/ArtifactDownloadService.cs",
+      "src/Pcl.Desktop/ArtifactDownloadWindow.cs",
+      "tests/Pcl.Tests/ArtifactDownloadTests.cs",
+      "artifacts/evidence-0.8-compat/download-only-smoke/downloads/result.json",
+      "artifacts/evidence-0.8-compat/download-only-smoke/quilt-official-metadata-check.json",
+      "artifacts/evidence-0.8-compat/download-only-smoke/quilt-hash-crosscheck.json",
+      "artifacts/evidence-0.8-compat/download-only-smoke/quilt-preflight-result.json"
+    ],
+    "remaining": "7类真实另存通过、官方更新日志通过；未执行文件且未安装游戏/Java。Quilt安装器官方Meta/Maven哈希冲突，最终预检0.09秒拒绝并确认无目标文件；没有降低校验或改用冲突哈希。LiteLoader导出加载器JAR，OptiFine校验来源如实区分。",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "VER-016": {
+    "status": "部分实现",
+    "implementationSummary": "InstanceComponentService/ComponentManagerWindow：组件备份、预览、冲突、数据指纹、复制新实例与失败清理",
+    "testEvidence": [
+      "artifacts/evidence-0.8-compat/migration-smoke/result.json",
+      "tests/Pcl.Tests/ComponentMigrationTests.cs"
+    ],
+    "remaining": "完成安全新副本路径，不原位替换；启用模组必须在副本禁用后重新检查；GUI人工点选尚待。",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "INST-009": {
+    "status": "部分实现",
+    "implementationSummary": "通过调整加载器新副本完成升级/替换/vanilla移除",
+    "testEvidence": [
+      "artifacts/evidence-0.8-compat/migration-smoke/result.json",
+      "tests/Pcl.Tests/ComponentMigrationTests.cs"
+    ],
+    "remaining": "不声称任意组合组件原位修改或模组自动适配。",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "JAVA-002": {
+    "id": "JAVA-002",
+    "domain": "Java与启动",
+    "name": "Java8ARM64",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Modules/Minecraft",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/LaunchService.cs",
+    "ui": "实例管理 → 启动设置",
+    "status": "部分实现",
+    "testEvidence": [
+      "artifacts/evidence-0.8-compat/compatibility-results.json",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/owned-launches/matrix.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json"
+    ],
+    "remaining": "0.17 真实正版启动原版 1.12.2、1.16.5，实际使用 Java 8 aarch64；历史 Forge/LiteLoader/OptiFine 证据保留原范围。",
+    "externalConditions": [],
+    "implementationSummary": "Azul官方SHA256与真实JVM架构检查，实体bin/java查找",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.17/release-tests/test-results.json"
+    }
+  },
+  "JAVA-003": {
+    "status": "部分实现",
+    "implementationSummary": "Azul16.0.2 ARM64，跳过链接重复bin/java，官方SHA256",
+    "testEvidence": [
+      "artifacts/evidence-0.8-compat/compatibility-results.json"
+    ],
+    "remaining": "1.17.1原版40秒图形和atlas通过，不代表所有1.17模组兼容。",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "VER-001": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/VersionCatalog.cs; src/Pcl.Desktop/VersionManager.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/evidence-0.7/acceptance.json"
+    ],
+    "remaining": "正式版、快照与历史过滤；目录可见不等于所有版本可启动。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "VER-002": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/VersionCatalog.cs; src/Pcl.Desktop/VersionManager.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/evidence-0.7/acceptance.json"
+    ],
+    "remaining": "正式版、快照与历史过滤；目录可见不等于所有版本可启动。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "VER-003": {
+    "id": "VER-003",
+    "domain": "游戏与加载器",
+    "name": "原版安装与启动",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageDownload",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/MinecraftService.cs; src/Pcl.Core/LaunchService.cs",
+    "ui": "下载版本 / 加载器",
+    "status": "已验收",
+    "testEvidence": [
+      "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json",
+      "artifacts/gui-install-clean-0.8/evidence/user-world-acceptance.json",
+      "artifacts/verification-0.16/microsoft-login-result.json",
+      "artifacts/verification-0.16/microsoft-cold-refresh-0.16.json",
+      "artifacts/verification-0.16/desktop-manual-launch.json",
+      "artifacts/verification-0.16/user-world-acceptance.json",
+      "artifacts/verification-0.16/final-tests/test-results.json",
+      "docs/0.16实现与验收.md",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/owned-launches/matrix.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json",
+      "artifacts/verification-0.18/worlds/vanilla263-roundtrip.json",
+      "docs/0.18.1实现与验收.md"
+    ],
+    "remaining": "0.17 正版启动原版 1.12.2、1.16.5、1.18.2、26.3，均观察图形与材质初始化；0.16 的 1.21.1 世界/存档用户验收保留。本轮十组合未进行世界内人工验收。 0.18.1 原版 26.3 测试副本升级、保存和独立重进通过，Java 25 ARM64；未将本次结果外推到所有历史版本。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.17/release-tests/test-results.json"
+    },
+    "implementationSummary": ""
+  },
+  "JAVA-001": {
+    "id": "JAVA-001",
+    "domain": "Java与启动",
+    "name": "元数据Java自动匹配",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Modules/Minecraft",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/JavaService.cs; src/Pcl.Core/MacCompatibility.cs",
+    "ui": "实例管理 → 启动设置",
+    "status": "已实现待验收",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/evidence-0.7/acceptance.json",
+      "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/owned-launches/matrix.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json"
+    ],
+    "remaining": "0.17 十个正版启动组合覆盖 ARM64 Java 8/17/21/25，核对实际进程版本与架构；不推定所有游戏、快照或模组适配。Java 16 单列保留待测边界。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.17/release-tests/test-results.json"
+    },
+    "implementationSummary": ""
+  },
+  "JAVA-004": {
+    "id": "JAVA-004",
+    "domain": "Java与启动",
+    "name": "Java17ARM64",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Modules/Minecraft",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/JavaService.cs; src/Pcl.Core/MacCompatibility.cs",
+    "ui": "实例管理 → 启动设置",
+    "status": "已实现待验收",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/evidence-0.7/acceptance.json",
+      "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/owned-launches/matrix.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json"
+    ],
+    "remaining": "0.17 十个正版启动组合覆盖 ARM64 Java 8/17/21/25，核对实际进程版本与架构；不推定所有游戏、快照或模组适配。Java 16 单列保留待测边界。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.17/release-tests/test-results.json"
+    },
+    "implementationSummary": ""
+  },
+  "JAVA-005": {
+    "id": "JAVA-005",
+    "domain": "Java与启动",
+    "name": "Java21ARM64",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Modules/Minecraft",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/JavaService.cs; src/Pcl.Core/MacCompatibility.cs",
+    "ui": "实例管理 → 启动设置",
+    "status": "已实现待验收",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/evidence-0.7/acceptance.json",
+      "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/owned-launches/matrix.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json"
+    ],
+    "remaining": "0.17 十个正版启动组合覆盖 ARM64 Java 8/17/21/25，核对实际进程版本与架构；不推定所有游戏、快照或模组适配。Java 16 单列保留待测边界。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.17/release-tests/test-results.json"
+    },
+    "implementationSummary": ""
+  },
+  "JAVA-006": {
+    "id": "JAVA-006",
+    "domain": "Java与启动",
+    "name": "Java25ARM64",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Modules/Minecraft",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/JavaService.cs; src/Pcl.Core/MacCompatibility.cs",
+    "ui": "实例管理 → 启动设置",
+    "status": "已实现待验收",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/evidence-0.7/acceptance.json",
+      "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/owned-launches/matrix.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json"
+    ],
+    "remaining": "0.17 十个正版启动组合覆盖 ARM64 Java 8/17/21/25，核对实际进程版本与架构；不推定所有游戏、快照或模组适配。Java 16 单列保留待测边界。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.17/release-tests/test-results.json"
+    },
+    "implementationSummary": ""
+  },
+  "JAVA-010": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/LauncherSettings.cs; src/Pcl.Core/LaunchService.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
+    ],
+    "remaining": "配置持久化和参数合并已验证；尚未逐个游戏内观察窗口/服务器/GC效果。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "JAVA-011": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/LauncherSettings.cs; src/Pcl.Core/LaunchService.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
+    ],
+    "remaining": "配置持久化和参数合并已验证；尚未逐个游戏内观察窗口/服务器/GC效果。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "JAVA-012": {
+    "id": "JAVA-012",
+    "domain": "Java与启动",
+    "name": "自定义JVM游戏参数",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Modules/Minecraft",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/LauncherSettings.cs; src/Pcl.Core/LaunchService.cs",
+    "ui": "实例管理 → 启动设置",
+    "status": "已实现待验收",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/ui-0.8-final/evidence/workspace-ui-result.json",
+      "artifacts/verification-0.18/final-regression2/test-results.json",
+      "docs/0.18实现与验收.md"
+    ],
+    "remaining": "0.18 增加元数据驱动的 QuickPlayWorld 字段与实例继承、路径/链接/缺失世界检查、多人参数互斥；Fabric 1.21.1 直达实测。Forge 直达已复现生命周期异常，本版禁止并提示使用主菜单；附加参数不能绕入。其余 JVM 参数/版本仍按既有边界。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.18/final-regression2/test-results.json"
+    },
+    "implementationSummary": ""
+  },
+  "JAVA-013": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/LauncherSettings.cs; src/Pcl.Core/LaunchService.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
+    ],
+    "remaining": "配置持久化和参数合并已验证；尚未逐个游戏内观察窗口/服务器/GC效果。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "JAVA-014": {
+    "status": "已验收",
+    "macImplementation": "src/Pcl.Core/LaunchHooks.cs; src/Pcl.Desktop/SettingsHelpWindow.cs; src/Pcl.Cli/Program.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    ],
+    "remaining": "显式本地程序；字面参数、等待/失败/超时与子进程生命周期已回归。导入内容不得自动设置执行命令。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "JAVA-015": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Desktop/MainWindow.axaml.cs; src/Pcl.Core/AppearanceService.cs",
+    "testEvidence": [
+      "artifacts/ui-0.8-final/evidence/workspace-ui-result.json",
+      "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json"
+    ],
+    "remaining": "隐藏/游戏退出恢复已实现；关闭/隐藏/Dock全部组合尚待手动验收。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "JAVA-016": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Legacy/MinecraftRules.vb; src/Pcl.Core/MacNativeAudit.cs; src/Pcl.Core/MacCompatibility.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/evidence-0.8-compat/compatibility-results.json"
+    ],
+    "remaining": "ARM64实际Mach-O检查；Intel/Rosetta未验收，无库可用时明确拒绝。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "NET-001": {
+    "status": "已验收",
+    "macImplementation": "src/Pcl.Core/DownloadService.cs; src/Pcl.Core/DownloadTasks.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json",
+      "artifacts/evidence-complete/segmented-live-1/segmented-live-result.json"
+    ],
+    "remaining": "HTTP夹具覆盖异常，真实联网校验；极端断电/实际磁盘耗尽尚未注入。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "NET-002": {
+    "status": "已验收",
+    "macImplementation": "src/Pcl.Core/DownloadService.cs; src/Pcl.Core/DownloadTasks.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json",
+      "artifacts/evidence-complete/segmented-live-1/segmented-live-result.json"
+    ],
+    "remaining": "HTTP夹具覆盖异常，真实联网校验；极端断电/实际磁盘耗尽尚未注入。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "NET-003": {
+    "status": "已验收",
+    "macImplementation": "src/Pcl.Core/DownloadService.cs; src/Pcl.Core/DownloadTasks.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json",
+      "artifacts/evidence-complete/segmented-live-1/segmented-live-result.json"
+    ],
+    "remaining": "HTTP夹具覆盖异常，真实联网校验；极端断电/实际磁盘耗尽尚未注入。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "NET-004": {
+    "status": "已验收",
+    "macImplementation": "src/Pcl.Core/DownloadService.cs; src/Pcl.Core/DownloadTasks.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json",
+      "artifacts/evidence-complete/segmented-live-1/segmented-live-result.json"
+    ],
+    "remaining": "HTTP夹具覆盖异常，真实联网校验；极端断电/实际磁盘耗尽尚未注入。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "NET-005": {
+    "status": "已验收",
+    "macImplementation": "src/Pcl.Core/DownloadService.cs; src/Pcl.Core/DownloadTasks.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json",
+      "artifacts/evidence-complete/segmented-live-1/segmented-live-result.json"
+    ],
+    "remaining": "HTTP夹具覆盖异常，真实联网校验；极端断电/实际磁盘耗尽尚未注入。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "NET-006": {
+    "status": "已验收",
+    "macImplementation": "src/Pcl.Core/DownloadService.cs; src/Pcl.Core/DownloadTasks.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json",
+      "artifacts/evidence-complete/segmented-live-1/segmented-live-result.json"
+    ],
+    "remaining": "HTTP夹具覆盖异常，真实联网校验；极端断电/实际磁盘耗尽尚未注入。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "NET-007": {
+    "status": "已验收",
+    "macImplementation": "src/Pcl.Core/DownloadService.cs; src/Pcl.Core/DownloadTasks.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json",
+      "artifacts/evidence-complete/segmented-live-1/segmented-live-result.json"
+    ],
+    "remaining": "HTTP夹具覆盖异常，真实联网校验；极端断电/实际磁盘耗尽尚未注入。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "NET-008": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/DownloadTasks.cs; src/Pcl.Desktop/TaskCenterWindow.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
+    ],
+    "remaining": "暂停/继续/取消/重启任务历史已测试；任务列表上限300，历史上限1000，不等于完整安装检查点。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "NET-009": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/DownloadTasks.cs; src/Pcl.Desktop/TaskCenterWindow.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
+    ],
+    "remaining": "暂停/继续/取消/重启任务历史已测试；任务列表上限300，历史上限1000，不等于完整安装检查点。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "NET-010": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/DownloadTasks.cs; src/Pcl.Desktop/TaskCenterWindow.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
+    ],
+    "remaining": "暂停/继续/取消/重启任务历史已测试；任务列表上限300，历史上限1000，不等于完整安装检查点。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "NET-011": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/InstallOperations.cs; src/Pcl.Desktop/TaskCenterWindow.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json"
+    ],
+    "remaining": "原版及支持加载器安装日志可恢复，重新校验并重执行安装器；整合包/资源任务需重新发起，不是任意指令级断点。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "NET-012": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/DownloadTasks.cs; src/Pcl.Desktop/TaskCenterWindow.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
+    ],
+    "remaining": "文件下载服务支持系统/显式HTTP代理；并非所有第三方元数据请求的统一代理，真实代理链路未测试。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "DIAG-001": {
+    "status": "已验收",
+    "macImplementation": "src/Pcl.Core/LaunchService.cs; src/Pcl.Desktop/MainWindow.axaml.cs",
+    "testEvidence": [
+      "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json",
+      "artifacts/evidence-0.7/acceptance.json"
+    ],
+    "remaining": "自然退出、崩溃、用户停止分别显示；测试主动停止的137不作为正常退出。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "DIAG-002": {
+    "id": "DIAG-002",
+    "domain": "诊断",
+    "name": "进程退出与崩溃区分",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Modules/Minecraft",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/LaunchService.cs; src/Pcl.Desktop/MainWindow.axaml.cs",
+    "ui": "任务与诊断 → 日志诊断",
+    "status": "已验收",
+    "testEvidence": [
+      "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json",
+      "artifacts/evidence-0.7/acceptance.json",
+      "artifacts/verification-0.18/final-regression2/test-results.json",
+      "docs/0.18实现与验收.md"
+    ],
+    "remaining": "新增诊断来自本机实际日志和回归；第三方根因与所有模组组合仍需对照，不自动删除世界或用户模组。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.18/final-regression2/test-results.json"
+    },
+    "implementationSummary": "；0.18 新增 Xaero 世界状态和 Forge 资源初始化错误特征，退出码 0 也提示已记录的世界进入失败。"
+  },
+  "DIAG-003": {
+    "status": "已验收",
+    "macImplementation": "src/Pcl.Core/DiagnosticsService.cs; src/Pcl.Desktop/TaskCenterWindow.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    ],
+    "remaining": "夹具验证错误导入/分析/脱敏；诊断是建议，不自动删除存档/配置。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "DIAG-004": {
+    "status": "已验收",
+    "macImplementation": "src/Pcl.Core/DiagnosticsService.cs; src/Pcl.Desktop/TaskCenterWindow.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    ],
+    "remaining": "夹具验证错误导入/分析/脱敏；诊断是建议，不自动删除存档/配置。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "DIAG-005": {
+    "id": "DIAG-005",
+    "domain": "诊断",
+    "name": "模组依赖图形网络诊断",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Modules/Minecraft",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/DiagnosticsService.cs; src/Pcl.Desktop/TaskCenterWindow.cs",
+    "ui": "任务与诊断 → 日志诊断",
+    "status": "已验收",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/verification-0.18/final-regression2/test-results.json",
+      "docs/0.18实现与验收.md"
+    ],
+    "remaining": "新增诊断来自本机实际日志和回归；第三方根因与所有模组组合仍需对照，不自动删除世界或用户模组。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.18/final-regression2/test-results.json"
+    },
+    "implementationSummary": "；0.18 新增 Xaero 世界状态和 Forge 资源初始化错误特征，退出码 0 也提示已记录的世界进入失败。"
+  },
+  "DIAG-006": {
+    "status": "已验收",
+    "macImplementation": "src/Pcl.Core/DiagnosticsService.cs; src/Pcl.Desktop/TaskCenterWindow.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    ],
+    "remaining": "夹具验证错误导入/分析/脱敏；诊断是建议，不自动删除存档/配置。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "DIAG-007": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/DiagnosticsService.cs; docs/crash-rule-source-map.json",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "docs/crash-rule-source-map.json"
+    ],
+    "remaining": "逐项映射公开46个CrashReason；保留13类通用规则和Mac等效规则。未逐字复刻原优先级及所有日志格式，堆栈猜测标低置信度；未逐规则取得真实崩溃。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "LINK-001": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/EasyTierService.cs; src/Pcl.Desktop/MultiplayerWindow.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/link-live-data/evidence/easytier-smoke.json",
+      "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
+    ],
+    "remaining": "官方ARM64模块、无root/TUN本地双进程TCP转发通过；房间/节点/状态入口有GUI，跨网NAT与真实游戏双端待验收。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "LINK-002": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/EasyTierService.cs; src/Pcl.Desktop/MultiplayerWindow.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/link-live-data/evidence/easytier-smoke.json",
+      "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
+    ],
+    "remaining": "官方ARM64模块、无root/TUN本地双进程TCP转发通过；房间/节点/状态入口有GUI，跨网NAT与真实游戏双端待验收。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "LINK-003": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/EasyTierService.cs; src/Pcl.Desktop/MultiplayerWindow.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/link-live-data/evidence/easytier-smoke.json",
+      "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
+    ],
+    "remaining": "官方ARM64模块、无root/TUN本地双进程TCP转发通过；房间/节点/状态入口有GUI，跨网NAT与真实游戏双端待验收。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "LINK-004": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/EasyTierService.cs; src/Pcl.Desktop/MultiplayerWindow.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/link-live-data/evidence/easytier-smoke.json",
+      "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
+    ],
+    "remaining": "官方ARM64模块、无root/TUN本地双进程TCP转发通过；房间/节点/状态入口有GUI，跨网NAT与真实游戏双端待验收。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "LINK-005": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/EasyTierService.cs; src/Pcl.Desktop/MultiplayerWindow.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/link-live-data/evidence/easytier-smoke.json",
+      "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
+    ],
+    "remaining": "官方ARM64模块、无root/TUN本地双进程TCP转发通过；房间/节点/状态入口有GUI，跨网NAT与真实游戏双端待验收。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "LINK-006": {
+    "status": "外部条件阻塞",
+    "macImplementation": "src/Pcl.Desktop/MultiplayerWindow.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/link-live-data/evidence/easytier-smoke.json"
+    ],
+    "remaining": "尚无双端Minecraft玩家连接实测；TCP echo不是多人游戏。",
+    "externalConditions": [
+      "第二个Minecraft客户端/玩家及双方可连通节点"
+    ],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "LINK-007": {
+    "status": "外部条件阻塞",
+    "macImplementation": "src/Pcl.Core/EasyTierService.cs",
+    "testEvidence": [],
+    "remaining": "现使用独立PCLMAC1邀请码；原私有服务/节点协议未获得，不能声称互通。",
+    "externalConditions": [
+      "原版私有节点协议与授权服务"
+    ],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "UI-001": {
+    "status": "已验收",
+    "macImplementation": "src/Pcl.Desktop/AppearanceWorkspace.cs; src/Pcl.Desktop/SettingsHelpWindow.cs",
+    "testEvidence": [
+      "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
+    ],
+    "remaining": "深浅色截图与中文可读；未做完整辅助功能审计。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "UI-002": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Desktop/AppearanceWorkspace.cs; src/Pcl.Core/AppearanceService.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
+    ],
+    "remaining": "本地图片/afplay音乐与游戏跟随已接入，播放听感/全部生命周期组合未人工验收。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "UI-003": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Desktop/AppearanceWorkspace.cs; src/Pcl.Core/AppearanceService.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
+    ],
+    "remaining": "本地图片/afplay音乐与游戏跟随已接入，播放听感/全部生命周期组合未人工验收。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "UI-004": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/AppearanceService.cs; src/Pcl.Desktop/AppearanceWorkspace.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    ],
+    "remaining": "安全JSON主页支持文字、网页、复制、消息、导航、启动、刷新和加入房间；不兼容原XAML布局或全部变量/事件。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "UI-012": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/AppearanceService.cs; src/Pcl.Desktop/AppearanceWorkspace.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    ],
+    "remaining": "安全JSON主页支持文字、网页、复制、消息、导航、启动、刷新和加入房间；不兼容原XAML布局或全部变量/事件。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "UI-005": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Desktop/SettingsHelpWindow.cs; src/Pcl.Core/AppearanceService.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
+    ],
+    "remaining": "导航隐藏恢复、帮助检索、设置备份/净化导入导出实现；设置不携带凭据或执行项。重置当前外观，不删除用户世界。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "UI-006": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Desktop/SettingsHelpWindow.cs; src/Pcl.Core/AppearanceService.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
+    ],
+    "remaining": "导航隐藏恢复、帮助检索、设置备份/净化导入导出实现；设置不携带凭据或执行项。重置当前外观，不删除用户世界。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "UI-007": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Desktop/SettingsHelpWindow.cs; src/Pcl.Core/AppearanceService.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
+    ],
+    "remaining": "导航隐藏恢复、帮助检索、设置备份/净化导入导出实现；设置不携带凭据或执行项。重置当前外观，不删除用户世界。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "UI-008": {
+    "status": "未实现",
+    "macImplementation": "src/Pcl.Desktop/MainWindow.axaml.cs",
+    "testEvidence": [],
+    "remaining": "本地交付，无线上版本源/更新包签名验证或应用替换器；仅公开开发说明，不伪装自动更新成功。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "UI-009": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Desktop/MainWindow.axaml.cs; docs/使用说明.md",
+    "testEvidence": [
+      "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
+    ],
+    "remaining": "关于/本地更新说明存在；原远程公告服务及活动页面未复刻。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "UI-010": {
+    "status": "已验收",
+    "macImplementation": "src/Pcl.Core/AppearanceService.cs; src/Pcl.Desktop/SettingsHelpWindow.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    ],
+    "remaining": "原PCL2系统设置实际可用项为首次游戏中文；尊重已有lang，1.10及以前使用zh_CN。原多语言UI选择代码已注释，不计为已启用功能。",
+    "externalConditions": [],
+    "name": "首次游戏中文与界面语言基线",
+    "sourceEntry": "Pages/PageSetup/PageSetupSystem.xaml:103-104,167-184",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "UI-013": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Desktop/DropWorkspace.cs",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    ],
+    "remaining": "本地JAR/litemod和ZIP分类预览；文件拖入的实际系统事件尚未人工回归。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "UI-014": {
+    "id": "UI-014",
+    "domain": "个性化与系统",
+    "name": "命令行入口",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageSetup",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Cli/Program.cs; src/Pcl.Desktop/Program.cs",
+    "ui": "设置与帮助",
+    "status": "已实现待验收",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/evidence-0.8-compat/compatibility-results.json",
+      "artifacts/verification-0.18/final-regression2/test-results.json",
+      "docs/0.18实现与验收.md"
+    ],
+    "remaining": "0.18 CLI 新增实例复制、备份、恢复并复用产品事务；已完成真实文件操作。并非所有 GUI 动作都有 CLI 等价入口。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.18/final-regression2/test-results.json"
+    },
+    "implementationSummary": ""
+  },
+  "UI-015": {
+    "status": "外部条件阻塞",
+    "macImplementation": "docs/PCL2完整功能矩阵.md",
+    "testEvidence": [],
+    "remaining": "公开仓库删节百宝箱等功能；无法观察的发行版行为仍待核实，没有删除这一项。",
+    "externalConditions": [
+      "可观察的授权发行版行为或公开实现"
+    ],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": "",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "JAVA-009": {
+    "status": "已验收",
+    "macImplementation": "src/Pcl.Core/LaunchSettingsPatch.cs; src/Pcl.Core/LauncherSettings.cs; src/Pcl.Desktop/InstanceWorkspace.cs",
+    "ui": "实例管理 → 全局启动设置 / 启动设置 → 每项自定义",
+    "testEvidence": [
+      "artifacts/evidence-0.9/regression-2/test-results.json",
+      "artifacts/optional-gui-retry-0.9/evidence/optional-features-result.json",
+      "artifacts/final-optional-0.9/evidence/optional-features-result.json"
+    ],
+    "implementationSummary": "逐字段继承；显式空值/false；schema 1无损备份迁移；复制和备份保留继承；全局冲突原子拒绝。",
+    "remaining": "已用实际GUI编辑、保存、重开并确认启动参数生效；自定义Java/参数/服务器仍按对应矩阵项分别验收，不推定所有游戏行为。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.9/regression-2/test-results.json",
+      "gui": "artifacts/final-optional-0.9/evidence/optional-features-result.json",
+      "realGame": "恢复的Fabric 1.21.1 + Fabric API；45秒图形初始化",
+      "world": "本版没有世界内操作验收"
+    }
+  },
+  "PACK-009": {
+    "status": "已验收",
+    "macImplementation": "src/Pcl.Core/ModpackService.cs; src/Pcl.Core/PortableModpackService.cs; src/Pcl.Desktop/PackSelectionWindow.cs; src/Pcl.Desktop/PackManagerWindow.cs",
+    "sourceEntry": "Modules/Minecraft/ModModpack.vb:274-280,417-425",
+    "sourceEvidence": "已核对逐文件询问、optional跳过和unsupported排除；Mac集中列表选择等效实现。",
+    "ui": "整合包下载/导入 → 可选文件列表；整合包管理 → 逐项勾选",
+    "testEvidence": [
+      "artifacts/evidence-0.9/regression-2/test-results.json",
+      "artifacts/optional-gui-retry-0.9/evidence/optional-features-result.json",
+      "artifacts/final-optional-0.9/evidence/optional-features-result.json"
+    ],
+    "implementationScope": "Modrinth/CF可选文件逐项、全选/全不选；必需项自动；预览变化拒绝；不同组合独立实例。",
+    "implementationSummary": "GUI安装真实Modrinth文件并排除未选文件；CF使用无密钥本地匹配夹具，重复/过期选择拒绝。",
+    "remaining": "真实网络测试为本地组合验收包；CF逐文件过滤有本地JAR夹具，未做有密钥在线安装，不代表任意整合包兼容。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.9/regression-2/test-results.json",
+      "fixture": "mrpack选项及CF手动匹配/过滤",
+      "realNetworkAndFiles": "artifacts/final-optional-0.9/evidence/optional-features-result.json",
+      "gui": "artifacts/final-optional-0.9/evidence/optional-features-result.json",
+      "inGame": "1.21.1/Fabric 0.20.1/Fabric API图形初始化45秒；无本版世界验收"
+    }
+  }
+}

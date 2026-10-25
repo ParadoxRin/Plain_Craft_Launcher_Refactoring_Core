@@ -1,0 +1,34 @@
+{
+  "RES-003": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/UnifiedResourceSearch.cs; src/Pcl.Core/UnifiedSearchSession.cs; src/Pcl.Desktop/UnifiedSearchWindow.cs",
+    "ui": "侧栏 → MC百科 / 多源搜索",
+    "implementationSummary": "0.13 跨页身份去重、来源补充合并、查询快照、缓存翻页、失败来源重试与筛选重置；真实资源分页及界面安装通过。",
+    "testEvidence": [
+      "artifacts/verification-0.13/final-tests/test-results.json",
+      "artifacts/verification-0.13/live/evidence/search-backup-result.json",
+      "artifacts/verification-0.13/final-zip/evidence/search-backup-result.json",
+      "docs/0.13实现与验收.md"
+    ],
+    "remaining": "不按同名猜测跨商店映射；CF 在线依赖密钥未实测，百科仍为静态独立索引。",
+    "externalConditions": [
+      "CF在线双源实测需要自己的API Key"
+    ]
+  },
+  "INST-006": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/InstanceManager.cs; src/Pcl.Core/InstanceBackupArchive.cs; src/Pcl.Core/LauncherSettings.cs; src/Pcl.Desktop/InstanceWorkspace.cs",
+    "ui": "实例管理 → 备份 ZIP / 恢复备份",
+    "implementationSummary": "0.13 schema 3 逐文件哈希、离线检查、先校验后修复与新目录提交、原子设置；真实资源及存档字节夹具恢复通过。",
+    "testEvidence": [
+      "artifacts/verification-0.13/final-tests/test-results.json",
+      "artifacts/verification-0.13/live/evidence/search-backup-result.json",
+      "artifacts/verification-0.13/final-zip/evidence/search-backup-result.json",
+      "docs/0.13实现与验收.md"
+    ],
+    "remaining": "未包含全部共享资产和 Java，跨设备完全离线恢复仍未实现；本轮没有游戏内存档读取验收。",
+    "externalConditions": [
+      "缺失共享父版/依赖时需网络"
+    ]
+  }
+}

@@ -1,0 +1,187 @@
+{
+  "RES-007": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/QuiltDependencies.cs; src/Pcl.Core/QuiltModPlanner.cs; src/Pcl.Core/JarJarResolver.cs; src/Pcl.Core/ResourceDependencyPlanner.cs; src/Pcl.Core/LocalResourceService.cs",
+    "ui": "资源版本 → 安装",
+    "implementationScope": "按版本/加载器递归解析必需前置并排序；冲突和发布限制明确失败",
+    "testEvidence": [
+      "artifacts/verification-0.14/release-tests/test-results.json",
+      "artifacts/verification-0.14/live/dependency-acceptance.json",
+      "artifacts/verification-0.14/live/evidence/dependency-pack-ui-result.json",
+      "artifacts/release-verification-0.14.json",
+      "docs/0.14实现与验收.md"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "curse_catalog_filters_dependencies_and_file_restrictions；既有 Modrinth/Fabric 依赖测试",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过",
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "remaining": "Quilt插件/覆盖/JSON5和完整引擎等价性、跨所有根的批量联合择版、JarJar module-info身份与全部TOML语义仍未完整；本轮无游戏运行证据。",
+    "externalConditions": [],
+    "implementationSummary": "0.14 加入 Quilt 全局候选约束与远程回溯，JarJar 范围交集择版、FML 服务库身份；资源事务和启动预检接入。1140组Quilt版本官方对照、真实QFAPI及Sodium验证。",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "RES-009": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/QuiltDependencies.cs; src/Pcl.Core/QuiltModPlanner.cs; src/Pcl.Core/JarJarResolver.cs; src/Pcl.Core/ResourceDependencyPlanner.cs; src/Pcl.Core/LocalResourceService.cs",
+    "ui": "资源安装/启停时检查；本地资源 → 检查依赖",
+    "implementationSummary": "0.14 加入 Quilt 全局候选约束与远程回溯，JarJar 范围交集择版、FML 服务库身份；资源事务和启动预检接入。1140组Quilt版本官方对照、真实QFAPI及Sodium验证。",
+    "testEvidence": [
+      "artifacts/verification-0.14/release-tests/test-results.json",
+      "artifacts/verification-0.14/live/dependency-acceptance.json",
+      "artifacts/verification-0.14/live/evidence/dependency-pack-ui-result.json",
+      "artifacts/release-verification-0.14.json",
+      "docs/0.14实现与验收.md"
+    ],
+    "remaining": "Quilt插件/覆盖/JSON5和完整引擎等价性、跨所有根的批量联合择版、JarJar module-info身份与全部TOML语义仍未完整；本轮无游戏运行证据。",
+    "externalConditions": []
+  },
+  "RES-015": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/QuiltDependencies.cs; src/Pcl.Core/QuiltModPlanner.cs; src/Pcl.Core/JarJarResolver.cs; src/Pcl.Core/ResourceDependencyPlanner.cs; src/Pcl.Core/LocalResourceService.cs",
+    "ui": "本地资源 → 多选 → 启用/停用/移除",
+    "implementationScope": "批量事务、错误回滚、备份移除；Fabric 与现代 Forge/NeoForge 声明依赖保护",
+    "testEvidence": [
+      "artifacts/verification-0.14/release-tests/test-results.json",
+      "artifacts/verification-0.14/live/dependency-acceptance.json",
+      "artifacts/verification-0.14/live/evidence/dependency-pack-ui-result.json",
+      "artifacts/release-verification-0.14.json",
+      "docs/0.14实现与验收.md"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "local_scan_toggle_and_dependency_rollback；forge_toml_dependencies_versions_side_and_neoforge_legacy_alias",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过",
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "remaining": "Quilt插件/覆盖/JSON5和完整引擎等价性、跨所有根的批量联合择版、JarJar module-info身份与全部TOML语义仍未完整；本轮无游戏运行证据。",
+    "externalConditions": [],
+    "implementationSummary": "0.14 加入 Quilt 全局候选约束与远程回溯，JarJar 范围交集择版、FML 服务库身份；资源事务和启动预检接入。1140组Quilt版本官方对照、真实QFAPI及Sodium验证。",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "RES-016": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/QuiltDependencies.cs; src/Pcl.Core/QuiltModPlanner.cs; src/Pcl.Core/JarJarResolver.cs; src/Pcl.Core/ResourceDependencyPlanner.cs; src/Pcl.Core/LocalResourceService.cs",
+    "ui": "本地资源 → 检查更新 → 多选 → 批量更新所选 → 预览 → 提交整批更新",
+    "implementationScope": "按现有文件 SHA1 向 Modrinth 识别身份，匹配当前版本/加载器；更新前计划与备份；批量暂存全部文件后核验合并依赖，预览版本及文件，目录提交备份，提交前检查外部修改并保护",
+    "testEvidence": [
+      "artifacts/verification-0.14/release-tests/test-results.json",
+      "artifacts/verification-0.14/live/dependency-acceptance.json",
+      "artifacts/verification-0.14/live/evidence/dependency-pack-ui-result.json",
+      "artifacts/release-verification-0.14.json",
+      "docs/0.14实现与验收.md"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "resource_batch_update_projects_whole_dependency_set_and_preserves_external_edits 已在 full-regression-4 通过",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过",
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "remaining": "Quilt插件/覆盖/JSON5和完整引擎等价性、跨所有根的批量联合择版、JarJar module-info身份与全部TOML语义仍未完整；本轮无游戏运行证据。",
+    "externalConditions": [],
+    "implementationSummary": "0.14 加入 Quilt 全局候选约束与远程回溯，JarJar 范围交集择版、FML 服务库身份；资源事务和启动预检接入。1140组Quilt版本官方对照、真实QFAPI及Sodium验证。",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "PACK-002": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/CustomPackMetadata.cs; src/Pcl.Core/PackMetadataCompatibility.cs; src/Pcl.Core/PortableModpackService.cs; src/Pcl.Core/ModpackService.cs",
+    "ui": "整合包下载/导入",
+    "implementationSummary": "0.14 保留HMCL附加校验库及限定属性、MultiMC声明式自定义组件；正确使用Forge私有库根；导出扩展并再导入，提交前验证依赖。",
+    "testEvidence": [
+      "artifacts/verification-0.14/release-tests/test-results.json",
+      "artifacts/verification-0.14/live/dependency-acceptance.json",
+      "artifacts/verification-0.14/live/evidence/dependency-pack-ui-result.json",
+      "artifacts/release-verification-0.14.json",
+      "docs/0.14实现与验收.md"
+    ],
+    "remaining": "任意自定义入口/客户端/jarmods/安装器未支持；自定义扩展需PCL Mac0.14+导入；跨版本大量真实包及游戏启动待验收。",
+    "externalConditions": []
+  },
+  "PACK-004": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/CustomPackMetadata.cs; src/Pcl.Core/PackMetadataCompatibility.cs; src/Pcl.Core/PortableModpackService.cs; src/Pcl.Core/ModpackService.cs",
+    "ui": "整合包管理 → 选择ZIP → 检查内容 → 安装",
+    "implementationSummary": "0.14 保留HMCL附加校验库及限定属性、MultiMC声明式自定义组件；正确使用Forge私有库根；导出扩展并再导入，提交前验证依赖。",
+    "testEvidence": [
+      "artifacts/verification-0.14/release-tests/test-results.json",
+      "artifacts/verification-0.14/live/dependency-acceptance.json",
+      "artifacts/verification-0.14/live/evidence/dependency-pack-ui-result.json",
+      "artifacts/release-verification-0.14.json",
+      "docs/0.14实现与验收.md"
+    ],
+    "remaining": "任意自定义入口/客户端/jarmods/安装器未支持；自定义扩展需PCL Mac0.14+导入；跨版本大量真实包及游戏启动待验收。",
+    "externalConditions": []
+  },
+  "PACK-005": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/CustomPackMetadata.cs; src/Pcl.Core/PackMetadataCompatibility.cs; src/Pcl.Core/PortableModpackService.cs; src/Pcl.Core/ModpackService.cs",
+    "ui": "整合包管理 → 选择ZIP → 检查内容 → 安装",
+    "implementationSummary": "0.14 保留HMCL附加校验库及限定属性、MultiMC声明式自定义组件；正确使用Forge私有库根；导出扩展并再导入，提交前验证依赖。",
+    "testEvidence": [
+      "artifacts/verification-0.14/release-tests/test-results.json",
+      "artifacts/verification-0.14/live/dependency-acceptance.json",
+      "artifacts/verification-0.14/live/evidence/dependency-pack-ui-result.json",
+      "artifacts/release-verification-0.14.json",
+      "docs/0.14实现与验收.md"
+    ],
+    "remaining": "任意自定义入口/客户端/jarmods/安装器未支持；自定义扩展需PCL Mac0.14+导入；跨版本大量真实包及游戏启动待验收。",
+    "externalConditions": []
+  },
+  "PACK-010": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/CustomPackMetadata.cs; src/Pcl.Core/PackMetadataCompatibility.cs; src/Pcl.Core/PortableModpackService.cs; src/Pcl.Core/ModpackService.cs",
+    "ui": "整合包管理 → 导出 .mrpack",
+    "implementationScope": "合法索引和 overrides，按实际 ZIP 写入字节生成 SHA1/SHA512 记录，保存后重检",
+    "testEvidence": [
+      "artifacts/verification-0.14/release-tests/test-results.json",
+      "artifacts/verification-0.14/live/dependency-acceptance.json",
+      "artifacts/verification-0.14/live/evidence/dependency-pack-ui-result.json",
+      "artifacts/release-verification-0.14.json",
+      "docs/0.14实现与验收.md"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "pack_export_privacy_hashes_and_roundtrip；pack_export_recipe_selection_and_exact_payload_hash",
+      "realNetworkAndFiles": "artifacts/evidence-complete/pack-live-3/pack-live-result.json（真实 Modrinth 下载、导出/导入/更新；无游戏世界验收）",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过",
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "remaining": "任意自定义入口/客户端/jarmods/安装器未支持；自定义扩展需PCL Mac0.14+导入；跨版本大量真实包及游戏启动待验收。",
+    "externalConditions": [],
+    "implementationSummary": "0.14 保留HMCL附加校验库及限定属性、MultiMC声明式自定义组件；正确使用Forge私有库根；导出扩展并再导入，提交前验证依赖。",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  },
+  "PACK-013": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/CustomPackMetadata.cs; src/Pcl.Core/PackMetadataCompatibility.cs; src/Pcl.Core/PortableModpackService.cs; src/Pcl.Core/ModpackService.cs",
+    "ui": "整合包管理 → 更新当前整合包（保留原实例）",
+    "implementationScope": "初次安装基线 SHA256；展示新增/修改/删除；更新为新实例并选择保留用户改动和删除；源实例留存",
+    "testEvidence": [
+      "artifacts/verification-0.14/release-tests/test-results.json",
+      "artifacts/verification-0.14/live/dependency-acceptance.json",
+      "artifacts/verification-0.14/live/evidence/dependency-pack-ui-result.json",
+      "artifacts/release-verification-0.14.json",
+      "docs/0.14实现与验收.md"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "pack_update_baseline_distinguishes_modified_added_deleted_and_private",
+      "realNetworkAndFiles": "artifacts/evidence-complete/pack-live-3/pack-live-result.json（真实 Modrinth 下载、导出/导入/更新；无游戏世界验收）：pack-update-c5e40805afbe；验证 config 新增与 Mod Menu 用户删除仍保留",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过",
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "remaining": "任意自定义入口/客户端/jarmods/安装器未支持；自定义扩展需PCL Mac0.14+导入；跨版本大量真实包及游戏启动待验收。",
+    "externalConditions": [],
+    "implementationSummary": "0.14 保留HMCL附加校验库及限定属性、MultiMC声明式自定义组件；正确使用Forge私有库根；导出扩展并再导入，提交前验证依赖。",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明"
+  }
+}

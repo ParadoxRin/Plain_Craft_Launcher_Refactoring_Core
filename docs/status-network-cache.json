@@ -1,0 +1,25 @@
+{
+  "NET-013": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/NetworkDiagnosticsService.cs; src/Pcl.Desktop/CacheNetworkWindow.cs",
+    "ui": "网络检查与临时缓存 → 网络检查；CLI network-probe",
+    "testEvidence": [
+      "tests/Pcl.Tests/AccountNetworkDiagnosticsTests.cs#network_probe_caps_ignored_range_and_never_queues_install",
+      "tests/Pcl.Tests/AccountNetworkDiagnosticsTests.cs#network_probe_reports_redirect_and_bad_range_without_reading_body"
+    ],
+    "remaining": "有界Range请求、忽略Range仍64KiB截止、10秒超时；官方清单/已有文件样本、已配置镜像与自填HTTPS源。小样本不代表持续带宽；真实请求证据待下一次统一编译后补。",
+    "externalConditions": [
+      "可用网络与目标源"
+    ]
+  },
+  "UI-011": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/TemporaryDownloadCache.cs; src/Pcl.Desktop/CacheNetworkWindow.cs",
+    "ui": "网络检查与临时缓存 → 临时缓存 / 缓存回收目录",
+    "testEvidence": [
+      "tests/Pcl.Tests/AccountNetworkDiagnosticsTests.cs#temporary_cache_excludes_active_recent_shared_and_symlink_files",
+      "tests/Pcl.Tests/AccountNetworkDiagnosticsTests.cs#temporary_cache_rechecks_preview_and_restores_without_overwrite"
+    ],
+    "remaining": "仅清理超过24小时的cache与实例.pcl-downloads临时下载；预览、逐文件重检/独占/活动任务排除、可恢复移动。已验证缓存、共享Java/libraries/assets不清理；完整引用计数清理未实现。"
+  }
+}

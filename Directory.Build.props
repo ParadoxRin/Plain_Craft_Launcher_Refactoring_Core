@@ -1,0 +1,9 @@
+<Project>
+  <PropertyGroup>
+    <Deterministic>true</Deterministic>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <RestorePackagesPath>$(MSBuildThisFileDirectory).cache/nuget</RestorePackagesPath>
+  </PropertyGroup>
+</Project>

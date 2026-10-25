@@ -1,0 +1,12 @@
+{
+  "Title": "我的 Minecraft",
+  "Body": "可以在设置中选择此文件作为主页。每个操作需点击后才执行。",
+  "Links": [
+    { "Text": "Minecraft 官网", "Url": "https://www.minecraft.net/", "Kind": "url" },
+    { "Text": "实例管理", "Url": "instances", "Kind": "navigate" },
+    { "Text": "下载游戏", "Url": "downloads", "Kind": "navigate" },
+    { "Text": "网络检查", "Url": "network", "Kind": "navigate" },
+    { "Text": "复制文本", "Url": "Minecraft Java Edition", "Kind": "copy" },
+    { "Text": "使用说明", "Url": "导入远程主页不会执行命令或修改启动设置。", "Kind": "message" }
+  ]
+}

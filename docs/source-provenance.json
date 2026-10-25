@@ -1,0 +1,44 @@
+{
+  "pcl_commit": "6b9a50df911c9d68b69b24c979efba477fb14b67",
+  "meloongcore_commit": "98157d65c7627721c816c02e8be96ac4fe61d615",
+  "changes": [
+    {
+      "path": "MeloongCore/Shared/General/Logger.cs",
+      "original_sha256": "4a11a2853018606e3b0412155c0895a9c99d198b274ce292f96f74228b107969",
+      "ported_sha256": "14b3e6658cd1c6d8ec834c6148ade504d2e22f123004d7c0f661e744d773dc8c"
+    },
+    {
+      "path": "MeloongCore/Shared/Utils/CryptographyUtils.cs",
+      "original_sha256": "3e946f74a5d0af54274662ed54f347d2ef06308637fb46ac68c4755c8a519962",
+      "ported_sha256": "0e0af9a7ff1123aba22705b58cf4e414f1a1f89d62c8e114fc4acfc83a3beb95"
+    },
+    {
+      "path": "MeloongCore/Shared/Utils/DirectoryUtils.cs",
+      "original_sha256": "87363fe9353f665c354b941d07de5939df46746428b9c6970e1f9ddbf9dc068f",
+      "ported_sha256": "5f3ae0dc3011f22c6bfafc53897088d8f96e8089d37de97b468211102035123f"
+    },
+    {
+      "path": "MeloongCore/Shared/Utils/FileUtils.cs",
+      "original_sha256": "67d79a2b9f29a2d06445c2fa6ae3bac4aa7d7f8e2a7d7bd8aa45f30e638010ff",
+      "ported_sha256": "cbb0bb5e7ec6556b6a8b137f37f87d8ad76f6b6f28dd290cdb1ddddb1d805d21"
+    },
+    {
+      "path": "MeloongCore/Shared/Utils/PathUtils.cs",
+      "original_sha256": "97cd62fa9dab403673d97e9b8486a311c863a2dc59a86383a8f60cf8d2140bd0",
+      "ported_sha256": "ee5a187a6952f34e7198e8fb11b6977b16c3b07536c77946ef4b7b6f7608cf67"
+    },
+    {
+      "path": "PCLCS/Java.cs",
+      "original_sha256": "c60e9a236863e9dee87c500b3ee494cec48a93ae6799b74d8f567e4948797d0c",
+      "ported_sha256": "4384a6f0870da02d10472e20f07d715c371ba1c62ed9f7554a1f3530b7f227e6"
+    },
+    {
+      "path": "PCLCS/PCLCS.csproj",
+      "original_sha256": "11d6b8c3f3583495bda236cb6140aa4e595fe3b8fecab6432f515101ece01376",
+      "ported_sha256": "29a87dc6c7edab399a361889f064e438a01d7c2ac271079ae6d33ff965f6d1ae"
+    }
+  ],
+  "new_core": "src/Pcl.Core",
+  "extracted_vb": "src/Pcl.Legacy/MinecraftRules.vb",
+  "preserved_originals": true
+}

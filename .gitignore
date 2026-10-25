@@ -1,0 +1,18 @@
+.tooling/
+.cache/
+**/bin/
+**/obj/
+artifacts/
+runtime/
+.DS_Store
+*.user
+
+# Local runtime and credentials must not enter future commits.
+runtime*/
+logs/
+*.log
+.env
+.env.*
+
+# Developer-owned OAuth configuration; never commit an application identity.
+.local/

@@ -1,0 +1,1015 @@
+{
+  "schemaVersion": 1,
+  "baseline": "PCL2 2.99.0.0",
+  "sourcePath": "../pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2/Modules/Minecraft/ModCrash.vb",
+  "sourceSha256": "737f2dfb531f5cf7da55b1cf3b3c7bca13480c1e682b0299f7fda6cbe7c5d9df",
+  "readSections": {
+    "enum": [
+      340,
+      387
+    ],
+    "priority1": [
+      473,
+      584
+    ],
+    "priority2": [
+      589,
+      643
+    ],
+    "priority3": [
+      649,
+      669
+    ],
+    "stackKeywords": [
+      675,
+      734
+    ],
+    "modNameMapping": [
+      738,
+      842
+    ],
+    "outputAdvice": [
+      932,
+      1095
+    ]
+  },
+  "implementation": "src/Pcl.Core/DiagnosticsService.cs",
+  "knownDifference": "Mac按有依据的匹配报告多个可能线索；原版优先级短路、Windows文件收集与全部第三方格式推测未逐字移植。未知日志原样保留，脱敏副本导出。",
+  "sourceReasonCount": 46,
+  "sourceReasonMappings": [
+    {
+      "sourceReason": "Java虚拟机参数有误",
+      "enumLine": 341,
+      "analysisBranches": [
+        {
+          "line": 490,
+          "text": "If LogMc.Contains(\"Unrecognized option:\") Then AppendReason(CrashReason.Java虚拟机参数有误)"
+        }
+      ],
+      "resultBranches": [
+        945
+      ],
+      "macRuleIds": [
+        "PCL-JVM-OPTIONS"
+      ],
+      "applicability": "Mac通用错误特征",
+      "adaptation": "保留触发特征与附近最多8行脱敏证据，提供副本验证/依赖检查建议，无自动删除行为。"
+    },
+    {
+      "sourceReason": "Mod文件被解压",
+      "enumLine": 342,
+      "analysisBranches": [
+        {
+          "line": 506,
+          "text": "If LogMc.Contains(\"The directories below appear to be extracted jar files. Fix this before you continue.\") Then AppendReason(CrashReason.Mod文件被解压)"
+        },
+        {
+          "line": 507,
+          "text": "If LogMc.Contains(\"Extracted mod jars found, loading will NOT continue\") Then AppendReason(CrashReason.Mod文件被解压)"
+        }
+      ],
+      "resultBranches": [
+        947
+      ],
+      "macRuleIds": [
+        "PCL-EXTRACTED-MOD"
+      ],
+      "applicability": "Mac通用错误特征",
+      "adaptation": "保留触发特征与附近最多8行脱敏证据，提供副本验证/依赖检查建议，无自动删除行为。"
+    },
+    {
+      "sourceReason": "MixinBootstrap缺失",
+      "enumLine": 343,
+      "analysisBranches": [
+        {
+          "line": 508,
+          "text": "If LogMc.Contains(\"java.lang.ClassNotFoundException: org.spongepowered.asm.launch.MixinTweaker\") Then AppendReason(CrashReason.MixinBootstrap缺失)"
+        }
+      ],
+      "resultBranches": [
+        961
+      ],
+      "macRuleIds": [
+        "PCL-MIXIN-BOOTSTRAP"
+      ],
+      "applicability": "Mac通用错误特征",
+      "adaptation": "保留触发特征与附近最多8行脱敏证据，提供副本验证/依赖检查建议，无自动删除行为。"
+    },
+    {
+      "sourceReason": "内存不足",
+      "enumLine": 344,
+      "analysisBranches": [
+        {
+          "line": 510,
+          "text": "If LogMc.Contains(\"java.lang.OutOfMemoryError\") OrElse LogMc.Contains(\"an out of memory error\") Then AppendReason(CrashReason.内存不足)"
+        },
+        {
+          "line": 532,
+          "text": "AppendReason(CrashReason.内存不足)"
+        },
+        {
+          "line": 554,
+          "text": "If LogHs.Contains(\"The system is out of physical RAM or swap space\") Then AppendReason(CrashReason.内存不足)"
+        },
+        {
+          "line": 555,
+          "text": "If LogHs.Contains(\"Out of Memory Error\") Then AppendReason(CrashReason.内存不足)"
+        },
+        {
+          "line": 566,
+          "text": "If LogCrash.Contains(\"java.lang.OutOfMemoryError\") Then AppendReason(CrashReason.内存不足)"
+        }
+      ],
+      "resultBranches": [
+        949
+      ],
+      "macRuleIds": [
+        "CORE-01"
+      ],
+      "applicability": "Mac通用错误特征",
+      "adaptation": "保留触发特征与附近最多8行脱敏证据，提供副本验证/依赖检查建议，无自动删除行为。"
+    },
+    {
+      "sourceReason": "使用JDK",
+      "enumLine": 345,
+      "analysisBranches": [
+        {
+          "line": 493,
+          "text": "If LogMc.Contains(\"java.lang.ClassCastException: java.base/jdk\") Then AppendReason(CrashReason.使用JDK)"
+        },
+        {
+          "line": 494,
+          "text": "If LogMc.Contains(\"java.lang.ClassCastException: class jdk.\") Then AppendReason(CrashReason.使用JDK)"
+        }
+      ],
+      "resultBranches": [
+        953
+      ],
+      "macRuleIds": [
+        "PCL-JAVA-MODULE"
+      ],
+      "applicability": "有条件等效或启发式",
+      "adaptation": "改为Java与加载器内部接口不兼容；不把所有JDK当成故障，也不统一推荐Java8。"
+    },
+    {
+      "sourceReason": "显卡不支持OpenGL",
+      "enumLine": 346,
+      "analysisBranches": [
+        {
+          "line": 492,
+          "text": "If LogMc.Contains(\"The driver does not appear to support OpenGL\") Then AppendReason(CrashReason.显卡不支持OpenGL)"
+        }
+      ],
+      "resultBranches": [
+        1055
+      ],
+      "macRuleIds": [
+        "CORE-04"
+      ],
+      "applicability": "Mac通用错误特征",
+      "adaptation": "保留触发特征与附近最多8行脱敏证据，提供副本验证/依赖检查建议，无自动删除行为。"
+    },
+    {
+      "sourceReason": "使用OpenJ9",
+      "enumLine": 347,
+      "analysisBranches": [
+        {
+          "line": 501,
+          "text": "If LogMc.Contains(\"Open J9 is not supported\") OrElse LogMc.Contains(\"OpenJ9 is incompatible\") OrElse LogMc.Contains(\".J9VMInternals.\") Then AppendReason(CrashReason.使用OpenJ9)"
+        }
+      ],
+      "resultBranches": [
+        951
+      ],
+      "macRuleIds": [
+        "PCL-OPENJ9"
+      ],
+      "applicability": "Mac通用错误特征",
+      "adaptation": "保留触发特征与附近最多8行脱敏证据，提供副本验证/依赖检查建议，无自动删除行为。"
+    },
+    {
+      "sourceReason": "Java版本过高",
+      "enumLine": 348,
+      "analysisBranches": [
+        {
+          "line": 484,
+          "text": "If LogCrash.Contains(\"Unable to make protected final java.lang.Class java.lang.ClassLoader.defineClass\") Then AppendReason(CrashReason.Java版本过高)"
+        },
+        {
+          "line": 502,
+          "text": "If LogMc.Contains(\"java.lang.NoSuchFieldException: ucp\") Then AppendReason(CrashReason.Java版本过高)"
+        },
+        {
+          "line": 503,
+          "text": "If LogMc.Contains(\"because module java.base does not export\") Then AppendReason(CrashReason.Java版本过高)"
+        },
+        {
+          "line": 504,
+          "text": "If LogMc.Contains(\"java.lang.ClassNotFoundException: jdk.nashorn.api.scripting.NashornScriptEngineFactory\") Then AppendReason(CrashReason.Java版本过高)"
+        },
+        {
+          "line": 505,
+          "text": "If LogMc.Contains(\"java.lang.ClassNotFoundException: java.lang.invoke.LambdaMetafactory\") Then AppendReason(CrashReason.Java版本过高)"
+        }
+      ],
+      "resultBranches": [
+        955
+      ],
+      "macRuleIds": [
+        "PCL-JAVA-MODULE"
+      ],
+      "applicability": "有条件等效或启发式",
+      "adaptation": "按错误中的模块/缺失API线索报告接口不匹配，需要核对实际Java与加载器；不凭单一日志推断Java过高。"
+    },
+    {
+      "sourceReason": "Java版本不兼容",
+      "enumLine": 349,
+      "analysisBranches": [
+        {
+          "line": 524,
+          "text": "If LogMc.Contains(\"Unsupported class file major version\") Then AppendReason(CrashReason.Java版本不兼容)"
+        },
+        {
+          "line": 525,
+          "text": "If LogMc.Contains(\"Unsupported major.minor version\") Then AppendReason(CrashReason.Java版本不兼容)"
+        },
+        {
+          "line": 526,
+          "text": "If LogMc.Contains(\"Level is not supported by the active JRE or ASM version\") Then AppendReason(CrashReason.Java版本不兼容)"
+        }
+      ],
+      "resultBranches": [
+        957
+      ],
+      "macRuleIds": [
+        "CORE-02"
+      ],
+      "applicability": "Mac通用错误特征",
+      "adaptation": "保留触发特征与附近最多8行脱敏证据，提供副本验证/依赖检查建议，无自动删除行为。"
+    },
+    {
+      "sourceReason": "Mod名称包含特殊字符",
+      "enumLine": 350,
+      "analysisBranches": [
+        {
+          "line": 520,
+          "text": "If LogMc.Contains(\"Invalid module name: '' is not a Java identifier\") Then AppendReason(CrashReason.Mod名称包含特殊字符)"
+        }
+      ],
+      "resultBranches": [
+        959
+      ],
+      "macRuleIds": [
+        "PCL-MODULE-NAME"
+      ],
+      "applicability": "Mac通用错误特征",
+      "adaptation": "保留触发特征与附近最多8行脱敏证据，提供副本验证/依赖检查建议，无自动删除行为。"
+    },
+    {
+      "sourceReason": "显卡驱动不支持导致无法设置像素格式",
+      "enumLine": 351,
+      "analysisBranches": [
+        {
+          "line": 509,
+          "text": "If LogMc.Contains(\"Couldn't set pixel format\") Then AppendReason(CrashReason.显卡驱动不支持导致无法设置像素格式)"
+        },
+        {
+          "line": 567,
+          "text": "If LogCrash.Contains(\"Pixel format not accelerated\") Then AppendReason(CrashReason.显卡驱动不支持导致无法设置像素格式)"
+        }
+      ],
+      "resultBranches": [
+        1055
+      ],
+      "macRuleIds": [
+        "CORE-04"
+      ],
+      "applicability": "Mac通用错误特征",
+      "adaptation": "保留触发特征与附近最多8行脱敏证据，提供副本验证/依赖检查建议，无自动删除行为。"
+    },
+    {
+      "sourceReason": "极短的程序输出",
+      "enumLine": 352,
+      "analysisBranches": [
+        {
+          "line": 655,
+          "text": "AppendReason(CrashReason.极短的程序输出, LogMc)"
+        }
+      ],
+      "resultBranches": [
+        1051
+      ],
+      "macRuleIds": [],
+      "applicability": "有条件等效或启发式",
+      "adaptation": "不将普通短输出判定为崩溃；保持未知原因与原始日志，UI提示继续检查。"
+    },
+    {
+      "sourceReason": "Intel驱动不兼容导致EXCEPTION_ACCESS_VIOLATION",
+      "enumLine": 353,
+      "analysisBranches": [
+        {
+          "line": 557,
+          "text": "If LogHs.Contains(\"# C  [ig\") Then AppendReason(CrashReason.Intel驱动不兼容导致EXCEPTION_ACCESS_VIOLATION)"
+        }
+      ],
+      "resultBranches": [
+        1055
+      ],
+      "macRuleIds": [
+        "PCL-WIN-INTEL"
+      ],
+      "applicability": "仅输入日志明确Windows异常上下文和对应DLL时",
+      "adaptation": "仅解释Windows日志，禁止套用macOS驱动建议。"
+    },
+    {
+      "sourceReason": "AMD驱动不兼容导致EXCEPTION_ACCESS_VIOLATION",
+      "enumLine": 354,
+      "analysisBranches": [
+        {
+          "line": 558,
+          "text": "If LogHs.Contains(\"# C  [atio\") Then AppendReason(CrashReason.AMD驱动不兼容导致EXCEPTION_ACCESS_VIOLATION)"
+        }
+      ],
+      "resultBranches": [
+        1055
+      ],
+      "macRuleIds": [
+        "PCL-WIN-AMD"
+      ],
+      "applicability": "仅输入日志明确Windows异常上下文和对应DLL时",
+      "adaptation": "仅解释Windows日志，禁止套用macOS驱动建议。"
+    },
+    {
+      "sourceReason": "Nvidia驱动不兼容导致EXCEPTION_ACCESS_VIOLATION",
+      "enumLine": 355,
+      "analysisBranches": [
+        {
+          "line": 559,
+          "text": "If LogHs.Contains(\"# C  [nvoglv\") Then AppendReason(CrashReason.Nvidia驱动不兼容导致EXCEPTION_ACCESS_VIOLATION)"
+        }
+      ],
+      "resultBranches": [
+        1055
+      ],
+      "macRuleIds": [
+        "PCL-WIN-NVIDIA"
+      ],
+      "applicability": "仅输入日志明确Windows异常上下文和对应DLL时",
+      "adaptation": "仅解释Windows日志，禁止套用macOS驱动建议。"
+    },
+    {
+      "sourceReason": "玩家手动触发调试崩溃",
+      "enumLine": 356,
+      "analysisBranches": [
+        {
+          "line": 568,
+          "text": "If LogCrash.Contains(\"Manually triggered debug crash\") Then AppendReason(CrashReason.玩家手动触发调试崩溃)"
+        }
+      ],
+      "resultBranches": [
+        1047
+      ],
+      "macRuleIds": [
+        "PCL-MANUAL-CRASH"
+      ],
+      "applicability": "Mac通用错误特征",
+      "adaptation": "保留触发特征与附近最多8行脱敏证据，提供副本验证/依赖检查建议，无自动删除行为。"
+    },
+    {
+      "sourceReason": "光影或资源包导致OpenGL1282错误",
+      "enumLine": 357,
+      "analysisBranches": [
+        {
+          "line": 513,
+          "text": "If LogMc.Contains(\"1282: Invalid operation\") Then AppendReason(CrashReason.光影或资源包导致OpenGL1282错误)"
+        }
+      ],
+      "resultBranches": [
+        1065
+      ],
+      "macRuleIds": [
+        "PCL-OPENGL-1282"
+      ],
+      "applicability": "有条件等效或启发式",
+      "adaptation": "仅在异常/崩溃上下文中添加线索；普通OpenGL1282警告不推断崩溃或光影根因。"
+    },
+    {
+      "sourceReason": "文件或内容校验失败",
+      "enumLine": 358,
+      "analysisBranches": [
+        {
+          "line": 514,
+          "text": "If LogMc.Contains(\"signer information does not match signer information of other classes in the same package\") Then AppendReason(CrashReason.文件或内容校验失败, If(LogMc.RegexSeek(\"(?<=class \"\")[^']+(?=\"\"'s signer information)\"), \"\").TrimEnd(vbCrLf))"
+        }
+      ],
+      "resultBranches": [
+        1069
+      ],
+      "macRuleIds": [
+        "PCL-SIGNATURE",
+        "CORE-08"
+      ],
+      "applicability": "Mac通用错误特征",
+      "adaptation": "保留触发特征与附近最多8行脱敏证据，提供副本验证/依赖检查建议，无自动删除行为。"
+    },
+    {
+      "sourceReason": "确定Mod导致游戏崩溃",
+      "enumLine": 359,
+      "analysisBranches": [
+        {
+          "line": 536,
+          "text": "If LogMc.Contains(\"Caught exception from \") Then AppendReason(CrashReason.确定Mod导致游戏崩溃, TryAnalyzeModName(LogMc.RegexSeek(\"(?<=Caught exception from )[^\\n]+?\")?.TrimEnd((vbCrLf & \" \").ToCharArray)))"
+        },
+        {
+          "line": 574,
+          "text": "AppendReason(CrashReason.确定Mod导致游戏崩溃, If(LogCrashMod.RegexSeek(\"(?<=Mod File: ).+\"), \"\").TrimEnd((vbCrLf & \" \").ToCharArray))"
+        },
+        {
+          "line": 579,
+          "text": "If LogCrash.Contains(\"Multiple entries with same key: \") Then AppendReason(CrashReason.确定Mod导致游戏崩溃, TryAnalyzeModName(If(LogCrash.RegexSeek(\"(?<=Multiple entries with same key: )[^=]+\"), \"\").TrimEnd((vbCrLf & \" \").ToCharArray)))"
+        },
+        {
+          "line": 580,
+          "text": "If LogCrash.Contains(\"LoaderExceptionModCrash: Caught exception from \") Then AppendReason(CrashReason.确定Mod导致游戏崩溃, TryAnalyzeModName(If(LogCrash.RegexSeek(\"(?<=LoaderExceptionModCrash: Caught exception from )[^\\n]+\"), \"\").TrimEnd((vbCrLf & \" \").ToCharArray)))"
+        },
+        {
+          "line": 627,
+          "text": "AppendReason(CrashReason.确定Mod导致游戏崩溃, TryAnalyzeModName(If(LogMc.RegexSeek(\"(?<=due to errors, provided by ')[^']+\"), \"\").TrimEnd((vbCrLf & \" \").ToCharArray)))"
+        }
+      ],
+      "resultBranches": [
+        987
+      ],
+      "macRuleIds": [
+        "PCL-MOD-ENTRY",
+        "PCL-MOD-FAILURE",
+        "PCL-DUPLICATE-KEY"
+      ],
+      "applicability": "有条件等效或启发式",
+      "adaptation": "保留加载器报告的模组和Failure message，措辞为涉及入口/加载失败，不断言唯一根因。"
+    },
+    {
+      "sourceReason": "怀疑Mod导致游戏崩溃",
+      "enumLine": 360,
+      "analysisBranches": [
+        {
+          "line": 640,
+          "text": "If Suspects.Any Then AppendReason(CrashReason.怀疑Mod导致游戏崩溃, TryAnalyzeModName(Suspects))"
+        }
+      ],
+      "resultBranches": [
+        981
+      ],
+      "macRuleIds": [
+        "PCL-SUSPECTED-MODS"
+      ],
+      "applicability": "有条件等效或启发式",
+      "adaptation": "忽略Suspected Mods: None；保持低置信度并提示副本验证。"
+    },
+    {
+      "sourceReason": "Mod配置文件导致游戏崩溃",
+      "enumLine": 361,
+      "analysisBranches": [
+        {
+          "line": 485,
+          "text": "If LogCrash.Contains(\"Failed loading config file \") Then AppendReason(CrashReason.Mod配置文件导致游戏崩溃, {TryAnalyzeModName(If(LogCrash.RegexSeek(\"(?<=Failed loading config file .+ for modid )[^\\n]+\"), \"\").TrimEnd(vbCrLf)).First, If(LogCrash.RegexSeek(\"(?<=Failed loading config file ).+(?= of type)\"), \"\").TrimEnd(vbCrLf)}) '#7071"
+        },
+        {
+          "line": 517,
+          "text": "If LogMc.Contains(\"com.electronwill.nightconfig.core.io.ParsingException: Not enough data available\") AndAlso Not CrashReasons.ContainsKey(CrashReason.Mod配置文件导致游戏崩溃) Then AppendReason(CrashReason.NightConfig的Bug)"
+        },
+        {
+          "line": 581,
+          "text": "If LogCrash.Contains(\"Failed loading config file \") Then AppendReason(CrashReason.Mod配置文件导致游戏崩溃, {TryAnalyzeModName(If(LogCrash.RegexSeek(\"(?<=Failed loading config file .+ for modid )[^\\n]+\"), \"\").TrimEnd(vbCrLf)).First, If(LogCrash.RegexSeek(\"(?<=Failed loading config file ).+(?= of type)\"), \"\").TrimEnd(vbCrLf)})"
+        }
+      ],
+      "resultBranches": [
+        1001
+      ],
+      "macRuleIds": [
+        "PCL-CONFIG"
+      ],
+      "applicability": "Mac通用错误特征",
+      "adaptation": "保留触发特征与附近最多8行脱敏证据，提供副本验证/依赖检查建议，无自动删除行为。"
+    },
+    {
+      "sourceReason": "ModMixin失败",
+      "enumLine": 362,
+      "analysisBranches": [
+        {
+          "line": 603,
+          "text": "AppendReason(CrashReason.ModMixin失败, TryAnalyzeModName(ModName.TrimEnd((vbCrLf & \" \").ToCharArray)))"
+        },
+        {
+          "line": 608,
+          "text": "AppendReason(CrashReason.ModMixin失败,"
+        },
+        {
+          "line": 613,
+          "text": "AppendReason(CrashReason.ModMixin失败)"
+        }
+      ],
+      "resultBranches": [
+        993
+      ],
+      "macRuleIds": [
+        "CORE-07"
+      ],
+      "applicability": "Mac通用错误特征",
+      "adaptation": "保留触发特征与附近最多8行脱敏证据，提供副本验证/依赖检查建议，无自动删除行为。"
+    },
+    {
+      "sourceReason": "Mod加载器报错",
+      "enumLine": 363,
+      "analysisBranches": [
+        {
+          "line": 576,
+          "text": "AppendReason(CrashReason.Mod加载器报错, If(LogCrash.RegexSeek(\"(?<=Failure message: )[\\w\\W]+?(?=\\tMod)\"), \"\").Replace(vbTab, \" \").TrimEnd((vbCrLf & \" \").ToCharArray))"
+        },
+        {
+          "line": 658,
+          "text": "If LogMc.Contains(\"Mod resolution failed\") Then AppendReason(CrashReason.Mod加载器报错)"
+        }
+      ],
+      "resultBranches": [
+        1085
+      ],
+      "macRuleIds": [
+        "PCL-MOD-RESOLUTION",
+        "PCL-MOD-FAILURE"
+      ],
+      "applicability": "Mac通用错误特征",
+      "adaptation": "保留触发特征与附近最多8行脱敏证据，提供副本验证/依赖检查建议，无自动删除行为。"
+    },
+    {
+      "sourceReason": "Mod初始化失败",
+      "enumLine": 364,
+      "analysisBranches": [
+        {
+          "line": 660,
+          "text": "If LogMc.Contains(\"Failed to create mod instance.\") Then AppendReason(CrashReason.Mod初始化失败, TryAnalyzeModName(If(LogMc.RegexSeek(\"(?<=Failed to create mod instance. ModID: )[^,]+\"), If(LogMc.RegexSeek(\"(?<=Failed to create mod instance. ModId )[^\\n]+(?= for )\"), \"\")).TrimEnd(vbCrLf)))"
+        }
+      ],
+      "resultBranches": [
+        1007
+      ],
+      "macRuleIds": [
+        "PCL-MOD-INIT"
+      ],
+      "applicability": "Mac通用错误特征",
+      "adaptation": "保留触发特征与附近最多8行脱敏证据，提供副本验证/依赖检查建议，无自动删除行为。"
+    },
+    {
+      "sourceReason": "堆栈分析发现关键字",
+      "enumLine": 365,
+      "analysisBranches": [
+        {
+          "line": 428,
+          "text": "AppendReason(CrashReason.堆栈分析发现关键字, Keywords)"
+        }
+      ],
+      "resultBranches": [
+        975
+      ],
+      "macRuleIds": [
+        "PCL-STACK-KEYWORD"
+      ],
+      "applicability": "有条件等效或启发式",
+      "adaptation": "仅异常且存在加载器上下文且没有精准诊断时启用；过滤Java/Minecraft/加载器库，最多10关键词，低置信度。"
+    },
+    {
+      "sourceReason": "堆栈分析发现Mod名称",
+      "enumLine": 366,
+      "analysisBranches": [
+        {
+          "line": 430,
+          "text": "AppendReason(CrashReason.堆栈分析发现Mod名称, Names)"
+        }
+      ],
+      "resultBranches": [
+        981
+      ],
+      "macRuleIds": [
+        "PCL-STACK-MOD"
+      ],
+      "applicability": "有条件等效或启发式",
+      "adaptation": "关联崩溃模组表或debug日志JAR行；标低置信度，不等于已识别根因。"
+    },
+    {
+      "sourceReason": "OptiFine导致无法加载世界",
+      "enumLine": 367,
+      "analysisBranches": [
+        {
+          "line": 516,
+          "text": "If LogMc.Contains(\"java.lang.NoSuchMethodError: net.minecraft.world.server.ChunkManager$ProxyTicketManager.shouldForceTicks(J)Z\") AndAlso LogMc.Contains(\"OptiFine\") Then AppendReason(CrashReason.OptiFine导致无法加载世界)"
+        }
+      ],
+      "resultBranches": [
+        1053
+      ],
+      "macRuleIds": [
+        "PCL-OPTIFINE-WORLD"
+      ],
+      "applicability": "Mac通用错误特征",
+      "adaptation": "保留触发特征与附近最多8行脱敏证据，提供副本验证/依赖检查建议，无自动删除行为。"
+    },
+    {
+      "sourceReason": "特定方块导致崩溃",
+      "enumLine": 368,
+      "analysisBranches": [
+        {
+          "line": 666,
+          "text": "If LogCrash.Contains(vbTab & \"Block location: World: \") Then AppendReason(CrashReason.特定方块导致崩溃, If(LogCrash.RegexSeek(\"(?<=\\tBlock: Block\\{)[^\\}]+\"), \"\") & \" \" & If(LogCrash.RegexSeek(\"(?<=\\tBlock location: World: )\\([^\\)]+\\)\"), \"\"))"
+        }
+      ],
+      "resultBranches": [
+        1013
+      ],
+      "macRuleIds": [
+        "PCL-WORLD-BLOCK"
+      ],
+      "applicability": "有条件等效或启发式",
+      "adaptation": "要求崩溃描述与实体/方块上下文，保留位置证据；先备份世界，无自动删除。"
+    },
+    {
+      "sourceReason": "特定实体导致崩溃",
+      "enumLine": 369,
+      "analysisBranches": [
+        {
+          "line": 667,
+          "text": "If LogCrash.Contains(vbTab & \"Entity's Exact location: \") Then AppendReason(CrashReason.特定实体导致崩溃, If(LogCrash.RegexSeek(\"(?<=\\tEntity Type: )[^\\n]+(?= \\()\"), \"\") & \" (\" & If(LogCrash.RegexSeek(\"(?<=\\tEntity's Exact location: )[^\\n]+\"), \"\").TrimEnd(vbCrLf.ToCharArray) & \")\")"
+        }
+      ],
+      "resultBranches": [
+        1025
+      ],
+      "macRuleIds": [
+        "PCL-WORLD-ENTITY"
+      ],
+      "applicability": "有条件等效或启发式",
+      "adaptation": "要求崩溃描述与实体/方块上下文，保留实体ID和位置；先备份世界，无自动删除。"
+    },
+    {
+      "sourceReason": "材质过大或显卡配置不足",
+      "enumLine": 370,
+      "analysisBranches": [
+        {
+          "line": 515,
+          "text": "If LogMc.Contains(\"Maybe try a lower resolution resourcepack?\") Then AppendReason(CrashReason.材质过大或显卡配置不足)"
+        }
+      ],
+      "resultBranches": [
+        1061
+      ],
+      "macRuleIds": [
+        "PCL-TEXTURE-SIZE"
+      ],
+      "applicability": "Mac通用错误特征",
+      "adaptation": "保留触发特征与附近最多8行脱敏证据，提供副本验证/依赖检查建议，无自动删除行为。"
+    },
+    {
+      "sourceReason": "没有可用的分析文件",
+      "enumLine": 371,
+      "analysisBranches": [
+        {
+          "line": 478,
+          "text": "AppendReason(CrashReason.没有可用的分析文件)"
+        }
+      ],
+      "resultBranches": [
+        1103
+      ],
+      "macRuleIds": [
+        "PCL-NO-LOG"
+      ],
+      "applicability": "Mac通用错误特征",
+      "adaptation": "保留触发特征与附近最多8行脱敏证据，提供副本验证/依赖检查建议，无自动删除行为。"
+    },
+    {
+      "sourceReason": "使用32位Java导致JVM无法分配足够多的内存",
+      "enumLine": 372,
+      "analysisBranches": [
+        {
+          "line": 527,
+          "text": "If LogMc.Contains(\"Invalid maximum heap size\") Then AppendReason(CrashReason.使用32位Java导致JVM无法分配足够多的内存)"
+        },
+        {
+          "line": 530,
+          "text": "AppendReason(CrashReason.使用32位Java导致JVM无法分配足够多的内存)"
+        }
+      ],
+      "resultBranches": [
+        963
+      ],
+      "macRuleIds": [
+        "PCL-HEAP-CONFIG"
+      ],
+      "applicability": "有条件等效或启发式",
+      "adaptation": "仅提示检查内存配置与实际位数；Apple Silicon使用64位ARM Java，此特征不能独立证明32位。"
+    },
+    {
+      "sourceReason": "Mod重复安装",
+      "enumLine": 373,
+      "analysisBranches": [
+        {
+          "line": 538,
+          "text": "If LogMc.Contains(\"DuplicateModsFoundException\") Then AppendReason(CrashReason.Mod重复安装, LogMc.RegexSearch(\"(?<=\\n\\t[\\w]+ : [A-Z]:[^\\n]+(/|\\\\))[^/\\\\\\n]+?.jar\", RegularExpressions.RegexOptions.IgnoreCase))"
+        },
+        {
+          "line": 539,
+          "text": "If LogMc.Contains(\"Found a duplicate mod\") Then AppendReason(CrashReason.Mod重复安装, If(LogMc.RegexSeek(\"Found a duplicate mod[^\\n]+\"), \"\").RegexSearch(\"[^\\\\/]+.jar\", RegularExpressions.RegexOptions.IgnoreCase))"
+        },
+        {
+          "line": 540,
+          "text": "If LogMc.Contains(\"Found duplicate mods\") Then AppendReason(CrashReason.Mod重复安装, LogMc.RegexSearch(\"(?<=Mod ID: ')\\w+?(?=' from mod files:)\").Distinct.ToList)"
+        },
+        {
+          "line": 541,
+          "text": "If LogMc.Contains(\"ModResolutionException: Duplicate\") Then AppendReason(CrashReason.Mod重复安装, If(LogMc.RegexSeek(\"ModResolutionException: Duplicate[^\\n]+\"), \"\").RegexSearch(\"[^\\\\/]+.jar\", RegularExpressions.RegexOptions.IgnoreCase))"
+        }
+      ],
+      "resultBranches": [
+        1019
+      ],
+      "macRuleIds": [
+        "CORE-05"
+      ],
+      "applicability": "Mac通用错误特征",
+      "adaptation": "保留触发特征与附近最多8行脱敏证据，提供副本验证/依赖检查建议，无自动删除行为。"
+    },
+    {
+      "sourceReason": "Mod互不兼容",
+      "enumLine": 374,
+      "analysisBranches": [
+        {
+          "line": 543,
+          "text": "AppendReason(CrashReason.Mod互不兼容, If(LogMc.RegexSeek(\"(?<=Incompatible mods found![\\s\\S]+: )[\\s\\S]+?(?=\\tat )\"), \"\").BeforeFirst(\"更多信息：\").Replace(\"Some of your mods are incompatible with the game or each other!\", \"\").Trim((vbCrLf & \" \").ToCharArray))"
+        }
+      ],
+      "resultBranches": [
+        1079
+      ],
+      "macRuleIds": [
+        "PCL-INCOMPATIBLE-MODS"
+      ],
+      "applicability": "Mac通用错误特征",
+      "adaptation": "保留触发特征与附近最多8行脱敏证据，提供副本验证/依赖检查建议，无自动删除行为。"
+    },
+    {
+      "sourceReason": "OptiFine与Forge不兼容",
+      "enumLine": 375,
+      "analysisBranches": [
+        {
+          "line": 495,
+          "text": "If LogMc.Contains(\"java.lang.NoSuchMethodError: 'void net.minecraft.client.renderer.texture.SpriteContents.<init>\") Then AppendReason(CrashReason.OptiFine与Forge不兼容)"
+        },
+        {
+          "line": 496,
+          "text": "If LogMc.Contains(\"java.lang.NoSuchMethodError: 'java.lang.String com.mojang.blaze3d.systems.RenderSystem.getBackendDescription\") Then AppendReason(CrashReason.OptiFine与Forge不兼容)"
+        },
+        {
+          "line": 497,
+          "text": "If LogMc.Contains(\"java.lang.NoSuchMethodError: 'void net.minecraft.client.renderer.block.model.BakedQuad.<init>\") Then AppendReason(CrashReason.OptiFine与Forge不兼容)"
+        },
+        {
+          "line": 498,
+          "text": "If LogMc.Contains(\"java.lang.NoSuchMethodError: 'void net.minecraftforge.client.gui.overlay.ForgeGui.renderSelectedItemName\") Then AppendReason(CrashReason.OptiFine与Forge不兼容)"
+        },
+        {
+          "line": 499,
+          "text": "If LogMc.Contains(\"java.lang.NoSuchMethodError: 'void net.minecraft.server.level.DistanceManager\") Then AppendReason(CrashReason.OptiFine与Forge不兼容)"
+        },
+        {
+          "line": 500,
+          "text": "If LogMc.Contains(\"java.lang.NoSuchMethodError: 'net.minecraft.network.chat.FormattedText net.minecraft.client.gui.Font.ellipsize\") Then AppendReason(CrashReason.OptiFine与Forge不兼容)"
+        },
+        {
+          "line": 569,
+          "text": "If LogCrash.Contains(\"has mods that were not found\") AndAlso LogCrash.RegexCheck(\"The Mod File [^\\n]+optifine\\\\OptiFine[^\\n]+ has mods that were not found\") Then AppendReason(CrashReason.OptiFine与Forge不兼容)"
+        }
+      ],
+      "resultBranches": [
+        1039
+      ],
+      "macRuleIds": [
+        "PCL-OPTIFINE-FORGE"
+      ],
+      "applicability": "Mac通用错误特征",
+      "adaptation": "保留触发特征与附近最多8行脱敏证据，提供副本验证/依赖检查建议，无自动删除行为。"
+    },
+    {
+      "sourceReason": "Fabric报错",
+      "enumLine": 376,
+      "analysisBranches": [],
+      "resultBranches": [
+        1073
+      ],
+      "macRuleIds": [
+        "PCL-MOD-RESOLUTION"
+      ],
+      "applicability": "有条件等效或启发式",
+      "adaptation": "公开源码定义枚举和输出建议，但没有直接AppendReason该项；用实际Mod resolution/FormattedException分支等效覆盖。"
+    },
+    {
+      "sourceReason": "Fabric报错并给出解决方案",
+      "enumLine": 377,
+      "analysisBranches": [
+        {
+          "line": 623,
+          "text": "If LogMc.Contains(\"A potential solution has been determined:\") Then AppendReason(CrashReason.Fabric报错并给出解决方案, If(LogMc.RegexSeek(\"(?<=A potential solution has been determined:\\n)(\\s+ - [^\\n]+\\n)+\"), \"\").RegexSearch(\"(?<=\\s+)[^\\n]+\").Join(vbLf))"
+        },
+        {
+          "line": 624,
+          "text": "If LogMc.Contains(\"A potential solution has been determined, this may resolve your problem:\") Then AppendReason(CrashReason.Fabric报错并给出解决方案, If(LogMc.RegexSeek(\"(?<=A potential solution has been determined, this may resolve your problem:\\n)(\\s+ - [^\\n]+\\n)+\"), \"\").RegexSearch(\"(?<=\\s+)[^\\n]+\").Join(vbLf))"
+        },
+        {
+          "line": 625,
+          "text": "If LogMc.Contains(\"确定了一种可能的解决方法，这样做可能会解决你的问题：\") Then AppendReason(CrashReason.Fabric报错并给出解决方案, If(LogMc.RegexSeek(\"(?<=确定了一种可能的解决方法，这样做可能会解决你的问题：\\n)(\\s+ - [^\\n]+\\n)+\"), \"\").RegexSearch(\"(?<=\\s+)[^\\n]+\").Join(vbLf))"
+        }
+      ],
+      "resultBranches": [
+        1091
+      ],
+      "macRuleIds": [
+        "PCL-FABRIC-SOLUTION"
+      ],
+      "applicability": "Mac通用错误特征",
+      "adaptation": "保留触发特征与附近最多8行脱敏证据，提供副本验证/依赖检查建议，无自动删除行为。"
+    },
+    {
+      "sourceReason": "Forge报错",
+      "enumLine": 378,
+      "analysisBranches": [
+        {
+          "line": 622,
+          "text": "If LogMc.Contains(\"An exception was thrown, the game will display an error screen and halt.\") Then AppendReason(CrashReason.Forge报错, LogMc.RegexSeek(\"(?<=the game will display an error screen and halt.[\\n\\r]+[^\\n]+?Exception: )[\\s\\S]+?(?=\\n\\tat)\")?.Trim(vbCrLf))"
+        }
+      ],
+      "resultBranches": [
+        1097
+      ],
+      "macRuleIds": [
+        "PCL-FORGE-ERROR"
+      ],
+      "applicability": "Mac通用错误特征",
+      "adaptation": "保留触发特征与附近最多8行脱敏证据，提供副本验证/依赖检查建议，无自动删除行为。"
+    },
+    {
+      "sourceReason": "低版本Forge与高版本Java不兼容",
+      "enumLine": 379,
+      "analysisBranches": [
+        {
+          "line": 512,
+          "text": "If LogMc.Contains(\"java.lang.NoSuchMethodError: sun.security.util.ManifestEntryVerifier\") OrElse LogMc.Contains(\"java.lang.NoSuchMethodError: 'void sun.security.util.ManifestEntryVerifier\") Then AppendReason(CrashReason.低版本Forge与高版本Java不兼容)"
+        }
+      ],
+      "resultBranches": [
+        1043
+      ],
+      "macRuleIds": [
+        "PCL-FORGE-JAVA-PATCH"
+      ],
+      "applicability": "有条件等效或启发式",
+      "adaptation": "建议兼容当前Java的同游戏Forge修订版，不固定推荐过时Java更新号。"
+    },
+    {
+      "sourceReason": "版本Json中存在多个Forge",
+      "enumLine": 380,
+      "analysisBranches": [
+        {
+          "line": 491,
+          "text": "If LogMc.Contains(\"Found multiple arguments for option fml.forgeVersion, but you asked for only one\") Then AppendReason(CrashReason.版本Json中存在多个Forge)"
+        }
+      ],
+      "resultBranches": [
+        1045
+      ],
+      "macRuleIds": [
+        "PCL-FORGE-DUPLICATE"
+      ],
+      "applicability": "Mac通用错误特征",
+      "adaptation": "保留触发特征与附近最多8行脱敏证据，提供副本验证/依赖检查建议，无自动删除行为。"
+    },
+    {
+      "sourceReason": "Mod过多导致超出ID限制",
+      "enumLine": 381,
+      "analysisBranches": [
+        {
+          "line": 565,
+          "text": "If LogCrash.Contains(\"maximum id range exceeded\") Then AppendReason(CrashReason.Mod过多导致超出ID限制)"
+        }
+      ],
+      "resultBranches": [
+        1067
+      ],
+      "macRuleIds": [
+        "PCL-ID-LIMIT"
+      ],
+      "applicability": "Mac通用错误特征",
+      "adaptation": "保留触发特征与附近最多8行脱敏证据，提供副本验证/依赖检查建议，无自动删除行为。"
+    },
+    {
+      "sourceReason": "NightConfig的Bug",
+      "enumLine": 382,
+      "analysisBranches": [
+        {
+          "line": 517,
+          "text": "If LogMc.Contains(\"com.electronwill.nightconfig.core.io.ParsingException: Not enough data available\") AndAlso Not CrashReasons.ContainsKey(CrashReason.Mod配置文件导致游戏崩溃) Then AppendReason(CrashReason.NightConfig的Bug)"
+        }
+      ],
+      "resultBranches": [
+        1063
+      ],
+      "macRuleIds": [
+        "PCL-NIGHTCONFIG"
+      ],
+      "applicability": "有条件等效或启发式",
+      "adaptation": "报告读取/配置异常并保留具体线索，不自动安装额外修复模组。"
+    },
+    {
+      "sourceReason": "ShadersMod与OptiFine同时安装",
+      "enumLine": 383,
+      "analysisBranches": [
+        {
+          "line": 511,
+          "text": "If LogMc.Contains(\"java.lang.RuntimeException: Shaders Mod detected. Please remove it, OptiFine has built-in support for shaders.\") Then AppendReason(CrashReason.ShadersMod与OptiFine同时安装)"
+        }
+      ],
+      "resultBranches": [
+        1041
+      ],
+      "macRuleIds": [
+        "PCL-SHADERS-OPTIFINE"
+      ],
+      "applicability": "Mac通用错误特征",
+      "adaptation": "保留触发特征与附近最多8行脱敏证据，提供副本验证/依赖检查建议，无自动删除行为。"
+    },
+    {
+      "sourceReason": "Forge安装不完整",
+      "enumLine": 384,
+      "analysisBranches": [
+        {
+          "line": 518,
+          "text": "If LogMc.Contains(\"Cannot find launch target fmlclient, unable to launch\") Then AppendReason(CrashReason.Forge安装不完整)"
+        },
+        {
+          "line": 519,
+          "text": "If LogMc.Contains(\"Invalid paths argument, contained no existing paths\") AndAlso LogMc.Contains(\"libraries\\net\\minecraftforge\\fmlcore\") Then AppendReason(CrashReason.Forge安装不完整)"
+        }
+      ],
+      "resultBranches": [
+        1071
+      ],
+      "macRuleIds": [
+        "PCL-FORGE-INCOMPLETE"
+      ],
+      "applicability": "Mac通用错误特征",
+      "adaptation": "保留触发特征与附近最多8行脱敏证据，提供副本验证/依赖检查建议，无自动删除行为。"
+    },
+    {
+      "sourceReason": "Mod需要Java11",
+      "enumLine": 385,
+      "analysisBranches": [
+        {
+          "line": 521,
+          "text": "If LogMc.Contains(\"has been compiled by a more recent version of the Java Runtime (class file version 55.0), this version of the Java Runtime only recognizes class file versions up to\") Then AppendReason(CrashReason.Mod需要Java11)"
+        },
+        {
+          "line": 522,
+          "text": "If LogMc.Contains(\"java.lang.RuntimeException: java.lang.NoSuchMethodException: no such method: sun.misc.Unsafe.defineAnonymousClass(Class,byte[],Object[])Class/invokeVirtual\") Then AppendReason(CrashReason.Mod需要Java11)"
+        },
+        {
+          "line": 523,
+          "text": "If LogMc.Contains(\"java.lang.IllegalArgumentException: The requested compatibility level JAVA_11 could not be set. Level is not supported by the active JRE or ASM version\") Then AppendReason(CrashReason.Mod需要Java11)"
+        }
+      ],
+      "resultBranches": [
+        1049
+      ],
+      "macRuleIds": [
+        "PCL-JAVA11-MINIMUM"
+      ],
+      "applicability": "有条件等效或启发式",
+      "adaptation": "class file55表示最低Java11而不是恰好11；同时核对游戏/加载器兼容性。"
+    },
+    {
+      "sourceReason": "Mod缺少前置或MC版本错误",
+      "enumLine": 386,
+      "analysisBranches": [
+        {
+          "line": 546,
+          "text": "AppendReason(CrashReason.Mod缺少前置或MC版本错误,"
+        }
+      ],
+      "resultBranches": [
+        969
+      ],
+      "macRuleIds": [
+        "PCL-MANDATORY-DEPENDENCY",
+        "CORE-06"
+      ],
+      "applicability": "Mac通用错误特征",
+      "adaptation": "保留触发特征与附近最多8行脱敏证据，提供副本验证/依赖检查建议，无自动删除行为。"
+    }
+  ]
+}

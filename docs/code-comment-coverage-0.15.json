@@ -1,0 +1,940 @@
+{
+  "release": "0.15",
+  "scope": "src/**/*.cs excluding bin and obj",
+  "files": 103,
+  "declarations": 1078,
+  "blocks": 1882,
+  "uncommentedDeclarations": 0,
+  "uncommentedBlocks": 0,
+  "tokenEquivalent": true,
+  "interpretation": "AST structural coverage; not a full manual correctness audit",
+  "filesAudited": [
+    {
+      "file": "src/Pcl.Cli/LinkSmoke.cs",
+      "Added": 7,
+      "tokenEquivalent": true,
+      "blocks": 7,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 2
+    },
+    {
+      "file": "src/Pcl.Cli/Program.cs",
+      "Added": 39,
+      "tokenEquivalent": true,
+      "blocks": 39,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 1
+    },
+    {
+      "file": "src/Pcl.Core/Accounts.cs",
+      "Added": 32,
+      "tokenEquivalent": true,
+      "blocks": 23,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 28
+    },
+    {
+      "file": "src/Pcl.Core/AppearanceService.cs",
+      "Added": 27,
+      "tokenEquivalent": true,
+      "blocks": 22,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 17
+    },
+    {
+      "file": "src/Pcl.Core/ArtifactDownloadService.cs",
+      "Added": 25,
+      "tokenEquivalent": true,
+      "blocks": 20,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 13
+    },
+    {
+      "file": "src/Pcl.Core/ConstraintSolver.cs",
+      "Added": 15,
+      "tokenEquivalent": true,
+      "blocks": 14,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 7
+    },
+    {
+      "file": "src/Pcl.Core/CurseForgeCatalog.cs",
+      "Added": 18,
+      "tokenEquivalent": true,
+      "blocks": 9,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 16
+    },
+    {
+      "file": "src/Pcl.Core/CustomPackMetadata.cs",
+      "Added": 23,
+      "tokenEquivalent": true,
+      "blocks": 21,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 11
+    },
+    {
+      "file": "src/Pcl.Core/DataPackService.cs",
+      "Added": 18,
+      "tokenEquivalent": true,
+      "blocks": 14,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 13
+    },
+    {
+      "file": "src/Pcl.Core/DependencyArchive.cs",
+      "Added": 0,
+      "tokenEquivalent": true,
+      "blocks": 1,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 2
+    },
+    {
+      "file": "src/Pcl.Core/DiagnosticsService.cs",
+      "Added": 19,
+      "tokenEquivalent": true,
+      "blocks": 17,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 12
+    },
+    {
+      "file": "src/Pcl.Core/DownloadService.cs",
+      "Added": 31,
+      "tokenEquivalent": true,
+      "blocks": 30,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 8
+    },
+    {
+      "file": "src/Pcl.Core/DownloadTasks.cs",
+      "Added": 31,
+      "tokenEquivalent": true,
+      "blocks": 25,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 23
+    },
+    {
+      "file": "src/Pcl.Core/EasyTierService.cs",
+      "Added": 24,
+      "tokenEquivalent": true,
+      "blocks": 21,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 14
+    },
+    {
+      "file": "src/Pcl.Core/ExternalAuthentication.cs",
+      "Added": 41,
+      "tokenEquivalent": true,
+      "blocks": 30,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 32
+    },
+    {
+      "file": "src/Pcl.Core/FabricModPlanner.cs",
+      "Added": 24,
+      "tokenEquivalent": true,
+      "blocks": 21,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 15
+    },
+    {
+      "file": "src/Pcl.Core/FabricService.cs",
+      "Added": 17,
+      "tokenEquivalent": true,
+      "blocks": 9,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 15
+    },
+    {
+      "file": "src/Pcl.Core/ForgeModDependencies.cs",
+      "Added": 32,
+      "tokenEquivalent": true,
+      "blocks": 26,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 16
+    },
+    {
+      "file": "src/Pcl.Core/ForgeService.cs",
+      "Added": 21,
+      "tokenEquivalent": true,
+      "blocks": 17,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 11
+    },
+    {
+      "file": "src/Pcl.Core/GameLaunchAuthorization.cs",
+      "Added": 1,
+      "tokenEquivalent": true,
+      "blocks": 1,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 3
+    },
+    {
+      "file": "src/Pcl.Core/InstallOperations.cs",
+      "Added": 11,
+      "tokenEquivalent": true,
+      "blocks": 9,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 7
+    },
+    {
+      "file": "src/Pcl.Core/InstanceBackupArchive.cs",
+      "Added": 14,
+      "tokenEquivalent": true,
+      "blocks": 12,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 6
+    },
+    {
+      "file": "src/Pcl.Core/InstanceComponentService.cs",
+      "Added": 33,
+      "tokenEquivalent": true,
+      "blocks": 30,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 15
+    },
+    {
+      "file": "src/Pcl.Core/InstanceIconService.cs",
+      "Added": 13,
+      "tokenEquivalent": true,
+      "blocks": 11,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 8
+    },
+    {
+      "file": "src/Pcl.Core/InstanceManager.cs",
+      "Added": 49,
+      "tokenEquivalent": true,
+      "blocks": 40,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 24
+    },
+    {
+      "file": "src/Pcl.Core/InstanceRegistry.cs",
+      "Added": 7,
+      "tokenEquivalent": true,
+      "blocks": 6,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 4
+    },
+    {
+      "file": "src/Pcl.Core/JarJarResolver.cs",
+      "Added": 16,
+      "tokenEquivalent": true,
+      "blocks": 12,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 9
+    },
+    {
+      "file": "src/Pcl.Core/JavaDiscovery.cs",
+      "Added": 19,
+      "tokenEquivalent": true,
+      "blocks": 17,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 6
+    },
+    {
+      "file": "src/Pcl.Core/JavaService.cs",
+      "Added": 25,
+      "tokenEquivalent": true,
+      "blocks": 22,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 10
+    },
+    {
+      "file": "src/Pcl.Core/LauncherSettings.cs",
+      "Added": 39,
+      "tokenEquivalent": true,
+      "blocks": 38,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 22
+    },
+    {
+      "file": "src/Pcl.Core/LaunchHooks.cs",
+      "Added": 16,
+      "tokenEquivalent": true,
+      "blocks": 15,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 7
+    },
+    {
+      "file": "src/Pcl.Core/LaunchService.cs",
+      "Added": 26,
+      "tokenEquivalent": true,
+      "blocks": 22,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 10
+    },
+    {
+      "file": "src/Pcl.Core/LaunchSettingsPatch.cs",
+      "Added": 5,
+      "tokenEquivalent": true,
+      "blocks": 3,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 6
+    },
+    {
+      "file": "src/Pcl.Core/LegacyLaunchAdapter.cs",
+      "Added": 19,
+      "tokenEquivalent": true,
+      "blocks": 18,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 6
+    },
+    {
+      "file": "src/Pcl.Core/LegacyMacLibraries.cs",
+      "Added": 5,
+      "tokenEquivalent": true,
+      "blocks": 5,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 2
+    },
+    {
+      "file": "src/Pcl.Core/LiteLoaderService.cs",
+      "Added": 15,
+      "tokenEquivalent": true,
+      "blocks": 12,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 9
+    },
+    {
+      "file": "src/Pcl.Core/LocalResourceService.cs",
+      "Added": 41,
+      "tokenEquivalent": true,
+      "blocks": 36,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 18
+    },
+    {
+      "file": "src/Pcl.Core/MacAccountSecrets.cs",
+      "Added": 25,
+      "tokenEquivalent": true,
+      "blocks": 12,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 24
+    },
+    {
+      "file": "src/Pcl.Core/MacCompatibility.cs",
+      "Added": 20,
+      "tokenEquivalent": true,
+      "blocks": 17,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 11
+    },
+    {
+      "file": "src/Pcl.Core/MacNativeAudit.cs",
+      "Added": 8,
+      "tokenEquivalent": true,
+      "blocks": 6,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 5
+    },
+    {
+      "file": "src/Pcl.Core/MacSetupService.cs",
+      "Added": 12,
+      "tokenEquivalent": true,
+      "blocks": 10,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 6
+    },
+    {
+      "file": "src/Pcl.Core/MavenComparableVersion.cs",
+      "Added": 21,
+      "tokenEquivalent": true,
+      "blocks": 16,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 15
+    },
+    {
+      "file": "src/Pcl.Core/McmodCatalog.cs",
+      "Added": 16,
+      "tokenEquivalent": true,
+      "blocks": 10,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 10
+    },
+    {
+      "file": "src/Pcl.Core/MetadataRequest.cs",
+      "Added": 9,
+      "tokenEquivalent": true,
+      "blocks": 9,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 2
+    },
+    {
+      "file": "src/Pcl.Core/MicrosoftApplication.cs",
+      "Added": 3,
+      "tokenEquivalent": true,
+      "blocks": 2,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 4
+    },
+    {
+      "file": "src/Pcl.Core/MicrosoftAuthentication.cs",
+      "Added": 19,
+      "tokenEquivalent": true,
+      "blocks": 13,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 16
+    },
+    {
+      "file": "src/Pcl.Core/MicrosoftSkinService.cs",
+      "Added": 18,
+      "tokenEquivalent": true,
+      "blocks": 10,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 18
+    },
+    {
+      "file": "src/Pcl.Core/MinecraftService.cs",
+      "Added": 12,
+      "tokenEquivalent": true,
+      "blocks": 11,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 9
+    },
+    {
+      "file": "src/Pcl.Core/Models.cs",
+      "Added": 12,
+      "tokenEquivalent": true,
+      "blocks": 3,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 14
+    },
+    {
+      "file": "src/Pcl.Core/ModpackService.cs",
+      "Added": 35,
+      "tokenEquivalent": true,
+      "blocks": 32,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 12
+    },
+    {
+      "file": "src/Pcl.Core/NetworkDiagnosticsService.cs",
+      "Added": 14,
+      "tokenEquivalent": true,
+      "blocks": 9,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 9
+    },
+    {
+      "file": "src/Pcl.Core/OfflineSkinService.cs",
+      "Added": 22,
+      "tokenEquivalent": true,
+      "blocks": 18,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 11
+    },
+    {
+      "file": "src/Pcl.Core/OptiFabricService.cs",
+      "Added": 16,
+      "tokenEquivalent": true,
+      "blocks": 15,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 8
+    },
+    {
+      "file": "src/Pcl.Core/OptiFineService.cs",
+      "Added": 16,
+      "tokenEquivalent": true,
+      "blocks": 12,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 9
+    },
+    {
+      "file": "src/Pcl.Core/PackMetadataCompatibility.cs",
+      "Added": 14,
+      "tokenEquivalent": true,
+      "blocks": 13,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 8
+    },
+    {
+      "file": "src/Pcl.Core/PortableModpackService.cs",
+      "Added": 63,
+      "tokenEquivalent": true,
+      "blocks": 56,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 33
+    },
+    {
+      "file": "src/Pcl.Core/QuiltDependencies.cs",
+      "Added": 29,
+      "tokenEquivalent": true,
+      "blocks": 25,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 15
+    },
+    {
+      "file": "src/Pcl.Core/QuiltDependencyOverrides.cs",
+      "Added": 15,
+      "tokenEquivalent": true,
+      "blocks": 21,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 14
+    },
+    {
+      "file": "src/Pcl.Core/QuiltModPlanner.cs",
+      "Added": 10,
+      "tokenEquivalent": true,
+      "blocks": 10,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 2
+    },
+    {
+      "file": "src/Pcl.Core/QuiltVersion.cs",
+      "Added": 12,
+      "tokenEquivalent": true,
+      "blocks": 12,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 7
+    },
+    {
+      "file": "src/Pcl.Core/QuiltVersionRange.cs",
+      "Added": 29,
+      "tokenEquivalent": true,
+      "blocks": 24,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 12
+    },
+    {
+      "file": "src/Pcl.Core/ResourceAliases.cs",
+      "Added": 6,
+      "tokenEquivalent": true,
+      "blocks": 2,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 7
+    },
+    {
+      "file": "src/Pcl.Core/ResourceBatchUpdater.cs",
+      "Added": 26,
+      "tokenEquivalent": true,
+      "blocks": 26,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 12
+    },
+    {
+      "file": "src/Pcl.Core/ResourceCatalog.cs",
+      "Added": 28,
+      "tokenEquivalent": true,
+      "blocks": 13,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 26
+    },
+    {
+      "file": "src/Pcl.Core/ResourceDependencyPlanner.cs",
+      "Added": 1,
+      "tokenEquivalent": true,
+      "blocks": 1,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 2
+    },
+    {
+      "file": "src/Pcl.Core/ResourceHistory.cs",
+      "Added": 6,
+      "tokenEquivalent": true,
+      "blocks": 4,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 5
+    },
+    {
+      "file": "src/Pcl.Core/ResourceInstaller.cs",
+      "Added": 45,
+      "tokenEquivalent": true,
+      "blocks": 40,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 22
+    },
+    {
+      "file": "src/Pcl.Core/SegmentedDownload.cs",
+      "Added": 33,
+      "tokenEquivalent": true,
+      "blocks": 31,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 10
+    },
+    {
+      "file": "src/Pcl.Core/TemporaryDownloadCache.cs",
+      "Added": 28,
+      "tokenEquivalent": true,
+      "blocks": 17,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 17
+    },
+    {
+      "file": "src/Pcl.Core/UnifiedResourceSearch.cs",
+      "Added": 25,
+      "tokenEquivalent": true,
+      "blocks": 20,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 9
+    },
+    {
+      "file": "src/Pcl.Core/UnifiedSearchSession.cs",
+      "Added": 6,
+      "tokenEquivalent": true,
+      "blocks": 6,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 3
+    },
+    {
+      "file": "src/Pcl.Core/VersionCatalog.cs",
+      "Added": 6,
+      "tokenEquivalent": true,
+      "blocks": 3,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 7
+    },
+    {
+      "file": "src/Pcl.Core/VersionInstaller.cs",
+      "Added": 5,
+      "tokenEquivalent": true,
+      "blocks": 5,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 2
+    },
+    {
+      "file": "src/Pcl.Desktop/AccountToolsWindow.cs",
+      "Added": 38,
+      "tokenEquivalent": true,
+      "blocks": 36,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 10
+    },
+    {
+      "file": "src/Pcl.Desktop/App.axaml.cs",
+      "Added": 8,
+      "tokenEquivalent": true,
+      "blocks": 7,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 3
+    },
+    {
+      "file": "src/Pcl.Desktop/AppearanceWorkspace.cs",
+      "Added": 15,
+      "tokenEquivalent": true,
+      "blocks": 15,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 4
+    },
+    {
+      "file": "src/Pcl.Desktop/ArtifactDownloadWindow.cs",
+      "Added": 14,
+      "tokenEquivalent": true,
+      "blocks": 13,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 4
+    },
+    {
+      "file": "src/Pcl.Desktop/CacheNetworkWindow.cs",
+      "Added": 18,
+      "tokenEquivalent": true,
+      "blocks": 17,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 5
+    },
+    {
+      "file": "src/Pcl.Desktop/CompletionFeatureSmoke.cs",
+      "Added": 22,
+      "tokenEquivalent": true,
+      "blocks": 20,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 8
+    },
+    {
+      "file": "src/Pcl.Desktop/ComponentManagerWindow.cs",
+      "Added": 15,
+      "tokenEquivalent": true,
+      "blocks": 14,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 5
+    },
+    {
+      "file": "src/Pcl.Desktop/CurseForgeWindow.cs",
+      "Added": 23,
+      "tokenEquivalent": true,
+      "blocks": 20,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 9
+    },
+    {
+      "file": "src/Pcl.Desktop/DependencyPackSmoke.cs",
+      "Added": 19,
+      "tokenEquivalent": true,
+      "blocks": 17,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 7
+    },
+    {
+      "file": "src/Pcl.Desktop/DropWorkspace.cs",
+      "Added": 9,
+      "tokenEquivalent": true,
+      "blocks": 9,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 3
+    },
+    {
+      "file": "src/Pcl.Desktop/GameFlowSmoke.cs",
+      "Added": 7,
+      "tokenEquivalent": true,
+      "blocks": 7,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 3
+    },
+    {
+      "file": "src/Pcl.Desktop/InstanceWorkspace.cs",
+      "Added": 62,
+      "tokenEquivalent": true,
+      "blocks": 59,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 19
+    },
+    {
+      "file": "src/Pcl.Desktop/LocalResourcesWindow.cs",
+      "Added": 27,
+      "tokenEquivalent": true,
+      "blocks": 23,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 7
+    },
+    {
+      "file": "src/Pcl.Desktop/MainWindow.axaml.cs",
+      "Added": 121,
+      "tokenEquivalent": true,
+      "blocks": 103,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 53
+    },
+    {
+      "file": "src/Pcl.Desktop/McmodSmoke.cs",
+      "Added": 18,
+      "tokenEquivalent": true,
+      "blocks": 16,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 6
+    },
+    {
+      "file": "src/Pcl.Desktop/MultiplayerWindow.cs",
+      "Added": 11,
+      "tokenEquivalent": true,
+      "blocks": 11,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 2
+    },
+    {
+      "file": "src/Pcl.Desktop/OptiFabricWindow.cs",
+      "Added": 15,
+      "tokenEquivalent": true,
+      "blocks": 14,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 3
+    },
+    {
+      "file": "src/Pcl.Desktop/OptionalFeatureSmoke.cs",
+      "Added": 21,
+      "tokenEquivalent": true,
+      "blocks": 19,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 8
+    },
+    {
+      "file": "src/Pcl.Desktop/PackManagerWindow.cs",
+      "Added": 26,
+      "tokenEquivalent": true,
+      "blocks": 24,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 9
+    },
+    {
+      "file": "src/Pcl.Desktop/PackSelectionWindow.cs",
+      "Added": 5,
+      "tokenEquivalent": true,
+      "blocks": 5,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 3
+    },
+    {
+      "file": "src/Pcl.Desktop/Program.cs",
+      "Added": 2,
+      "tokenEquivalent": true,
+      "blocks": 1,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 3
+    },
+    {
+      "file": "src/Pcl.Desktop/QuiltOverrideSmoke.cs",
+      "Added": 21,
+      "tokenEquivalent": true,
+      "blocks": 18,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 8
+    },
+    {
+      "file": "src/Pcl.Desktop/ResourceBrowser.cs",
+      "Added": 64,
+      "tokenEquivalent": true,
+      "blocks": 57,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 25
+    },
+    {
+      "file": "src/Pcl.Desktop/SearchBackupSmoke.cs",
+      "Added": 20,
+      "tokenEquivalent": true,
+      "blocks": 18,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 8
+    },
+    {
+      "file": "src/Pcl.Desktop/SettingsHelpWindow.cs",
+      "Added": 22,
+      "tokenEquivalent": true,
+      "blocks": 20,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 8
+    },
+    {
+      "file": "src/Pcl.Desktop/SkinManagerWindow.cs",
+      "Added": 30,
+      "tokenEquivalent": true,
+      "blocks": 30,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 9
+    },
+    {
+      "file": "src/Pcl.Desktop/TaskCenterWindow.cs",
+      "Added": 27,
+      "tokenEquivalent": true,
+      "blocks": 27,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 5
+    },
+    {
+      "file": "src/Pcl.Desktop/UnifiedSearchWindow.cs",
+      "Added": 38,
+      "tokenEquivalent": true,
+      "blocks": 38,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 10
+    },
+    {
+      "file": "src/Pcl.Desktop/VersionManager.cs",
+      "Added": 7,
+      "tokenEquivalent": true,
+      "blocks": 5,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 4
+    },
+    {
+      "file": "src/Pcl.Desktop/WorkspaceSmoke.cs",
+      "Added": 10,
+      "tokenEquivalent": true,
+      "blocks": 10,
+      "uncommentedBlocks": [],
+      "uncommentedDeclarations": [],
+      "declarations": 3
+    }
+  ]
+}

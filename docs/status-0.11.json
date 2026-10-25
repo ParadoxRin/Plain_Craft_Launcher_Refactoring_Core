@@ -1,0 +1,23 @@
+{
+  "RES-003": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/UnifiedResourceSearch.cs; src/Pcl.Desktop/UnifiedSearchWindow.cs; src/Pcl.Core/McmodCatalog.cs",
+    "ui": "侧栏 → MC百科 / 多源搜索",
+    "implementationSummary": "MR/本地/可选CF统一列表，独立来源分页，命名空间ID与本地文件SHA-1识别合并，离线模式、来源失败隔离、取消、版本安装。 0.11增加MC百科内置索引、中文/ID/链接检索、按明确MR映射核验后安装、百科网页下载与JAR导入。",
+    "testEvidence": [
+      "artifacts/evidence-0.10/regression-final/test-results.json",
+      "artifacts/completion-final-0.10/evidence/completion-features-result.json",
+      "artifacts/evidence-0.11/regression/test-results.json",
+      "artifacts/mcmod-final-0.11/evidence/mcmod-result.json"
+    ],
+    "remaining": "本页MR+本地已实际搜索/去重/安装；CF需自有Key，跨MR-CF未获可信映射的同名项目不合并；尚无跨页全局去重。 MC百科实时抓取与站内验证码下载未实测，本地索引不自动更新。",
+    "externalConditions": [
+      "CF在线双源实测需要自己的API Key"
+    ],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.10/regression-final/test-results.json",
+      "realNetworkAndFiles": "artifacts/completion-final-0.10/evidence/completion-features-result.json",
+      "gui": "实际查询Fabric API合并、离线查询、Lithium/FerriteCore版本安装；未做有密钥CF实测"
+    }
+  }
+}

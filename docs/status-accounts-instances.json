@@ -1,0 +1,332 @@
+{
+  "AUTH-001": {
+    "status": "已验收",
+    "macImplementation": "src/Pcl.Core/Accounts.cs",
+    "ui": "首页 → 离线账户",
+    "testEvidence": [
+      "artifacts/evidence-0.8/tests-instance-fixes/test-results.json#pcl2_offline_uuid_name_validation_and_non_demo"
+    ],
+    "remaining": "本轮新增外观不改变现有 UUID 规则",
+    "externalConditions": [],
+    "implementationSummary": "沿用 PCL2 稳定 UUID；离线不是试玩模式。"
+  },
+  "AUTH-002": {
+    "status": "已验收",
+    "macImplementation": "src/Pcl.Core/Accounts.cs",
+    "ui": "首页 → 账户列表",
+    "testEvidence": [
+      "artifacts/evidence-0.8/tests-instance-fixes/test-results.json#offline_accounts_persist_switch_remove_without_keychain"
+    ],
+    "remaining": "无外部账号验证要求；GUI 本轮截图由整合记录关联",
+    "externalConditions": [],
+    "implementationSummary": "账户添加、选择、重启保留、移除；离线不访问 Keychain。"
+  },
+  "AUTH-003": {
+    "status": "外部条件阻塞",
+    "macImplementation": "src/Pcl.Core/Accounts.cs; src/Pcl.Core/MicrosoftAuthentication.cs",
+    "ui": "首页 → 微软账户",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression/test-results.json#microsoft_device_pending_slowdown_exchange_and_profile"
+    ],
+    "remaining": "实现已存在且协议 fixtures 通过；没有真人微软授权、皮肤、游戏或多人联机全链路验收",
+    "externalConditions": [
+      "合法 Minecraft OAuth client ID",
+      "用户真实微软账号操作"
+    ],
+    "implementationSummary": "微软设备码、轮询 pending/slow_down、Xbox/XSTS/Minecraft token 交换"
+  },
+  "AUTH-004": {
+    "status": "外部条件阻塞",
+    "macImplementation": "src/Pcl.Core/Accounts.cs; src/Pcl.Core/MicrosoftAuthentication.cs",
+    "ui": "首页 → 微软账户",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression/test-results.json#microsoft_expiry_refresh_rotation_and_logout"
+    ],
+    "remaining": "实现已存在且协议 fixtures 通过；没有真人微软授权、皮肤、游戏或多人联机全链路验收",
+    "externalConditions": [
+      "合法 Minecraft OAuth client ID",
+      "用户真实微软账号操作"
+    ],
+    "implementationSummary": "token 到期刷新与轮换，刷新令牌进入 Keychain"
+  },
+  "AUTH-005": {
+    "status": "外部条件阻塞",
+    "macImplementation": "src/Pcl.Core/Accounts.cs; src/Pcl.Core/MicrosoftAuthentication.cs",
+    "ui": "首页 → 微软账户",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression/test-results.json#microsoft_entitlement_and_cancel_checks"
+    ],
+    "remaining": "实现已存在且协议 fixtures 通过；没有真人微软授权、皮肤、游戏或多人联机全链路验收",
+    "externalConditions": [
+      "合法 Minecraft OAuth client ID",
+      "用户真实微软账号操作"
+    ],
+    "implementationSummary": "Minecraft 权益与档案 UUID 验证，不自动退回离线"
+  },
+  "AUTH-006": {
+    "status": "外部条件阻塞",
+    "macImplementation": "src/Pcl.Core/Accounts.cs; src/Pcl.Core/MicrosoftAuthentication.cs",
+    "ui": "首页 → 微软账户",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression/test-results.json#microsoft_session_only_does_not_survive_restart"
+    ],
+    "remaining": "实现已存在且协议 fixtures 通过；没有真人微软授权、皮肤、游戏或多人联机全链路验收",
+    "externalConditions": [
+      "合法 Minecraft OAuth client ID",
+      "用户真实微软账号操作"
+    ],
+    "implementationSummary": "多账号索引、当前会话、退出、移除、切换"
+  },
+  "AUTH-007": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/ExternalAuthentication.cs; src/Pcl.Desktop/AccountToolsWindow.cs",
+    "ui": "外置账户与皮肤 → 读取服务器",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression/test-results.json#external_https_discovery_and_no_password_redirect",
+      "artifacts/evidence-0.8/external-auth/agent-download-verification.json"
+    ],
+    "remaining": "HTTPS/ALI/跳转与结构校验已有 mock；缺真实服务器/账号完整登录验收",
+    "externalConditions": [
+      "可测试的 Yggdrasil 服务及账号"
+    ],
+    "implementationSummary": "用户确认最终 HTTPS 地址后输入凭据；凭据请求拒绝重定向。"
+  },
+  "AUTH-008": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/ExternalAuthentication.cs; src/Pcl.Core/Accounts.cs",
+    "ui": "外置账户与皮肤 → 登录并选择角色",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression/test-results.json#external_multirole_binding_keychain_identity_and_refresh",
+      "artifacts/evidence-0.8/full-regression/test-results.json#external_logout_revokes_and_removes_saved_credential"
+    ],
+    "remaining": "多角色、validate/refresh、Keychain 提供者、撤销均 mock 通过；无真人登录和游戏握手测试",
+    "externalConditions": [
+      "可测试的 Yggdrasil 服务及账号"
+    ],
+    "implementationSummary": "身份含服务器+登录标识+角色 UUID；Desktop/CLI 注入校验过的 agent 与预取元数据。"
+  },
+  "AUTH-009": {
+    "status": "未实现",
+    "macImplementation": "src/Pcl.Core/ExternalAuthentication.cs",
+    "ui": "外置账户与皮肤",
+    "testEvidence": [],
+    "remaining": "尚未实现统一通行证专属预设/协议；现有 Yggdrasil 不等于此功能",
+    "externalConditions": [
+      "服务方现行协议与可用服务器标识"
+    ],
+    "implementationSummary": ""
+  },
+  "AUTH-010": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/MicrosoftSkinService.cs; src/Pcl.Core/OfflineSkinService.cs; src/Pcl.Desktop/SkinManagerWindow.cs",
+    "ui": "微软与离线皮肤 / 外置账户与皮肤",
+    "testEvidence": [
+      "tests/Pcl.Tests/AccountAppearanceTests.cs#microsoft_skin_profile_upload_selection_reset_and_owned_cape",
+      "artifacts/evidence-0.8/full-regression/test-results.json#external_skin_capability_bearer_and_png_bounds"
+    ],
+    "remaining": "已有二维皮肤预览、离线内容寻址缓存；缺完整在线皮肤磁盘缓存与 3D 人物预览；账号操作无真人验收",
+    "externalConditions": [],
+    "implementationSummary": ""
+  },
+  "AUTH-011": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/MicrosoftSkinService.cs; src/Pcl.Core/ExternalAuthentication.cs",
+    "ui": "微软与离线皮肤 → 上传/选择/恢复；外置 → 上传/重置",
+    "testEvidence": [
+      "tests/Pcl.Tests/AccountAppearanceTests.cs#microsoft_skin_profile_upload_selection_reset_and_owned_cape",
+      "artifacts/evidence-0.8/full-regression/test-results.json#external_skin_capability_bearer_and_png_bounds"
+    ],
+    "remaining": "模拟 API fixtures 通过；真实微软/外置账户上传与游戏内外观仍待验证",
+    "externalConditions": [
+      "微软需合法 client ID 与账号；外置需角色上传权限"
+    ],
+    "implementationSummary": ""
+  },
+  "AUTH-012": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/MicrosoftSkinService.cs; src/Pcl.Core/ExternalAuthentication.cs",
+    "ui": "微软与离线皮肤 → 使用所选披风/隐藏；外置 → 上传/清除",
+    "testEvidence": [
+      "tests/Pcl.Tests/AccountAppearanceTests.cs#microsoft_skin_profile_upload_selection_reset_and_owned_cape"
+    ],
+    "remaining": "仅操作拥有/授权的披风；模拟 API 通过，无真人账户验收",
+    "externalConditions": [
+      "拥有披风的微软账户或授权外置角色"
+    ],
+    "implementationSummary": ""
+  },
+  "AUTH-013": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/OfflineSkinService.cs; src/Pcl.Desktop/SkinManagerWindow.cs",
+    "ui": "微软与离线皮肤 → 离线账户 → 导入/恢复",
+    "testEvidence": [
+      "tests/Pcl.Tests/AccountAppearanceTests.cs#offline_skin_pack_uses_client_metadata_preserves_uuid_and_options",
+      "tests/Pcl.Tests/AccountAppearanceTests.cs#offline_skin_legacy_and_new_major_minor_pack_formats",
+      "tests/Pcl.Tests/AccountAppearanceTests.cs#offline_skin_corruption_and_filename_collision_preserve_user_files"
+    ],
+    "remaining": "已实现本地默认材质资源包；保留 UUID，模型由游戏决定，其他默认皮肤也可能被替换；不是网络同步皮肤。需游戏内人物视觉验收",
+    "externalConditions": [],
+    "implementationSummary": "Desktop/CLI 启动准备，读取客户端资源包格式，保留 options/其他资源包，清除时只删自产包。"
+  },
+  "INST-001": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/InstanceManager.cs",
+    "ui": "实例管理 → 导入目录",
+    "testEvidence": [
+      "artifacts/evidence-0.8/tests-instance-fixes/test-results.json#instance_import_scan_rejects_unresolved_inherited_metadata_and_symlinks"
+    ],
+    "remaining": "支持扫描完整原版目录及本启动器格式并复制导入；不支持任意第三方 inheritsFrom 链、多个外部目录原地注册",
+    "externalConditions": [],
+    "implementationSummary": ""
+  },
+  "INST-002": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Desktop/InstanceWorkspace.cs",
+    "ui": "实例管理 → 搜索",
+    "testEvidence": [
+      "tests/Pcl.Tests/InstanceManagementTests.cs#instance_filters_combine_loader_favorite_hidden_and_search"
+    ],
+    "remaining": "名称/ID/版本搜索，加载器、仅收藏、仅隐藏、未隐藏分类可组合；fixture 与本轮 GUI 验收待整合。未提供任意用户自定义分组。",
+    "externalConditions": [],
+    "implementationSummary": ""
+  },
+  "INST-003": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/LauncherSettings.cs; src/Pcl.Core/InstanceRegistry.cs",
+    "ui": "实例管理 → 收藏/在首页隐藏",
+    "testEvidence": [
+      "artifacts/evidence-0.8/tests-instance-fixes/test-results.json#instance_favorite_hidden_persisted_and_management_still_finds_hidden"
+    ],
+    "remaining": "持久化与首页过滤 fixtures 通过；管理窗口仍可找到隐藏项，完整 GUI 多次重启验收待整合记录",
+    "externalConditions": [],
+    "implementationSummary": ""
+  },
+  "INST-004": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/LauncherSettings.cs; src/Pcl.Core/InstanceIconService.cs; src/Pcl.Desktop/InstanceWorkspace.cs",
+    "ui": "实例管理 → 名称/描述 → 保存",
+    "testEvidence": [
+      "tests/Pcl.Tests/InstanceManagementTests.cs#instance_icon_is_passive_bounded_and_follows_copy_backup"
+    ],
+    "remaining": "名称、描述、PNG/JPEG图标导入/恢复已实现；图标被动存入实例、复制/备份随行，大小与尺寸先检查再GUI解码重编码；待最终fixture及图标GUI验收。",
+    "externalConditions": [],
+    "implementationSummary": ""
+  },
+  "INST-005": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/InstanceManager.cs",
+    "ui": "实例管理 → 复制实例",
+    "testEvidence": [
+      "artifacts/evidence-0.8/tests-instance-fixes/test-results.json#instance_copy_preserves_save_excludes_credentials_and_shared_cache"
+    ],
+    "remaining": "复制存档/模组/配置及新实例 ID fixtures 通过，拒绝符号链接；全部加载器副本真实启动待矩阵关联",
+    "externalConditions": [],
+    "implementationSummary": ""
+  },
+  "INST-006": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/InstanceManager.cs",
+    "ui": "实例管理 → 备份 ZIP / 恢复备份",
+    "testEvidence": [
+      "artifacts/evidence-0.8/tests-instance-fixes/test-results.json#instance_backup_content_and_unsafe_restore_rejected"
+    ],
+    "remaining": "备份格式与安全恢复已实现；跨设备全量离线恢复未实现，恢复需官方父版和依赖可用；正向备份恢复实际运行尚待验收",
+    "externalConditions": [
+      "缺失共享父版/依赖时需网络"
+    ],
+    "implementationSummary": ""
+  },
+  "INST-007": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/InstanceManager.cs",
+    "ui": "实例管理 → 移入回收站 / 回收站 → 恢复",
+    "testEvidence": [
+      "artifacts/evidence-0.8/tests-instance-fixes/test-results.json#instance_trash_restore_preserves_save_and_parent_dependencies",
+      "tests/Pcl.Tests/InstanceManagementTests.cs#instance_trash_restore_rejects_replaced_data_symlink"
+    ],
+    "remaining": "私有实例移走并恢复，默认共享实例只逻辑删除；fixtures 通过。新增回收数据 symlink 替换拒绝用例待最终回归",
+    "externalConditions": [],
+    "implementationSummary": ""
+  },
+  "INST-008": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/InstanceManager.cs",
+    "ui": "实例管理 → 校验并修复",
+    "testEvidence": [
+      "src/Pcl.Core/InstanceManager.cs#RepairAsync"
+    ],
+    "remaining": "补全官方父版及可验证下载的库；安装器生成的缺失 file:// 文件需用组件管理重新安装，未实现所有安装器自动原地重建",
+    "externalConditions": [
+      "缺失资源时需网络"
+    ],
+    "implementationSummary": ""
+  },
+  "INST-010": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/InstanceManager.cs",
+    "ui": "实例管理 → 导出离线启动脚本",
+    "testEvidence": [
+      "src/Pcl.Core/InstanceManager.cs#ExportOfflineScriptAsync"
+    ],
+    "remaining": "导出已接真实预检/Java/启动计划并逐参数 POSIX 转义；不导出微软/外置 token；独立脚本实跑验收待补，后续皮肤变更需重新通过启动器准备",
+    "externalConditions": [],
+    "implementationSummary": ""
+  },
+  "INST-011": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Desktop/InstanceWorkspace.cs",
+    "ui": "实例管理 → 打开目录",
+    "testEvidence": [
+      "src/Pcl.Desktop/InstanceWorkspace.cs#OpenFolder"
+    ],
+    "remaining": "使用 macOS open 且 ArgumentList 传参；实际 Finder 打开验收待整合记录",
+    "externalConditions": [],
+    "implementationSummary": ""
+  },
+  "INST-012": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/InstanceRegistry.cs; src/Pcl.Core/InstanceManager.cs",
+    "ui": "自动用于实例启动/复制/删除",
+    "testEvidence": [
+      "artifacts/evidence-0.8/tests-instance-fixes/test-results.json#instance_copy_preserves_save_excludes_credentials_and_shared_cache",
+      "artifacts/evidence-0.8/tests-instance-fixes/test-results.json#instance_trash_restore_preserves_save_and_parent_dependencies"
+    ],
+    "remaining": "共享客户端与 assets 保留，加载器私有库按 receipt 读取；没有引用计数 GC，不执行可能破坏其他实例的共享清理",
+    "externalConditions": [],
+    "implementationSummary": ""
+  },
+  "JAVA-007": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/LauncherSettings.cs; src/Pcl.Core/JavaService.cs; src/Pcl.Desktop/InstanceWorkspace.cs",
+    "ui": "实例管理 → 启动设置 → 选择并检查 Java",
+    "testEvidence": [
+      "artifacts/evidence-0.8/tests-instance-fixes/test-results.json#java_inspection_accepts_both_streams_and_arch_aliases",
+      "artifacts/evidence-0.8/tests-instance-fixes/test-results.json#java_inspection_process_exit_and_cancellation"
+    ],
+    "remaining": "真实 Java 主版本/架构检查已有回归；手选不同 JDK 并游戏启动的 GUI 全链路待矩阵关联",
+    "externalConditions": [],
+    "implementationSummary": ""
+  },
+  "JAVA-008": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/JavaDiscovery.cs; src/Pcl.Desktop/InstanceWorkspace.cs",
+    "ui": "实例管理 → 启动设置 → 查找已安装 Java",
+    "testEvidence": [
+      "tests/Pcl.Tests/AccountAppearanceTests.cs#java_discovery_rejects_escaping_receipts_and_macos_stub"
+    ],
+    "remaining": "支持启动器 runtime、系统/用户 JDK、Homebrew、JAVA_HOME，跳过安装弹窗 stub；待最终 fixture 和实际发现/选择验收，不承诺遍历所有第三方管理器路径",
+    "externalConditions": [],
+    "implementationSummary": ""
+  },
+  "JAVA-009": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/LauncherSettings.cs; src/Pcl.Core/LaunchService.cs",
+    "ui": "实例管理 → 全局启动设置 / 实例启动设置",
+    "testEvidence": [
+      "artifacts/evidence-0.8/tests-instance-fixes/test-results.json#instance_settings_inheritance_override_and_argument_safety"
+    ],
+    "remaining": "持久化全局与完整实例覆盖已接真实 launch plan 并 fixture 通过；逐字段继承覆盖尚未实现。主线程报告本轮实例设置 GUI 操作通过，截图由整合回填",
+    "externalConditions": [],
+    "implementationSummary": ""
+  }
+}

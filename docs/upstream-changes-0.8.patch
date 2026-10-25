@@ -1,0 +1,470 @@
+--- upstream/MeloongCore/.agents/Shared/架构分析.md
++++ vendor/MeloongCore/.agents/Shared/架构分析.md
+@@ -1,4 +1,12 @@
+ # Shared 复用指南
++
++## 本移植副本的变化（2026-10-23）
++
++此处为独立 Mac 移植副本，原始附件未改。Shared 仍面向 netstandard2.0：Unix 本地路径保持原生分隔符、根目录与大小写；Windows 长路径分支仅在 Windows 调用。文件/目录操作沿用新的平台路径契约；Unix 目录链接删除只移除链接，经过链接父目录的递归删除被拒绝。ZIP 不经过已有链接写文件；Java 安装器在上层单独处理官方 manifest 的链接和可执行位。
++
++ECDSA 的 Mac 分支使用托管 API，保留 CNG P-256 blob 和 P1363 签名格式；Windows BCrypt 分支保留。默认 Mac 文件日志放入应用数据目录，引用方可另行配置。注册表、MsDelta 与回收站入口仍为平台专属，Mac 回收站操作显式拒绝，避免回退为永久删除。
++
++本副本不包含上游 net48/WPF 测试工程；针对这些修改的 Mac 回归位于移植工程 tests/Pcl.Tests。其他上游行为说明仍按原文保留，不能将本轮局部测试视为完整 API 验收。
+ 
+ [代码约定](../仓库指示.md) · [Wpf](../Wpf/架构分析.md) · [Tests](../Tests/架构分析.md)
+ 
+@@ -29,7 +37,7 @@
+ - `ConfigUtils.GetSecret` 独立读取 `Paths.AppData/Meloong/Dev/secret.json`，使用 `CryptographyUtils.AesDecrypt` ，首次读取后缓存 JSON 对象；不使用配置 provider、不参与 SaveAll。文件不存在或键为 null/缺失时抛出缺键异常；解密或解析失败抛出脱敏异常，不覆盖文件。默认密钥仅用于避免明文存储，不提供可靠保密保护。
+ - 同一 provider 的同一键固定使用同一类型；显式 JSON null 算已存值。Get 返回对象缓存，修改对象后需 Edit/Set 才安排保存；Edit 不是原子更新。
+ - Set 即使值相同也触发 Changed；动态 entry 的 Changed 不携带 provider。PreviewGet 仅修正本次读取，不自动写回。
+-- JSON 写入防抖 500 ms；明确落盘点可用 `ConfigUtils.SaveAll()`。DiscardCache 不保存变更；Save 写盘失败不保证恢复 dirty。整文件加载失败回退空对象，不代表所有键读取错误都会回退默认值。
++- JSON 写入防抖 500 ms；明确落盘点可用 `ConfigUtils.SaveAll()`。DiscardCache 不保存变更；Save 写盘失败保留 dirty 供重试。整文件加载失败回退空对象，不代表所有键读取错误都会回退默认值。
+ - `Logger.Instance` 可替换；基类不实现 LogBehavior 所表达的 UI 动作。BaseLogger 构造时启动后台线程并调用虚方法 Init；Output 通常在日志线程，HandleBehavior 在调用线程。
+ - FileLogger 创建后修改路径字段可能晚于初始化；退出时先 Flush 再 Dispose，但尚未就绪时 Flush 会返回，Dispose 不保证排空或等待线程。
+ 
+--- upstream/MeloongCore/Shared/General/Config.cs
++++ vendor/MeloongCore/Shared/General/Config.cs
+@@ -231,7 +231,6 @@
+         try {
+             return FileUtils.Exists(filePath) ? JObject.Parse(FileUtils.ReadAsString(filePath)) : [];
+         } catch {
+-            // JSON 异常可能包含凭据内容，不保留原始异常，也不回退空配置。
+             throw new InvalidDataException($"读取密钥文件失败（{filePath}），请检查文件内容与加密格式。");
+         }
+     });
+--- upstream/MeloongCore/Shared/General/Logger.cs
++++ vendor/MeloongCore/Shared/General/Logger.cs
+@@ -296,7 +296,7 @@
+ /// </summary>
+ public class FileLogger : BaseLogger, IDisposable {
+ 
+-    public string logFolder = Path.Combine(Paths.Base, "logs");
++    public string logFolder = Path.Combine(PathUtils.IsWindows ? Paths.Base : Paths.AppDataThenName, "logs");
+     public string fileNamePrefix = "Log";
+     public string fileNameSuffix = ".txt";
+     private StreamWriter? writer;
+--- upstream/MeloongCore/Shared/Utils/CryptographyUtils.cs
++++ vendor/MeloongCore/Shared/Utils/CryptographyUtils.cs
+@@ -141,6 +141,13 @@
+     /// 如果验证失败则抛出 <see cref="CryptographicException"/>。
+     /// </summary>
+     public static void EcdsaVerify(string sourceString, string sign, string publicKey) {
++        if (!PathUtils.IsWindows) {
++            using var portable = ECDsa.Create();
++            portable.ImportParameters(ReadCngP256Key(publicKey, false));
++            if (!portable.VerifyData(Encoding.UTF8.GetBytes(sourceString), Convert.FromBase64String(sign), HashAlgorithmName.SHA256))
++                throw new SecurityException("签名验证失败");
++            return;
++        }
+         using var sha256 = GetHashAlgorithm(HashMethod.Sha256);
+         byte[] hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(sourceString));
+         IntPtr algorithmHandle = IntPtr.Zero;
+@@ -164,6 +171,11 @@
+     /// 使用 ECDSA 算法，为一个双方均知晓的字符串生成签名。
+     /// </summary>
+     public static string EcdsaSign(string sourceString, string privateKey) {
++        if (!PathUtils.IsWindows) {
++            using var portable = ECDsa.Create();
++            portable.ImportParameters(ReadCngP256Key(privateKey, true));
++            return Convert.ToBase64String(portable.SignData(Encoding.UTF8.GetBytes(sourceString), HashAlgorithmName.SHA256));
++        }
+         using var sha256 = GetHashAlgorithm(HashMethod.Sha256);
+         byte[] hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(sourceString));
+         byte[] privateKeyBytes = Convert.FromBase64String(privateKey);
+@@ -188,6 +200,18 @@
+         }
+     }
+ 
++    // Retain the upstream CNG key blob and IEEE-P1363 signature format.
++    private static ECParameters ReadCngP256Key(string base64, bool hasPrivate) {
++        var blob = Convert.FromBase64String(base64);
++        if (blob.Length != (hasPrivate ? 104 : 72) || BitConverter.ToUInt32(blob, 0) != (hasPrivate ? 0x32534345u : 0x31534345u) || BitConverter.ToUInt32(blob, 4) != 32)
++            throw new CryptographicException("不是有效的 CNG P-256 密钥。");
++        var x = new byte[32]; var y = new byte[32];
++        Array.Copy(blob, 8, x, 0, 32); Array.Copy(blob, 40, y, 0, 32);
++        byte[]? d = null;
++        if (hasPrivate) { d = new byte[32]; Array.Copy(blob, 72, d, 0, 32); }
++        return new ECParameters { Curve = ECCurve.NamedCurves.nistP256, Q = new ECPoint { X = x, Y = y }, D = d };
++    }
++
+     [DllImport("bcrypt.dll", CharSet = CharSet.Unicode)] private static extern int BCryptOpenAlgorithmProvider(out IntPtr algorithmHandle, string algorithmId, string? implementation, int flags);
+     [DllImport("bcrypt.dll", CharSet = CharSet.Unicode)] private static extern int BCryptImportKeyPair(IntPtr algorithmHandle, IntPtr importKey, string blobType, out IntPtr keyHandle, byte[] input, int inputSize, int flags);
+     [DllImport("bcrypt.dll")] private static extern int BCryptVerifySignature(IntPtr keyHandle, IntPtr paddingInfo, byte[] hash, int hashSize, byte[] signature, int signatureSize, int flags);
+--- upstream/MeloongCore/Shared/Utils/DirectoryUtils.cs
++++ vendor/MeloongCore/Shared/Utils/DirectoryUtils.cs
+@@ -78,7 +78,9 @@
+         } else {
+             // 实际的复制
+             Logger.Trace($"复制文件夹：{sourceFolder} → {destFolder}");
+-            foreach (var file in DirectoryUtils.EnumerateFiles(sourceFolder, includeSubDirectories: true).ToList()) FileUtils.Copy(file, file.Replace(sourceFolder, destFolder));
++            if (PathUtils.IsParentOf(sourceFolder, destFolder)) throw new IOException("不能将目录复制到自身的子目录。");
++            foreach (var file in DirectoryUtils.EnumerateFiles(sourceFolder, includeSubDirectories: true).ToList())
++                FileUtils.Copy(file, Path.Combine(destFolder, file.Substring(PathUtils.AddSlashSuffix(sourceFolder).Length)));
+         }
+     }
+ 
+@@ -99,7 +101,7 @@
+             var temp = Path.Combine(PathUtils.RemoveLastPart(sourceFolder), Path.GetRandomFileName());
+             DirectoryUtils.Move(sourceFolder, temp);
+             DirectoryUtils.Move(temp, destFolder);
+-        } else if (PathUtils.GetDiskName(sourceFolder) == PathUtils.GetDiskName(destFolder)) {
++        } else if (PathUtils.IsWindows && PathUtils.GetDiskName(sourceFolder) == PathUtils.GetDiskName(destFolder)) {
+             // 同一磁盘剪切，直接调用 Move（这只修改文件夹名，效率更高）
+             Logger.Trace($"剪切文件夹到同一磁盘：{sourceFolder} → {destFolder}");
+             DirectoryUtils.Delete(destFolder); // Move 要求此前不存在对应文件夹
+@@ -108,6 +110,15 @@
+                 Directory.Move(PathUtils.ForApi(sourceFolder), PathUtils.ForApi(destFolder));
+             });
+         } else {
++            if (!PathUtils.IsWindows) {
++                // POSIX volumes do not have drive letters. Try rename first.
++                try {
++                    if (!DirectoryUtils.Exists(destFolder)) {
++                        Directory.Move(sourceFolder, destFolder);
++                        return;
++                    }
++                } catch (IOException) { /* Cross-volume move falls back to copy. */ }
++            }
+             // 不同磁盘，必须先复制再删除，这就是我们傻逼微软
+             Logger.Trace($"剪切文件夹到不同磁盘：{sourceFolder} → {destFolder}");
+             DirectoryUtils.Copy(sourceFolder, destFolder);
+@@ -125,7 +136,18 @@
+     /// <para/>如果永久删除，返回 <see langword="false"/>。
+     /// </returns>
+     public static bool? Delete(string folder, bool toRecycleBin = false) {
++        if (toRecycleBin && !PathUtils.IsWindows) throw new PlatformNotSupportedException("请通过平台回收站服务删除文件夹。");
+         if (!DirectoryUtils.Exists(folder)) return null;
++        if (!PathUtils.IsWindows && (File.GetAttributes(folder) & FileAttributes.ReparsePoint) != 0) {
++            Directory.Delete(folder); // Unlink the selected symlink, never enumerate its target.
++            return false;
++        }
++        if (!PathUtils.IsWindows) {
++            for (var parent = Path.GetDirectoryName(Path.GetFullPath(folder)); !string.IsNullOrEmpty(parent); parent = Path.GetDirectoryName(parent)) {
++                if (Directory.Exists(parent) && (File.GetAttributes(parent) & FileAttributes.ReparsePoint) != 0)
++                    throw new IOException("不通过符号链接父目录执行递归删除。");
++            }
++        }
+         Logger.Trace($"{(toRecycleBin ? "将文件夹删除到回收站" : "删除文件夹")}：{folder}");
+         SafetyCheck(folder);
+         // 删除到回收站
+@@ -143,7 +165,10 @@
+             try {
+                 folder = PathUtils.ForApi(folder);
+                 foreach (string filePath in DirectoryUtils.EnumerateFiles(folder)) FileUtils.Delete(filePath); // 删除文件
+-                foreach (string str in DirectoryUtils.EnumerateDirectories(folder)) DeleteInternal(str); // 递归删除子文件夹
++                foreach (string str in DirectoryUtils.EnumerateDirectories(folder)) {
++                    if ((File.GetAttributes(str) & FileAttributes.ReparsePoint) != 0) Directory.Delete(str);
++                    else DeleteInternal(str);
++                }
+                 Retrier.Attempt(delay: _ => TimeSpan.FromMilliseconds(200), isRetryAllowed: ex => ex is IOException, action: _ => {
+                     FileUtils.SetReadOnly(folder, false);
+                     Directory.Delete(folder, true);
+@@ -179,6 +204,6 @@
+         Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+         Environment.GetFolderPath(Environment.SpecialFolder.Windows),
+         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads") // 下载文件夹没有 SpecialFolder 枚举
+-    }.Where(f => f.Contains(Path.VolumeSeparatorChar)))); // 当缺少某个文件夹时，GetFolderPath 会返回空字符串（#8636）
++    }.Where(f => !string.IsNullOrWhiteSpace(f)).Select(PathUtils.ForCompare))); // Ignore unavailable special folders on Unix.
+ 
+ }
+--- upstream/MeloongCore/Shared/Utils/FileUtils.cs
++++ vendor/MeloongCore/Shared/Utils/FileUtils.cs
+@@ -105,14 +105,12 @@
+     }
+ 
+     /// <summary>
+-    /// 原子写入文件。成功时目标文件完整切换为新内容，失败时已有目标文件保持不变。
+-    /// 不提供并发写入合并保证。
++    /// 原子写入文件。写入失败时目标文件保持不变。
+     /// </summary>
+     public static void WriteAtomic(string filePath, string text, Encoding? encoding = null) =>
+         FileUtils.WriteAtomic(filePath, (encoding ?? new UTF8Encoding()).GetBytes(text));
+     /// <summary>
+-    /// 原子写入文件。成功时目标文件完整切换为新内容，失败时已有目标文件保持不变。
+-    /// 不提供并发写入合并保证。
++    /// 原子写入文件。写入失败时目标文件保持不变。
+     /// </summary>
+     public static void WriteAtomic(string filePath, byte[] content) {
+         string tempPath = $"{filePath}.{Guid.NewGuid():N}.tmp";
+@@ -250,6 +248,7 @@
+     /// <para/>如果永久删除，返回 <see langword="false"/>。
+     /// </returns>
+     public static bool? Delete(string filePath, bool toRecycleBin = false) {
++        if (toRecycleBin && !PathUtils.IsWindows) throw new PlatformNotSupportedException("请通过平台回收站服务删除文件。");
+         if (!FileUtils.Exists(filePath)) return null;
+         Logger.Trace($"{(toRecycleBin ? "将文件删除到回收站" : "删除文件")}：{filePath}");
+         // 删除到回收站
+@@ -404,9 +403,19 @@
+             doneCount++;
+             if (totalCount > 0) p?.Set((double) doneCount / totalCount);
+             // ZipSlip 修复
+-            string outputFilePath = Path.Combine(outputDirectory, entry.FullName);
++            // netstandard2.0 lacks this property in its reference API; modern hosts expose it.
++            var attributes = (int?) typeof(ZipArchiveEntry).GetProperty("ExternalAttributes")?.GetValue(entry) ?? 0;
++            if (((attributes >> 16) & 0xF000) == 0xA000)
++                throw new InvalidDataException("此解压入口不允许符号链接。");
++            string outputFilePath = Path.GetFullPath(Path.Combine(outputDirectory, entry.FullName.Replace('\\', '/')));
+             if (!PathUtils.IsParentOf(outputDirectory, outputFilePath))
+                 throw new InvalidDataException($"Zip 文件项 {entry.FullName} 的路径在压缩包之外，这可能导致安全问题");
++            for (var parent = Path.GetDirectoryName(outputFilePath); !string.IsNullOrEmpty(parent); parent = Path.GetDirectoryName(parent)) {
++                if (Directory.Exists(parent) && (File.GetAttributes(parent) & FileAttributes.ReparsePoint) != 0)
++                    throw new InvalidDataException("解压目标不允许经过符号链接。");
++            }
++            if (File.Exists(outputFilePath) && (File.GetAttributes(outputFilePath) & FileAttributes.ReparsePoint) != 0)
++                throw new InvalidDataException("解压目标不允许覆盖符号链接。");
+             // 实际的解压
+             using var entryStream = entry.Open();
+             FileUtils.Write(outputFilePath, entryStream);
+@@ -462,14 +471,13 @@
+         => File.Exists(PathUtils.ForApi(filePath));
+ 
+     /// <summary>
+-    /// 检查文件是否未被其他进程占用
+-    /// <para>被占用或无权读取时返回 <see langword="false"/>。</para>
++    /// 检查文件是否存在，且当前程序有独占的读写权限，未被其他进程占用。
+     /// </summary>
+     public static bool IsAvailable(string filePath) {
+-        if (!Exists(filePath)) return true;
++        if (!Exists(filePath)) return false;
+         try {
+             Retrier.Attempt(maxAttempts: 3, delay: _ => TimeSpan.FromMilliseconds(200), isRetryAllowed: ex => ex is IOException, action: _ => {
+-                using var stream = new FileStream(PathUtils.ForApi(filePath), FileMode.Open, FileAccess.Read, FileShare.None);
++                using var unused = new FileStream(PathUtils.ForApi(filePath), FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+             });
+             return true;
+         } catch (Exception ex) when (ex is IOException or UnauthorizedAccessException) {
+--- upstream/MeloongCore/Shared/Utils/PathUtils.cs
++++ vendor/MeloongCore/Shared/Utils/PathUtils.cs
+@@ -1,6 +1,9 @@
+ namespace MeloongCore;
+ public static class PathUtils {
+ 
++    // Mac port: local paths keep native separators and Unix case semantics.
++    internal static bool IsWindows => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
++
+     #region 分隔符
+ 
+     /// <summary>
+@@ -12,8 +15,11 @@
+     /// <summary>
+     /// 确保路径的结尾不包含文件夹分隔符。
+     /// </summary>
+-    public static string RemoveSlashSuffix(string folder) 
+-        => folder.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
++    public static string RemoveSlashSuffix(string folder) {
++        var trimmed = folder.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
++        var root = (folder.Contains("://") ? "" : Path.GetPathRoot(folder)) ?? "";
++        return trimmed.Length < root.Length ? root : trimmed;
++    }
+ 
+     #endregion
+ 
+@@ -24,6 +30,7 @@
+     /// <para/>结果的开头不含 <c>\\?\</c>，结尾不含分隔符。
+     /// </summary>
+     public static string ToShortPath(string pathName) {
++        if (!IsWindows) return pathName;
+         // 快速返回
+         if (string.IsNullOrEmpty(pathName)) return pathName;
+         if (!pathName.Contains(":") || pathName.Contains("://")) return pathName;
+@@ -119,6 +126,7 @@
+     /// 这会去除路径末尾的分隔符，将 / 替换为 \。
+     /// </summary>
+     public static string ToExtendedFormat(string pathName) {
++        if (!IsWindows) return pathName;
+         if (string.IsNullOrWhiteSpace(pathName)) return pathName;
+         if (!pathName.Contains(@":")) return pathName; // 可能是相对路径，保持不变
+         if (pathName.StartsWithF(@"\\?\")) return pathName; // 已经是长路径
+@@ -134,6 +142,7 @@
+     /// 去除路径开头的 <c>\\?\</c>。
+     /// </summary>
+     public static string RemoveExtendedPrefix(string pathName) {
++        if (!IsWindows) return pathName;
+         if (pathName.StartsWithF(@"\\?\UNC\")) return @"\\" + pathName.AfterLast(@"\\?\UNC\");
+         if (pathName.StartsWithF(@"\\?\")) return pathName.AfterLast(@"\\?\");
+         return pathName;
+@@ -153,6 +162,7 @@
+     /// "https://foo.bar/file/pack.zip?arg=1" → "https://foo.bar/file"
+     /// </code></summary>
+     public static string RemoveLastPart(string pathName) {
++        if (!IsWindows && !pathName.Contains("://")) return Path.GetDirectoryName(RemoveSlashSuffix(pathName)) ?? Path.GetPathRoot(pathName) ?? "";
+         if (pathName.Contains("://")) { // 网络路径
+             pathName = PathUtils.RemoveSlashSuffix(pathName.BeforeFirst("#").BeforeFirst("?")); // 去除参数
+         }
+@@ -168,6 +178,7 @@
+     /// "https://foo.bar/file/pack.zip?arg=1" → "pack.zip"
+     /// </code></summary>
+     public static string GetLastPart(string pathName) {
++        if (!IsWindows && !pathName.Contains("://")) return Path.GetFileName(RemoveSlashSuffix(pathName));
+         if (pathName.Contains("://")) { // 网络路径
+             pathName = PathUtils.RemoveSlashSuffix(pathName.BeforeFirst("#").BeforeFirst("?")); // 去除参数
+         } else { // 文件路径
+@@ -207,6 +218,7 @@
+     /// 若路径不包含盘符，则返回 <c>null</c>。
+     /// </summary>
+     public static char? GetDiskName(string? pathName) {
++        if (!IsWindows) return null;
+         if (string.IsNullOrEmpty(pathName)) return null;
+         pathName = PathUtils.RemoveExtendedPrefix(pathName!);
+         if (pathName.StartsWithF(@"\\") || pathName.StartsWithF("/")) return null;
+@@ -219,7 +231,8 @@
+     /// </summary>
+     public static string ForCompare(string pathName) {
+         try {
+-            return PathUtils.RemoveSlashSuffix(PathUtils.RemoveExtendedPrefix(Path.GetFullPath(pathName)).Replace("/", @"\"));
++            var fullPath = PathUtils.RemoveExtendedPrefix(Path.GetFullPath(pathName));
++            return PathUtils.RemoveSlashSuffix(IsWindows ? fullPath.Replace('/', '\\') : fullPath);
+         } catch (ArgumentException ex) {
+             throw new ArgumentException($"路径不正确：{pathName}", ex);
+         }
+@@ -243,7 +256,7 @@
+     public static int Compare(string? path1, string? path2) {
+         if (string.IsNullOrEmpty(path1)) return string.IsNullOrEmpty(path2) ? 0 : -1;
+         if (string.IsNullOrEmpty(path2)) return 1;
+-        return string.Compare(PathUtils.ForCompare(path1!), PathUtils.ForCompare(path2!), StringComparison.OrdinalIgnoreCase);
++        return string.Compare(PathUtils.ForCompare(path1!), PathUtils.ForCompare(path2!), IsWindows ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
+     }
+ 
+     /// <summary>
+@@ -251,6 +264,7 @@
+     /// <para/>具体而言：将分隔符改为 \。添加前导的 <c>\\?\</c>。若为驱动器则添加末尾分隔符，否则去除分隔符。
+     /// </summary>
+     public static string ForApi(string pathName) {
++        if (!IsWindows) return PathUtils.RemoveSlashSuffix(pathName);
+         pathName = PathUtils.ToExtendedFormat(pathName);
+         if (pathName.EndsWithF(":")) pathName += @"\"; // 驱动器路径必须保留末尾的分隔符
+         if (pathName.EndsWithF(@":\")) return pathName;
+@@ -265,7 +279,8 @@
+     public static bool IsParentOf(string parentPath, string childPath) {
+         parentPath = PathUtils.ForCompare(parentPath);
+         childPath = PathUtils.ForCompare(childPath);
+-        return childPath.StartsWithF(parentPath + @"\", true) || PathUtils.IsSame(childPath, parentPath);
++        var prefix = PathUtils.AddSlashSuffix(parentPath);
++        return childPath.StartsWith(prefix, IsWindows ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal) || PathUtils.IsSame(childPath, parentPath);
+     }
+ 
+ }
+--- upstream/PCLCS/Java.cs
++++ vendor/PCLCS/Java.cs
+@@ -12,7 +12,8 @@
+     /// <summary>
+     /// java.exe 文件的完整路径。
+     /// </summary>
+-    [JsonIgnore] public string JavaExePath => Path.Combine(Folder, "java.exe");
++    [JsonIgnore] public string JavaExePath => Path.Combine(Folder, OperatingSystem.IsWindows() ? "java.exe" : "java");
++    [JsonIgnore] public string? Architecture;
+ 
+     /// <summary>
+     /// Java 的版本号（例如 16.0.1），保证 <see cref="Version.Major"/> 为其主版本。
+@@ -62,6 +63,7 @@
+             }
+             FileEncodingName = GetProperty("file.encoding");
+             NativeEncodingName = GetProperty("native.encoding") ?? FileEncodingName; // 旧版本没有 native.encoding
++            Architecture = GetProperty("os.arch");
+ 
+             Logger.Info($"检查 Java 成功：{this}");
+             available = true;
+@@ -89,7 +91,7 @@
+     public bool Equals(Java? other)
+         => other is not null && PathUtils.IsSame(Folder, other.Folder);
+     public override bool Equals(object? obj) => obj is Java other && Equals(other);
+-    public override int GetHashCode() => StringComparer.CurrentCultureIgnoreCase.GetHashCode(PathUtils.ForCompare(Folder));
++    public override int GetHashCode() => (OperatingSystem.IsWindows() ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal).GetHashCode(PathUtils.ForCompare(Folder));
+ 
+     /// <summary>用户友好的描述文本。</summary>
+     public override string ToString()
+@@ -134,6 +136,14 @@
+     /// 存在完整 Java 的文件夹列表。
+     /// </summary>
+     internal static readonly Lazy<List<string>> CandidateFolders = new(() => {
++        if (OperatingSystem.IsMacOS()) {
++            var user = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
++            return new[] {
++                "/Library/Java/JavaVirtualMachines", Path.Combine(user, "Library/Java/JavaVirtualMachines"),
++                Path.Combine(user, ".sdkman/candidates/java"), Path.Combine(user, ".jdks"),
++                Environment.GetEnvironmentVariable("JAVA_HOME"), Environment.GetEnvironmentVariable("JDK_HOME")
++            }.Where(f => !string.IsNullOrWhiteSpace(f)).Cast<string>().Select(PathUtils.ForCompare).ToList();
++        }
+         List<string> folders = [
+             Paths.AppData + @".minecraft\runtime\", // 这也是 PCL 下载 Java 的路径
+             Paths.AppData + @".hmcl\java\",
+@@ -197,11 +207,12 @@
+         await TaskUtils.ForEachAsync(folders.Distinct(StringComparer.OrdinalIgnoreCase), 4, async (folder, cp) => {
+             await Task.Run(() => {
+                 try {
+-                    foreach (var file in DirectoryUtils.EnumerateFiles(folder, includeSubDirectories, "java.exe")) {
++                    foreach (var file in DirectoryUtils.EnumerateFiles(folder, includeSubDirectories, OperatingSystem.IsWindows() ? "java.exe" : "java")) {
+                         cancellationToken.ThrowIfCancellationRequested();
+                         string targetFolder = PathUtils.AddSlashSuffix(PathUtils.ForCompare(PathUtils.RemoveLastPart(file)));
+                         // 判断文件夹是否包含重解析点（例如符号链接）
+-                        static bool HasReparsePoint(FileSystemInfo info) {
++                        static bool HasReparsePoint(FileSystemInfo? info) {
++                            if (info is null) return false;
+                             if (PathUtils.IsParentOf(Paths.AppData + @".minecraft\runtime\", info.FullName)) return false; // 不筛查 PCL 的下载路径（#8928）
+                             do {
+                                 if (info.Attributes.HasFlagF(FileAttributes.ReparsePoint)) return true;
+@@ -210,7 +221,7 @@
+                             return false;
+                         }
+                         // 结果
+-                        var hasReparsePoint = HasReparsePoint(FileUtils.GetInfo(Path.Combine(targetFolder, "java.exe")));
++                        var hasReparsePoint = HasReparsePoint(FileUtils.GetInfo(Path.Combine(targetFolder, OperatingSystem.IsWindows() ? "java.exe" : "java")));
+                         var isSpecialPath = targetFolder.ContainsIgnoreCase("java8path_target_") || targetFolder.ContainsIgnoreCase("javapath_target_") || targetFolder.ContainsIgnoreCase("javatmp") || targetFolder.ContainsIgnoreCase("system32");
+                         results.Add((targetFolder, hasReparsePoint, isSpecialPath));
+                     }
+--- upstream/PCLCS/PCLCS.csproj
++++ vendor/PCLCS/PCLCS.csproj
+@@ -1,7 +1,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+ 
+ 	<PropertyGroup>
+-		<TargetFramework>net48</TargetFramework>
++		<TargetFramework>net10.0</TargetFramework>
+ 		<OutputType>Library</OutputType>
+ 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+ 		<OutDir>bin\</OutDir>
+@@ -35,13 +35,10 @@
+ 		<Using Include="Newtonsoft.Json.Linq" />
+ 		<Using Include="MeloongCore" />
+ 		<Using Include="MeloongCore.Extensions" />
+-		<Using Include="MeloongCore.Wpf" />
+-		<Using Include="MeloongCore.Wpf.Extensions" />
+ 	</ItemGroup>
+ 
+ 	<ItemGroup>
+ 	  <ProjectReference Include="..\MeloongCore\Shared\MeloongCore.csproj" />
+-	  <ProjectReference Include="..\MeloongCore\Wpf\MeloongCore.Wpf.csproj" />
+ 	</ItemGroup>
+ 
+ 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+@@ -62,10 +59,7 @@
+ 		<EmbeddedResource Include="Minecraft\OptiFineHashes.json" LogicalName="Minecraft\OptiFineHashes.json" />
+ 	</ItemGroup>
+ 	<ItemGroup>
+-	  <Reference Include="Microsoft.VisualBasic" />
+-	  <Reference Include="Newtonsoft.Json">
+-	    <HintPath>..\Plain Craft Launcher 2\Resources\Newtonsoft.Json.dll</HintPath>
+-	  </Reference>
++	  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+ 	</ItemGroup>
+ 
+ </Project>
+--- upstream/PCLCS/Resource/WikiEntry.cs
++++ vendor/PCLCS/Resource/WikiEntry.cs
+@@ -29,7 +29,10 @@
+     /// 内置数据库中的所有 MC 百科条目。
+     /// </summary>
+     public static readonly Lazy<List<WikiEntry>> All = new(() => {
+-        var dataLines = FileUtils.ReadAsLines(@"Resource\WikiEntries.txt", type: typeof(WikiEntry)).ToList();
++        // MSBuild normalizes LogicalName separators on Unix. Resolve the actual embedded resource name.
++        var resourceName = typeof(WikiEntry).Assembly.GetManifestResourceNames()
++            .Single(name => name.Replace('\\', '/').EndsWith("Resource/WikiEntries.txt", StringComparison.Ordinal));
++        var dataLines = FileUtils.ReadAsLines(resourceName, type: typeof(WikiEntry)).ToList();
+ 
+         // 读取最后一行的浏览量
+         Queue<int> popularities = [];
+@@ -80,4 +83,4 @@
+ 
+     public override string ToString()
+         => $"{Slugs.GetOrDefault(ResourcePlatforms.CurseForge)}&{Slugs.GetOrDefault(ResourcePlatforms.Modrinth)}|{Id}|{ChineseName}，浏览量 {Popularity}";
+-}+}

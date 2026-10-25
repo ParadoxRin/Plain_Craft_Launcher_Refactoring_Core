@@ -1,0 +1,115 @@
+{
+  "version": "0.23",
+  "date": "2026-10-25",
+  "scope": "仅本轮新增功能实际运行与必要编译；未运行历史回归、额外质量检查或人工验收",
+  "counts": {
+    "已补齐本地行为": 8,
+    "Mac平台实现": 3,
+    "仍有兼容或外部实测限制": 3
+  },
+  "items": [
+    {
+      "feature": "进程优先级",
+      "status": "Mac 平台实现",
+      "implementation": "新增前台优先；原生 agent 设置 TASK_FOREGROUND_APPLICATION。",
+      "runtime": "原生窗口运行：task_policy_set/get 均返回 0，实际 role=1。",
+      "remaining": "不提供 Windows 实时优先级。"
+    },
+    {
+      "feature": "随机皮肤",
+      "status": "已补齐本地行为",
+      "implementation": "同时保存随机纹理和手臂模型，启动身份匹配模型。",
+      "runtime": "实际窗口按钮保存模型、生成匹配 UUID。",
+      "remaining": "本轮未启动游戏观察人物模型。"
+    },
+    {
+      "feature": "Steve",
+      "status": "已补齐本地行为",
+      "implementation": "优先使用 wide/steve 纹理，保存 wide 模型。",
+      "runtime": "按钮保存 wide、生成启动 UUID。",
+      "remaining": "本轮未做游戏内外观验收。"
+    },
+    {
+      "feature": "Alex",
+      "status": "已补齐本地行为",
+      "implementation": "优先使用 slim/alex 纹理，保存 slim 模型。",
+      "runtime": "按钮保存 slim、生成启动 UUID。",
+      "remaining": "1.8 之前没有原版 slim 模型。"
+    },
+    {
+      "feature": "滑稽彩",
+      "status": "Mac 平台实现",
+      "implementation": "动态全色相主色、选择色、背景色与三段标题渐变。",
+      "runtime": "实际定时器产生不同颜色值；标题刷类型为 LinearGradientBrush。",
+      "remaining": "原仓库未公开对应完整私有算法，不称为算法复刻。"
+    },
+    {
+      "feature": "欧皇彩",
+      "status": "Mac 平台实现",
+      "implementation": "青绿极光色域动态变化，辅助窗口跟随主色。",
+      "runtime": "实际定时器产生不同颜色值。",
+      "remaining": "同上，提供 Mac 动态配色。"
+    },
+    {
+      "feature": "启动 PCL 图标",
+      "status": "已补齐本地行为",
+      "implementation": "采用原版 PCL 矢量路径和淡入动画。",
+      "runtime": "真实窗口实例创建 Path，并执行淡入。",
+      "remaining": "未做视觉验收。"
+    },
+    {
+      "feature": "主页预设模式",
+      "status": "仍有兼容范围",
+      "implementation": "直接渲染常用 XAML/JSON，内联执行事件，保存完整内容为离线预设。",
+      "runtime": "真实布局和按钮运行、预设保存重读、移除。",
+      "remaining": "不兼容任意 WPF 控件、脚本及所有第三方动态预设。"
+    },
+    {
+      "feature": "主页预设选择",
+      "status": "仍有兼容范围",
+      "implementation": "内置预设及用户内容快照可选择；保存、删除后刷新列表。",
+      "runtime": "核心预设保存重读删除实际运行。",
+      "remaining": "未逐个接入或运行 Windows 版全部外部预设。"
+    },
+    {
+      "feature": "社区资源来源",
+      "status": "实现已扩展，外部部分未实测",
+      "implementation": "Modrinth 全部目录与哈希查询统一来源策略；CurseForge 独立镜像配置、失败回退，不转发密钥。",
+      "runtime": "真实 Modrinth 查询、失效来源回退、文件哈希查询。",
+      "remaining": "没有可用 CurseForge 密钥或指定镜像，因此未声称该外部链路实测通过。"
+    },
+    {
+      "feature": "文件名格式",
+      "status": "已补齐本地行为",
+      "implementation": "获取项目名及已有中文译名，五种格式保持文件扩展名和资源身份。",
+      "runtime": "Sodium 0.8.13 / Minecraft 1.21.1 五次真实下载安装，生成五种文件名。",
+      "remaining": "没有译名的项目保留官方项目名称。"
+    },
+    {
+      "feature": "Mod 管理样式",
+      "status": "已补齐本地行为",
+      "implementation": "管理清单保存项目名；名称优先/文件名优先均使用真实项目名称。",
+      "runtime": "五组已安装资源生成两种显示顺序，名称为钠 (Sodium)。",
+      "remaining": "不猜测未收录项目的中文名。"
+    },
+    {
+      "feature": "动画速度",
+      "status": "已补齐本地行为",
+      "implementation": "统一导航、辅助窗口、主页和启动标志的淡入；速度 0 立即完成，取消旧动画。",
+      "runtime": "实际运行速度 0、0.5、3；完成耗时随速度变化。",
+      "remaining": "系统原生窗口动画与第三方控件内部动画不属于自有动画时钟。"
+    },
+    {
+      "feature": "调试模式",
+      "status": "已补齐本地行为",
+      "implementation": "可开关结构化运行日志，记录元数据、导航、启动阶段和退出码；2 MiB 轮换。",
+      "runtime": "真实资源网络请求写入 runtime-debug.jsonl；关闭日志目标。",
+      "remaining": "本轮没有为日志功能重复游戏启动或账号流程。"
+    }
+  ],
+  "additional": [
+    "正版玩家名查询、预览、保存、强制刷新、重开恢复",
+    "PNG 原子导出、64x32/64x64 转换",
+    "删除应用赞助入口及当前交付宣传内容，保留署名与许可证"
+  ]
+}

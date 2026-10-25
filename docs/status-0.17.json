@@ -1,0 +1,408 @@
+{
+  "AUTH-003": {
+    "id": "AUTH-003",
+    "domain": "账户",
+    "name": "微软设备码授权",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageLaunch",
+    "sourceEvidence": "公开源码入口；细节见source-ui-inventory.json，删节功能单列",
+    "macImplementation": "src/Pcl.Core/MicrosoftApplication.cs; src/Pcl.Core/MicrosoftAuthentication.cs; src/Pcl.Core/GameLaunchAuthorization.cs; src/Pcl.Core/Accounts.cs",
+    "ui": "首页 → 微软账号 → 登录微软账号",
+    "status": "已验收",
+    "testEvidence": [
+      "artifacts/microsoft-integration-preflight/release-tests/test-results.json",
+      "artifacts/microsoft-live-0.12-retry/evidence/last-error.json",
+      "artifacts/verification-0.16/microsoft-login-result.json",
+      "artifacts/verification-0.16/microsoft-cold-refresh-0.16.json",
+      "artifacts/verification-0.16/desktop-manual-launch.json",
+      "artifacts/verification-0.16/user-world-acceptance.json",
+      "artifacts/verification-0.16/final-tests/test-results.json",
+      "docs/0.16实现与验收.md",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/microsoft-lifecycle-0.17.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json"
+    ],
+    "remaining": "0.16 完成单账户首次授权与世界存档验收；0.17 追加实际退出重登、权益重新校验、钥匙串冷恢复及多版本正版启动。不代表所有账号、网络或双账户人工切换已验收。",
+    "externalConditions": [],
+    "implementationSummary": "使用内置且获批的公开 client ID；访问令牌驻留内存，记住登录仅保存刷新令牌到 macOS 钥匙串。",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.17/release-tests/test-results.json"
+    }
+  },
+  "AUTH-004": {
+    "id": "AUTH-004",
+    "domain": "账户",
+    "name": "微软刷新和Keychain",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageLaunch",
+    "sourceEvidence": "公开源码入口；细节见source-ui-inventory.json，删节功能单列",
+    "macImplementation": "src/Pcl.Core/MicrosoftApplication.cs; src/Pcl.Core/MicrosoftAuthentication.cs; src/Pcl.Core/GameLaunchAuthorization.cs; src/Pcl.Core/Accounts.cs",
+    "ui": "首页 → 微软账号 → 登录微软账号",
+    "status": "已验收",
+    "testEvidence": [
+      "artifacts/microsoft-integration-preflight/release-tests/test-results.json",
+      "artifacts/microsoft-live-0.12-retry/evidence/last-error.json",
+      "artifacts/verification-0.16/microsoft-login-result.json",
+      "artifacts/verification-0.16/microsoft-cold-refresh-0.16.json",
+      "artifacts/verification-0.16/desktop-manual-launch.json",
+      "artifacts/verification-0.16/user-world-acceptance.json",
+      "artifacts/verification-0.16/final-tests/test-results.json",
+      "docs/0.16实现与验收.md",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/microsoft-lifecycle-0.17.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json"
+    ],
+    "remaining": "0.16 完成单账户首次授权与世界存档验收；0.17 追加实际退出重登、权益重新校验、钥匙串冷恢复及多版本正版启动。不代表所有账号、网络或双账户人工切换已验收。",
+    "externalConditions": [],
+    "implementationSummary": "使用内置且获批的公开 client ID；访问令牌驻留内存，记住登录仅保存刷新令牌到 macOS 钥匙串。",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.17/release-tests/test-results.json"
+    }
+  },
+  "AUTH-005": {
+    "id": "AUTH-005",
+    "domain": "账户",
+    "name": "微软权益与档案",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageLaunch",
+    "sourceEvidence": "公开源码入口；细节见source-ui-inventory.json，删节功能单列",
+    "macImplementation": "src/Pcl.Core/MicrosoftApplication.cs; src/Pcl.Core/MicrosoftAuthentication.cs; src/Pcl.Core/GameLaunchAuthorization.cs; src/Pcl.Core/Accounts.cs",
+    "ui": "首页 → 微软账号 → 登录微软账号",
+    "status": "已验收",
+    "testEvidence": [
+      "artifacts/microsoft-integration-preflight/release-tests/test-results.json",
+      "artifacts/microsoft-live-0.12-retry/evidence/last-error.json",
+      "artifacts/verification-0.16/microsoft-login-result.json",
+      "artifacts/verification-0.16/microsoft-cold-refresh-0.16.json",
+      "artifacts/verification-0.16/desktop-manual-launch.json",
+      "artifacts/verification-0.16/user-world-acceptance.json",
+      "artifacts/verification-0.16/final-tests/test-results.json",
+      "docs/0.16实现与验收.md",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/microsoft-lifecycle-0.17.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json"
+    ],
+    "remaining": "0.16 完成单账户首次授权与世界存档验收；0.17 追加实际退出重登、权益重新校验、钥匙串冷恢复及多版本正版启动。不代表所有账号、网络或双账户人工切换已验收。",
+    "externalConditions": [],
+    "implementationSummary": "使用内置且获批的公开 client ID；访问令牌驻留内存，记住登录仅保存刷新令牌到 macOS 钥匙串。",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.17/release-tests/test-results.json"
+    }
+  },
+  "AUTH-006": {
+    "id": "AUTH-006",
+    "domain": "账户",
+    "name": "多微软账户与退出",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageLaunch",
+    "sourceEvidence": "公开源码入口；细节见source-ui-inventory.json，删节功能单列",
+    "macImplementation": "src/Pcl.Core/MicrosoftApplication.cs; src/Pcl.Core/MicrosoftAuthentication.cs; src/Pcl.Core/GameLaunchAuthorization.cs; src/Pcl.Core/Accounts.cs",
+    "ui": "首页 → 微软账号 → 登录微软账号",
+    "status": "部分实现",
+    "testEvidence": [
+      "artifacts/microsoft-integration-preflight/release-tests/test-results.json",
+      "artifacts/microsoft-live-0.12-retry/evidence/last-error.json",
+      "artifacts/verification-0.16/microsoft-login-result.json",
+      "artifacts/verification-0.16/microsoft-cold-refresh-0.16.json",
+      "artifacts/verification-0.16/desktop-manual-launch.json",
+      "artifacts/verification-0.16/user-world-acceptance.json",
+      "artifacts/verification-0.16/final-tests/test-results.json",
+      "docs/0.16实现与验收.md",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/microsoft-lifecycle-0.17.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json"
+    ],
+    "remaining": "0.17 已实测同一真实微软正版账户退出、钥匙串与内存清除、退出后拒绝启动、网页重新授权、去重及冷启动刷新。用户没有第二个可用账户，真人双账户切换仍待验收；两独立账户协议夹具已通过。",
+    "externalConditions": [],
+    "implementationSummary": "以所选账户凭据状态控制启动按钮，退出保留账户记录但标为需重新登录；核心仍执行正版检查。回归检查不同账户的缓存、client ID、刷新令牌和注销隔离。",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.17/release-tests/test-results.json"
+    }
+  },
+  "VER-003": {
+    "id": "VER-003",
+    "domain": "游戏与加载器",
+    "name": "原版安装与启动",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageDownload",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/MinecraftService.cs; src/Pcl.Core/LaunchService.cs",
+    "ui": "下载版本 / 加载器",
+    "status": "已验收",
+    "testEvidence": [
+      "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json",
+      "artifacts/gui-install-clean-0.8/evidence/user-world-acceptance.json",
+      "artifacts/verification-0.16/microsoft-login-result.json",
+      "artifacts/verification-0.16/microsoft-cold-refresh-0.16.json",
+      "artifacts/verification-0.16/desktop-manual-launch.json",
+      "artifacts/verification-0.16/user-world-acceptance.json",
+      "artifacts/verification-0.16/final-tests/test-results.json",
+      "docs/0.16实现与验收.md",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/owned-launches/matrix.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json"
+    ],
+    "remaining": "0.17 正版启动原版 1.12.2、1.16.5、1.18.2、26.3，均观察图形与材质初始化；0.16 的 1.21.1 世界/存档用户验收保留。本轮十组合未进行世界内人工验收。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.17/release-tests/test-results.json"
+    },
+    "implementationSummary": ""
+  },
+  "VER-004": {
+    "id": "VER-004",
+    "domain": "游戏与加载器",
+    "name": "旧minecraftArguments适配",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageDownload",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/VersionInstaller.cs",
+    "ui": "下载版本 / 加载器",
+    "status": "部分实现",
+    "testEvidence": [
+      "artifacts/evidence-0.8-compat/compatibility-results.json",
+      "tests/Pcl.Tests/LegacyCompatibilityTests.cs",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/owned-launches/matrix.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json"
+    ],
+    "remaining": "0.17 真实正版账户启动 1.12.2，旧 minecraftArguments 路径完成图形初始化；其他远古参数和资源布局仍需逐版验收。",
+    "externalConditions": [],
+    "implementationSummary": "LegacyLaunchAdapter.NormalizeMetadata/SplitArguments、FabricService.Merge，老参数替换及变量适配",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.17/release-tests/test-results.json"
+    }
+  },
+  "VER-005": {
+    "id": "VER-005",
+    "domain": "游戏与加载器",
+    "name": "LWJGL2 ARM64",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageDownload",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/VersionInstaller.cs",
+    "ui": "下载版本 / 加载器",
+    "status": "部分实现",
+    "testEvidence": [
+      "artifacts/evidence-0.8-compat/compatibility-results.json",
+      "src/Pcl.Core/Compatibility/xmcl-macos-arm64.json",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/owned-launches/matrix.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json"
+    ],
+    "remaining": "0.17 原版 1.12.2 使用 ARM64 Java 8 与 LWJGL2 兼容层通过图形初始化；不声明全部 LWJGL2 游戏、旁白或手柄兼容。",
+    "externalConditions": [],
+    "implementationSummary": "固定XMCL osx-arm64映射、HMCL LWJGL2 natives、逐Mach-O审核、第一线程规则",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.17/release-tests/test-results.json"
+    }
+  },
+  "VER-006": {
+    "id": "VER-006",
+    "domain": "游戏与加载器",
+    "name": "Fabric安装",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageDownload",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/VersionInstaller.cs",
+    "ui": "下载版本 / 加载器",
+    "status": "部分实现",
+    "testEvidence": [
+      "artifacts/evidence-0.8-compat/migration-smoke/result.json",
+      "artifacts/evidence-0.7/acceptance.json",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/owned-launches/matrix.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json"
+    ],
+    "remaining": "0.17 以真实正版账户启动 Fabric 0.19.5 / 1.20.1；保留原迁移副本证据，未覆盖全部目录或模组组合。",
+    "externalConditions": [],
+    "implementationSummary": "官方Meta/Maven校验、独立实例，显式版本更换走新副本",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.17/release-tests/test-results.json"
+    }
+  },
+  "VER-007": {
+    "id": "VER-007",
+    "domain": "游戏与加载器",
+    "name": "Forge现代安装",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageDownload",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/VersionInstaller.cs",
+    "ui": "下载版本 / 加载器",
+    "status": "部分实现",
+    "testEvidence": [
+      "artifacts/evidence-0.7/acceptance.json",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/owned-launches/matrix.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json"
+    ],
+    "remaining": "0.17 正版启动 Forge 1.20.1-47.4.28 与 1.21.1-52.1.20，图形与材质初始化通过；未覆盖每个 Forge 构建和模组组合。",
+    "externalConditions": [],
+    "implementationSummary": "官方installer --installClient、私有库及生成文件收据",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.17/release-tests/test-results.json"
+    }
+  },
+  "VER-009": {
+    "id": "VER-009",
+    "domain": "游戏与加载器",
+    "name": "NeoForge现代安装",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageDownload",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/VersionInstaller.cs",
+    "ui": "下载版本 / 加载器",
+    "status": "部分实现",
+    "testEvidence": [
+      "artifacts/evidence-0.7/acceptance.json",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/owned-launches/matrix.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json"
+    ],
+    "remaining": "0.17 正版启动 NeoForge 1.20.4-20.4.253 与 1.21.1-21.1.264，图形与材质初始化通过；未覆盖全部现代版本。",
+    "externalConditions": [],
+    "implementationSummary": "现代net.neoforged:neoforge坐标与官方installer",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.17/release-tests/test-results.json"
+    }
+  },
+  "JAVA-001": {
+    "id": "JAVA-001",
+    "domain": "Java与启动",
+    "name": "元数据Java自动匹配",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Modules/Minecraft",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/JavaService.cs; src/Pcl.Core/MacCompatibility.cs",
+    "ui": "实例管理 → 启动设置",
+    "status": "已实现待验收",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/evidence-0.7/acceptance.json",
+      "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/owned-launches/matrix.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json"
+    ],
+    "remaining": "0.17 十个正版启动组合覆盖 ARM64 Java 8/17/21/25，核对实际进程版本与架构；不推定所有游戏、快照或模组适配。Java 16 单列保留待测边界。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.17/release-tests/test-results.json"
+    },
+    "implementationSummary": ""
+  },
+  "JAVA-002": {
+    "id": "JAVA-002",
+    "domain": "Java与启动",
+    "name": "Java8ARM64",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Modules/Minecraft",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/LaunchService.cs",
+    "ui": "实例管理 → 启动设置",
+    "status": "部分实现",
+    "testEvidence": [
+      "artifacts/evidence-0.8-compat/compatibility-results.json",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/owned-launches/matrix.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json"
+    ],
+    "remaining": "0.17 真实正版启动原版 1.12.2、1.16.5，实际使用 Java 8 aarch64；历史 Forge/LiteLoader/OptiFine 证据保留原范围。",
+    "externalConditions": [],
+    "implementationSummary": "Azul官方SHA256与真实JVM架构检查，实体bin/java查找",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.17/release-tests/test-results.json"
+    }
+  },
+  "JAVA-004": {
+    "id": "JAVA-004",
+    "domain": "Java与启动",
+    "name": "Java17ARM64",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Modules/Minecraft",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/JavaService.cs; src/Pcl.Core/MacCompatibility.cs",
+    "ui": "实例管理 → 启动设置",
+    "status": "已实现待验收",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/evidence-0.7/acceptance.json",
+      "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/owned-launches/matrix.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json"
+    ],
+    "remaining": "0.17 十个正版启动组合覆盖 ARM64 Java 8/17/21/25，核对实际进程版本与架构；不推定所有游戏、快照或模组适配。Java 16 单列保留待测边界。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.17/release-tests/test-results.json"
+    },
+    "implementationSummary": ""
+  },
+  "JAVA-005": {
+    "id": "JAVA-005",
+    "domain": "Java与启动",
+    "name": "Java21ARM64",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Modules/Minecraft",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/JavaService.cs; src/Pcl.Core/MacCompatibility.cs",
+    "ui": "实例管理 → 启动设置",
+    "status": "已实现待验收",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/evidence-0.7/acceptance.json",
+      "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/owned-launches/matrix.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json"
+    ],
+    "remaining": "0.17 十个正版启动组合覆盖 ARM64 Java 8/17/21/25，核对实际进程版本与架构；不推定所有游戏、快照或模组适配。Java 16 单列保留待测边界。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.17/release-tests/test-results.json"
+    },
+    "implementationSummary": ""
+  },
+  "JAVA-006": {
+    "id": "JAVA-006",
+    "domain": "Java与启动",
+    "name": "Java25ARM64",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Modules/Minecraft",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/JavaService.cs; src/Pcl.Core/MacCompatibility.cs",
+    "ui": "实例管理 → 启动设置",
+    "status": "已实现待验收",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/evidence-0.7/acceptance.json",
+      "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/owned-launches/matrix.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json"
+    ],
+    "remaining": "0.17 十个正版启动组合覆盖 ARM64 Java 8/17/21/25，核对实际进程版本与架构；不推定所有游戏、快照或模组适配。Java 16 单列保留待测边界。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.17/release-tests/test-results.json"
+    },
+    "implementationSummary": ""
+  }
+}

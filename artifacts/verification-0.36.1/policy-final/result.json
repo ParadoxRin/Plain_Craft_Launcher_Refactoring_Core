@@ -1,0 +1,27 @@
+{
+  "status": "passed",
+  "checks": [
+    "chinese-purchase-and-sponsor-guidance",
+    "unverified-non-chinese-trial-required",
+    "reject-incomplete-consent-2",
+    "reject-incomplete-consent-3",
+    "reject-incomplete-consent-4",
+    "reject-incomplete-consent-5",
+    "trial-consent-accepted",
+    "chinese-offline-preserved-after-guidance",
+    "official-trial-identity-authorized",
+    "tampered-trial-rejected",
+    "offline-never-records-purchase",
+    "prior-verification-removes-purchase-and-trial-hint",
+    "windows-blue-no-dynamic-unlock-like-theme",
+    "mac-decoration-retained",
+    "executor-blocks-before-spawn-and-java",
+    "valid-consent-reaches-original-installation-validation",
+    "consent-idempotency-spawns-once-fixture",
+    "consent-and-detached-forwarded-to-executor",
+    "changed-consent-conflicts",
+    "restart-preserves-receipt-without-respawn-fixture"
+  ],
+  "windowsRuntimeTest": false,
+  "realGame": false
+}

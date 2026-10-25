@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net10.0": {
+      "Newtonsoft.Json": {
+        "type": "Transitive",
+        "resolved": "13.0.3",
+        "contentHash": "HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ=="
+      },
+      "ThrottleDebounce": {
+        "type": "Transitive",
+        "resolved": "2.0.2",
+        "contentHash": "SqGyo1Ihv/3Wvq4bjIhjQjFNZ+/6SUvxNIIvdXcDzdP9QRDfySneXtAt9+rkGrFvizjosJAN1jyl2f2vCcR30Q=="
+      },
+      "Tomlyn": {
+        "type": "Transitive",
+        "resolved": "2.10.1",
+        "contentHash": "ykjOY3IpYmC4SpPcAZRTl/w2jTmhPMDydHq8xcV7tTBAQ22nKBsOkPqauIrZlMjHm03cmKfV23UOPscKp+J4Og=="
+      },
+      "meloongcore": {
+        "type": "Project",
+        "dependencies": {
+          "Newtonsoft.Json": "[13.0.3, )",
+          "ThrottleDebounce": "[2.0.2, )"
+        }
+      },
+      "pcl.application": {
+        "type": "Project",
+        "dependencies": {
+          "Pcl.Contract": "[1.0.0, )",
+          "Pcl.Domain": "[1.0.0, )",
+          "Pcl.Ports": "[1.0.0, )"
+        }
+      },
+      "pcl.client": {
+        "type": "Project",
+        "dependencies": {
+          "Pcl.Contract": "[1.0.0, )"
+        }
+      },
+      "pcl.contract": {
+        "type": "Project"
+      },
+      "pcl.core": {
+        "type": "Project",
+        "dependencies": {
+          "MeloongCore": "[1.0.0, )",
+          "PCLCS": "[1.0.0, )",
+          "Pcl.Contract": "[1.0.0, )",
+          "Pcl.Domain": "[1.0.0, )",
+          "Pcl.Legacy": "[1.0.0, )",
+          "Pcl.Ports": "[1.0.0, )",
+          "Tomlyn": "[2.10.1, )"
+        }
+      },
+      "pcl.domain": {
+        "type": "Project"
+      },
+      "pcl.legacy": {
+        "type": "Project",
+        "dependencies": {
+          "Newtonsoft.Json": "[13.0.3, )"
+        }
+      },
+      "pcl.ports": {
+        "type": "Project",
+        "dependencies": {
+          "Pcl.Domain": "[1.0.0, )"
+        }
+      },
+      "pclcs": {
+        "type": "Project",
+        "dependencies": {
+          "MeloongCore": "[1.0.0, )",
+          "Newtonsoft.Json": "[13.0.3, )"
+        }
+      }
+    }
+  }
+}

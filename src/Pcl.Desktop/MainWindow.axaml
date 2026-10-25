@@ -1,0 +1,139 @@
+<Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Class="Pcl.Desktop.MainWindow" Title="Plain Craft Launcher Refactoring" Width="1100" Height="760" MinWidth="960" MinHeight="680" Background="{DynamicResource PclBackground}">
+    <!-- 共享 Modern UI 样式：动态资源随主题切换，选择器统一控制文字、卡片和按钮外观。 -->
+    <Window.Styles>
+        <Style Selector="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource PclText}"/>
+        </Style>
+        <Style Selector="TextBlock.muted">
+            <Setter Property="Foreground" Value="{DynamicResource PclMuted}"/>
+        </Style>
+        <Style Selector="Border.card">
+            <Setter Property="Background" Value="{DynamicResource PclCard}"/>
+            <Setter Property="CornerRadius" Value="18"/>
+            <Setter Property="Padding" Value="24"/>
+        </Style>
+        <Style Selector="Button">
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Padding" Value="18,11"/>
+        </Style>
+        <Style Selector="Button.primary">
+            <Setter Property="Background" Value="{DynamicResource PclAccent}"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        <Style Selector="Button.nav">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+    </Window.Styles>
+    <!-- 左侧固定宽度导航，右侧自适应内容；背景不拦截鼠标事件。 -->
+    <Grid ColumnDefinitions="210,*">
+        <Image x:Name="BackgroundImage" Grid.ColumnSpan="2" Stretch="UniformToFill" IsHitTestVisible="False"/>
+        <Border Background="{DynamicResource PclSidebar}" Padding="20,28">
+            <Grid RowDefinitions="Auto,*,Auto">
+                <StackPanel Spacing="6" Margin="0,0,0,32">
+                    <Border Background="{DynamicResource PclAccent}" CornerRadius="12" Width="48" Height="48" HorizontalAlignment="Left">
+                        <TextBlock Text="P" FontSize="30" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <TextBlock Text="Plain Craft Launcher Refactoring" TextWrapping="Wrap" FontSize="15" FontWeight="SemiBold" Margin="0,12,0,0"/>
+                </StackPanel>
+                <!-- 导航 Click 绑定 MainWindow 事件，再调用对应 Core 服务或打开功能窗口。 -->
+                <ScrollViewer Grid.Row="1">
+                    <StackPanel Spacing="4">
+                        <Button x:Name="NavHome" Content="◈   游戏" Classes="nav" Click="HomeClick" Background="{DynamicResource PclSelection}"/>
+                        <Button x:Name="NavInstances" Content="▣   实例管理" Classes="nav" Click="InstancesClick"/>
+                        <Button x:Name="NavMods" Content="⬡   模组" Classes="nav" Click="ModsClick"/>
+                        <Button x:Name="NavShaders" Content="☼   光影" Classes="nav" Click="ShadersClick"/>
+                        <Button x:Name="NavPacks" Content="▧   资源包" Classes="nav" Click="PacksClick"/>
+                        <Button x:Name="NavDataPacks" Content="▧   数据包" Classes="nav" Click="DataPacksClick"/>
+                        <Button x:Name="NavModpacks" Content="▦   整合包" Classes="nav" Click="ModpacksClick"/>
+                        <Button x:Name="NavMcmod" Content="⌕   MC 百科" Classes="nav" Click="McmodSearchClick"/>
+                        <Button x:Name="NavUnified" Content="⌕   多源搜索" Classes="nav" Click="UnifiedSearchClick"/>
+                        <Button x:Name="NavCurseForge" Content="⬡   CurseForge" Classes="nav" Click="CurseForgeClick"/>
+                        <Button x:Name="NavManaged" Content="✓   已安装" Classes="nav" Click="ManagedClick"/>
+                        <Button x:Name="NavLocal" Content="▤   本地资源" Classes="nav" Click="LocalResourcesClick"/>
+                        <Button x:Name="NavPackTools" Content="⇄   整合包管理" Classes="nav" Click="PackToolsClick"/>
+                        <Button Content="↓   下载文件" Classes="nav" Click="DownloadFilesClick"/>
+                        <Button Content="⇆   联机" Classes="nav" Click="MultiplayerClick"/>
+                        <Button Content="⌂   自定义主页" Classes="nav" Click="CustomHomeClick"/>
+                        <Button Content="↗   游戏文件夹" Classes="nav" Click="OpenGameClick"/>
+                        <Button Content="≡   日志" Classes="nav" Click="OpenLogsClick"/>
+                    </StackPanel>
+                </ScrollViewer>
+                <StackPanel Grid.Row="2" Margin="0,8,0,0">
+                    <Button Content="⇣   任务与诊断" Classes="nav" Click="TaskCenterClick"/>
+                    <Button Content="⚙   设置与帮助" Classes="nav" Click="SettingsClick"/>
+                    <Button Content="关于" Classes="nav" Click="AboutClick" Padding="0,8"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+        <!-- 游戏首页按版本、安装进度、账户和设置分区，命名控件供后台按状态更新。 -->
+        <Grid x:Name="HomePanel" Grid.Column="1" RowDefinitions="Auto,Auto,Auto,*" Margin="32,28,32,20">
+            <TextBlock Text="游戏" FontSize="28" FontWeight="SemiBold" Margin="0,0,0,24"/>
+            <Border Grid.Row="1" Classes="card" Margin="0,0,0,16">
+                <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto">
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="MINECRAFT" Foreground="#A8BEFF" FontSize="11" LetterSpacing="2"/>
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <Image x:Name="GameArtwork" Width="48" Height="48" IsVisible="False"/>
+                            <TextBlock x:Name="GameVersionText" Text="1.21.1" FontSize="40" FontWeight="Bold"/>
+                        </StackPanel>
+                        <ComboBox x:Name="ProfileBox" SelectionChanged="ProfileChanged" MinWidth="260" Margin="0,8,20,0"/>
+                        <WrapPanel Margin="0,4,0,0">
+                            <Button x:Name="VersionButton" Content="下载版本" Click="VersionClick" Padding="12,8" Margin="0,0,6,6"/>
+                            <Button x:Name="FabricButton" Content="加载器" Click="FabricClick" Padding="12,8" Margin="0,0,6,6"/>
+                            <Button x:Name="MacSetupButton" Content="Mac 配置" Click="MacSetupClick" Padding="12,8" Margin="0,0,0,6"/>
+                        </WrapPanel>
+                        <TextBlock x:Name="InstallState" Text="未安装" Classes="muted"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Spacing="10" VerticalAlignment="Center">
+                        <Button x:Name="InstallButton" Content="安装 / 修复" Classes="primary" Click="InstallClick"/>
+                        <Button x:Name="LaunchButton" Content="启动游戏" Click="LaunchClick" IsEnabled="False"/>
+                        <Button x:Name="StopGameButton" Content="结束游戏" Click="StopGameClick" IsVisible="False"/>
+                    </StackPanel>
+                    <ProgressBar x:Name="InstallProgressBar" IsVisible="False" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,20,0,10" Minimum="0" Maximum="100" Height="5" Foreground="#7799FF"/>
+                    <Grid Grid.Row="2" Grid.ColumnSpan="2" ColumnDefinitions="*,Auto">
+                        <TextBlock x:Name="StatusText" Text="" Classes="muted" TextWrapping="Wrap" FontSize="12"/>
+                        <Button x:Name="CancelButton" Grid.Column="1" Content="取消" Click="CancelClick" IsVisible="False" Padding="10,4"/>
+                    </Grid>
+                </Grid>
+            </Border>
+            <!-- 账户区域分别展示离线身份及微软登录状态，按所选模式检查启动条件。 -->
+            <Border Grid.Row="2" Classes="card" Margin="0,0,0,12" Padding="18,12">
+                <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="8">
+                    <TextBlock x:Name="AccountText" Text="账户" FontWeight="SemiBold"/>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6">
+                        <Button x:Name="SkinsButton" Content="皮肤 / 披风" Click="SkinsClick" Padding="10,4"/>
+                        <Button x:Name="LogoutButton" Content="退出登录" Click="LogoutClick" Padding="10,4" IsVisible="False"/>
+                        <Button x:Name="RemoveAccountButton" Content="移除账户" Click="RemoveAccountClick" Padding="10,4"/>
+                    </StackPanel>
+                    <Grid Grid.Row="1" Grid.ColumnSpan="2" ColumnDefinitions="140,*" ColumnSpacing="10">
+                        <ComboBox x:Name="AccountTypeBox" SelectedIndex="0" SelectionChanged="AccountModeChanged" HorizontalAlignment="Stretch">
+                            <ComboBoxItem Content="离线登录"/>
+                            <ComboBoxItem Content="微软账号"/>
+                            <ComboBoxItem Content="历史外置账户"/>
+                        </ComboBox>
+                        <ComboBox x:Name="AccountBox" Grid.Column="1" SelectionChanged="AccountSelected" PlaceholderText="选择或添加账户" HorizontalAlignment="Stretch"/>
+                    </Grid>
+                    <Grid Grid.Row="2" Grid.ColumnSpan="2" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
+                        <TextBox x:Name="OfflineNameBox" PlaceholderText="玩家名（1–16 字符）" TextChanged="OfflineNameChanged"/>
+                        <TextBlock x:Name="MicrosoftLoginInfo" IsVisible="False" Text="在微软网页安全登录" VerticalAlignment="Center" Classes="muted" TextWrapping="Wrap"/>
+                        <CheckBox x:Name="RememberLoginBox" Grid.Column="1" Content="记住登录" IsChecked="True" IsVisible="False"/>
+                        <Button x:Name="LoginButton" Grid.Column="2" Content="使用此名称" Click="LoginClick" Padding="12,8"/>
+                    </Grid>
+                    <StackPanel Grid.Row="3" Grid.ColumnSpan="2" Orientation="Horizontal" Spacing="10">
+                        <TextBlock x:Name="LoginHint" Text="" IsVisible="False" Classes="muted" FontSize="11" MaxWidth="560" TextWrapping="Wrap"/>
+                        <Button x:Name="CopyCodeButton" Content="复制设备码" Click="CopyLoginCodeClick" IsVisible="False" Padding="8,4"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+            <Border Grid.Row="3" Classes="card" Padding="18,16">
+                <Grid RowDefinitions="Auto,*">
+                    <TextBlock Text="运行记录" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                    <TextBox x:Name="LogBox" Grid.Row="1" IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap" FontFamily="Menlo" FontSize="11" Background="Transparent" BorderThickness="0" Text=""/>
+                </Grid>
+            </Border>
+        </Grid>
+        <ContentControl x:Name="ResourcePanel" Grid.Column="1" IsVisible="False"/>
+    </Grid>
+</Window>

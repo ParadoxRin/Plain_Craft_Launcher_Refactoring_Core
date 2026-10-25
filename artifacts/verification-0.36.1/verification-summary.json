@@ -1,0 +1,34 @@
+{
+  "version": "0.36.1",
+  "product": "Plain Craft Launcher Refactoring",
+  "sourceVisibility": "private",
+  "sourcePublicationRequirementMet": false,
+  "policyAndIdempotencyChecks": 20,
+  "actualPackagedUiChecks": 15,
+  "emptyOAuthChecks": 7,
+  "architectureGuard": {
+    "methods": 2784,
+    "symbolUses": 43770,
+    "violations": 0
+  },
+  "actualBundledHostGame": {
+    "host": "bundled self-contained Pcl.Host",
+    "mode": "official-demo",
+    "processExit": 0,
+    "worldInteraction": "not-tested",
+    "msAccount": "not-used",
+    "graphicsLogObserved": true,
+    "atlasCreationObserved": true,
+    "gameVersion": "1.21.1",
+    "stoppedByTestAfterSeconds": 35
+  },
+  "windowsRuntime": "not-tested",
+  "microsoftAccount": "not-tested-this-release",
+  "worldSaveReenter": "not-tested-this-release",
+  "codeSigning": "ad-hoc-not-notarized",
+  "binarySha256": {
+    "Contents/MacOS/PCL-MacPort.dll": "8002de79b4c17a3fccd5ea5ddbe69b9cb5f887cb2e0f1e9775af2c832a6f2378",
+    "Contents/MacOS/host/Pcl.Host.dll": "cb20096646f2833e324398a58a542de244c9aaea54a0e9546389b807d197c786",
+    "Contents/MacOS/host/Pcl.Core.dll": "bf77666647f782433ac0c5e89c95ab91a9cf4523242d316f528ee17a9d214cba"
+  }
+}

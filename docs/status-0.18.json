@@ -1,0 +1,222 @@
+{
+  "INST-002": {
+    "id": "INST-002",
+    "domain": "实例",
+    "name": "实例搜索与分类",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageInstance",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Desktop/InstanceWorkspace.cs",
+    "ui": "实例管理 → 搜索",
+    "status": "已验收",
+    "testEvidence": [
+      "tests/Pcl.Tests/InstanceManagementTests.cs#instance_filters_combine_loader_favorite_hidden_and_search",
+      "artifacts/verification-0.18/final-regression2/test-results.json",
+      "docs/0.18实现与验收.md",
+      "artifacts/verification-0.18/group-ui-final/evidence/instance-groups.json"
+    ],
+    "remaining": "通过实际控件保存、分组筛选、重开和清除验收；每实例一个分组，不提供嵌套分组或一次多组选中。",
+    "externalConditions": [],
+    "implementationSummary": "每实例自定义分组，名称规范化/长度与控制字符校验；分组与查询、加载器、收藏、隐藏组合筛选，显示选项不与保留项混淆。",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.18/final-regression2/test-results.json"
+    }
+  },
+  "INST-005": {
+    "id": "INST-005",
+    "domain": "实例",
+    "name": "复制实例",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageInstance",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/InstanceManager.cs",
+    "ui": "实例管理 → 复制实例",
+    "status": "已实现待验收",
+    "testEvidence": [
+      "artifacts/evidence-0.8/tests-instance-fixes/test-results.json#instance_copy_preserves_save_excludes_credentials_and_shared_cache",
+      "artifacts/verification-0.18/final-regression2/test-results.json",
+      "docs/0.18实现与验收.md"
+    ],
+    "remaining": "0.18 产品 CLI 为 Forge/NeoForge/Quilt/26.3 创建独立副本，分组随复制保留；不把复制成功当作所有副本世界兼容验收。",
+    "externalConditions": [],
+    "implementationSummary": "",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.18/final-regression2/test-results.json"
+    }
+  },
+  "INST-006": {
+    "id": "INST-006",
+    "domain": "实例",
+    "name": "实例备份恢复",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageInstance",
+    "sourceEvidence": "公开源码入口；细节见source-ui-inventory.json，删节功能单列",
+    "macImplementation": "src/Pcl.Core/InstanceManager.cs; src/Pcl.Core/InstanceBackupArchive.cs; src/Pcl.Core/LauncherSettings.cs; src/Pcl.Desktop/InstanceWorkspace.cs",
+    "ui": "实例管理 → 备份 ZIP / 恢复备份",
+    "status": "部分实现",
+    "testEvidence": [
+      "artifacts/verification-0.13/final-tests/test-results.json",
+      "artifacts/verification-0.13/live/evidence/search-backup-result.json",
+      "artifacts/verification-0.13/final-zip/evidence/search-backup-result.json",
+      "docs/0.13实现与验收.md",
+      "artifacts/verification-0.18/final-regression2/test-results.json",
+      "docs/0.18实现与验收.md",
+      "artifacts/verification-0.18/world-backup-restore.json",
+      "artifacts/verification-0.18/worlds/fabric1211-roundtrip.json"
+    ],
+    "remaining": "0.18 将真实光影实例备份并恢复为新副本，23 个存档文件逐字节相同；恢复的 Fabric 1.21.1 通过世界进入、正常保存退出、独立进程重读和用户标记确认。仍不包含全部共享资产/Java，不保证跨设备离线恢复。",
+    "externalConditions": [
+      "缺失共享父版/依赖时需网络"
+    ],
+    "implementationSummary": "0.13 schema 3 逐文件哈希、离线检查、先校验后修复与新目录提交、原子设置；真实资源及存档字节夹具恢复通过。",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.18/final-regression2/test-results.json"
+    }
+  },
+  "JAVA-012": {
+    "id": "JAVA-012",
+    "domain": "Java与启动",
+    "name": "自定义JVM游戏参数",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Modules/Minecraft",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/LauncherSettings.cs; src/Pcl.Core/LaunchService.cs",
+    "ui": "实例管理 → 启动设置",
+    "status": "已实现待验收",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/ui-0.8-final/evidence/workspace-ui-result.json",
+      "artifacts/verification-0.18/final-regression2/test-results.json",
+      "docs/0.18实现与验收.md"
+    ],
+    "remaining": "0.18 增加元数据驱动的 QuickPlayWorld 字段与实例继承、路径/链接/缺失世界检查、多人参数互斥；Fabric 1.21.1 直达实测。Forge 直达已复现生命周期异常，本版禁止并提示使用主菜单；附加参数不能绕入。其余 JVM 参数/版本仍按既有边界。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.18/final-regression2/test-results.json"
+    },
+    "implementationSummary": ""
+  },
+  "VER-006": {
+    "id": "VER-006",
+    "domain": "游戏与加载器",
+    "name": "Fabric安装",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageDownload",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/VersionInstaller.cs",
+    "ui": "下载版本 / 加载器",
+    "status": "部分实现",
+    "testEvidence": [
+      "artifacts/evidence-0.8-compat/migration-smoke/result.json",
+      "artifacts/evidence-0.7/acceptance.json",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/owned-launches/matrix.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json",
+      "artifacts/verification-0.18/final-regression2/test-results.json",
+      "docs/0.18实现与验收.md"
+    ],
+    "remaining": "0.18 Fabric 1.21.1 光影备份恢复副本通过世界保存和独立进程重进，用户确认标记与位置正常；本轮 Fabric 1.20.1 手动会话只有标题/退出记录，未核实进世界，不覆盖整个目录。",
+    "externalConditions": [],
+    "implementationSummary": "官方Meta/Maven校验、独立实例，显式版本更换走新副本",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.18/final-regression2/test-results.json"
+    }
+  },
+  "VER-007": {
+    "id": "VER-007",
+    "domain": "游戏与加载器",
+    "name": "Forge现代安装",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageDownload",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/VersionInstaller.cs",
+    "ui": "下载版本 / 加载器",
+    "status": "部分实现",
+    "testEvidence": [
+      "artifacts/evidence-0.7/acceptance.json",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/owned-launches/matrix.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json",
+      "artifacts/verification-0.18/final-regression2/test-results.json",
+      "docs/0.18实现与验收.md",
+      "artifacts/verification-0.18/worlds/forge1211-first/result.json",
+      "artifacts/verification-0.18/worlds/forge1211-isolated-first/result.json"
+    ],
+    "remaining": "Forge Quick Play 已知失败已保护；普通菜单会话收到正常反馈，但没有世界日志或存档变化且被超时终止，保留待核对。NeoForge 复制实例启动发现排除项绑定错误，0.18.1 已修复并复测中。",
+    "externalConditions": [],
+    "implementationSummary": "官方installer --installClient、私有库及生成文件收据",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.18/final-regression2/test-results.json"
+    }
+  },
+  "DIAG-002": {
+    "id": "DIAG-002",
+    "domain": "诊断",
+    "name": "进程退出与崩溃区分",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Modules/Minecraft",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/LaunchService.cs; src/Pcl.Desktop/MainWindow.axaml.cs",
+    "ui": "任务与诊断 → 日志诊断",
+    "status": "已验收",
+    "testEvidence": [
+      "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json",
+      "artifacts/evidence-0.7/acceptance.json",
+      "artifacts/verification-0.18/final-regression2/test-results.json",
+      "docs/0.18实现与验收.md"
+    ],
+    "remaining": "新增诊断来自本机实际日志和回归；第三方根因与所有模组组合仍需对照，不自动删除世界或用户模组。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.18/final-regression2/test-results.json"
+    },
+    "implementationSummary": "；0.18 新增 Xaero 世界状态和 Forge 资源初始化错误特征，退出码 0 也提示已记录的世界进入失败。"
+  },
+  "DIAG-005": {
+    "id": "DIAG-005",
+    "domain": "诊断",
+    "name": "模组依赖图形网络诊断",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Modules/Minecraft",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/DiagnosticsService.cs; src/Pcl.Desktop/TaskCenterWindow.cs",
+    "ui": "任务与诊断 → 日志诊断",
+    "status": "已验收",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/verification-0.18/final-regression2/test-results.json",
+      "docs/0.18实现与验收.md"
+    ],
+    "remaining": "新增诊断来自本机实际日志和回归；第三方根因与所有模组组合仍需对照，不自动删除世界或用户模组。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.18/final-regression2/test-results.json"
+    },
+    "implementationSummary": "；0.18 新增 Xaero 世界状态和 Forge 资源初始化错误特征，退出码 0 也提示已记录的世界进入失败。"
+  },
+  "UI-014": {
+    "id": "UI-014",
+    "domain": "个性化与系统",
+    "name": "命令行入口",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageSetup",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Cli/Program.cs; src/Pcl.Desktop/Program.cs",
+    "ui": "设置与帮助",
+    "status": "已实现待验收",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-7/test-results.json",
+      "artifacts/evidence-0.8-compat/compatibility-results.json",
+      "artifacts/verification-0.18/final-regression2/test-results.json",
+      "docs/0.18实现与验收.md"
+    ],
+    "remaining": "0.18 CLI 新增实例复制、备份、恢复并复用产品事务；已完成真实文件操作。并非所有 GUI 动作都有 CLI 等价入口。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.18/final-regression2/test-results.json"
+    },
+    "implementationSummary": ""
+  }
+}

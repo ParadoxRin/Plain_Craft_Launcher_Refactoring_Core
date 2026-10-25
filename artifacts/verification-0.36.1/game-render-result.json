@@ -1,0 +1,15 @@
+{
+  "status": "render_initialization_observed",
+  "profileId": "1.21.1",
+  "gameVersion": "1.21.1",
+  "loader": "vanilla",
+  "javaMajor": 21,
+  "accountKind": "offline",
+  "graphicsLogObserved": true,
+  "atlasCreationObserved": true,
+  "stoppedBySmokeTest": false,
+  "exitCode": 0,
+  "visualInspection": "not_performed",
+  "interactiveWorldPlay": "not_tested",
+  "sessionMode": "official-demo"
+}

@@ -1,0 +1,1 @@
+{"schema_version": 1, "overrides": [{"id": "input", "depends": [{"add": {"id": "java", "versions": ">=21.0.0"}}]}, {"id": "rule", "depends": [{"replace": {"id": "java", "versions": ">=21"}, "with": {"id": "java", "versions": ">=17"}}]}, {"id": "expected", "depends": [{"add": {"id": "java", "versions": ">=21.0.0"}}]}]}

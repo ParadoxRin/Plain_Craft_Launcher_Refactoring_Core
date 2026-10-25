@@ -1,0 +1,125 @@
+{
+  "AUTH-003": {
+    "id": "AUTH-003",
+    "domain": "账户",
+    "name": "微软设备码授权",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageLaunch",
+    "sourceEvidence": "公开源码入口；细节见source-ui-inventory.json，删节功能单列",
+    "macImplementation": "src/Pcl.Core/MicrosoftApplication.cs; src/Pcl.Core/MicrosoftAuthentication.cs; src/Pcl.Core/GameLaunchAuthorization.cs; src/Pcl.Core/Accounts.cs",
+    "ui": "首页 → 微软账号 → 登录微软账号",
+    "status": "已验收",
+    "testEvidence": [
+      "artifacts/microsoft-integration-preflight/release-tests/test-results.json",
+      "artifacts/microsoft-live-0.12-retry/evidence/last-error.json",
+      "artifacts/verification-0.16/microsoft-login-result.json",
+      "artifacts/verification-0.16/microsoft-cold-refresh-0.16.json",
+      "artifacts/verification-0.16/desktop-manual-launch.json",
+      "artifacts/verification-0.16/user-world-acceptance.json",
+      "artifacts/verification-0.16/final-tests/test-results.json",
+      "docs/0.16实现与验收.md"
+    ],
+    "remaining": "2026-10-24 单个真实 Java 正版账户通过设备码登录、权益/档案、即时刷新、钥匙串冷启动刷新和 1.21.1 桌面启动；首次刷新失败经重新授权后未复现，不能据此保证所有账户或网络。",
+    "externalConditions": [],
+    "implementationSummary": "使用内置且获批的公开 client ID；访问令牌驻留内存，记住登录仅保存刷新令牌到 macOS 钥匙串。"
+  },
+  "AUTH-004": {
+    "id": "AUTH-004",
+    "domain": "账户",
+    "name": "微软刷新和Keychain",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageLaunch",
+    "sourceEvidence": "公开源码入口；细节见source-ui-inventory.json，删节功能单列",
+    "macImplementation": "src/Pcl.Core/MicrosoftApplication.cs; src/Pcl.Core/MicrosoftAuthentication.cs; src/Pcl.Core/GameLaunchAuthorization.cs; src/Pcl.Core/Accounts.cs",
+    "ui": "首页 → 微软账号 → 登录微软账号",
+    "status": "已验收",
+    "testEvidence": [
+      "artifacts/microsoft-integration-preflight/release-tests/test-results.json",
+      "artifacts/microsoft-live-0.12-retry/evidence/last-error.json",
+      "artifacts/verification-0.16/microsoft-login-result.json",
+      "artifacts/verification-0.16/microsoft-cold-refresh-0.16.json",
+      "artifacts/verification-0.16/desktop-manual-launch.json",
+      "artifacts/verification-0.16/user-world-acceptance.json",
+      "artifacts/verification-0.16/final-tests/test-results.json",
+      "docs/0.16实现与验收.md"
+    ],
+    "remaining": "2026-10-24 单个真实 Java 正版账户通过设备码登录、权益/档案、即时刷新、钥匙串冷启动刷新和 1.21.1 桌面启动；首次刷新失败经重新授权后未复现，不能据此保证所有账户或网络。",
+    "externalConditions": [],
+    "implementationSummary": "使用内置且获批的公开 client ID；访问令牌驻留内存，记住登录仅保存刷新令牌到 macOS 钥匙串。"
+  },
+  "AUTH-005": {
+    "id": "AUTH-005",
+    "domain": "账户",
+    "name": "微软权益与档案",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageLaunch",
+    "sourceEvidence": "公开源码入口；细节见source-ui-inventory.json，删节功能单列",
+    "macImplementation": "src/Pcl.Core/MicrosoftApplication.cs; src/Pcl.Core/MicrosoftAuthentication.cs; src/Pcl.Core/GameLaunchAuthorization.cs; src/Pcl.Core/Accounts.cs",
+    "ui": "首页 → 微软账号 → 登录微软账号",
+    "status": "已验收",
+    "testEvidence": [
+      "artifacts/microsoft-integration-preflight/release-tests/test-results.json",
+      "artifacts/microsoft-live-0.12-retry/evidence/last-error.json",
+      "artifacts/verification-0.16/microsoft-login-result.json",
+      "artifacts/verification-0.16/microsoft-cold-refresh-0.16.json",
+      "artifacts/verification-0.16/desktop-manual-launch.json",
+      "artifacts/verification-0.16/user-world-acceptance.json",
+      "artifacts/verification-0.16/final-tests/test-results.json",
+      "docs/0.16实现与验收.md"
+    ],
+    "remaining": "2026-10-24 单个真实 Java 正版账户通过设备码登录、权益/档案、即时刷新、钥匙串冷启动刷新和 1.21.1 桌面启动；首次刷新失败经重新授权后未复现，不能据此保证所有账户或网络。",
+    "externalConditions": [],
+    "implementationSummary": "使用内置且获批的公开 client ID；访问令牌驻留内存，记住登录仅保存刷新令牌到 macOS 钥匙串。"
+  },
+  "AUTH-006": {
+    "id": "AUTH-006",
+    "domain": "账户",
+    "name": "多微软账户与退出",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageLaunch",
+    "sourceEvidence": "公开源码入口；细节见source-ui-inventory.json，删节功能单列",
+    "macImplementation": "src/Pcl.Core/MicrosoftApplication.cs; src/Pcl.Core/MicrosoftAuthentication.cs; src/Pcl.Core/GameLaunchAuthorization.cs; src/Pcl.Core/Accounts.cs",
+    "ui": "首页 → 微软账号 → 登录微软账号",
+    "status": "部分实现",
+    "testEvidence": [
+      "artifacts/microsoft-integration-preflight/release-tests/test-results.json",
+      "artifacts/microsoft-live-0.12-retry/evidence/last-error.json",
+      "artifacts/verification-0.16/microsoft-login-result.json",
+      "artifacts/verification-0.16/microsoft-cold-refresh-0.16.json",
+      "artifacts/verification-0.16/desktop-manual-launch.json",
+      "artifacts/verification-0.16/user-world-acceptance.json",
+      "artifacts/verification-0.16/final-tests/test-results.json",
+      "docs/0.16实现与验收.md"
+    ],
+    "remaining": "本轮使用一个真实正版账户；多微软账户切换及真人退出后重新授权仍未实测，已有协议和管理回归。",
+    "externalConditions": [],
+    "implementationSummary": "已注册并内置自己的应用ID；真人微软OAuth、Xbox和XSTS通过，Minecraft登录返回403。修复Xbox请求体大小写。"
+  },
+  "VER-003": {
+    "id": "VER-003",
+    "domain": "游戏与加载器",
+    "name": "原版安装与启动",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageDownload",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/MinecraftService.cs; src/Pcl.Core/LaunchService.cs",
+    "ui": "下载版本 / 加载器",
+    "status": "已验收",
+    "testEvidence": [
+      "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json",
+      "artifacts/gui-install-clean-0.8/evidence/user-world-acceptance.json",
+      "artifacts/verification-0.16/microsoft-login-result.json",
+      "artifacts/verification-0.16/microsoft-cold-refresh-0.16.json",
+      "artifacts/verification-0.16/desktop-manual-launch.json",
+      "artifacts/verification-0.16/user-world-acceptance.json",
+      "artifacts/verification-0.16/final-tests/test-results.json",
+      "docs/0.16实现与验收.md"
+    ],
+    "remaining": "0.16 已用真实微软正版账户验证 1.21.1 界面启动、世界保存重入及退出码 0；其他版本保留各自历史兼容证据。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+    },
+    "implementationSummary": ""
+  }
+}

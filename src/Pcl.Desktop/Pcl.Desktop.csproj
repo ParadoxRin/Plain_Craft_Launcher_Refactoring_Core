@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>WinExe</OutputType><TargetFramework>net10.0</TargetFramework><AssemblyName>PCL-MacPort</AssemblyName><Version>0.36.1</Version></PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="../../docs/windows-layout-baseline.json" LogicalName="windows-layout.json" />
+    <EmbeddedResource Include="../../docs/PCL2完整功能矩阵.json" LogicalName="feature-matrix.json" />
+    <PackageReference Include="Avalonia" Version="12.1.4" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.1.4" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.4" />
+
+    <ProjectReference Include="../Pcl.Client/Pcl.Client.csproj" />
+    <ProjectReference Include="../../scripts/ArchitectureGuard/ArchitectureGuard.csproj" ReferenceOutputAssembly="false" PrivateAssets="all" />
+    <ProjectReference Include="../Pcl.Host/Pcl.Host.csproj" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="../../artifacts/native/libpclwindow.dylib" Link="libpclwindow.dylib" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Condition="Exists('../../artifacts/native/libpclwindow.dylib')" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="../../artifacts/native/lwjgl-unsafe-agent-2.0.jar" Link="lwjgl-unsafe-agent-2.0.jar" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Condition="Exists('../../artifacts/native/lwjgl-unsafe-agent-2.0.jar')" />
+  </ItemGroup>
+  <Target Name="CopyHost" AfterTargets="Build">
+    <ItemGroup><HostFiles Include="../Pcl.Host/bin/$(Configuration)/$(TargetFramework)/$(RuntimeIdentifier)/**/*" /></ItemGroup>
+    <Copy SourceFiles="@(HostFiles)" DestinationFiles="@(HostFiles->'$(OutDir)host/%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+  </Target>
+  <Target Name="PublishHost" AfterTargets="Publish">
+    <ItemGroup><PublishedHostFiles Include="../Pcl.Host/bin/$(Configuration)/$(TargetFramework)/$(RuntimeIdentifier)/**/*" /></ItemGroup>
+    <Copy SourceFiles="@(PublishedHostFiles)" DestinationFiles="@(PublishedHostFiles->'$(PublishDir)host/%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+  </Target>
+  <Target Name="EnforceArchitecture" AfterTargets="Build">
+    <PropertyGroup>
+      <ArchitectureGuardHost>$(NetCoreRoot)dotnet</ArchitectureGuardHost>
+      <ArchitectureGuardHost Condition="'$(OS)' == 'Windows_NT'">$(NetCoreRoot)dotnet.exe</ArchitectureGuardHost>
+      <ArchitectureGuardDll>$(MSBuildThisFileDirectory)../../scripts/ArchitectureGuard/bin/$(Configuration)/net10.0/$(RuntimeIdentifier)/ArchitectureGuard.dll</ArchitectureGuardDll>
+      <ArchitectureGuardDll Condition="!Exists('$(ArchitectureGuardDll)')">$(MSBuildThisFileDirectory)../../scripts/ArchitectureGuard/bin/$(Configuration)/net10.0/ArchitectureGuard.dll</ArchitectureGuardDll>
+    </PropertyGroup>
+    <Exec Command="&quot;$(ArchitectureGuardHost)&quot; &quot;$(ArchitectureGuardDll)&quot; &quot;$(MSBuildThisFileDirectory)../..&quot; &quot;$(TargetPath)&quot; &quot;$(TargetDir)architecture-guard.json&quot;" />
+  </Target>
+  <ItemGroup><ProjectReference Include="../Pcl.Contract/Pcl.Contract.csproj" /></ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,98 @@
+{
+  "baseline": "0.8",
+  "comparedTypes": [
+    ".cs",
+    ".csproj",
+    ".txt",
+    ".md"
+  ],
+  "pclCommit": "6b9a50df911c9d68b69b24c979efba477fb14b67",
+  "meloongcoreCommit": "98157d65c7627721c816c02e8be96ac4fe61d615",
+  "xmclCommit": "029f9ba466c181aebe5884439e4c65b481b175e3",
+  "referenceNote": "PCL tree contains local download fix; original archive remains separately preserved",
+  "counts": {
+    "MeloongCore": {
+      "unchangedFilesInComparedTypes": 26,
+      "modified": 7,
+      "added": 0
+    },
+    "PCLCS": {
+      "unchangedFilesInComparedTypes": 8,
+      "modified": 3,
+      "added": 0
+    }
+  },
+  "changes": [
+    {
+      "path": "vendor/MeloongCore/.agents/Shared/架构分析.md",
+      "original": "<developer-home>/.codex/projects/software/output/meloongcore-review/MeloongCore-2.14.0.0/.agents/Shared/架构分析.md",
+      "originalSha256": "6e167b3dd2392f55d8d4d9c524136eab1854a5c1787b9a02963fb4e8ec97dbc1",
+      "portedSha256": "797e7eebfef8cc09b914e0f10ca2c04a7326d87c6b5f724f6aae84f830bb88fc",
+      "kind": "modified"
+    },
+    {
+      "path": "vendor/MeloongCore/Shared/General/Config.cs",
+      "original": "<developer-home>/.codex/projects/software/output/meloongcore-review/MeloongCore-2.14.0.0/Shared/General/Config.cs",
+      "originalSha256": "846ad71561b78ef4c8c84ad7b6e5ba18f79a843c0384e93d603bc022a298ed3a",
+      "portedSha256": "cf2aa3247720e57981f8792e5bc5727c95387cf5c415642be01c3b353c210cdd",
+      "kind": "modified"
+    },
+    {
+      "path": "vendor/MeloongCore/Shared/General/Logger.cs",
+      "original": "<developer-home>/.codex/projects/software/output/meloongcore-review/MeloongCore-2.14.0.0/Shared/General/Logger.cs",
+      "originalSha256": "4a11a2853018606e3b0412155c0895a9c99d198b274ce292f96f74228b107969",
+      "portedSha256": "14b3e6658cd1c6d8ec834c6148ade504d2e22f123004d7c0f661e744d773dc8c",
+      "kind": "modified"
+    },
+    {
+      "path": "vendor/MeloongCore/Shared/Utils/CryptographyUtils.cs",
+      "original": "<developer-home>/.codex/projects/software/output/meloongcore-review/MeloongCore-2.14.0.0/Shared/Utils/CryptographyUtils.cs",
+      "originalSha256": "3e946f74a5d0af54274662ed54f347d2ef06308637fb46ac68c4755c8a519962",
+      "portedSha256": "0e0af9a7ff1123aba22705b58cf4e414f1a1f89d62c8e114fc4acfc83a3beb95",
+      "kind": "modified"
+    },
+    {
+      "path": "vendor/MeloongCore/Shared/Utils/DirectoryUtils.cs",
+      "original": "<developer-home>/.codex/projects/software/output/meloongcore-review/MeloongCore-2.14.0.0/Shared/Utils/DirectoryUtils.cs",
+      "originalSha256": "87363fe9353f665c354b941d07de5939df46746428b9c6970e1f9ddbf9dc068f",
+      "portedSha256": "5f3ae0dc3011f22c6bfafc53897088d8f96e8089d37de97b468211102035123f",
+      "kind": "modified"
+    },
+    {
+      "path": "vendor/MeloongCore/Shared/Utils/FileUtils.cs",
+      "original": "<developer-home>/.codex/projects/software/output/meloongcore-review/MeloongCore-2.14.0.0/Shared/Utils/FileUtils.cs",
+      "originalSha256": "515b0dfaf14e525829e916ca73e556a5374e15cfc3794a73e962f5b84172bb82",
+      "portedSha256": "cbb0bb5e7ec6556b6a8b137f37f87d8ad76f6b6f28dd290cdb1ddddb1d805d21",
+      "kind": "modified"
+    },
+    {
+      "path": "vendor/MeloongCore/Shared/Utils/PathUtils.cs",
+      "original": "<developer-home>/.codex/projects/software/output/meloongcore-review/MeloongCore-2.14.0.0/Shared/Utils/PathUtils.cs",
+      "originalSha256": "97cd62fa9dab403673d97e9b8486a311c863a2dc59a86383a8f60cf8d2140bd0",
+      "portedSha256": "ee5a187a6952f34e7198e8fb11b6977b16c3b07536c77946ef4b7b6f7608cf67",
+      "kind": "modified"
+    },
+    {
+      "path": "vendor/PCLCS/Java.cs",
+      "original": "<developer-home>/.codex/projects/software/output/pcl-download-fix/PCL-2.99.0.0/PCLCS/Java.cs",
+      "originalSha256": "c60e9a236863e9dee87c500b3ee494cec48a93ae6799b74d8f567e4948797d0c",
+      "portedSha256": "4384a6f0870da02d10472e20f07d715c371ba1c62ed9f7554a1f3530b7f227e6",
+      "kind": "modified"
+    },
+    {
+      "path": "vendor/PCLCS/PCLCS.csproj",
+      "original": "<developer-home>/.codex/projects/software/output/pcl-download-fix/PCL-2.99.0.0/PCLCS/PCLCS.csproj",
+      "originalSha256": "11d6b8c3f3583495bda236cb6140aa4e595fe3b8fecab6432f515101ece01376",
+      "portedSha256": "29a87dc6c7edab399a361889f064e438a01d7c2ac271079ae6d33ff965f6d1ae",
+      "kind": "modified"
+    },
+    {
+      "path": "vendor/PCLCS/Resource/WikiEntry.cs",
+      "original": "<developer-home>/.codex/projects/software/output/pcl-download-fix/PCL-2.99.0.0/PCLCS/Resource/WikiEntry.cs",
+      "originalSha256": "0a7852ae1d9e4b57b848b3f0f6736e43bbae93cd54e82e0d9e97f63749e7b131",
+      "portedSha256": "1c48aa55e62751d086e99179d7012f3e035bfe12e16af9409295b63e44aa1641",
+      "kind": "modified"
+    }
+  ],
+  "originalArchives": []
+}

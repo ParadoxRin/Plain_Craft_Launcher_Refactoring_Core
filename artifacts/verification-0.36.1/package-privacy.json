@@ -1,0 +1,63 @@
+{
+  "status": "passed",
+  "filesScanned": 490,
+  "findings": [],
+  "scope": "bounded pattern and known-value scan; no claim of exhaustive secret detection",
+  "upstreamPathClassifications": [
+    {
+      "file": "Contents/MacOS/libcoreclr.dylib",
+      "classification": "upstream-distributed-build-path",
+      "source": ".tooling/dotnet/shared/Microsoft.NETCore.App/10.0.13/libcoreclr.dylib",
+      "sourceSha256": "ddfcfc962b1a9cf4bc36bd9058e6d9c23132fc267d704d55c64d832b06258d64"
+    },
+    {
+      "file": "Contents/MacOS/libAvaloniaNative.dylib",
+      "classification": "upstream-distributed-build-path",
+      "source": ".cache/nuget/avalonia.native/12.1.4/runtimes/osx/native/libAvaloniaNative.dylib",
+      "sourceSha256": "42765b28691538bcfbe6ed3ec39afc5c899b43cc9b7cf0ca550f91a0f1fc6533"
+    },
+    {
+      "file": "Contents/MacOS/libmscordaccore.dylib",
+      "classification": "upstream-distributed-build-path",
+      "source": ".tooling/dotnet/shared/Microsoft.NETCore.App/10.0.13/libmscordaccore.dylib",
+      "sourceSha256": "d0dbdbb3f62acd413bf036366529a2518ed63c1180c19669b68fe37daeba9e45"
+    },
+    {
+      "file": "Contents/MacOS/libmscordbi.dylib",
+      "classification": "upstream-distributed-build-path",
+      "source": ".tooling/dotnet/shared/Microsoft.NETCore.App/10.0.13/libmscordbi.dylib",
+      "sourceSha256": "c3a782387ce2d0d9cfb096eaacba302b12f9fea301e03e9eb3b7754fc4f3888d"
+    },
+    {
+      "file": "Contents/MacOS/libclrjit.dylib",
+      "classification": "upstream-distributed-build-path",
+      "source": ".tooling/dotnet/shared/Microsoft.NETCore.App/10.0.13/libclrjit.dylib",
+      "sourceSha256": "00fee97d6b484290219d1ebf5086bf0a873cf1700c07bcac8550ff95c37de0ac"
+    },
+    {
+      "file": "Contents/MacOS/host/libcoreclr.dylib",
+      "classification": "upstream-distributed-build-path",
+      "source": ".tooling/dotnet/shared/Microsoft.NETCore.App/10.0.13/libcoreclr.dylib",
+      "sourceSha256": "ddfcfc962b1a9cf4bc36bd9058e6d9c23132fc267d704d55c64d832b06258d64"
+    },
+    {
+      "file": "Contents/MacOS/host/libmscordaccore.dylib",
+      "classification": "upstream-distributed-build-path",
+      "source": ".tooling/dotnet/shared/Microsoft.NETCore.App/10.0.13/libmscordaccore.dylib",
+      "sourceSha256": "d0dbdbb3f62acd413bf036366529a2518ed63c1180c19669b68fe37daeba9e45"
+    },
+    {
+      "file": "Contents/MacOS/host/libmscordbi.dylib",
+      "classification": "upstream-distributed-build-path",
+      "source": ".tooling/dotnet/shared/Microsoft.NETCore.App/10.0.13/libmscordbi.dylib",
+      "sourceSha256": "c3a782387ce2d0d9cfb096eaacba302b12f9fea301e03e9eb3b7754fc4f3888d"
+    },
+    {
+      "file": "Contents/MacOS/host/libclrjit.dylib",
+      "classification": "upstream-distributed-build-path",
+      "source": ".tooling/dotnet/shared/Microsoft.NETCore.App/10.0.13/libclrjit.dylib",
+      "sourceSha256": "00fee97d6b484290219d1ebf5086bf0a873cf1700c07bcac8550ff95c37de0ac"
+    }
+  ],
+  "knownPrivateValuesFound": false
+}

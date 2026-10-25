@@ -1,0 +1,6 @@
+<Application xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Class="Pcl.Desktop.App" RequestedThemeVariant="Dark">
+    <!-- 使用 Avalonia FluentTheme 作为原生桌面控件基线，具体配色由外观服务的动态资源覆盖。 -->
+    <Application.Styles>
+        <FluentTheme/>
+    </Application.Styles>
+</Application>

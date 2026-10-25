@@ -1,0 +1,611 @@
+{
+  "RES-001": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/ResourceCatalog.cs; src/Pcl.Desktop/ResourceBrowser.cs",
+    "ui": "Modrinth → 资源类型 → 分类/搜索/分页",
+    "implementationScope": "实例版本、加载器、分类、分页；中文别名显示和检索",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: modrinth_datapack_filters_need_no_fabric_loader；主测试 modrinth_facets_and_query_escaping",
+      "artifacts/evidence-complete/pack-live-3/pack-live-result.json（真实 Modrinth 下载、导出/导入/更新；无游戏世界验收）",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "modrinth_datapack_filters_need_no_fabric_loader；主测试 modrinth_facets_and_query_escaping",
+      "realNetworkAndFiles": "artifacts/evidence-complete/pack-live-3/pack-live-result.json（真实 Modrinth 下载、导出/导入/更新；无游戏世界验收）",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过"
+    },
+    "remaining": "需完成该入口的真实 GUI 操作验收；不保证任意第三方资源兼容",
+    "externalConditions": []
+  },
+  "RES-002": {
+    "status": "外部条件阻塞",
+    "macImplementation": "src/Pcl.Core/CurseForgeCatalog.cs; src/Pcl.Desktop/CurseForgeWindow.cs",
+    "ui": "CurseForge → 本次 API Key → 类型/搜索/版本",
+    "implementationScope": "官方 API、类型/版本/加载器筛选、分页、版本文件、官方网页、必需依赖、受限文件手动匹配；Key 仅窗口内存",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: curse_catalog_filters_dependencies_and_file_restrictions",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "curse_catalog_filters_dependencies_and_file_restrictions",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过"
+    },
+    "remaining": "真实 API 凭据和网络链路未验收；未内置他人密钥",
+    "externalConditions": [
+      "用户自有有效 CurseForge API Key"
+    ]
+  },
+  "RES-003": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/ResourceAliases.cs",
+    "ui": "Modrinth 与 CurseForge 分别检索",
+    "implementationScope": "固定 PCLCS 词库有明确双平台 slug 的项目可得到同一百科身份",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: resource_alias_embedded_database_and_explicit_cross_platform_identity",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "resource_alias_embedded_database_and_explicit_cross_platform_identity",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过"
+    },
+    "remaining": "尚无统一混合检索结果列表；没有可信映射的项目不做同名合并",
+    "externalConditions": []
+  },
+  "RES-004": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/ResourceAliases.cs; vendor/PCLCS/Resource/WikiEntry.cs",
+    "ui": "Modrinth / CurseForge → 中文搜索",
+    "implementationScope": "复用固定基线 WikiEntries；中文名称映射检索词及显示别名；修正 Unix 嵌入资源分隔符",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: resource_alias_embedded_database_and_explicit_cross_platform_identity",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "resource_alias_embedded_database_and_explicit_cross_platform_identity",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过"
+    },
+    "remaining": "固定词库可能过时；未实现在线自动刷新或用户词库编辑",
+    "externalConditions": []
+  },
+  "RES-005": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/ResourceAliases.cs; src/Pcl.Desktop/ResourceBrowser.cs",
+    "ui": "Modrinth → 项目 → MC 百科",
+    "implementationScope": "已知条目直达 class/id，未知条目进入百科搜索",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: resource_alias_embedded_database_and_explicit_cross_platform_identity",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "resource_alias_embedded_database_and_explicit_cross_platform_identity",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过"
+    },
+    "remaining": "浏览器跳转需最终 GUI 验收",
+    "externalConditions": []
+  },
+  "RES-006": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/ResourceCatalog.cs; src/Pcl.Desktop/ResourceBrowser.cs",
+    "ui": "Modrinth → 项目 → 详情/更新日志/版本/另存为",
+    "implementationScope": "官方项目正文、更新日志以纯文本查看；版本列表及校验下载后另存为",
+    "testEvidence": [],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "未专门覆盖",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过"
+    },
+    "remaining": "各按钮需最终 GUI 验收；CurseForge 详情主要使用官方网页",
+    "externalConditions": []
+  },
+  "RES-007": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/ResourceCatalog.cs; src/Pcl.Core/CurseForgeCatalog.cs; src/Pcl.Core/FabricModPlanner.cs",
+    "ui": "资源版本 → 安装",
+    "implementationScope": "按版本/加载器递归解析必需前置并排序；冲突和发布限制明确失败",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: curse_catalog_filters_dependencies_and_file_restrictions；既有 Modrinth/Fabric 依赖测试",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "curse_catalog_filters_dependencies_and_file_restrictions；既有 Modrinth/Fabric 依赖测试",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过"
+    },
+    "remaining": "CF 真网待自有 Key；可选/嵌入资源不强行自动安装",
+    "externalConditions": []
+  },
+  "RES-008": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/FabricModPlanner.cs; src/Pcl.Core/LocalResourceService.cs",
+    "ui": "模组安装 / 本地资源 → 检查依赖关系",
+    "implementationScope": "Fabric depends/breaks/provides、嵌套模组、重复外部 ID；安装和批量启停提交前校验",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: local_scan_toggle_and_dependency_rollback；既有 Fabric 语义版本测试",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "local_scan_toggle_and_dependency_rollback；既有 Fabric 语义版本测试",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过"
+    },
+    "remaining": "依赖声明不能覆盖动态代码及模组自行下载的原生库",
+    "externalConditions": []
+  },
+  "RES-009": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/ForgeModDependencies.cs; src/Pcl.Core/LocalResourceService.cs",
+    "ui": "本地资源 → 检查依赖关系；资源安装提交检查",
+    "implementationScope": "Tomlyn 读取真实 TOML；required/optional/incompatible/discouraged、客户端 side、加载顺序循环、Java/FML、manifest 版本与 JarJar 元数据",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: forge_toml_dependencies_versions_side_and_neoforge_legacy_alias",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "forge_toml_dependencies_versions_side_and_neoforge_legacy_alias",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过"
+    },
+    "remaining": "尚不是完整 Maven ComparableVersion 等价实现；旧 mcmod.info 只扫描身份；第三方 language loader、OpenGL 条件需真实加载器检查；不声明完整 TOML 约束验收",
+    "externalConditions": []
+  },
+  "RES-010": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/ResourceInstaller.cs; src/Pcl.Core/ResourceHistory.cs; src/Pcl.Desktop/ResourceBrowser.cs",
+    "ui": "光影 → 下载/应用/撤销应用",
+    "implementationScope": "下载校验；Fabric/Iris 配置写入，备份与最后一次应用撤销；配置若被游戏修改则拒绝覆盖",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: resource_activation_undo_history_and_external_change_protection",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "resource_activation_undo_history_and_external_change_protection",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过"
+    },
+    "remaining": "撤销文件事务有资源包夹具；实际光影撤销仍需 GUI/世界复测。Forge/NeoForge 光影后端未自动搭建",
+    "externalConditions": []
+  },
+  "RES-011": {
+    "status": "已验收",
+    "macImplementation": "src/Pcl.Core/MacShaderCompatibility.cs; docs/Mac依赖与光影适配.md",
+    "ui": "光影页 / 1.21.1 光影",
+    "implementationScope": "明确 Apple OpenGL/Iris 支持限制；已知 required GPU 功能拦截",
+    "testEvidence": [
+      "docs/Mac依赖与光影适配.md：0.3 用户已进入世界并确认画面正常；本轮未重复人工验收"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "未专门覆盖",
+      "realNetworkAndFiles": "docs/Mac依赖与光影适配.md：0.3 用户已进入世界并确认画面正常；本轮未重复人工验收",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过"
+    },
+    "remaining": "仅已指定组合有历史人工世界验收，不能推广为任意光影和所有 Mac",
+    "externalConditions": []
+  },
+  "RES-012": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/ResourceInstaller.cs; src/Pcl.Desktop/ResourceBrowser.cs",
+    "ui": "资源包 → 安装 → 应用",
+    "implementationScope": "ZIP/pack.mcmeta 校验、写 options.txt、保存原配置及撤销",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: resource_activation_undo_history_and_external_change_protection",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "resource_activation_undo_history_and_external_change_protection",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过"
+    },
+    "remaining": "游戏内材质显示需实际验收",
+    "externalConditions": []
+  },
+  "RES-013": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/DataPackService.cs; src/Pcl.Desktop/ResourceBrowser.cs; src/Pcl.Desktop/LocalResourcesWindow.cs",
+    "ui": "数据包 → 版本 → 选择当前实例存档；本地资源 → 数据包",
+    "implementationScope": "Modrinth 联网检索及下载前置；按世界安全安装、启停和备份移除",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: world_datapack_install_toggle_backup_and_target_validation；modrinth_datapack_filters_need_no_fabric_loader",
+      "artifacts/evidence-complete/pack-live-3/pack-live-result.json（真实 Modrinth 下载、导出/导入/更新；无游戏世界验收）：TreeMiner 5.0.0 / 19,397 bytes / SHA1 a9e9a1a63c70f5cefc7bbf333c286a872e70896f",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "world_datapack_install_toggle_backup_and_target_validation；modrinth_datapack_filters_need_no_fabric_loader",
+      "realNetworkAndFiles": "artifacts/evidence-complete/pack-live-3/pack-live-result.json（真实 Modrinth 下载、导出/导入/更新；无游戏世界验收）：TreeMiner 5.0.0 / 19,397 bytes / SHA1 a9e9a1a63c70f5cefc7bbf333c286a872e70896f",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过"
+    },
+    "remaining": "真实下载与 staging 存档目录安装已过；尚未在游戏世界内观察数据包行为",
+    "externalConditions": []
+  },
+  "RES-014": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/LocalResourceService.cs; src/Pcl.Desktop/LocalResourcesWindow.cs",
+    "ui": "本地资源 → 分类/搜索",
+    "implementationScope": "扫描未登记外部 JAR/ZIP/disabled；Fabric/Quilt/Forge/NeoForge/LiteLoader 元数据、大小哈希、损坏状态",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: local_scan_toggle_and_dependency_rollback；resource_metadata_legacy_forge_neoforge_quilt_liteloader",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "local_scan_toggle_and_dependency_rollback；resource_metadata_legacy_forge_neoforge_quilt_liteloader",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过"
+    },
+    "remaining": "各加载器的身份扫描不代表其所有依赖已被分析",
+    "externalConditions": []
+  },
+  "RES-015": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/LocalResourceService.cs; src/Pcl.Desktop/LocalResourcesWindow.cs",
+    "ui": "本地资源 → 多选 → 启用/停用/移除",
+    "implementationScope": "批量事务、错误回滚、备份移除；Fabric 与现代 Forge/NeoForge 声明依赖保护",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: local_scan_toggle_and_dependency_rollback；forge_toml_dependencies_versions_side_and_neoforge_legacy_alias",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "local_scan_toggle_and_dependency_rollback；forge_toml_dependencies_versions_side_and_neoforge_legacy_alias",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过"
+    },
+    "remaining": "Quilt 完整约束、旧 Forge/LiteLoader 依赖保护未完成；Forge 比较器边界同 RES-009",
+    "externalConditions": []
+  },
+  "RES-016": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/LocalResourceService.cs; src/Pcl.Desktop/LocalResourcesWindow.cs; src/Pcl.Core/ResourceBatchUpdater.cs",
+    "ui": "本地资源 → 检查更新 → 多选 → 批量更新所选 → 预览 → 提交整批更新",
+    "implementationScope": "按现有文件 SHA1 向 Modrinth 识别身份，匹配当前版本/加载器；更新前计划与备份；批量暂存全部文件后核验合并依赖，预览版本及文件，目录提交备份，提交前检查外部修改并保护",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs: resource_batch_update_projects_whole_dependency_set_and_preserves_external_edits（模拟下载/临时文件）",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "resource_batch_update_projects_whole_dependency_set_and_preserves_external_edits 已在 full-regression-4 通过",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过"
+    },
+    "remaining": "批量更新已具 GUI 路径，需最终实际操作验收；未实现强制终止后的自动事务恢复；CF 文件不会借用 Modrinth ID 自动更新",
+    "externalConditions": []
+  },
+  "RES-017": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/LocalResourceService.cs; src/Pcl.Desktop/LocalResourcesWindow.cs",
+    "ui": "本地资源 → 可更新列表 → 忽略此版本",
+    "implementationScope": "实例持久化忽略特定项目+版本，下次检查不重复提醒",
+    "testEvidence": [],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "未专门覆盖",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过"
+    },
+    "remaining": "需 GUI 保存/重开验证",
+    "externalConditions": []
+  },
+  "RES-018": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/ResourceInstaller.cs; src/Pcl.Core/DataPackService.cs; src/Pcl.Desktop/ResourceBrowser.cs",
+    "ui": "资源页 → 导入；本地资源 → 导入数据包",
+    "implementationScope": "本地模组/光影/资源包/数据包导入，校验元数据和依赖；LiteLoader 扩展名适配",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: resource_metadata_legacy_forge_neoforge_quilt_liteloader；world_datapack_install_toggle_backup_and_target_validation；resource_activation_undo_history_and_external_change_protection",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "resource_metadata_legacy_forge_neoforge_quilt_liteloader；world_datapack_install_toggle_backup_and_target_validation；resource_activation_undo_history_and_external_change_protection",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过"
+    },
+    "remaining": "OptiFine 独立实例不当作通用 mods 加载器",
+    "externalConditions": []
+  },
+  "PACK-001": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/ResourceCatalog.cs; src/Pcl.Desktop/ResourceBrowser.cs",
+    "ui": "整合包 → 搜索/版本 → 安装",
+    "implementationScope": "Modrinth 项目搜索、对应游戏版本和包文件下载",
+    "testEvidence": [
+      "docs/Forge-NeoForge与整合包适配.md：0.4 Adrenaline 真实包下载与图形初始化历史证据"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "未专门覆盖",
+      "realNetworkAndFiles": "docs/Forge-NeoForge与整合包适配.md：0.4 Adrenaline 真实包下载与图形初始化历史证据",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过"
+    },
+    "remaining": "新分类/详情等 UI 需最终验收",
+    "externalConditions": []
+  },
+  "PACK-002": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/ModpackService.cs; src/Pcl.Desktop/PackManagerWindow.cs",
+    "ui": "整合包管理 → 导入 .mrpack",
+    "implementationScope": "多 Minecraft 版本；vanilla/Fabric/Quilt/Forge/NeoForge 指定版本；双哈希、环境、覆盖顺序、安全路径、临时实例发布",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: pack_export_privacy_hashes_and_roundtrip；既有 mrpack hash/path/overrides 测试",
+      "artifacts/evidence-complete/pack-live-3/pack-live-result.json（真实 Modrinth 下载、导出/导入/更新；无游戏世界验收）",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "pack_export_privacy_hashes_and_roundtrip；既有 mrpack hash/path/overrides 测试",
+      "realNetworkAndFiles": "artifacts/evidence-complete/pack-live-3/pack-live-result.json（真实 Modrinth 下载、导出/导入/更新；无游戏世界验收）",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过"
+    },
+    "remaining": "不支持同一包多个加载器；大量第三方包兼容性仍需逐包运行",
+    "externalConditions": []
+  },
+  "PACK-003": {
+    "status": "外部条件阻塞",
+    "macImplementation": "src/Pcl.Core/PortableModpackService.cs; src/Pcl.Desktop/PackManagerWindow.cs",
+    "ui": "整合包管理 → CurseForge ZIP → API Key/手动文件",
+    "implementationScope": "官方 manifest v1 转换，API 元数据与文件 SHA1/大小验证，受限下载明确列出缺失；无 Key 可由用户逐项匹配本地 JAR",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: pack_import_all_declared_formats；curse_api_metadata_and_publisher_disabled_download；curse_missing_credentials_blocks_before_instance_install",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "pack_import_all_declared_formats；curse_api_metadata_and_publisher_disabled_download；curse_missing_credentials_blocks_before_instance_install",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过"
+    },
+    "remaining": "真实 CF API 端到端未验收；无 API 时手动匹配只记录本地哈希，不能称远程项目身份已认证",
+    "externalConditions": [
+      "自动安装需用户自有有效 CurseForge API Key；或用户合法取得的必需本地文件"
+    ]
+  },
+  "PACK-004": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/PortableModpackService.cs; src/Pcl.Desktop/PackManagerWindow.cs",
+    "ui": "整合包管理 → HMCL ZIP",
+    "implementationScope": "识别 modpack.json/gameVersion/minecraft 数据目录；转换后统一安装",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: pack_import_all_declared_formats",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "pack_import_all_declared_formats",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过"
+    },
+    "remaining": "带自定义 versions 元数据的 HMCL 包明确拒绝；含模组但元数据未声明加载器需用户指定",
+    "externalConditions": []
+  },
+  "PACK-005": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/PortableModpackService.cs; src/Pcl.Desktop/PackManagerWindow.cs",
+    "ui": "整合包管理 → MultiMC ZIP",
+    "implementationScope": "支持 mmc-pack.json formatVersion 1 及实例嵌套根目录；Minecraft/Fabric/Quilt/Forge/NeoForge 组件",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: pack_import_all_declared_formats；pack_rejects_traversal_symlink_case_collision_and_custom_patch",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "pack_import_all_declared_formats；pack_rejects_traversal_symlink_case_collision_and_custom_patch",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过"
+    },
+    "remaining": "自定义 patches/jarmods、启动命令、环境变量和 JVM 命令不迁移；复杂实例需手动处理",
+    "externalConditions": []
+  },
+  "PACK-006": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/PortableModpackService.cs; src/Pcl.Desktop/PackManagerWindow.cs",
+    "ui": "整合包管理 → MCBBS ZIP",
+    "implementationScope": "识别 mcbbs.packmeta addons/overrides；转换到统一安装链路",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: pack_import_all_declared_formats",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "pack_import_all_declared_formats",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过"
+    },
+    "remaining": "旧 OptiFine/LiteLoader 作为包组件尚不支持；不是所有发行版包格式保证",
+    "externalConditions": []
+  },
+  "PACK-007": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/PortableModpackService.cs; src/Pcl.Desktop/PackManagerWindow.cs",
+    "ui": "整合包管理 → 普通 ZIP → 填游戏/加载器版本",
+    "implementationScope": "仅导入已知游戏数据目录；支持 .minecraft 包装层；不覆盖启动器目录",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: pack_import_all_declared_formats",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "pack_import_all_declared_formats",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过"
+    },
+    "remaining": "缺少元数据无法自动推断所有组件；需用真实外部包做 GUI/启动验证",
+    "externalConditions": []
+  },
+  "PACK-008": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/PortableModpackService.cs; src/Pcl.Desktop/PackManagerWindow.cs",
+    "ui": "整合包管理 → 检查内容",
+    "implementationScope": "可以识别并跳过 launcher.exe/start.sh 等非数据内容，导入游戏数据，拒绝危险路径",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: pack_import_all_declared_formats；pack_rejects_traversal_symlink_case_collision_and_custom_patch",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "pack_import_all_declared_formats；pack_rejects_traversal_symlink_case_collision_and_custom_patch",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过"
+    },
+    "remaining": "不运行包内启动脚本，未实现任意第三方启动器配置的完整迁移",
+    "externalConditions": []
+  },
+  "PACK-009": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/ModpackService.cs; src/Pcl.Core/PortableModpackService.cs; src/Pcl.Desktop/PackManagerWindow.cs",
+    "ui": "整合包管理 → 包含可选文件",
+    "implementationScope": "默认不装可选文件，可勾选整体包含",
+    "testEvidence": [],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "未专门覆盖",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过"
+    },
+    "remaining": "尚无逐文件选择 UI；不能称与 PCL2 可选文件选择完全一致",
+    "externalConditions": []
+  },
+  "PACK-010": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/PortableModpackService.cs; src/Pcl.Desktop/PackManagerWindow.cs",
+    "ui": "整合包管理 → 导出 .mrpack",
+    "implementationScope": "合法索引和 overrides，按实际 ZIP 写入字节生成 SHA1/SHA512 记录，保存后重检",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: pack_export_privacy_hashes_and_roundtrip；pack_export_recipe_selection_and_exact_payload_hash",
+      "artifacts/evidence-complete/pack-live-3/pack-live-result.json（真实 Modrinth 下载、导出/导入/更新；无游戏世界验收）",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "pack_export_privacy_hashes_and_roundtrip；pack_export_recipe_selection_and_exact_payload_hash",
+      "realNetworkAndFiles": "artifacts/evidence-complete/pack-live-3/pack-live-result.json（真实 Modrinth 下载、导出/导入/更新；无游戏世界验收）",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过"
+    },
+    "remaining": "嵌入本地资源文件；分享前需检查各资源分发许可，未自动上传",
+    "externalConditions": []
+  },
+  "PACK-011": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/PortableModpackService.cs; src/Pcl.Desktop/PackManagerWindow.cs",
+    "ui": "整合包管理 → 导出目录/存档/选项复选框",
+    "implementationScope": "默认排除存档、options、账号、token、日志和服务器列表；已知数据目录可选，私密文件名过滤",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: pack_export_privacy_hashes_and_roundtrip；pack_export_recipe_selection_and_exact_payload_hash",
+      "artifacts/evidence-complete/pack-live-3/pack-live-result.json（真实 Modrinth 下载、导出/导入/更新；无游戏世界验收）",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "pack_export_privacy_hashes_and_roundtrip；pack_export_recipe_selection_and_exact_payload_hash",
+      "realNetworkAndFiles": "artifacts/evidence-complete/pack-live-3/pack-live-result.json（真实 Modrinth 下载、导出/导入/更新；无游戏世界验收）",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过"
+    },
+    "remaining": "任意自定义 config 内容里的秘密无法自动识别，发布前需自行检查",
+    "externalConditions": []
+  },
+  "PACK-012": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/PortableModpackService.cs; src/Pcl.Desktop/PackManagerWindow.cs",
+    "ui": "整合包管理 → 保存/读取导出配置",
+    "implementationScope": "实例内保存名称版本、文件夹集合、存档/选项开关；校验选项路径",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: pack_export_recipe_selection_and_exact_payload_hash",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "pack_export_recipe_selection_and_exact_payload_hash",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过"
+    },
+    "remaining": "需 GUI 保存/读取验收",
+    "externalConditions": []
+  },
+  "PACK-013": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/PortableModpackService.cs; src/Pcl.Desktop/PackManagerWindow.cs",
+    "ui": "整合包管理 → 更新当前整合包（保留原实例）",
+    "implementationScope": "初次安装基线 SHA256；展示新增/修改/删除；更新为新实例并选择保留用户改动和删除；源实例留存",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: pack_update_baseline_distinguishes_modified_added_deleted_and_private",
+      "artifacts/evidence-complete/pack-live-3/pack-live-result.json（真实 Modrinth 下载、导出/导入/更新；无游戏世界验收）：pack-update-c5e40805afbe；验证 config 新增与 Mod Menu 用户删除仍保留",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "pack_update_baseline_distinguishes_modified_added_deleted_and_private",
+      "realNetworkAndFiles": "artifacts/evidence-complete/pack-live-3/pack-live-result.json（真实 Modrinth 下载、导出/导入/更新；无游戏世界验收）：pack-update-c5e40805afbe；验证 config 新增与 Mod Menu 用户删除仍保留",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过"
+    },
+    "remaining": "无基线旧包明确停止；当前按完整文件覆盖保留，不是配置语义三方合并；保留旧模组仍可能产生版本冲突",
+    "externalConditions": []
+  },
+  "PACK-014": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/PortableModpackService.cs; src/Pcl.Desktop/PackManagerWindow.cs; src/Pcl.Desktop/CurseForgeWindow.cs",
+    "ui": "CurseForge 项目/包 → 官方文件页 → 匹配本地文件",
+    "implementationScope": "有 API 元数据时比对官方 SHA1/大小；无 API 包手动选择则标明仅用户匹配并记录本地哈希",
+    "testEvidence": [
+      "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: curse_api_metadata_and_publisher_disabled_download；curse_catalog_filters_dependencies_and_file_restrictions；curse_missing_credentials_blocks_before_instance_install",
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+    ],
+    "evidenceLevels": {
+      "source": true,
+      "fixture": "curse_api_metadata_and_publisher_disabled_download；curse_catalog_filters_dependencies_and_file_restrictions；curse_missing_credentials_blocks_before_instance_install",
+      "realNetworkAndFiles": "本模块本轮未单独实测",
+      "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
+      "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过"
+    },
+    "remaining": "无 Key 无法证明手动文件属于所列 project/file；真实受限发布文件需要用户材料",
+    "externalConditions": [
+      "受限项目文件需用户按其授权从官方页面取得"
+    ]
+  }
+}

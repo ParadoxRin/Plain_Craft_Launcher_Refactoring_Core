@@ -1,0 +1,6 @@
+LWJGL Unsafe Agent 2.0, Copyright Glavo. Apache License 2.0.
+Unmodified artifact from Maven Central:
+https://repo.maven.apache.org/maven2/org/glavo/lwjgl-unsafe-agent/2.0/lwjgl-unsafe-agent-2.0.jar
+SHA256: 6c07d3508dc090a12076876bdc227a19ce195a41c9e2c6535c3f82213b1b2015
+Source: https://github.com/HMCL-dev/lwjgl-unsafe-agent
+Only enabled with Java 25+ and LWJGL 3.4.0/3.4.1. Can be disabled in launch settings.

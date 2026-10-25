@@ -1,0 +1,74 @@
+{
+  "RES-003": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/UnifiedResourceSearch.cs; src/Pcl.Desktop/UnifiedSearchWindow.cs",
+    "ui": "侧栏 → 多源搜索",
+    "implementationSummary": "MR/本地/可选CF统一列表，独立来源分页，命名空间ID与本地文件SHA-1识别合并，离线模式、来源失败隔离、取消、版本安装。",
+    "testEvidence": [
+      "artifacts/evidence-0.10/regression-final/test-results.json",
+      "artifacts/completion-final-0.10/evidence/completion-features-result.json"
+    ],
+    "remaining": "本页MR+本地已实际搜索/去重/安装；CF需自有Key，跨MR-CF未获可信映射的同名项目不合并；尚无跨页全局去重。",
+    "externalConditions": [
+      "CF在线双源实测需要自己的API Key"
+    ],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/evidence-0.10/regression-final/test-results.json",
+      "realNetworkAndFiles": "artifacts/completion-final-0.10/evidence/completion-features-result.json",
+      "gui": "实际查询Fabric API合并、离线查询、Lithium/FerriteCore版本安装；未做有密钥CF实测"
+    }
+  },
+  "RES-009": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/MavenComparableVersion.cs; src/Pcl.Core/ForgeModDependencies.cs; src/Pcl.Core/LocalResourceService.cs",
+    "ui": "资源安装/启停时检查；本地资源 → 检查依赖",
+    "implementationSummary": "Maven3.9.9列表比较算法移植、9721组官方Java对照；范围推荐值/精确值/联合区间；TOML属性展开、默认版本、side/ordering检查，第三方语言加载器提示。",
+    "testEvidence": [
+      "artifacts/evidence-0.10/regression-final/test-results.json",
+      "artifacts/completion-final-0.10/evidence/completion-features-result.json",
+      "artifacts/completion-final-0.10/evidence/completion-runtime-cases.json",
+      "artifacts/evidence-0.10/maven-oracle/provenance.json"
+    ],
+    "remaining": "对照覆盖ASCII长度≤512版本；不是全部Unicode/Maven选择机制。第三方language loader、JarJar完整冲突选择、旧mcmod.info依赖及OpenGL仍有缺口；本轮实测NeoForge/FerriteCore，不推广到任意模组。",
+    "externalConditions": []
+  },
+  "PACK-004": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/PortableModpackService.cs; src/Pcl.Core/PackMetadataCompatibility.cs",
+    "ui": "整合包管理 → 选择ZIP → 检查内容 → 安装",
+    "implementationSummary": "读取HMCL minecraft/pack.json或单一versions定义，识别官方原版/Fabric/Quilt及合并元数据；转换前联网核验，匹配后重建Mac实例。",
+    "testEvidence": [
+      "artifacts/evidence-0.10/regression-final/test-results.json",
+      "artifacts/completion-final-0.10/evidence/completion-features-result.json",
+      "artifacts/completion-final-0.10/evidence/completion-runtime-cases.json"
+    ],
+    "remaining": "本轮官方定义组合的HMCL/Fabric包实际导入和启动；包内自定义客户端、多版本、未知/不等效定义及全部新patch结构尚未支持。测试包不是任意HMCL导出包兼容证明。",
+    "externalConditions": []
+  },
+  "PACK-005": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/PortableModpackService.cs; src/Pcl.Core/PackMetadataCompatibility.cs",
+    "ui": "整合包管理 → 选择ZIP → 检查内容 → 安装",
+    "implementationSummary": "标准组件及可与官方MultiMC元数据等效核验的patches导入；实际Fabric补丁包重建启动。",
+    "testEvidence": [
+      "artifacts/evidence-0.10/regression-final/test-results.json",
+      "artifacts/completion-final-0.10/evidence/completion-features-result.json",
+      "artifacts/completion-final-0.10/evidence/completion-runtime-cases.json"
+    ],
+    "remaining": "自定义库/顺序/参数差异、未知组件、jarmods仍拒绝，未迁移外部命令/Java。当前验收为固定官方Fabric定义，不声明任意复杂补丁兼容。",
+    "externalConditions": []
+  },
+  "PACK-002": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/ModpackService.cs; src/Pcl.Core/PortableModpackService.cs",
+    "ui": "整合包下载/导入",
+    "implementationSummary": "mrpack校验、可选文件选择、按Mac重建组件，真实Adrenaline发布包下载安装启动。",
+    "testEvidence": [
+      "artifacts/evidence-0.10/regression-final/test-results.json",
+      "artifacts/completion-final-0.10/evidence/completion-features-result.json",
+      "artifacts/completion-final-0.10/evidence/completion-runtime-cases.json"
+    ],
+    "remaining": "本轮Adrenaline 26.5.1+mc1.21.1.fabric固定发布包通过服务安装、GUI启动；世界游玩/全部入口/任意包兼容仍待逐项，不支持多个加载器同时声明。",
+    "externalConditions": []
+  }
+}

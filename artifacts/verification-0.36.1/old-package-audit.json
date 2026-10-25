@@ -1,0 +1,355 @@
+{
+  "scope": "known private strings in selected text/assembly archive members, stops at first hit per archive",
+  "packages": [
+    {
+      "file": "PCL-MacPort-Preview-0.6-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-Mac-0.19-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-Mac-0.9-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-Mac-0.21-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-Mac-0.35-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-Mac-0.14-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-Mac-0.12-source.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 22
+    },
+    {
+      "file": "PCL-MacPort-Preview-0.5-source.zip",
+      "knownPrivateValueFound": false,
+      "membersExamined": 83
+    },
+    {
+      "file": "PCL-MacPort-Preview-source.zip",
+      "knownPrivateValueFound": false,
+      "membersExamined": 99
+    },
+    {
+      "file": "PCL-Mac-0.17-source.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 8
+    },
+    {
+      "file": "PCL-Mac-0.20-source.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 8
+    },
+    {
+      "file": "PCL-Mac-0.12-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-Mac-0.27-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-Mac-0.20-Windows-comparison.zip",
+      "knownPrivateValueFound": false,
+      "membersExamined": 2
+    },
+    {
+      "file": "PCL-Mac-0.33-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-MacPort-Preview-0.7-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-Mac-0.8-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-Mac-0.18-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-Mac-0.34-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-Mac-0.10-source.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 21
+    },
+    {
+      "file": "PCL-Mac-0.20-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-Mac-0.15-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-MacPort-Preview-0.2-source.zip",
+      "knownPrivateValueFound": false,
+      "membersExamined": 72
+    },
+    {
+      "file": "PCL-Mac-0.8-source.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 17
+    },
+    {
+      "file": "PCL-Mac-0.22-source.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 8
+    },
+    {
+      "file": "PCL-Mac-0.15-source.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 28
+    },
+    {
+      "file": "PCL-MacPort-Preview-0.7-source.zip",
+      "knownPrivateValueFound": false,
+      "membersExamined": 99
+    },
+    {
+      "file": "PCL-Mac-0.22-verification.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 6
+    },
+    {
+      "file": "PCL-Mac-0.18-source.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 8
+    },
+    {
+      "file": "PCL-Mac-0.13-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-Mac-0.32-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-Mac-0.26-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-MacPort-Preview-0.4-source.zip",
+      "knownPrivateValueFound": false,
+      "membersExamined": 82
+    },
+    {
+      "file": "PCL-Mac-0.16-source.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 8
+    },
+    {
+      "file": "PCL-Mac-0.21-source.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 8
+    },
+    {
+      "file": "PCL-Mac-0.18.1-source.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 8
+    },
+    {
+      "file": "PCL-MacPort-Preview-0.4-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-Mac-0.16-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-MacPort-Preview-0.6-validation.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 1
+    },
+    {
+      "file": "PCL-Mac-0.36-handoff-20261026.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 38
+    },
+    {
+      "file": "PCL-Mac-0.23-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-Mac-0.28-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-MacPort-Preview-0.2-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-Mac-0.25-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-Mac-0.36-handoff-with-git-20261026.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 40
+    },
+    {
+      "file": "PCL-Mac-0.31-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-Mac-0.21-verification.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 1
+    },
+    {
+      "file": "PCL-Mac-0.10-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-Mac-0.13-source.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 23
+    },
+    {
+      "file": "PCL-Mac-0.23-source.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 22
+    },
+    {
+      "file": "PCL-Mac-0.14-source.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 26
+    },
+    {
+      "file": "PCL-MacPort-Preview-0.5-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-MacPort-Preview-0.6-source.zip",
+      "knownPrivateValueFound": false,
+      "membersExamined": 86
+    },
+    {
+      "file": "PCL-Mac-0.17-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-Mac-0.19-source.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 8
+    },
+    {
+      "file": "PCL-Mac-0.36-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-MacPort-Preview-0.5-validation.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 1
+    },
+    {
+      "file": "PCL-Mac-0.22-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-Mac-0.23-run-records.zip",
+      "knownPrivateValueFound": false,
+      "membersExamined": 6
+    },
+    {
+      "file": "PCL-MacPort-Preview-0.3-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-Mac-0.29-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-MacPort-Preview-0.4-validation.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 2
+    },
+    {
+      "file": "PCL-Mac-0.30-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-Mac-0.18.1-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-Mac-0.11-source.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 22
+    },
+    {
+      "file": "PCL-MacPort-Preview-0.3-source.zip",
+      "knownPrivateValueFound": false,
+      "membersExamined": 76
+    },
+    {
+      "file": "PCL-Mac-0.9-source.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 18
+    },
+    {
+      "file": "PCL-MacPort-Preview-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-Mac-0.24-Host-Preview-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    },
+    {
+      "file": "PCL-Mac-0.11-arm64.zip",
+      "knownPrivateValueFound": true,
+      "membersExamined": 7
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "host": "bundled self-contained Pcl.Host",
+  "mode": "official-demo",
+  "processExit": 0,
+  "worldInteraction": "not-tested",
+  "msAccount": "not-used",
+  "graphicsLogObserved": true,
+  "atlasCreationObserved": true,
+  "gameVersion": "1.21.1",
+  "stoppedByTestAfterSeconds": 35
+}

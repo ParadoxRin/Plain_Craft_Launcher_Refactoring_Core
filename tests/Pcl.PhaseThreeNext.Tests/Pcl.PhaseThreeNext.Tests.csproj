@@ -1,0 +1,4 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+  <ItemGroup><ProjectReference Include="../../src/Pcl.Core/Pcl.Core.csproj" /><ProjectReference Include="../../src/Pcl.Client/Pcl.Client.csproj" /></ItemGroup>
+<ItemGroup><ProjectReference Include="../../src/Pcl.Application/Pcl.Application.csproj" /></ItemGroup></Project>

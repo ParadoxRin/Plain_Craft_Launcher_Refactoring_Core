@@ -1,0 +1,10 @@
+<Project>
+  <!-- 使用 SDK 自带 Roslyn，无需增加外部格式化依赖。 -->
+  <PropertyGroup>
+    <RoslynFormatPath>$(MSBuildSDKsPath)/../Roslyn/bincore</RoslynFormatPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CodeAnalysis" HintPath="$(RoslynFormatPath)/Microsoft.CodeAnalysis.dll" />
+    <Reference Include="Microsoft.CodeAnalysis.CSharp" HintPath="$(RoslynFormatPath)/Microsoft.CodeAnalysis.CSharp.dll" />
+  </ItemGroup>
+</Project>

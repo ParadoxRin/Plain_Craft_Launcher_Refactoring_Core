@@ -1,0 +1,1048 @@
+{
+  "version": "0.22",
+  "total": 121,
+  "counts": {
+    "平台固定策略": 1,
+    "直接绑定": 73,
+    "部分绑定": 23,
+    "平台差异": 3,
+    "未完成": 4,
+    "现有功能入口": 4,
+    "固定安全行为": 1,
+    "替代实现入口": 5,
+    "固定隐私行为": 1,
+    "外部服务未接入": 5,
+    "固定行为": 1
+  },
+  "original40": {
+    "直接绑定": 21,
+    "部分绑定": 14,
+    "未完成": 4,
+    "固定隐私行为": 1
+  },
+  "fields": [
+    {
+      "page": "PageSetupLaunch",
+      "card": "启动选项",
+      "index": 0,
+      "label": "默认版本隔离",
+      "status": "平台固定策略",
+      "implementation": "各实例始终隔离，未提供共享目录模式"
+    },
+    {
+      "page": "PageSetupLaunch",
+      "card": "启动选项",
+      "index": 1,
+      "label": "游戏窗口标题",
+      "status": "直接绑定",
+      "implementation": "MacWindowPolicy + 本机 JVM agent 修改实际 NSWindow 标题；Java 8/21/25 实测",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupLaunch",
+      "card": "启动选项",
+      "index": 2,
+      "label": "自定义信息",
+      "status": "直接绑定",
+      "implementation": "LaunchSettings.VersionInformation → version_type 启动参数"
+    },
+    {
+      "page": "PageSetupLaunch",
+      "card": "启动选项",
+      "index": 3,
+      "label": "启动器可见性",
+      "status": "直接绑定",
+      "implementation": "五种可见性行为 + 旧设置兼容；隐藏恢复/最小化/保持/退出后关闭/独立进程启动后关闭均经真实游戏测试",
+      "previousStatus": "部分绑定"
+    },
+    {
+      "page": "PageSetupLaunch",
+      "card": "启动选项",
+      "index": 4,
+      "label": "进程优先级",
+      "status": "部分绑定",
+      "implementation": "macOS 正常/低优先级实际设置 nice 0/10；不提权，未提供 Windows 的高/实时优先级",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupLaunch",
+      "card": "启动选项",
+      "index": 5,
+      "label": "游戏窗口",
+      "status": "直接绑定",
+      "implementation": "默认/自定义/启动器尺寸/最大化 + 全屏；实际窗口回执与启动参数测试",
+      "previousStatus": "部分绑定"
+    },
+    {
+      "page": "PageSetupLaunch",
+      "card": "内存分配",
+      "index": 0,
+      "label": "自动配置",
+      "status": "直接绑定",
+      "implementation": "AutomaticMemory / MinimumMemoryMb / MaximumMemoryMb → LaunchRuntimePolicy"
+    },
+    {
+      "page": "PageSetupLaunch",
+      "card": "内存分配",
+      "index": 1,
+      "label": "自定义",
+      "status": "直接绑定",
+      "implementation": "AutomaticMemory / MinimumMemoryMb / MaximumMemoryMb → LaunchRuntimePolicy"
+    },
+    {
+      "page": "PageSetupLaunch",
+      "card": "内存分配",
+      "index": 2,
+      "label": "启动游戏前进行内存优化",
+      "status": "平台差异",
+      "implementation": "不执行 Windows 工作集清理"
+    },
+    {
+      "page": "PageSetupLaunch",
+      "card": "离线皮肤",
+      "index": 0,
+      "label": "随机",
+      "status": "部分绑定",
+      "implementation": "从已安装客户端提取随机/Steve/Alex 纹理，保存后生成实际资源包；保留 UUID，未强制更改宽臂/细臂模型",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupLaunch",
+      "card": "离线皮肤",
+      "index": 1,
+      "label": "Steve",
+      "status": "部分绑定",
+      "implementation": "从已安装客户端提取随机/Steve/Alex 纹理，保存后生成实际资源包；保留 UUID，未强制更改宽臂/细臂模型",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupLaunch",
+      "card": "离线皮肤",
+      "index": 2,
+      "label": "Alex",
+      "status": "部分绑定",
+      "implementation": "从已安装客户端提取随机/Steve/Alex 纹理，保存后生成实际资源包；保留 UUID，未强制更改宽臂/细臂模型",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupLaunch",
+      "card": "离线皮肤",
+      "index": 3,
+      "label": "正版皮肤",
+      "status": "未完成",
+      "implementation": "尚未绑定原版预设皮肤或玩家名抓取控件"
+    },
+    {
+      "page": "PageSetupLaunch",
+      "card": "离线皮肤",
+      "index": 4,
+      "label": "自定义",
+      "status": "现有功能入口",
+      "implementation": "同卡片打开 SkinManagerWindow，使用 OfflineSkinService；未改成原版独立控件"
+    },
+    {
+      "page": "PageSetupLaunch",
+      "card": "离线皮肤",
+      "index": 5,
+      "label": "正版玩家名",
+      "status": "未完成",
+      "implementation": "尚未绑定原版预设皮肤或玩家名抓取控件"
+    },
+    {
+      "page": "PageSetupLaunch",
+      "card": "离线皮肤",
+      "index": 6,
+      "label": "保存皮肤",
+      "status": "现有功能入口",
+      "implementation": "同卡片打开 SkinManagerWindow，使用 OfflineSkinService；未改成原版独立控件"
+    },
+    {
+      "page": "PageSetupLaunch",
+      "card": "离线皮肤",
+      "index": 7,
+      "label": "刷新",
+      "status": "未完成",
+      "implementation": "尚未绑定原版预设皮肤或玩家名抓取控件"
+    },
+    {
+      "page": "PageSetupLaunch",
+      "card": "离线皮肤",
+      "index": 8,
+      "label": "更改皮肤",
+      "status": "现有功能入口",
+      "implementation": "同卡片打开 SkinManagerWindow，使用 OfflineSkinService；未改成原版独立控件"
+    },
+    {
+      "page": "PageSetupLaunch",
+      "card": "离线皮肤",
+      "index": 9,
+      "label": "重置皮肤",
+      "status": "现有功能入口",
+      "implementation": "同卡片打开 SkinManagerWindow，使用 OfflineSkinService；未改成原版独立控件"
+    },
+    {
+      "page": "PageSetupLaunch",
+      "card": "高级选项",
+      "index": 0,
+      "label": "启动 Minecraft 时使用的额外 JVM 参数，除非有确定把握，否则请不要修改。",
+      "status": "直接绑定",
+      "implementation": "JvmArguments → 实际 Java 参数；禁止覆盖内存与入口"
+    },
+    {
+      "page": "PageSetupLaunch",
+      "card": "高级选项",
+      "index": 1,
+      "label": "游戏参数",
+      "status": "直接绑定",
+      "implementation": "GameArguments → 游戏参数；账户与目录受保护"
+    },
+    {
+      "page": "PageSetupLaunch",
+      "card": "高级选项",
+      "index": 2,
+      "label": "启动前执行命令",
+      "status": "直接绑定",
+      "implementation": "LaunchHookSettings / LaunchHookRunner，本地程序与参数分开设置"
+    },
+    {
+      "page": "PageSetupLaunch",
+      "card": "高级选项",
+      "index": 3,
+      "label": "内存管理",
+      "status": "直接绑定",
+      "implementation": "默认/G1/调优 G1/ZGC/分代 ZGC；Java 门槛与实际 G1 启动通过",
+      "previousStatus": "部分绑定"
+    },
+    {
+      "page": "PageSetupLaunch",
+      "card": "高级选项",
+      "index": 4,
+      "label": "禁用 Java Launch Wrapper",
+      "status": "平台差异",
+      "implementation": "Windows Java Launch Wrapper / 显卡注册表操作不用于 Mac"
+    },
+    {
+      "page": "PageSetupLaunch",
+      "card": "高级选项",
+      "index": 5,
+      "label": "禁用 LWJGL Unsafe Agent",
+      "status": "直接绑定",
+      "implementation": "固定 LWJGL Unsafe Agent 2.0 + SHA256；仅 Java 25+ 且 LWJGL 3.4.0/3.4.1 生效；禁用提前返回，实测原生内存读写和方法改写",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupLaunch",
+      "card": "高级选项",
+      "index": 6,
+      "label": "使用高性能显卡",
+      "status": "平台差异",
+      "implementation": "Windows Java Launch Wrapper / 显卡注册表操作不用于 Mac"
+    },
+    {
+      "page": "PageSetupLaunch",
+      "card": "高级选项",
+      "index": 7,
+      "label": "在正版登录时验证 SSL 证书",
+      "status": "固定安全行为",
+      "implementation": "持续验证 TLS 证书，不提供关闭验证开关"
+    },
+    {
+      "page": "PageSetupLink",
+      "card": "连接选项",
+      "index": 0,
+      "label": "模式",
+      "status": "替代实现入口",
+      "implementation": "EasyTier 房间窗口与网络检查可用，未接入 PCL 原版节点服务或协议"
+    },
+    {
+      "page": "PageSetupLink",
+      "card": "高级设置",
+      "index": 0,
+      "label": "自定义节点",
+      "status": "替代实现入口",
+      "implementation": "EasyTier 房间窗口与网络检查可用，未接入 PCL 原版节点服务或协议"
+    },
+    {
+      "page": "PageSetupLink",
+      "card": "高级设置",
+      "index": 1,
+      "label": " 光荣地贡献节点！",
+      "status": "替代实现入口",
+      "implementation": "EasyTier 房间窗口与网络检查可用，未接入 PCL 原版节点服务或协议"
+    },
+    {
+      "page": "PageSetupLink",
+      "card": "高级设置",
+      "index": 2,
+      "label": "节点状态",
+      "status": "替代实现入口",
+      "implementation": "EasyTier 房间窗口与网络检查可用，未接入 PCL 原版节点服务或协议"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "基础",
+      "index": 0,
+      "label": "不透明度",
+      "status": "直接绑定",
+      "implementation": "WindowOpacity → 实际 Window.Opacity"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "基础",
+      "index": 1,
+      "label": "龙猫蓝",
+      "status": "直接绑定",
+      "implementation": "Accent → 实际标题栏颜色；静态配色预设与自定义颜色，不继承赞助解锁状态"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "基础",
+      "index": 2,
+      "label": "甜柠青",
+      "status": "直接绑定",
+      "implementation": "Accent → 实际标题栏颜色；静态配色预设与自定义颜色，不继承赞助解锁状态"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "基础",
+      "index": 3,
+      "label": "小草绿",
+      "status": "直接绑定",
+      "implementation": "Accent → 实际标题栏颜色；静态配色预设与自定义颜色，不继承赞助解锁状态"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "基础",
+      "index": 4,
+      "label": "菠萝黄",
+      "status": "直接绑定",
+      "implementation": "Accent → 实际标题栏颜色；静态配色预设与自定义颜色，不继承赞助解锁状态"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "基础",
+      "index": 5,
+      "label": "橡木棕",
+      "status": "直接绑定",
+      "implementation": "Accent → 实际标题栏颜色；静态配色预设与自定义颜色，不继承赞助解锁状态"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "基础",
+      "index": 6,
+      "label": "玄素黑",
+      "status": "直接绑定",
+      "implementation": "Accent → 实际标题栏颜色；静态配色预设与自定义颜色，不继承赞助解锁状态"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "基础",
+      "index": 7,
+      "label": "玄素黑",
+      "status": "直接绑定",
+      "implementation": "Accent → 实际标题栏颜色；静态配色预设与自定义颜色，不继承赞助解锁状态"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "基础",
+      "index": 8,
+      "label": "滑稽彩",
+      "status": "部分绑定",
+      "implementation": "动态彩色与极光色周期实际更新标题栏；为 Mac 独立动画，不复制原版赞助解锁/配色算法",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "基础",
+      "index": 9,
+      "label": "铁杆粉",
+      "status": "直接绑定",
+      "implementation": "Accent → 实际标题栏颜色；静态配色预设与自定义颜色，不继承赞助解锁状态"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "基础",
+      "index": 10,
+      "label": "神秘紫",
+      "status": "直接绑定",
+      "implementation": "Accent → 实际标题栏颜色；静态配色预设与自定义颜色，不继承赞助解锁状态"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "基础",
+      "index": 11,
+      "label": "欧皇彩",
+      "status": "部分绑定",
+      "implementation": "动态彩色与极光色周期实际更新标题栏；为 Mac 独立动画，不复制原版赞助解锁/配色算法",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "基础",
+      "index": 12,
+      "label": "秋仪金",
+      "status": "直接绑定",
+      "implementation": "Accent → 实际标题栏颜色；静态配色预设与自定义颜色，不继承赞助解锁状态"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "基础",
+      "index": 13,
+      "label": "活跃橙",
+      "status": "直接绑定",
+      "implementation": "Accent → 实际标题栏颜色；静态配色预设与自定义颜色，不继承赞助解锁状态"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "基础",
+      "index": 14,
+      "label": "跳票红",
+      "status": "直接绑定",
+      "implementation": "Accent → 实际标题栏颜色；静态配色预设与自定义颜色，不继承赞助解锁状态"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "基础",
+      "index": 15,
+      "label": "极客蓝",
+      "status": "直接绑定",
+      "implementation": "Accent → 实际标题栏颜色；静态配色预设与自定义颜色，不继承赞助解锁状态"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "基础",
+      "index": 16,
+      "label": "自定义",
+      "status": "直接绑定",
+      "implementation": "Accent → 实际标题栏颜色；静态配色预设与自定义颜色，不继承赞助解锁状态"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "基础",
+      "index": 17,
+      "label": "打开启动器时显示 PCL 图标",
+      "status": "部分绑定",
+      "implementation": "启动时显示 PCL 字样浮层，时间受动画速度控制；不是原版矢量 Logo 动画",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "基础",
+      "index": 18,
+      "label": "支持 PCL 开发！",
+      "status": "未完成",
+      "implementation": "原版动态彩色/启动动画/赞助流程未移植"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "背景图片",
+      "index": 0,
+      "label": "自适应方式",
+      "status": "直接绑定",
+      "implementation": "平铺、9 方位保持比例填满、拉伸、原尺寸居中、自动小图平铺 + 完整显示；实际 ImageBrush 属性和截图验证",
+      "previousStatus": "部分绑定"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "背景图片",
+      "index": 1,
+      "label": "不透明度",
+      "status": "直接绑定",
+      "implementation": "BackgroundImage 透明度 / BlurEffect"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "背景图片",
+      "index": 2,
+      "label": "背景模糊",
+      "status": "直接绑定",
+      "implementation": "BackgroundImage 透明度 / BlurEffect"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "背景图片",
+      "index": 3,
+      "label": "叠加彩色背景",
+      "status": "直接绑定",
+      "implementation": "独立彩色覆盖层随颜色和开关更新",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "背景图片",
+      "index": 4,
+      "label": "打开文件夹",
+      "status": "直接绑定",
+      "implementation": "本地背景目录选择/打开/随机读取与刷新；刷新重扫并避开上一张，实际控件验证",
+      "previousStatus": "替代实现入口"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "背景图片",
+      "index": 5,
+      "label": "刷新背景图片",
+      "status": "直接绑定",
+      "implementation": "本地背景目录选择/打开/随机读取与刷新；刷新重扫并避开上一张，实际控件验证",
+      "previousStatus": "替代实现入口"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "背景音乐",
+      "index": 0,
+      "label": "音量",
+      "status": "直接绑定",
+      "implementation": "MusicVolume / MusicAutoPlay / PauseMusicInGame → LocalMusicPlayer"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "背景音乐",
+      "index": 1,
+      "label": "随机播放",
+      "status": "直接绑定",
+      "implementation": "本地文件夹列表、随机不连续重复、刷新重扫、游戏内播放/结束停止；真实 afplay 顺序切换和停止测试",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "背景音乐",
+      "index": 2,
+      "label": "打开启动器自动开始播放",
+      "status": "直接绑定",
+      "implementation": "MusicVolume / MusicAutoPlay / PauseMusicInGame → LocalMusicPlayer"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "背景音乐",
+      "index": 3,
+      "label": "游戏启动后自动开始播放，游戏退出后自动暂停播放",
+      "status": "直接绑定",
+      "implementation": "本地文件夹列表、随机不连续重复、刷新重扫、游戏内播放/结束停止；真实 afplay 顺序切换和停止测试",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "背景音乐",
+      "index": 4,
+      "label": "游戏启动后自动暂停播放，游戏退出后自动开始播放",
+      "status": "直接绑定",
+      "implementation": "MusicVolume / MusicAutoPlay / PauseMusicInGame → LocalMusicPlayer"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "背景音乐",
+      "index": 5,
+      "label": "打开文件夹",
+      "status": "直接绑定",
+      "implementation": "本地文件夹列表、随机不连续重复、刷新重扫、游戏内播放/结束停止；真实 afplay 顺序切换和停止测试",
+      "previousStatus": "替代实现入口"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "背景音乐",
+      "index": 6,
+      "label": "刷新背景音乐",
+      "status": "直接绑定",
+      "implementation": "本地文件夹列表、随机不连续重复、刷新重扫、游戏内播放/结束停止；真实 afplay 顺序切换和停止测试",
+      "previousStatus": "替代实现入口"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "标题栏",
+      "index": 0,
+      "label": "无",
+      "status": "直接绑定",
+      "implementation": "TitleMode 与 Title → 标题栏及系统窗口标题"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "标题栏",
+      "index": 1,
+      "label": "默认",
+      "status": "直接绑定",
+      "implementation": "TitleMode 与 Title → 标题栏及系统窗口标题"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "标题栏",
+      "index": 2,
+      "label": "文本",
+      "status": "直接绑定",
+      "implementation": "TitleMode 与 Title → 标题栏及系统窗口标题"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "标题栏",
+      "index": 3,
+      "label": "图片",
+      "status": "直接绑定",
+      "implementation": "标题图片选择、渲染、清空和位图释放；保存后新进程恢复",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "标题栏",
+      "index": 4,
+      "label": "标题栏文本",
+      "status": "直接绑定",
+      "implementation": "TitleMode 与 Title → 标题栏及系统窗口标题"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "标题栏",
+      "index": 5,
+      "label": "更改图片",
+      "status": "直接绑定",
+      "implementation": "标题图片选择、渲染、清空和位图释放；保存后新进程恢复",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "标题栏",
+      "index": 6,
+      "label": "清空图片",
+      "status": "直接绑定",
+      "implementation": "标题图片选择、渲染、清空和位图释放；保存后新进程恢复",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "主页",
+      "index": 0,
+      "label": "空白",
+      "status": "部分绑定",
+      "implementation": "清空地址移除自定义主页，保留版本与运行状态"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "主页",
+      "index": 1,
+      "label": "预设",
+      "status": "部分绑定",
+      "implementation": "3 个本地主页预设带可执行导航按钮；原版远程第三方 XAML 预设未兼容",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "主页",
+      "index": 2,
+      "label": "读取本地文件",
+      "status": "部分绑定",
+      "implementation": "JSON 本地/HTTPS 文档、启动页展示与刷新；不执行 Windows XAML"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "主页",
+      "index": 3,
+      "label": "联网更新",
+      "status": "部分绑定",
+      "implementation": "JSON 本地/HTTPS 文档、启动页展示与刷新；不执行 Windows XAML"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "主页",
+      "index": 4,
+      "label": "刷新主页",
+      "status": "部分绑定",
+      "implementation": "JSON 本地/HTTPS 文档、启动页展示与刷新；不执行 Windows XAML"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "主页",
+      "index": 5,
+      "label": "生成教学文件",
+      "status": "部分绑定",
+      "implementation": "JSON 本地/HTTPS 文档、启动页展示与刷新；不执行 Windows XAML"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "主页",
+      "index": 6,
+      "label": "查看教程",
+      "status": "直接绑定",
+      "implementation": "内置本地 JSON 教程与实际主页目录打开；不宣称 WPF XAML 兼容",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "主页",
+      "index": 7,
+      "label": "打开主页文件夹",
+      "status": "直接绑定",
+      "implementation": "内置本地 JSON 教程与实际主页目录打开；不宣称 WPF XAML 兼容",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "主页",
+      "index": 8,
+      "label": "下载地址",
+      "status": "部分绑定",
+      "implementation": "JSON 本地/HTTPS 文档、启动页展示与刷新；不执行 Windows XAML"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "主页",
+      "index": 9,
+      "label": "主页预设",
+      "status": "部分绑定",
+      "implementation": "3 个本地主页预设带可执行导航按钮；原版远程第三方 XAML 预设未兼容",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "功能隐藏",
+      "index": 0,
+      "label": "下载",
+      "status": "直接绑定",
+      "implementation": "细粒度导航/管理按钮隐藏连接实际控件；设置及启动可隐藏，始终保留恢复按钮和 Ctrl+Shift+H；真实勾选保存与恢复测试",
+      "previousStatus": "部分绑定"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "功能隐藏",
+      "index": 1,
+      "label": "联机",
+      "status": "部分绑定",
+      "implementation": "隐藏 Mac 联机设置/入口；原版 PCL 节点服务及两个 Windows 联机位置仍不完全等价",
+      "previousStatus": "部分绑定"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "功能隐藏",
+      "index": 2,
+      "label": "设置",
+      "status": "直接绑定",
+      "implementation": "细粒度导航/管理按钮隐藏连接实际控件；设置及启动可隐藏，始终保留恢复按钮和 Ctrl+Shift+H；真实勾选保存与恢复测试",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "功能隐藏",
+      "index": 3,
+      "label": "更多",
+      "status": "直接绑定",
+      "implementation": "细粒度导航/管理按钮隐藏连接实际控件；设置及启动可隐藏，始终保留恢复按钮和 Ctrl+Shift+H；真实勾选保存与恢复测试",
+      "previousStatus": "部分绑定"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "功能隐藏",
+      "index": 4,
+      "label": "启动",
+      "status": "直接绑定",
+      "implementation": "细粒度导航/管理按钮隐藏连接实际控件；设置及启动可隐藏，始终保留恢复按钮和 Ctrl+Shift+H；真实勾选保存与恢复测试",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "功能隐藏",
+      "index": 5,
+      "label": "联机",
+      "status": "部分绑定",
+      "implementation": "隐藏 Mac 联机设置/入口；原版 PCL 节点服务及两个 Windows 联机位置仍不完全等价",
+      "previousStatus": "部分绑定"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "功能隐藏",
+      "index": 6,
+      "label": "个性化",
+      "status": "直接绑定",
+      "implementation": "细粒度导航/管理按钮隐藏连接实际控件；设置及启动可隐藏，始终保留恢复按钮和 Ctrl+Shift+H；真实勾选保存与恢复测试",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "功能隐藏",
+      "index": 7,
+      "label": "其他",
+      "status": "直接绑定",
+      "implementation": "细粒度导航/管理按钮隐藏连接实际控件；设置及启动可隐藏，始终保留恢复按钮和 Ctrl+Shift+H；真实勾选保存与恢复测试",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "功能隐藏",
+      "index": 8,
+      "label": "帮助",
+      "status": "直接绑定",
+      "implementation": "细粒度导航/管理按钮隐藏连接实际控件；设置及启动可隐藏，始终保留恢复按钮和 Ctrl+Shift+H；真实勾选保存与恢复测试",
+      "previousStatus": "部分绑定"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "功能隐藏",
+      "index": 9,
+      "label": "关于与鸣谢",
+      "status": "直接绑定",
+      "implementation": "细粒度导航/管理按钮隐藏连接实际控件；设置及启动可隐藏，始终保留恢复按钮和 Ctrl+Shift+H；真实勾选保存与恢复测试",
+      "previousStatus": "部分绑定"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "功能隐藏",
+      "index": 10,
+      "label": "百宝箱",
+      "status": "直接绑定",
+      "implementation": "细粒度导航/管理按钮隐藏连接实际控件；设置及启动可隐藏，始终保留恢复按钮和 Ctrl+Shift+H；真实勾选保存与恢复测试",
+      "previousStatus": "部分绑定"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "功能隐藏",
+      "index": 11,
+      "label": "反馈",
+      "status": "直接绑定",
+      "implementation": "细粒度导航/管理按钮隐藏连接实际控件；设置及启动可隐藏，始终保留恢复按钮和 Ctrl+Shift+H；真实勾选保存与恢复测试",
+      "previousStatus": "部分绑定"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "功能隐藏",
+      "index": 12,
+      "label": "新功能投票",
+      "status": "直接绑定",
+      "implementation": "细粒度导航/管理按钮隐藏连接实际控件；设置及启动可隐藏，始终保留恢复按钮和 Ctrl+Shift+H；真实勾选保存与恢复测试",
+      "previousStatus": "部分绑定"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "功能隐藏",
+      "index": 13,
+      "label": "邮箱隐藏",
+      "status": "固定隐私行为",
+      "implementation": "本移植账户列表不读取/显示微软邮箱；没有可切换显示的邮箱数据，不提供空开关",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "功能隐藏",
+      "index": 14,
+      "label": "版本管理",
+      "status": "直接绑定",
+      "implementation": "细粒度导航/管理按钮隐藏连接实际控件；设置及启动可隐藏，始终保留恢复按钮和 Ctrl+Shift+H；真实勾选保存与恢复测试",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "功能隐藏",
+      "index": 15,
+      "label": "Mod 更新",
+      "status": "直接绑定",
+      "implementation": "细粒度导航/管理按钮隐藏连接实际控件；设置及启动可隐藏，始终保留恢复按钮和 Ctrl+Shift+H；真实勾选保存与恢复测试",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "功能隐藏",
+      "index": 16,
+      "label": "功能隐藏",
+      "status": "直接绑定",
+      "implementation": "细粒度导航/管理按钮隐藏连接实际控件；设置及启动可隐藏，始终保留恢复按钮和 Ctrl+Shift+H；真实勾选保存与恢复测试",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupUI",
+      "card": "功能隐藏",
+      "index": 17,
+      "label": "版本修改",
+      "status": "直接绑定",
+      "implementation": "细粒度导航/管理按钮隐藏连接实际控件；设置及启动可隐藏，始终保留恢复按钮和 Ctrl+Shift+H；真实勾选保存与恢复测试",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupSystem",
+      "card": "下载",
+      "index": 0,
+      "label": "文件下载源",
+      "status": "部分绑定",
+      "implementation": "配置 HTTPS 镜像与目标主机，按官方哈希校验并决定来源顺序"
+    },
+    {
+      "page": "PageSetupSystem",
+      "card": "下载",
+      "index": 1,
+      "label": "版本列表源",
+      "status": "直接绑定",
+      "implementation": "版本清单官方/12 秒失败回退/镜像优先；HTTPS 地址验证、无效 JSON 回退测试",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupSystem",
+      "card": "下载",
+      "index": 2,
+      "label": "最大线程数",
+      "status": "直接绑定",
+      "implementation": "DownloadTasks.Configure → 实际并发与限速（并发以文件计）"
+    },
+    {
+      "page": "PageSetupSystem",
+      "card": "下载",
+      "index": 3,
+      "label": "速度限制",
+      "status": "直接绑定",
+      "implementation": "DownloadTasks.Configure → 实际并发与限速（并发以文件计）"
+    },
+    {
+      "page": "PageSetupSystem",
+      "card": "社区资源",
+      "index": 0,
+      "label": "来源",
+      "status": "部分绑定",
+      "implementation": "Modrinth 元数据官方/镜像优先/回退；自定义兼容 v2 地址。散列反查及其他社区源尚未统一来源策略",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupSystem",
+      "card": "社区资源",
+      "index": 1,
+      "label": "文件名格式",
+      "status": "部分绑定",
+      "implementation": "五种真实文件命名 + 两种管理排列；安装/更新/禁用/移除实测。名称取发布名，项目译名尚未贯穿所有来源",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupSystem",
+      "card": "社区资源",
+      "index": 2,
+      "label": "Mod 管理样式",
+      "status": "部分绑定",
+      "implementation": "五种真实文件命名 + 两种管理排列；安装/更新/禁用/移除实测。名称取发布名，项目译名尚未贯穿所有来源",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupSystem",
+      "card": "辅助功能",
+      "index": 0,
+      "label": "正式版更新提示",
+      "status": "直接绑定",
+      "implementation": "启动及保存开关时检查清单，按 release/snapshot 比较已安装版本；发布包联网读取官方清单显示提示，关闭开关后提示消失",
+      "previousStatus": "部分绑定"
+    },
+    {
+      "page": "PageSetupSystem",
+      "card": "辅助功能",
+      "index": 1,
+      "label": "测试版更新提示",
+      "status": "直接绑定",
+      "implementation": "启动及保存开关时检查清单，按 release/snapshot 比较已安装版本；发布包联网读取官方清单显示提示，关闭开关后提示消失",
+      "previousStatus": "部分绑定"
+    },
+    {
+      "page": "PageSetupSystem",
+      "card": "辅助功能",
+      "index": 2,
+      "label": "自动设置为中文",
+      "status": "直接绑定",
+      "implementation": "FirstLaunchChinese → PrepareGameLanguage，保留已有语言"
+    },
+    {
+      "page": "PageSetupSystem",
+      "card": "启动器",
+      "index": 0,
+      "label": "启动器更新",
+      "status": "外部服务未接入",
+      "implementation": "没有签名更新源、原版公告/赞助身份服务；不伪造响应"
+    },
+    {
+      "page": "PageSetupSystem",
+      "card": "启动器",
+      "index": 1,
+      "label": "启动器公告",
+      "status": "外部服务未接入",
+      "implementation": "没有签名更新源、原版公告/赞助身份服务；不伪造响应"
+    },
+    {
+      "page": "PageSetupSystem",
+      "card": "启动器",
+      "index": 2,
+      "label": "缓存文件夹",
+      "status": "替代实现入口",
+      "implementation": "可打开缓存检查与回收站；不支持任意移动活动缓存根目录"
+    },
+    {
+      "page": "PageSetupSystem",
+      "card": "启动器",
+      "index": 3,
+      "label": "匿名数据收集",
+      "status": "固定行为",
+      "implementation": "本移植不收集匿名统计"
+    },
+    {
+      "page": "PageSetupSystem",
+      "card": "启动器",
+      "index": 4,
+      "label": "检查更新",
+      "status": "外部服务未接入",
+      "implementation": "没有签名更新源、原版公告/赞助身份服务；不伪造响应"
+    },
+    {
+      "page": "PageSetupSystem",
+      "card": "启动器",
+      "index": 5,
+      "label": "导出设置",
+      "status": "直接绑定",
+      "implementation": "AppearanceService.Export/Import，去除账户、命令和机器路径"
+    },
+    {
+      "page": "PageSetupSystem",
+      "card": "启动器",
+      "index": 6,
+      "label": "导入设置",
+      "status": "直接绑定",
+      "implementation": "AppearanceService.Export/Import，去除账户、命令和机器路径"
+    },
+    {
+      "page": "PageSetupSystem",
+      "card": "启动器",
+      "index": 7,
+      "label": "复制识别码",
+      "status": "外部服务未接入",
+      "implementation": "没有签名更新源、原版公告/赞助身份服务；不伪造响应"
+    },
+    {
+      "page": "PageSetupSystem",
+      "card": "启动器",
+      "index": 8,
+      "label": "输入土豆码",
+      "status": "外部服务未接入",
+      "implementation": "没有签名更新源、原版公告/赞助身份服务；不伪造响应"
+    },
+    {
+      "page": "PageSetupSystem",
+      "card": "调试选项",
+      "index": 0,
+      "label": "动画速度",
+      "status": "部分绑定",
+      "implementation": "0 关闭动画，非零控制动态配色和启动浮层；尚未覆盖原版所有过渡动画",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupSystem",
+      "card": "调试选项",
+      "index": 1,
+      "label": "禁止在下载时从其他文件夹复制文件",
+      "status": "直接绑定",
+      "implementation": "开关实际控制跨目录同哈希缓存复制；禁用后确认发生 HTTP 请求，路径和文件哈希校验",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupSystem",
+      "card": "调试选项",
+      "index": 2,
+      "label": "调试模式",
+      "status": "部分绑定",
+      "implementation": "真实下载诊断日志，去掉查询参数/授权头；不是原版全部内部调试输出",
+      "previousStatus": "未完成"
+    },
+    {
+      "page": "PageSetupSystem",
+      "card": "调试选项",
+      "index": 3,
+      "label": "添加延迟",
+      "status": "直接绑定",
+      "implementation": "0–5000 ms 下载延迟，取消能中断且不产生目标文件",
+      "previousStatus": "未完成"
+    }
+  ]
+}

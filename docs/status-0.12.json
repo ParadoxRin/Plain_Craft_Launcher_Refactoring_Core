@@ -1,0 +1,117 @@
+{
+  "AUTH-001": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/Accounts.cs; src/Pcl.Core/GameLaunchAuthorization.cs; src/Pcl.Desktop/MainWindow.axaml.cs",
+    "ui": "首页 → 历史账户管理",
+    "implementationSummary": "保留旧账户记录与管理；按用户确认的微软申请要求，不再允许旧离线/外置账户作为游戏启动凭据。",
+    "testEvidence": [
+      "artifacts/microsoft-integration-preflight/release-tests/test-results.json",
+      "artifacts/microsoft-integration-preflight/ownership-ui/evidence/account-ui-flow.json"
+    ],
+    "remaining": "0.12明确取消未验证启动，不再承诺与PCL2离线启动一比一相同。历史运行证据只适用于旧版。",
+    "externalConditions": []
+  },
+  "AUTH-002": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/Accounts.cs; src/Pcl.Core/GameLaunchAuthorization.cs; src/Pcl.Desktop/MainWindow.axaml.cs",
+    "ui": "首页 → 历史账户管理",
+    "implementationSummary": "保留旧账户记录与管理；按用户确认的微软申请要求，不再允许旧离线/外置账户作为游戏启动凭据。",
+    "testEvidence": [
+      "artifacts/microsoft-integration-preflight/release-tests/test-results.json",
+      "artifacts/microsoft-integration-preflight/ownership-ui/evidence/account-ui-flow.json"
+    ],
+    "remaining": "0.12明确取消未验证启动，不再承诺与PCL2离线启动一比一相同。历史运行证据只适用于旧版。",
+    "externalConditions": []
+  },
+  "AUTH-007": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/Accounts.cs; src/Pcl.Core/GameLaunchAuthorization.cs; src/Pcl.Desktop/MainWindow.axaml.cs",
+    "ui": "首页 → 历史账户管理",
+    "implementationSummary": "保留旧账户记录与管理；按用户确认的微软申请要求，不再允许旧离线/外置账户作为游戏启动凭据。",
+    "testEvidence": [
+      "artifacts/microsoft-integration-preflight/release-tests/test-results.json",
+      "artifacts/microsoft-integration-preflight/ownership-ui/evidence/account-ui-flow.json"
+    ],
+    "remaining": "0.12明确取消未验证启动，不再承诺与PCL2离线启动一比一相同。历史运行证据只适用于旧版。",
+    "externalConditions": []
+  },
+  "AUTH-008": {
+    "status": "部分实现",
+    "macImplementation": "src/Pcl.Core/Accounts.cs; src/Pcl.Core/GameLaunchAuthorization.cs; src/Pcl.Desktop/MainWindow.axaml.cs",
+    "ui": "首页 → 历史账户管理",
+    "implementationSummary": "保留旧账户记录与管理；按用户确认的微软申请要求，不再允许旧离线/外置账户作为游戏启动凭据。",
+    "testEvidence": [
+      "artifacts/microsoft-integration-preflight/release-tests/test-results.json",
+      "artifacts/microsoft-integration-preflight/ownership-ui/evidence/account-ui-flow.json"
+    ],
+    "remaining": "0.12明确取消未验证启动，不再承诺与PCL2离线启动一比一相同。历史运行证据只适用于旧版。",
+    "externalConditions": []
+  },
+  "AUTH-003": {
+    "status": "外部条件阻塞",
+    "macImplementation": "src/Pcl.Core/MicrosoftApplication.cs; src/Pcl.Core/MicrosoftAuthentication.cs; src/Pcl.Core/GameLaunchAuthorization.cs; src/Pcl.Core/Accounts.cs",
+    "ui": "首页 → 微软账号 → 登录微软账号",
+    "implementationSummary": "已注册并内置自己的应用ID；真人微软OAuth、Xbox和XSTS通过，Minecraft登录返回403。修复Xbox请求体大小写。",
+    "testEvidence": [
+      "artifacts/microsoft-integration-preflight/release-tests/test-results.json",
+      "artifacts/microsoft-live-0.12-retry/evidence/last-error.json"
+    ],
+    "remaining": "Minecraft API审批、真人权益/档案、重启刷新、实际游戏启动和多账户退出验收尚未完成。审核申请已提交，等待结果。",
+    "externalConditions": [
+      "新应用Minecraft API审批与后续真人授权验收"
+    ]
+  },
+  "AUTH-004": {
+    "status": "外部条件阻塞",
+    "macImplementation": "src/Pcl.Core/MicrosoftApplication.cs; src/Pcl.Core/MicrosoftAuthentication.cs; src/Pcl.Core/GameLaunchAuthorization.cs; src/Pcl.Core/Accounts.cs",
+    "ui": "首页 → 微软账号 → 登录微软账号",
+    "implementationSummary": "已注册并内置自己的应用ID；真人微软OAuth、Xbox和XSTS通过，Minecraft登录返回403。修复Xbox请求体大小写。",
+    "testEvidence": [
+      "artifacts/microsoft-integration-preflight/release-tests/test-results.json",
+      "artifacts/microsoft-live-0.12-retry/evidence/last-error.json"
+    ],
+    "remaining": "Minecraft API审批、真人权益/档案、重启刷新、实际游戏启动和多账户退出验收尚未完成。审核申请已提交，等待结果。",
+    "externalConditions": [
+      "新应用Minecraft API审批与后续真人授权验收"
+    ]
+  },
+  "AUTH-005": {
+    "status": "外部条件阻塞",
+    "macImplementation": "src/Pcl.Core/MicrosoftApplication.cs; src/Pcl.Core/MicrosoftAuthentication.cs; src/Pcl.Core/GameLaunchAuthorization.cs; src/Pcl.Core/Accounts.cs",
+    "ui": "首页 → 微软账号 → 登录微软账号",
+    "implementationSummary": "已注册并内置自己的应用ID；真人微软OAuth、Xbox和XSTS通过，Minecraft登录返回403。修复Xbox请求体大小写。",
+    "testEvidence": [
+      "artifacts/microsoft-integration-preflight/release-tests/test-results.json",
+      "artifacts/microsoft-live-0.12-retry/evidence/last-error.json"
+    ],
+    "remaining": "Minecraft API审批、真人权益/档案、重启刷新、实际游戏启动和多账户退出验收尚未完成。审核申请已提交，等待结果。",
+    "externalConditions": [
+      "新应用Minecraft API审批与后续真人授权验收"
+    ]
+  },
+  "AUTH-006": {
+    "status": "外部条件阻塞",
+    "macImplementation": "src/Pcl.Core/MicrosoftApplication.cs; src/Pcl.Core/MicrosoftAuthentication.cs; src/Pcl.Core/GameLaunchAuthorization.cs; src/Pcl.Core/Accounts.cs",
+    "ui": "首页 → 微软账号 → 登录微软账号",
+    "implementationSummary": "已注册并内置自己的应用ID；真人微软OAuth、Xbox和XSTS通过，Minecraft登录返回403。修复Xbox请求体大小写。",
+    "testEvidence": [
+      "artifacts/microsoft-integration-preflight/release-tests/test-results.json",
+      "artifacts/microsoft-live-0.12-retry/evidence/last-error.json"
+    ],
+    "remaining": "Minecraft API审批、真人权益/档案、重启刷新、实际游戏启动和多账户退出验收尚未完成。审核申请已提交，等待结果。",
+    "externalConditions": [
+      "新应用Minecraft API审批与后续真人授权验收"
+    ]
+  },
+  "INST-010": {
+    "status": "未实现",
+    "macImplementation": "src/Pcl.Core/InstanceManager.cs; src/Pcl.Core/GameLaunchAuthorization.cs",
+    "ui": "0.12已移除入口",
+    "implementationSummary": "按用户确认取消绕过正版验证的离线脚本导出；旧调用明确拒绝且不写文件。",
+    "testEvidence": [
+      "artifacts/microsoft-integration-preflight/release-tests/test-results.json#offline_script_export_is_blocked_before_writes"
+    ],
+    "remaining": "这是明确的产品取舍，不从PCL2对照矩阵中删除该行；未实现带安全登录的快捷启动脚本。",
+    "externalConditions": []
+  }
+}

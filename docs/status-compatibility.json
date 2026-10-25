@@ -1,0 +1,189 @@
+{
+  "updatedAt": "2026-10-23",
+  "scope": "Apple Silicon compatibility and component migration",
+  "evidenceLimits": [
+    "offline account only",
+    "no new manual world-play acceptance",
+    "no Microsoft real-account acceptance",
+    "no Intel Mac/Rosetta claim"
+  ],
+  "items": [
+    {
+      "id": "VER-004",
+      "title": "旧 minecraftArguments",
+      "status": "部分实现",
+      "implementation": "LegacyLaunchAdapter.NormalizeMetadata/SplitArguments、FabricService.Merge，老参数替换及变量适配",
+      "evidence": [
+        "artifacts/evidence-0.8-compat/compatibility-results.json",
+        "tests/Pcl.Tests/LegacyCompatibilityTests.cs"
+      ],
+      "boundary": "已实测1.12.2；其他远古参数、资源布局仍需逐版验收。"
+    },
+    {
+      "id": "VER-005",
+      "title": "LWJGL2 ARM64",
+      "status": "部分实现",
+      "implementation": "固定XMCL osx-arm64映射、HMCL LWJGL2 natives、逐Mach-O审核、第一线程规则",
+      "evidence": [
+        "artifacts/evidence-0.8-compat/compatibility-results.json",
+        "src/Pcl.Core/Compatibility/xmcl-macos-arm64.json"
+      ],
+      "boundary": "1.12.2启动通过，不声明所有LWJGL2游戏/旁白/手柄兼容。"
+    },
+    {
+      "id": "VER-006",
+      "title": "Fabric安装",
+      "status": "部分实现",
+      "implementation": "官方Meta/Maven校验、独立实例，显式版本更换走新副本",
+      "evidence": [
+        "artifacts/evidence-0.8-compat/migration-smoke/result.json",
+        "artifacts/evidence-0.7/acceptance.json"
+      ],
+      "boundary": "1.20.1 0.18.4→0.19.5新副本实际启动；未逐版本覆盖整个目录。"
+    },
+    {
+      "id": "VER-007",
+      "title": "Forge现代安装",
+      "status": "部分实现",
+      "implementation": "官方installer --installClient、私有库及生成文件收据",
+      "evidence": [
+        "artifacts/evidence-0.7/acceptance.json"
+      ],
+      "boundary": "0.7实测1.20.1 47.4.28；这不是本轮重跑，不保证每个Forge版本。"
+    },
+    {
+      "id": "VER-008",
+      "title": "Forge旧安装器",
+      "status": "部分实现",
+      "implementation": "兼容1.12.2 installer version.json与完整minecraftArguments",
+      "evidence": [
+        "artifacts/evidence-0.8-compat/compatibility-results.json"
+      ],
+      "boundary": "1.12.2 14.23.5.2864安装器退出0并启动；更早仅versionInfo格式仍明确拒绝。"
+    },
+    {
+      "id": "VER-009",
+      "title": "NeoForge现代安装",
+      "status": "部分实现",
+      "implementation": "现代net.neoforged:neoforge坐标与官方installer",
+      "evidence": [
+        "artifacts/evidence-0.7/acceptance.json"
+      ],
+      "boundary": "0.7实测1.20.4 20.4.253，本轮未重跑全部现代版本。"
+    },
+    {
+      "id": "VER-010",
+      "title": "NeoForge1.20.1坐标",
+      "status": "部分实现",
+      "implementation": "旧net.neoforged:forge与forge文件名/--installClient",
+      "evidence": [
+        "artifacts/evidence-0.8-compat/compatibility-results.json"
+      ],
+      "boundary": "1.20.1 47.1.106启动通过；未保证全部旧NeoForge构建。"
+    },
+    {
+      "id": "VER-011",
+      "title": "OptiFine安装",
+      "status": "部分实现",
+      "implementation": "作者adloadx/downloadx、Patcher、内置LaunchWrapper、私有库",
+      "evidence": [
+        "artifacts/evidence-0.8-compat/compatibility-results.json",
+        "src/Pcl.Core/OptiFineService.cs"
+      ],
+      "boundary": "独立1.12.2 G5/1.20.1 I6通过；未适配Forge/OptiFabric组合；二进制不随软件再分发。"
+    },
+    {
+      "id": "VER-012",
+      "title": "LiteLoader安装",
+      "status": "部分实现",
+      "implementation": "官方目录及Maven快照/SHA1，旧Sponge地址升级官方现址",
+      "evidence": [
+        "artifacts/evidence-0.8-compat/compatibility-results.json",
+        "src/Pcl.Core/LiteLoaderService.cs"
+      ],
+      "boundary": "1.12.2构建实测；其他历史构建未逐项验证。"
+    },
+    {
+      "id": "VER-013",
+      "title": "Fabric API前置",
+      "status": "部分实现",
+      "implementation": "FabricModPlanner按fabric.mod.json解析和安装所需依赖；MacSetup已有固定版本方案",
+      "evidence": [
+        "src/Pcl.Core/FabricModPlanner.cs",
+        "src/Pcl.Core/MacSetupService.cs"
+      ],
+      "boundary": "资源领域证据由资源agent汇总；未增加安装器内任意Fabric API组合一步安装。"
+    },
+    {
+      "id": "VER-014",
+      "title": "OptiFabric兼容组合",
+      "status": "部分实现",
+      "implementation": "OptiFabricService/Window：固定1.20.1、Fabric0.16.14、OptiFabric1.14.3、OptiFineI6；新实例、作者手动文件或合法CF API、冲突/指纹预检",
+      "evidence": [
+        "artifacts/evidence-0.8-compat/optifabric/service-result.json",
+        "artifacts/evidence-0.8-compat/optifabric/probe-result.json",
+        "tests/Pcl.Tests/OptiFabricTests.cs",
+        "docs/OptiFabric固定组合与文件另存为.md"
+      ],
+      "boundary": "固定组合产品服务手动文件安装→启动预检→真实游戏45秒存活、OptiFine/图形/atlas通过；未知版本组合未启用。探测文件来自作者页所列第三方Curse Maven坐标，产品只允许手动或合法CF API（真实Key未验）。尚无人工世界/光影效果与组合UI交互验收。"
+    },
+    {
+      "id": "VER-015",
+      "title": "客户端服务端安装器另存为",
+      "status": "部分实现",
+      "implementation": "ArtifactDownloadService/Window，官方元数据、已知SHA1、无覆盖原子保存、纯文本官方更新日志",
+      "evidence": [
+        "src/Pcl.Core/ArtifactDownloadService.cs",
+        "src/Pcl.Desktop/ArtifactDownloadWindow.cs",
+        "tests/Pcl.Tests/ArtifactDownloadTests.cs",
+        "artifacts/evidence-0.8-compat/download-only-smoke/downloads/result.json",
+        "artifacts/evidence-0.8-compat/download-only-smoke/quilt-official-metadata-check.json",
+        "artifacts/evidence-0.8-compat/download-only-smoke/quilt-hash-crosscheck.json",
+        "artifacts/evidence-0.8-compat/download-only-smoke/quilt-preflight-result.json"
+      ],
+      "boundary": "7类真实另存通过、官方更新日志通过；未执行文件且未安装游戏/Java。Quilt安装器官方Meta/Maven哈希冲突，最终预检0.09秒拒绝并确认无目标文件；没有降低校验或改用冲突哈希。LiteLoader导出加载器JAR，OptiFine校验来源如实区分。"
+    },
+    {
+      "id": "VER-016",
+      "title": "已有实例修改与回滚",
+      "status": "部分实现",
+      "implementation": "InstanceComponentService/ComponentManagerWindow：组件备份、预览、冲突、数据指纹、复制新实例与失败清理",
+      "evidence": [
+        "artifacts/evidence-0.8-compat/migration-smoke/result.json",
+        "tests/Pcl.Tests/ComponentMigrationTests.cs"
+      ],
+      "boundary": "完成安全新副本路径，不原位替换；启用模组必须在副本禁用后重新检查；GUI人工点选尚待。"
+    },
+    {
+      "id": "INST-009",
+      "title": "已有组件增删改",
+      "status": "部分实现",
+      "implementation": "通过调整加载器新副本完成升级/替换/vanilla移除",
+      "evidence": [
+        "artifacts/evidence-0.8-compat/migration-smoke/result.json",
+        "tests/Pcl.Tests/ComponentMigrationTests.cs"
+      ],
+      "boundary": "不声称任意组合组件原位修改或模组自动适配。"
+    },
+    {
+      "id": "JAVA-002",
+      "title": "Java8 ARM64",
+      "status": "部分实现",
+      "implementation": "Azul官方SHA256与真实JVM架构检查，实体bin/java查找",
+      "evidence": [
+        "artifacts/evidence-0.8-compat/compatibility-results.json"
+      ],
+      "boundary": "1.12.2原版/Forge/LiteLoader/OptiFine实测，不借此声明全部Java8模组兼容。"
+    },
+    {
+      "id": "JAVA-003",
+      "title": "Java16 ARM64",
+      "status": "部分实现",
+      "implementation": "Azul16.0.2 ARM64，跳过链接重复bin/java，官方SHA256",
+      "evidence": [
+        "artifacts/evidence-0.8-compat/compatibility-results.json"
+      ],
+      "boundary": "1.17.1原版40秒图形和atlas通过，不代表所有1.17模组兼容。"
+    }
+  ]
+}

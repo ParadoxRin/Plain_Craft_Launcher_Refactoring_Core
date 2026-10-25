@@ -1,0 +1,46 @@
+{
+  "AUTH-001": {
+    "id": "AUTH-001",
+    "domain": "账户",
+    "name": "离线名称与稳定UUID",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageLaunch",
+    "sourceEvidence": "公开源码入口；细节见source-ui-inventory.json，删节功能单列",
+    "macImplementation": "src/Pcl.Core/Accounts.cs; src/Pcl.Core/GameLaunchAuthorization.cs; src/Pcl.Desktop/MainWindow.axaml.cs",
+    "ui": "首页 → 历史账户管理",
+    "status": "已验收",
+    "testEvidence": [
+      "artifacts/microsoft-integration-preflight/release-tests/test-results.json",
+      "artifacts/microsoft-integration-preflight/ownership-ui/evidence/account-ui-flow.json",
+      "docs/0.19离线登录恢复与验收.md",
+      "artifacts/verification-0.19/regression/test-results.json",
+      "artifacts/verification-0.19/offline-world-roundtrip.json",
+      "artifacts/verification-0.19/offline-data/evidence/offline-ui.json"
+    ],
+    "remaining": "按用户最新要求恢复本地离线身份及启动；原版稳定 UUID 算法、多名称切换/删除和重开恢复已验证。离线身份不提供微软购买证明；第二次游戏退出有已知 OpenAL 音频错误。",
+    "externalConditions": [],
+    "implementationSummary": "保留旧账户记录与管理；按用户确认的微软申请要求，不再允许旧离线/外置账户作为游戏启动凭据。"
+  },
+  "AUTH-002": {
+    "id": "AUTH-002",
+    "domain": "账户",
+    "name": "多离线账户切换和删除",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageLaunch",
+    "sourceEvidence": "公开源码入口；细节见source-ui-inventory.json，删节功能单列",
+    "macImplementation": "src/Pcl.Core/Accounts.cs; src/Pcl.Core/GameLaunchAuthorization.cs; src/Pcl.Desktop/MainWindow.axaml.cs",
+    "ui": "首页 → 历史账户管理",
+    "status": "已验收",
+    "testEvidence": [
+      "artifacts/microsoft-integration-preflight/release-tests/test-results.json",
+      "artifacts/microsoft-integration-preflight/ownership-ui/evidence/account-ui-flow.json",
+      "docs/0.19离线登录恢复与验收.md",
+      "artifacts/verification-0.19/regression/test-results.json",
+      "artifacts/verification-0.19/offline-world-roundtrip.json",
+      "artifacts/verification-0.19/offline-data/evidence/offline-ui.json"
+    ],
+    "remaining": "按用户最新要求恢复本地离线身份及启动；原版稳定 UUID 算法、多名称切换/删除和重开恢复已验证。离线身份不提供微软购买证明；第二次游戏退出有已知 OpenAL 音频错误。",
+    "externalConditions": [],
+    "implementationSummary": "保留旧账户记录与管理；按用户确认的微软申请要求，不再允许旧离线/外置账户作为游戏启动凭据。"
+  }
+}

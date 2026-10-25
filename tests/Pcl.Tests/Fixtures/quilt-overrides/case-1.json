@@ -1,0 +1,1 @@
+{"schema_version": 1, "overrides": [{"id": "input", "depends": [{"add": "absent"}]}, {"id": "rule", "depends": [{"add": "java"}, {"remove": "java"}, {"replace": "absent", "with": "java"}]}, {"id": "expected", "depends": [{"add": "java"}]}]}

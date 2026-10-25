@@ -1,0 +1,19 @@
+{
+  "NET-014": {
+    "status": "已实现待验收",
+    "macImplementation": "src/Pcl.Core/SegmentedDownload.cs; src/Pcl.Core/DownloadService.cs; src/Pcl.Core/DownloadTasks.cs",
+    "ui": "任务与诊断 → 网络 → 大文件分段下载（默认关闭）",
+    "testEvidence": [
+      "artifacts/evidence-0.8/full-regression-4/test-results.json：5个segmented tests通过（HTTP fixture/本地文件）",
+      "artifacts/evidence-complete/segmented-live-1/segmented-live-result.json：官方26.3客户端41,483,720bytes，10分块4并发，取消后复用1块，完整官方SHA1通过，Completed=true"
+    ],
+    "evidenceLevels": {
+      "fixture": "范围验证/顺序回退/总限速/取消/复用/缓存篡改/错误hash保旧文件/链接拒绝已通过",
+      "realNetworkAndFiles": "官方client另存真实下载，含206请求记录及分块回执，无顺序回退",
+      "gui": "设置入口已实现；此模块未独立完成GUI点击保存验收",
+      "inGame": "只下载不执行，此项不要求游戏运行证据"
+    },
+    "remaining": "仍需最终GUI设置操作验收；仅复用完整块，未完成块重下；默认关闭，不声称性能提升比率",
+    "externalConditions": []
+  }
+}

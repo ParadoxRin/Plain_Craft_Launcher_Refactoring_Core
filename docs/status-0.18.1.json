@@ -1,0 +1,151 @@
+{
+  "INST-005": {
+    "id": "INST-005",
+    "domain": "实例",
+    "name": "复制实例",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageInstance",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/InstanceManager.cs",
+    "ui": "实例管理 → 复制实例",
+    "status": "已实现待验收",
+    "testEvidence": [
+      "artifacts/evidence-0.8/tests-instance-fixes/test-results.json#instance_copy_preserves_save_excludes_credentials_and_shared_cache",
+      "artifacts/verification-0.18/final-regression2/test-results.json",
+      "docs/0.18实现与验收.md",
+      "docs/0.18.1实现与验收.md",
+      "artifacts/verification-0.18.1/regression/test-results.json",
+      "artifacts/verification-0.18/worlds/neo1211-fixed-roundtrip.json"
+    ],
+    "remaining": "0.18 产品 CLI 为 Forge/NeoForge/Quilt/26.3 创建独立副本，分组随复制保留；不把复制成功当作所有副本世界兼容验收。 0.18.1 修复复制/恢复后客户端 JAR 排除项错绑；NeoForge 1.21.1 独立副本世界保存和重进通过，两次退出均有 OpenAL 音频错误，保留此已知问题。",
+    "externalConditions": [],
+    "implementationSummary": "",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.18/final-regression2/test-results.json"
+    }
+  },
+  "INST-006": {
+    "id": "INST-006",
+    "domain": "实例",
+    "name": "实例备份恢复",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageInstance",
+    "sourceEvidence": "公开源码入口；细节见source-ui-inventory.json，删节功能单列",
+    "macImplementation": "src/Pcl.Core/InstanceManager.cs; src/Pcl.Core/InstanceBackupArchive.cs; src/Pcl.Core/LauncherSettings.cs; src/Pcl.Desktop/InstanceWorkspace.cs",
+    "ui": "实例管理 → 备份 ZIP / 恢复备份",
+    "status": "部分实现",
+    "testEvidence": [
+      "artifacts/verification-0.13/final-tests/test-results.json",
+      "artifacts/verification-0.13/live/evidence/search-backup-result.json",
+      "artifacts/verification-0.13/final-zip/evidence/search-backup-result.json",
+      "docs/0.13实现与验收.md",
+      "artifacts/verification-0.18/final-regression2/test-results.json",
+      "docs/0.18实现与验收.md",
+      "artifacts/verification-0.18/world-backup-restore.json",
+      "artifacts/verification-0.18/worlds/fabric1211-roundtrip.json",
+      "docs/0.18.1实现与验收.md",
+      "artifacts/verification-0.18.1/regression/test-results.json",
+      "artifacts/verification-0.18/worlds/neo1211-fixed-roundtrip.json",
+      "artifacts/verification-0.18.1/vanilla263-backup-restore.json"
+    ],
+    "remaining": "0.18 将真实光影实例备份并恢复为新副本，23 个存档文件逐字节相同；恢复的 Fabric 1.21.1 通过世界进入、正常保存退出、独立进程重读和用户标记确认。仍不包含全部共享资产/Java，不保证跨设备离线恢复。 0.18.1 修复复制/恢复后客户端 JAR 排除项错绑；NeoForge 1.21.1 独立副本世界保存和重进通过，两次退出均有 OpenAL 音频错误，保留此已知问题。 26.3 新维度/玩家布局的48个存档文件备份恢复逐字节一致。",
+    "externalConditions": [
+      "缺失共享父版/依赖时需网络"
+    ],
+    "implementationSummary": "0.13 schema 3 逐文件哈希、离线检查、先校验后修复与新目录提交、原子设置；真实资源及存档字节夹具恢复通过。",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.18/final-regression2/test-results.json"
+    }
+  },
+  "VER-009": {
+    "id": "VER-009",
+    "domain": "游戏与加载器",
+    "name": "NeoForge现代安装",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageDownload",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/VersionInstaller.cs",
+    "ui": "下载版本 / 加载器",
+    "status": "部分实现",
+    "testEvidence": [
+      "artifacts/evidence-0.7/acceptance.json",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/owned-launches/matrix.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json",
+      "docs/0.18.1实现与验收.md",
+      "artifacts/verification-0.18.1/regression/test-results.json",
+      "artifacts/verification-0.18/worlds/neo1211-fixed-roundtrip.json"
+    ],
+    "remaining": "0.17 正版启动 NeoForge 1.20.4-20.4.253 与 1.21.1-21.1.264，图形与材质初始化通过；未覆盖全部现代版本。 0.18.1 修复复制/恢复后客户端 JAR 排除项错绑；NeoForge 1.21.1 独立副本世界保存和重进通过，两次退出均有 OpenAL 音频错误，保留此已知问题。",
+    "externalConditions": [],
+    "implementationSummary": "现代net.neoforged:neoforge坐标与官方installer",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.17/release-tests/test-results.json"
+    }
+  },
+  "VER-003": {
+    "id": "VER-003",
+    "domain": "游戏与加载器",
+    "name": "原版安装与启动",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageDownload",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/MinecraftService.cs; src/Pcl.Core/LaunchService.cs",
+    "ui": "下载版本 / 加载器",
+    "status": "已验收",
+    "testEvidence": [
+      "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json",
+      "artifacts/gui-install-clean-0.8/evidence/user-world-acceptance.json",
+      "artifacts/verification-0.16/microsoft-login-result.json",
+      "artifacts/verification-0.16/microsoft-cold-refresh-0.16.json",
+      "artifacts/verification-0.16/desktop-manual-launch.json",
+      "artifacts/verification-0.16/user-world-acceptance.json",
+      "artifacts/verification-0.16/final-tests/test-results.json",
+      "docs/0.16实现与验收.md",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/owned-launches/matrix.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json",
+      "artifacts/verification-0.18/worlds/vanilla263-roundtrip.json",
+      "docs/0.18.1实现与验收.md"
+    ],
+    "remaining": "0.17 正版启动原版 1.12.2、1.16.5、1.18.2、26.3，均观察图形与材质初始化；0.16 的 1.21.1 世界/存档用户验收保留。本轮十组合未进行世界内人工验收。 0.18.1 原版 26.3 测试副本升级、保存和独立重进通过，Java 25 ARM64；未将本次结果外推到所有历史版本。",
+    "externalConditions": [],
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.17/release-tests/test-results.json"
+    },
+    "implementationSummary": ""
+  },
+  "VER-007": {
+    "id": "VER-007",
+    "domain": "游戏与加载器",
+    "name": "Forge现代安装",
+    "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
+    "sourceEntry": "Pages/PageDownload",
+    "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
+    "macImplementation": "src/Pcl.Core/VersionInstaller.cs",
+    "ui": "下载版本 / 加载器",
+    "status": "部分实现",
+    "testEvidence": [
+      "artifacts/evidence-0.7/acceptance.json",
+      "artifacts/verification-0.17/release-tests/test-results.json",
+      "docs/0.17实现与验收.md",
+      "artifacts/verification-0.17/owned-launches/matrix.json",
+      "artifacts/verification-0.17/final-owned-launches/matrix.json",
+      "artifacts/verification-0.18/final-regression2/test-results.json",
+      "docs/0.18实现与验收.md",
+      "artifacts/verification-0.18/worlds/forge1211-first/result.json",
+      "artifacts/verification-0.18/worlds/forge1211-isolated-first/result.json",
+      "docs/0.18.1实现与验收.md",
+      "artifacts/verification-0.18/worlds/forge1211-menu-retest/result.json",
+      "artifacts/verification-0.18/worlds/forge1211-menu-roundtrip.json"
+    ],
+    "remaining": "Forge 1.21.1 普通菜单的两进程世界保存重进通过，用户确认标记；两次正常退出且无 ERROR/FATAL。单人 Quick Play 仍禁用，其他 Forge 版本未据此外推。",
+    "externalConditions": [],
+    "implementationSummary": "官方installer --installClient、私有库及生成文件收据",
+    "evidenceLevels": {
+      "automatedRegression": "artifacts/verification-0.18/final-regression2/test-results.json"
+    }
+  }
+}
