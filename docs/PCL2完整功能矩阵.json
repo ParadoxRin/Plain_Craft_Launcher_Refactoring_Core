@@ -4947,7 +4947,10 @@
         "docs/0.39-Quilt依赖覆盖与验收.md",
         "artifacts/verification-0.39/final/official-0301.json",
         "artifacts/verification-0.39/final/official-0271.json",
-        "artifacts/verification-0.39/final/real-installs.json"
+        "artifacts/verification-0.39/final/real-installs.json",
+        "artifacts/verification-0.39/final/game-first.json",
+        "artifacts/verification-0.39/final/game-reopen.json",
+        "artifacts/verification-0.39/final/world-roundtrip.json"
       ],
       "remaining": "仍缺自定义Quilt插件/虚拟组合路径、任意多父嵌套路径身份及官方软偏好最优化；无序规则不收敛或超出预算会明确拒绝。未知远程前置不猜测补齐，受控包不代表任意第三方包。",
       "externalConditions": [],
@@ -4959,7 +4962,7 @@
         "gui": "程序驱动实际Avalonia窗口，截图审阅；最终包另行验收",
         "inGame": "未启动游戏"
       },
-      "implementationSummary": "0.15 支持 Quilt 精确 id 依赖覆盖、配置变更保护和原实例库上下文；真实 QFAPI 下载、GUI检查、批量提交及mrpack往返通过。保留0.14能力。 0.34：批量更新入口新增多根联合回溯，锁定用户选择的根版本，并用实际JAR校验候选组合。 0.39：Quilt path/Java pattern/ID覆盖、重复声明、模糊删除、Fabric包装转换和version实际无效语义已接入统一规划；0.30.1/0.27.1官方对照及磁盘事务通过，真实公开模组单项/批量/受控mrpack最终文件一致。",
+      "implementationSummary": "0.15 支持 Quilt 精确 id 依赖覆盖、配置变更保护和原实例库上下文；真实 QFAPI 下载、GUI检查、批量提交及mrpack往返通过。保留0.14能力。 0.34：批量更新入口新增多根联合回溯，锁定用户选择的根版本，并用实际JAR校验候选组合。 0.39：Quilt path/Java pattern/ID覆盖、重复声明、模糊删除、Fabric包装转换和version实际无效语义已接入统一规划；0.30.1/0.27.1官方对照及磁盘事务通过，真实公开模组单项/批量/受控mrpack最终文件一致。 最终0.39包通过Quilt1.21.1两进程世界保存重进，用户确认标记/位置/画面，Host退出后游戏继续运行。",
       "audit033": {
         "reviewed": true,
         "baselineStatus": "部分实现",
@@ -5572,7 +5575,10 @@
         "docs/0.39-Quilt依赖覆盖与验收.md",
         "artifacts/verification-0.39/final/official-0301.json",
         "artifacts/verification-0.39/final/official-0271.json",
-        "artifacts/verification-0.39/final/real-installs.json"
+        "artifacts/verification-0.39/final/real-installs.json",
+        "artifacts/verification-0.39/final/game-first.json",
+        "artifacts/verification-0.39/final/game-reopen.json",
+        "artifacts/verification-0.39/final/world-roundtrip.json"
       ],
       "remaining": "仍缺自定义Quilt插件/虚拟组合路径、任意多父嵌套路径身份及官方软偏好最优化；无序规则不收敛或超出预算会明确拒绝。未知远程前置不猜测补齐，受控包不代表任意第三方包。",
       "externalConditions": [],
@@ -5584,7 +5590,7 @@
         "gui": "程序驱动实际Avalonia窗口，截图审阅；最终包另行验收",
         "inGame": "未启动游戏"
       },
-      "implementationSummary": "0.15 支持 Quilt 精确 id 依赖覆盖、配置变更保护和原实例库上下文；真实 QFAPI 下载、GUI检查、批量提交及mrpack往返通过。保留0.14能力。 0.34：依赖保护复用改进后的JarJar模块身份；本轮实际启停及现有Quilt回滚分支通过。 0.39：Quilt path/Java pattern/ID覆盖、重复声明、模糊删除、Fabric包装转换和version实际无效语义已接入统一规划；0.30.1/0.27.1官方对照及磁盘事务通过，真实公开模组单项/批量/受控mrpack最终文件一致。",
+      "implementationSummary": "0.15 支持 Quilt 精确 id 依赖覆盖、配置变更保护和原实例库上下文；真实 QFAPI 下载、GUI检查、批量提交及mrpack往返通过。保留0.14能力。 0.34：依赖保护复用改进后的JarJar模块身份；本轮实际启停及现有Quilt回滚分支通过。 0.39：Quilt path/Java pattern/ID覆盖、重复声明、模糊删除、Fabric包装转换和version实际无效语义已接入统一规划；0.30.1/0.27.1官方对照及磁盘事务通过，真实公开模组单项/批量/受控mrpack最终文件一致。 最终0.39包通过Quilt1.21.1两进程世界保存重进，用户确认标记/位置/画面，Host退出后游戏继续运行。",
       "audit033": {
         "reviewed": true,
         "baselineStatus": "部分实现",
@@ -5703,7 +5709,10 @@
         "docs/0.39-Quilt依赖覆盖与验收.md",
         "artifacts/verification-0.39/final/official-0301.json",
         "artifacts/verification-0.39/final/official-0271.json",
-        "artifacts/verification-0.39/final/real-installs.json"
+        "artifacts/verification-0.39/final/real-installs.json",
+        "artifacts/verification-0.39/final/game-first.json",
+        "artifacts/verification-0.39/final/game-reopen.json",
+        "artifacts/verification-0.39/final/world-roundtrip.json"
       ],
       "remaining": "仍缺自定义Quilt插件/虚拟组合路径、任意多父嵌套路径身份及官方软偏好最优化；无序规则不收敛或超出预算会明确拒绝。未知远程前置不猜测补齐，受控包不代表任意第三方包。",
       "externalConditions": [],
@@ -5715,7 +5724,7 @@
         "gui": "程序驱动实际Avalonia窗口，截图审阅；最终包另行验收",
         "inGame": "未启动游戏"
       },
-      "implementationSummary": "0.15 支持 Quilt 精确 id 依赖覆盖、配置变更保护和原实例库上下文；真实 QFAPI 下载、GUI检查、批量提交及mrpack往返通过。保留0.14能力。 0.34：批量更新已从逐根选依赖改为联合回溯，在暂存目录验证整套实际JAR，通过后才预览/提交；失败和取消不改现有文件。 0.39：Quilt path/Java pattern/ID覆盖、重复声明、模糊删除、Fabric包装转换和version实际无效语义已接入统一规划；0.30.1/0.27.1官方对照及磁盘事务通过，真实公开模组单项/批量/受控mrpack最终文件一致。",
+      "implementationSummary": "0.15 支持 Quilt 精确 id 依赖覆盖、配置变更保护和原实例库上下文；真实 QFAPI 下载、GUI检查、批量提交及mrpack往返通过。保留0.14能力。 0.34：批量更新已从逐根选依赖改为联合回溯，在暂存目录验证整套实际JAR，通过后才预览/提交；失败和取消不改现有文件。 0.39：Quilt path/Java pattern/ID覆盖、重复声明、模糊删除、Fabric包装转换和version实际无效语义已接入统一规划；0.30.1/0.27.1官方对照及磁盘事务通过，真实公开模组单项/批量/受控mrpack最终文件一致。 最终0.39包通过Quilt1.21.1两进程世界保存重进，用户确认标记/位置/画面，Host退出后游戏继续运行。",
       "audit033": {
         "reviewed": true,
         "baselineStatus": "部分实现",
@@ -5980,11 +5989,14 @@
         "docs/0.39-Quilt依赖覆盖与验收.md",
         "artifacts/verification-0.39/final/official-0301.json",
         "artifacts/verification-0.39/final/official-0271.json",
-        "artifacts/verification-0.39/final/real-installs.json"
+        "artifacts/verification-0.39/final/real-installs.json",
+        "artifacts/verification-0.39/final/game-first.json",
+        "artifacts/verification-0.39/final/game-reopen.json",
+        "artifacts/verification-0.39/final/world-roundtrip.json"
       ],
       "remaining": "仍缺自定义Quilt插件/虚拟组合路径、任意多父嵌套路径身份及官方软偏好最优化；无序规则不收敛或超出预算会明确拒绝。未知远程前置不猜测补齐，受控包不代表任意第三方包。",
       "externalConditions": [],
-      "implementationSummary": "0.15 支持 Quilt 精确 id 依赖覆盖、配置变更保护和原实例库上下文；真实 QFAPI 下载、GUI检查、批量提交及mrpack往返通过。保留0.14能力。 0.34：PCL扩展schema2保存自定义入口与tweaker声明；mrpack导出重导后真实1.21.1启动通过。 0.39：Quilt path/Java pattern/ID覆盖、重复声明、模糊删除、Fabric包装转换和version实际无效语义已接入统一规划；0.30.1/0.27.1官方对照及磁盘事务通过，真实公开模组单项/批量/受控mrpack最终文件一致。",
+      "implementationSummary": "0.15 支持 Quilt 精确 id 依赖覆盖、配置变更保护和原实例库上下文；真实 QFAPI 下载、GUI检查、批量提交及mrpack往返通过。保留0.14能力。 0.34：PCL扩展schema2保存自定义入口与tweaker声明；mrpack导出重导后真实1.21.1启动通过。 0.39：Quilt path/Java pattern/ID覆盖、重复声明、模糊删除、Fabric包装转换和version实际无效语义已接入统一规划；0.30.1/0.27.1官方对照及磁盘事务通过，真实公开模组单项/批量/受控mrpack最终文件一致。 最终0.39包通过Quilt1.21.1两进程世界保存重进，用户确认标记/位置/画面，Host退出后游戏继续运行。",
       "evidenceLevels": {
         "source": "Quilt Loader 0.27.1 固定实现对照",
         "fixture": "覆盖语义、严格元数据、事务回滚与异常边界；八组官方集合变换",
