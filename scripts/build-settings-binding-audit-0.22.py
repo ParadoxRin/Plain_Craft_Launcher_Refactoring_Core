@@ -43,5 +43,5 @@ result=dict(version='0.22',total=len(rows),counts=counts,original40=dict(Counter
 (root/'docs/0.22-settings-binding-audit.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
 lines=['# 0.22 原版设置逐项核对','','同一组 121 个原版控件逐项追踪。部分绑定、平台替代和已实现待验收不算完全一致；本次并未将全部剩余项标记完成。','','原 40 个未完成项的现状：'+json.dumps(result['original40'],ensure_ascii=False),'','| 页面 / 卡片 | 原版项 | 当前状态 | 实现或缺口 |','|---|---|---|---|']
 for r in rows: lines.append('| '+' | '.join(str(v).replace('|',' / ').replace('\n',' ') for v in [r['page']+' / '+r['card'],r['label'],r['status'],r['implementation']])+' |')
-(root/'docs/0.22设置逐项核对.md').write_text('\n'.join(lines)+'\n')
+(root/'docs/【已弃用】0.22设置逐项核对.md').write_text('\n'.join(lines)+'\n')
 print(json.dumps({'total':len(rows),'counts':counts,'original40':result['original40']},ensure_ascii=False))

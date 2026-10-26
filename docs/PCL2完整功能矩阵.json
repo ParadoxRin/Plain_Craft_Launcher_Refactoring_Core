@@ -8265,7 +8265,7 @@
       "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
       "sourceEntry": "Pages/PageSetup",
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
-      "macImplementation": "src/Pcl.Desktop/MainWindow.axaml.cs; docs/使用说明.md",
+      "macImplementation": "src/Pcl.Desktop/MainWindow.axaml.cs; docs/【已弃用】使用说明.md",
       "ui": "设置与帮助",
       "status": "部分实现",
       "testEvidence": [

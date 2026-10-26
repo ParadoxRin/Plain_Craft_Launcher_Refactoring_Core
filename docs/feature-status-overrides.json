@@ -7826,7 +7826,7 @@
   },
   "UI-009": {
     "status": "部分实现",
-    "macImplementation": "src/Pcl.Desktop/MainWindow.axaml.cs; docs/使用说明.md",
+    "macImplementation": "src/Pcl.Desktop/MainWindow.axaml.cs; docs/【已弃用】使用说明.md",
     "testEvidence": [
       "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
     ],

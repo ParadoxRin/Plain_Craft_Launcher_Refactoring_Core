@@ -28,7 +28,7 @@ for name in ['1.12.2','1.21.1','26.3']:
     result=json.loads((game/f'launch-result-{name}.json').read_text())
     assert result['graphicsLogObserved'] and result['atlasCreationObserved']
     shutil.copy2(Path(result['log']),exports/f'minecraft-{name}.log')
-for name in ['0.22-settings-binding-audit.json','0.22设置逐项核对.md','0.22实现与验收.md','0.21-settings-binding-audit.json']:
+for name in ['0.22-settings-binding-audit.json','【已弃用】0.22设置逐项核对.md','0.22实现与验收.md','0.21-settings-binding-audit.json']:
     shutil.copy2(root/'docs'/name,review/name)
 images=[]
 for folder,names in [('final-layout',['01-launch','setup-launch','setup-ui','setup-system','mod-list','mod-detail','shader-list','shader-detail']),('final-settings',['InstanceWorkspace','TaskCenterWindow','SkinManagerWindow','LocalResourcesWindow']),('final-local-ui',['local-appearance','local-system'])]:

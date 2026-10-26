@@ -40,7 +40,7 @@ row('UI-002 UI-003','已实现待验收','src/Pcl.Desktop/AppearanceWorkspace.cs
 row('UI-004 UI-012','部分实现','src/Pcl.Core/AppearanceService.cs; src/Pcl.Desktop/AppearanceWorkspace.cs',[reg],'安全JSON主页支持文字、网页、复制、消息、导航、启动、刷新和加入房间；不兼容原XAML布局或全部变量/事件。')
 row('UI-005 UI-006 UI-007','已实现待验收','src/Pcl.Desktop/SettingsHelpWindow.cs; src/Pcl.Core/AppearanceService.cs',[reg,ui],'导航隐藏恢复、帮助检索、设置备份/净化导入导出实现；设置不携带凭据或执行项。重置当前外观，不删除用户世界。')
 row('UI-008','未实现','src/Pcl.Desktop/MainWindow.axaml.cs',[],'本地交付，无线上版本源/更新包签名验证或应用替换器；仅公开开发说明，不伪装自动更新成功。')
-row('UI-009','部分实现','src/Pcl.Desktop/MainWindow.axaml.cs; docs/使用说明.md',[ui],'关于/本地更新说明存在；原远程公告服务及活动页面未复刻。')
+row('UI-009','部分实现','src/Pcl.Desktop/MainWindow.axaml.cs; docs/【已弃用】使用说明.md',[ui],'关于/本地更新说明存在；原远程公告服务及活动页面未复刻。')
 row('UI-010','已验收','src/Pcl.Core/AppearanceService.cs; src/Pcl.Desktop/SettingsHelpWindow.cs',[reg],'原PCL2系统设置实际可用项为首次游戏中文；尊重已有lang，1.10及以前使用zh_CN。原多语言UI选择代码已注释，不计为已启用功能。')
 merged['UI-010']['name']='首次游戏中文与界面语言基线'
 merged['UI-010']['sourceEntry']='Pages/PageSetup/PageSetupSystem.xaml:103-104,167-184'

@@ -111,5 +111,5 @@ counts = dict(Counter((r['status'] for r in rows)))
 lines = ['# 0.21 原版设置逐项核对', '', '每一行对应 0.20 清单中的原版控件；部分绑定与替代入口不视为原版完全实现。实测边界见《0.21实现与验收.md》。', '', '| 页面 / 卡片 | 原版项 | 当前状态 | 实现或缺口 |', '|---|---|---|---|']
 for r in rows:
     lines.append('| ' + ' | '.join((str(v).replace('|', ' / ').replace('\n', ' ') for v in (r['page'] + ' / ' + r['card'], r['label'], r['status'], r['implementation']))) + ' |')
-(root / 'docs/0.21设置逐项核对.md').write_text('\n'.join(lines) + '\n')
+(root / 'docs/【已弃用】0.21设置逐项核对.md').write_text('\n'.join(lines) + '\n')
 print(len(rows), counts)

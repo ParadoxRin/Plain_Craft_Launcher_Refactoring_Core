@@ -41,5 +41,5 @@ for kind in ['实现缺口', '定向验收', '外部条件验收']:
         if f['audit033']['workKind'] == kind:
             text += '| '+f['id']+' | '+f['name']+' | '+f['remaining'].replace('|','／').replace('\n',' ')+' |\n'
     text += '\n'
-(root/'docs/0.36-剩余清单.md').write_text(text)
+(root/'docs/【已弃用】0.36-剩余清单.md').write_text(text)
 print(dict(collections.Counter(f['audit033']['workKind'] for f in matrix['features'])))

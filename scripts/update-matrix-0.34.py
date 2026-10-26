@@ -63,5 +63,5 @@ for kind in ['实现缺口', '定向验收', '外部条件验收']:
         if f['audit033']['workKind'] == kind:
             lines.append('| ' + f['id'] + ' | ' + f['name'] + ' | ' + f['remaining'].replace('|', '／') + ' | ' + ('是' if f['audit033']['requiresExternalCondition'] else '否') + ' |')
 lines += ['', '下一步优先：Quilt path/pattern/version覆盖与独立官方对照 → Fabric覆盖/schema0 → 整合包锁定清单的联合补全和自定义客户端边界 → 配置文件三方合并。其余功能不因本轮测试通过自动升级状态。']
-(root / 'docs/0.34-剩余清单.md').write_text('\n'.join(lines) + '\n')
+(root / 'docs/【已弃用】0.34-剩余清单.md').write_text('\n'.join(lines) + '\n')
 print('Updated 7 partial rows; 3 subcapabilities; complete-row counts unchanged.')
