@@ -1,0 +1,2791 @@
+{
+  "date": "2026-10-27",
+  "baseline": "0.40.1 + local closeout fixes; no release published",
+  "platform": "macOS Apple Silicon",
+  "status": "scoped_acceptance_completed_with_remaining_items",
+  "acceptedFeatureIds": [
+    "INST-012",
+    "VER-004",
+    "VER-005",
+    "VER-010",
+    "JAVA-001",
+    "JAVA-002",
+    "JAVA-003",
+    "JAVA-004",
+    "JAVA-006",
+    "JAVA-015",
+    "RES-008",
+    "LINK-001",
+    "UI-002",
+    "UI-003"
+  ],
+  "stillTargetedAcceptanceIds": [
+    "AUTH-013",
+    "INST-011",
+    "VER-006",
+    "VER-007",
+    "VER-009",
+    "VER-012",
+    "VER-014",
+    "VER-015",
+    "JAVA-007",
+    "JAVA-010",
+    "JAVA-011",
+    "JAVA-012",
+    "JAVA-013",
+    "JAVA-016",
+    "RES-003",
+    "RES-005",
+    "PACK-001",
+    "PACK-007",
+    "PACK-010",
+    "LINK-005"
+  ],
+  "productionFixes": [
+    {
+      "problem": "1.12.2 native SIGSEGV in glCopyTexSubImage2D after atlas initialization",
+      "change": "Add -XstartOnFirstThread to macOS aarch64 LWJGL2; preserve non-ARM64 legacy policy and argument deduplication.",
+      "verification": "Same isolated instance: initial native crash, explicit parameter 30 seconds passed, fixed default configuration 60 seconds passed. No world test."
+    },
+    {
+      "problem": "Host-bound 1.21.1 incorrectly used for OptiFabric 1.20.1 dependency validation",
+      "change": "Read and validate gameVersion from instance profile; use service version only for legacy profile with absent field.",
+      "verification": "New regression: compatible instance reaches downstream integrity check; incompatible instance rejected. Real OptiFabric 1.20.1 menu observed for 30 seconds."
+    }
+  ],
+  "coreTests": {
+    "status": "passed",
+    "passed": 231,
+    "path": "artifacts/closeout-fifth/core-tests-release-final/test-results.json",
+    "sha256": "c149d6a20a128e048303e46970cf49302fefab46cb8ccdf526feb779d28c74a3",
+    "tests": [
+      {
+        "name": "settings_gc_java_version_gates",
+        "status": "passed"
+      },
+      {
+        "name": "settings_memory_and_inheritance",
+        "status": "passed"
+      },
+      {
+        "name": "settings_actual_launch_arguments",
+        "status": "passed"
+      },
+      {
+        "name": "settings_appearance_persistence_and_recovery",
+        "status": "passed"
+      },
+      {
+        "name": "unix_absolute_path_and_root",
+        "status": "passed"
+      },
+      {
+        "name": "unicode_file_copy_move_atomic_replace",
+        "status": "passed"
+      },
+      {
+        "name": "directory_move_and_symlink_unlink",
+        "status": "passed"
+      },
+      {
+        "name": "config_reload_and_progress",
+        "status": "passed"
+      },
+      {
+        "name": "ecdsa_cng_blob_and_signature_interoperability",
+        "status": "passed"
+      },
+      {
+        "name": "zip_utf8_and_traversal_rejection",
+        "status": "passed"
+      },
+      {
+        "name": "zip_existing_symlink_rejection",
+        "status": "passed"
+      },
+      {
+        "name": "rules_osx_arm_and_features",
+        "status": "passed"
+      },
+      {
+        "name": "real_1_21_1_mac_library_and_argument_plan",
+        "status": "passed"
+      },
+      {
+        "name": "download_resume_206",
+        "status": "passed"
+      },
+      {
+        "name": "download_server_ignores_range",
+        "status": "passed"
+      },
+      {
+        "name": "download_bad_hash_never_promoted",
+        "status": "passed"
+      },
+      {
+        "name": "download_cancellation_does_not_promote",
+        "status": "passed"
+      },
+      {
+        "name": "download_duplicate_targets_and_valid_cache",
+        "status": "passed"
+      },
+      {
+        "name": "modrinth_facets_and_query_escaping",
+        "status": "passed"
+      },
+      {
+        "name": "classic_resource_all_versions_filter",
+        "status": "passed"
+      },
+      {
+        "name": "classic_resource_versions_browse_and_install_separation",
+        "status": "passed"
+      },
+      {
+        "name": "resource_project_rejects_wrong_json_shape",
+        "status": "passed"
+      },
+      {
+        "name": "network_handoff_keeps_borrowed_downloader_usable",
+        "status": "passed"
+      },
+      {
+        "name": "modrinth_required_dependency_and_optional_exclusion",
+        "status": "passed"
+      },
+      {
+        "name": "modrinth_pinned_dependency_conflict_and_loader_rejection",
+        "status": "passed"
+      },
+      {
+        "name": "fabric_merge_overrides_and_instance_isolation",
+        "status": "passed"
+      },
+      {
+        "name": "resource_filename_and_symlink_rejection",
+        "status": "passed"
+      },
+      {
+        "name": "resource_install_update_disable_remove_and_protected_files",
+        "status": "passed"
+      },
+      {
+        "name": "resource_download_failure_never_replaces_installed_version",
+        "status": "passed"
+      },
+      {
+        "name": "resource_dependencies_protect_against_incompatible_updates",
+        "status": "passed"
+      },
+      {
+        "name": "fabric_semver_predicates_and_prerelease_order",
+        "status": "passed"
+      },
+      {
+        "name": "fabric_planner_uses_jar_constraints_instead_of_latest_dependency",
+        "status": "passed"
+      },
+      {
+        "name": "resource_activation_preserves_existing_settings",
+        "status": "passed"
+      },
+      {
+        "name": "mac_shader_required_optional_and_conditional_features",
+        "status": "passed"
+      },
+      {
+        "name": "mac_shader_application_blocks_known_unsupported_requirement",
+        "status": "passed"
+      },
+      {
+        "name": "mac_native_macho_and_fat_arm64_detection",
+        "status": "passed"
+      },
+      {
+        "name": "mac_independent_profiles_keep_original_fabric",
+        "status": "passed"
+      },
+      {
+        "name": "mac_pin_rejects_changed_file_and_preset_uses_external_settings",
+        "status": "passed"
+      },
+      {
+        "name": "mac_native_audit_keeps_official_scoped_intel_patch",
+        "status": "passed"
+      },
+      {
+        "name": "mrpack_client_optional_and_loader_versions",
+        "status": "passed"
+      },
+      {
+        "name": "mrpack_rejects_unsupported_and_ambiguous_dependencies",
+        "status": "passed"
+      },
+      {
+        "name": "mrpack_paths_hashes_and_download_sources",
+        "status": "passed"
+      },
+      {
+        "name": "mrpack_overrides_order_and_server_exclusion",
+        "status": "passed"
+      },
+      {
+        "name": "mrpack_symlink_and_case_collision_rejected",
+        "status": "passed"
+      },
+      {
+        "name": "mrpack_files_visible_in_resource_management",
+        "status": "passed"
+      },
+      {
+        "name": "forge_neoforge_metadata_must_match_target_loader",
+        "status": "passed"
+      },
+      {
+        "name": "generated_patch_local_artifact_no_network_fallback",
+        "status": "passed"
+      },
+      {
+        "name": "neoforge_private_module_path_and_version_jar",
+        "status": "passed"
+      },
+      {
+        "name": "instance_registry_loader_types_and_pending_hidden",
+        "status": "passed"
+      },
+      {
+        "name": "java_inspection_accepts_both_streams_and_arch_aliases",
+        "status": "passed"
+      },
+      {
+        "name": "java_inspection_process_exit_and_cancellation",
+        "status": "passed"
+      },
+      {
+        "name": "mac_jna_embedded_native_architecture_audit",
+        "status": "passed"
+      },
+      {
+        "name": "launch_preflight_uses_instance_game_version_for_dependencies",
+        "status": "passed"
+      },
+      {
+        "name": "mac_preflight_blocks_corrupt_library_and_instance_client",
+        "status": "passed"
+      },
+      {
+        "name": "mac_dock_icon_hash_and_first_thread_dedup",
+        "status": "passed"
+      },
+      {
+        "name": "pcl2_offline_uuid_name_validation_and_non_demo",
+        "status": "passed"
+      },
+      {
+        "name": "offline_accounts_persist_switch_remove_without_keychain",
+        "status": "passed"
+      },
+      {
+        "name": "microsoft_embedded_application_config_rejects_secrets_and_invalid_ids",
+        "status": "passed"
+      },
+      {
+        "name": "microsoft_public_client_requests_have_no_secret_or_password",
+        "status": "passed"
+      },
+      {
+        "name": "microsoft_device_pending_slowdown_exchange_and_profile",
+        "status": "passed"
+      },
+      {
+        "name": "microsoft_expiry_refresh_rotation_and_logout",
+        "status": "passed"
+      },
+      {
+        "name": "microsoft_switch_logout_and_cold_refresh_remain_account_scoped",
+        "status": "passed"
+      },
+      {
+        "name": "microsoft_session_only_does_not_survive_restart",
+        "status": "passed"
+      },
+      {
+        "name": "microsoft_rejected_refresh_no_offline_fallback",
+        "status": "passed"
+      },
+      {
+        "name": "microsoft_refresh_diagnostics_keep_codes_without_secrets",
+        "status": "passed"
+      },
+      {
+        "name": "microsoft_entitlement_and_cancel_checks",
+        "status": "passed"
+      },
+      {
+        "name": "offline_account_resolves_after_restart_without_network_or_keychain",
+        "status": "passed"
+      },
+      {
+        "name": "offline_identity_launch_gate_preserves_pcl_uuid_without_claiming_ownership",
+        "status": "passed"
+      },
+      {
+        "name": "launch_rejects_invalid_or_unverified_microsoft_identity",
+        "status": "passed"
+      },
+      {
+        "name": "verified_ownership_rejects_mutation_serialization_and_expiry",
+        "status": "passed"
+      },
+      {
+        "name": "verified_fixture_session_allows_process_start",
+        "status": "passed"
+      },
+      {
+        "name": "offline_script_export_preserves_existing_destination",
+        "status": "passed"
+      },
+      {
+        "name": "minecraft_app_rejection_is_not_reported_as_account_ownership_failure",
+        "status": "passed"
+      },
+      {
+        "name": "anonymous_catalog_and_resource_download_need_no_account",
+        "status": "passed"
+      },
+      {
+        "name": "multi_version_metadata_java_and_arm_native_adapters",
+        "status": "passed"
+      },
+      {
+        "name": "multi_version_registry_keeps_parent_and_saves_separate",
+        "status": "passed"
+      },
+      {
+        "name": "runtime_tar_preserves_executable_and_rejects_escape",
+        "status": "passed"
+      },
+      {
+        "name": "native_audit_architecture_qualified_netty_and_paired_jtracy",
+        "status": "passed"
+      },
+      {
+        "name": "fabric_planner_reads_instance_java_instead_of_fixed_21",
+        "status": "passed"
+      },
+      {
+        "name": "neoforge_1204_uses_official_legacy_mods_toml",
+        "status": "passed"
+      },
+      {
+        "name": "copied_and_restored_instance_bootstrap_excludes_actual_client_filename",
+        "status": "passed"
+      },
+      {
+        "name": "quick_play_world_uses_metadata_and_rejects_missing_linked_or_conflicting_targets",
+        "status": "passed"
+      },
+      {
+        "name": "instance_groups_persist_compose_and_follow_copy_backup",
+        "status": "passed"
+      },
+      {
+        "name": "instance_settings_inheritance_override_and_argument_safety",
+        "status": "passed"
+      },
+      {
+        "name": "instance_copy_preserves_save_excludes_credentials_and_shared_cache",
+        "status": "passed"
+      },
+      {
+        "name": "instance_favorite_hidden_persisted_and_management_still_finds_hidden",
+        "status": "passed"
+      },
+      {
+        "name": "instance_trash_restore_preserves_save_and_parent_dependencies",
+        "status": "passed"
+      },
+      {
+        "name": "instance_backup_content_and_unsafe_restore_rejected",
+        "status": "passed"
+      },
+      {
+        "name": "instance_import_scan_rejects_unresolved_inherited_metadata_and_symlinks",
+        "status": "passed"
+      },
+      {
+        "name": "instance_trash_restore_rejects_replaced_data_symlink",
+        "status": "passed"
+      },
+      {
+        "name": "instance_filters_combine_loader_favorite_hidden_and_search",
+        "status": "passed"
+      },
+      {
+        "name": "instance_icon_is_passive_bounded_and_follows_copy_backup",
+        "status": "passed"
+      },
+      {
+        "name": "pack_import_all_declared_formats",
+        "status": "passed"
+      },
+      {
+        "name": "pack_rejects_traversal_symlink_case_collision_and_custom_patch",
+        "status": "passed"
+      },
+      {
+        "name": "pack_export_privacy_hashes_and_roundtrip",
+        "status": "passed"
+      },
+      {
+        "name": "curse_api_metadata_and_publisher_disabled_download",
+        "status": "passed"
+      },
+      {
+        "name": "pack_update_baseline_distinguishes_modified_added_deleted_and_private",
+        "status": "passed"
+      },
+      {
+        "name": "curse_missing_credentials_blocks_before_instance_install",
+        "status": "passed"
+      },
+      {
+        "name": "curse_catalog_filters_dependencies_and_file_restrictions",
+        "status": "passed"
+      },
+      {
+        "name": "modrinth_datapack_filters_need_no_fabric_loader",
+        "status": "passed"
+      },
+      {
+        "name": "local_scan_toggle_and_dependency_rollback",
+        "status": "passed"
+      },
+      {
+        "name": "resource_metadata_legacy_forge_neoforge_quilt_liteloader",
+        "status": "passed"
+      },
+      {
+        "name": "resource_alias_embedded_database_and_explicit_cross_platform_identity",
+        "status": "passed"
+      },
+      {
+        "name": "forge_toml_dependencies_versions_side_and_neoforge_legacy_alias",
+        "status": "passed"
+      },
+      {
+        "name": "pack_export_recipe_selection_and_exact_payload_hash",
+        "status": "passed"
+      },
+      {
+        "name": "resource_activation_undo_history_and_external_change_protection",
+        "status": "passed"
+      },
+      {
+        "name": "resource_batch_update_projects_whole_dependency_set_and_preserves_external_edits",
+        "status": "passed"
+      },
+      {
+        "name": "world_datapack_install_toggle_backup_and_target_validation",
+        "status": "passed"
+      },
+      {
+        "name": "legacy_arguments_quote_safe_no_shell",
+        "status": "passed"
+      },
+      {
+        "name": "lwjgl2_arm64_native_only_replacement",
+        "status": "passed"
+      },
+      {
+        "name": "legacy_forge_replaces_complete_game_arguments",
+        "status": "passed"
+      },
+      {
+        "name": "optifine_catalog_filters_version_and_preview",
+        "status": "passed"
+      },
+      {
+        "name": "java_runtime_duplicate_bundle_symlink",
+        "status": "passed"
+      },
+      {
+        "name": "legacy_native_extract_traversal_rejected",
+        "status": "passed"
+      },
+      {
+        "name": "download_queue_pause_cancel_restart_and_verified_retry",
+        "status": "passed"
+      },
+      {
+        "name": "download_partial_symlink_never_writes_outside_target",
+        "status": "passed"
+      },
+      {
+        "name": "download_duplicate_target_serializes_across_service_instances",
+        "status": "passed"
+      },
+      {
+        "name": "network_mirror_requires_original_digest_and_valid_proxy",
+        "status": "passed"
+      },
+      {
+        "name": "diagnostic_analysis_and_export_redact_tokens_and_home",
+        "status": "passed"
+      },
+      {
+        "name": "segmented_legacy_network_settings_preserve_disabled_default",
+        "status": "passed"
+      },
+      {
+        "name": "segmented_parallel_ranges_whole_hash_and_default_disabled",
+        "status": "passed"
+      },
+      {
+        "name": "segmented_no_range_and_wrong_content_range_fall_back",
+        "status": "passed"
+      },
+      {
+        "name": "segmented_cancellation_restart_reuses_complete_blocks",
+        "status": "passed"
+      },
+      {
+        "name": "segmented_tampered_chunk_rechecked_and_hash_failure_keeps_old_target",
+        "status": "passed"
+      },
+      {
+        "name": "segmented_rejects_dangling_cache_symlink",
+        "status": "passed"
+      },
+      {
+        "name": "settings_export_strips_executable_and_import_preserves_account_store",
+        "status": "passed"
+      },
+      {
+        "name": "custom_home_rejects_script_links_and_oversized_document",
+        "status": "passed"
+      },
+      {
+        "name": "launch_hook_literal_args_failure_and_timeout",
+        "status": "passed"
+      },
+      {
+        "name": "easytier_room_validation_and_no_shell_port_forward",
+        "status": "passed"
+      },
+      {
+        "name": "local_settings_metadata_fallback_invalid_json_and_priority",
+        "status": "passed"
+      },
+      {
+        "name": "local_settings_copy_toggle_debug_redaction_and_delay_cancel",
+        "status": "passed"
+      },
+      {
+        "name": "local_settings_window_size_and_instance_inheritance",
+        "status": "passed"
+      },
+      {
+        "name": "local_settings_resource_filename_formats_and_path_safety",
+        "status": "passed"
+      },
+      {
+        "name": "local_settings_home_presets_blank_and_hidden_restore_model",
+        "status": "passed"
+      },
+      {
+        "name": "local_settings_named_resource_install_update_disable_remove",
+        "status": "passed"
+      },
+      {
+        "name": "local_settings_unsafe_agent_compatibility_and_explicit_disable",
+        "status": "passed"
+      },
+      {
+        "name": "local_settings_random_background_and_portable_path_stripping",
+        "status": "passed"
+      },
+      {
+        "name": "local_settings_actual_afplay_playlist_stop_and_restart",
+        "status": "passed"
+      },
+      {
+        "name": "metadata_transient_retry_and_invalid_json_preserve_previous_cache",
+        "status": "passed"
+      },
+      {
+        "name": "diagnostics_bounded_context_avoids_warning_and_platform_false_positive",
+        "status": "passed"
+      },
+      {
+        "name": "diagnostics_retains_dependency_config_world_context_and_redacts",
+        "status": "passed"
+      },
+      {
+        "name": "first_launch_chinese_preserves_existing_language_and_other_settings",
+        "status": "passed"
+      },
+      {
+        "name": "home_actions_reject_remote_commands_and_install_journal_retains_history",
+        "status": "passed"
+      },
+      {
+        "name": "fabric_metadata_retries_transient_timeout_and_preserves_user_cancellation",
+        "status": "passed"
+      },
+      {
+        "name": "field_inheritance_migrates_v1_with_backup_and_preserves_explicit_empty_false",
+        "status": "passed"
+      },
+      {
+        "name": "field_inheritance_conflict_is_atomic_and_patch_copy_stays_inherited",
+        "status": "passed"
+      },
+      {
+        "name": "mrpack_per_file_selection_keeps_required_and_rejects_stale_choices",
+        "status": "passed"
+      },
+      {
+        "name": "curse_optional_selection_converts_only_selected_local_files_without_key",
+        "status": "passed"
+      },
+      {
+        "name": "maven_matches_9721_official_java_comparisons",
+        "status": "passed"
+      },
+      {
+        "name": "maven_union_recommendation_and_invalid_bounds",
+        "status": "passed"
+      },
+      {
+        "name": "unified_search_identity_merge_not_title_and_partial_failure",
+        "status": "passed"
+      },
+      {
+        "name": "unified_search_user_cancellation_propagates",
+        "status": "passed"
+      },
+      {
+        "name": "neoforge_file_properties_language_loader_and_invalid_side",
+        "status": "passed"
+      },
+      {
+        "name": "hmcl_official_profile_rebuild_and_tamper_rejected_before_install",
+        "status": "passed"
+      },
+      {
+        "name": "multimc_official_patch_identity_and_unknown_components",
+        "status": "passed"
+      },
+      {
+        "name": "search_session_global_identity_dedup_enrichment_and_cached_back",
+        "status": "passed"
+      },
+      {
+        "name": "search_session_cancel_does_not_advance_or_commit",
+        "status": "passed"
+      },
+      {
+        "name": "search_session_retry_preserves_success_and_rehomes_duplicate",
+        "status": "passed"
+      },
+      {
+        "name": "search_session_all_duplicates_keeps_continuation",
+        "status": "passed"
+      },
+      {
+        "name": "backup_v3_hashes_exact_bytes_and_detects_same_size_damage",
+        "status": "passed"
+      },
+      {
+        "name": "backup_v3_missing_extra_and_modified_manifest_rejected",
+        "status": "passed"
+      },
+      {
+        "name": "backup_case_unicode_duplicate_and_symlink_rejected",
+        "status": "passed"
+      },
+      {
+        "name": "backup_legacy_explicitly_reports_no_hashes",
+        "status": "passed"
+      },
+      {
+        "name": "backup_cancel_preserves_source_and_removes_partial",
+        "status": "passed"
+      },
+      {
+        "name": "backup_restore_cancel_removes_staging_without_registration",
+        "status": "passed"
+      },
+      {
+        "name": "backup_preferences_and_patch_commit_atomically",
+        "status": "passed"
+      },
+      {
+        "name": "backup_invalid_settings_fail_before_network_or_registration",
+        "status": "passed"
+      },
+      {
+        "name": "quilt_1140_official_loader_version_oracle",
+        "status": "passed"
+      },
+      {
+        "name": "quilt_version_bare_caret_zero_major_tilde_and_any_all",
+        "status": "passed"
+      },
+      {
+        "name": "quilt_invalid_empty_universal_and_contradictory_ranges_rejected",
+        "status": "passed"
+      },
+      {
+        "name": "quilt_solver_backtracks_to_older_nested_candidate_and_cycles",
+        "status": "passed"
+      },
+      {
+        "name": "quilt_any_optional_unless_alias_group_and_conflict",
+        "status": "passed"
+      },
+      {
+        "name": "quilt_load_types_environment_and_alias_exclusivity",
+        "status": "passed"
+      },
+      {
+        "name": "quilt_solver_scales_to_large_independent_nested_set",
+        "status": "passed"
+      },
+      {
+        "name": "quilt_reads_nested_archives_and_rejects_missing_or_unsafe_path",
+        "status": "passed"
+      },
+      {
+        "name": "quilt_dependency_disable_and_remove_roll_back",
+        "status": "passed"
+      },
+      {
+        "name": "jarjar_intersects_all_ranges_and_excludes_unselected_mod_constraints",
+        "status": "passed"
+      },
+      {
+        "name": "jarjar_library_wrapper_toml_is_not_a_duplicate_mod",
+        "status": "passed"
+      },
+      {
+        "name": "jarjar_unselected_invalid_toml_does_not_poison_selected_mod",
+        "status": "passed"
+      },
+      {
+        "name": "jarjar_conflicting_ranges_and_identical_version_different_bytes_rejected",
+        "status": "passed"
+      },
+      {
+        "name": "jarjar_nested_library_transitives_and_top_level_override",
+        "status": "passed"
+      },
+      {
+        "name": "custom_pack_preserves_additive_libraries_properties_and_verified_entrypoint",
+        "status": "passed"
+      },
+      {
+        "name": "multimc_custom_component_requires_order_and_conversion_retains_metadata",
+        "status": "passed"
+      },
+      {
+        "name": "quilt_remote_backtracks_project_versions_and_preserves_exact_pins",
+        "status": "passed"
+      },
+      {
+        "name": "custom_metadata_normalization_roundtrip_and_export_retains_extension",
+        "status": "passed"
+      },
+      {
+        "name": "quilt_overrides_official_eight_case_fixtures",
+        "status": "passed"
+      },
+      {
+        "name": "quilt_override_add_remove_replace_and_original_immutable",
+        "status": "passed"
+      },
+      {
+        "name": "quilt_override_semantic_range_equality_reason_optional_and_unless",
+        "status": "passed"
+      },
+      {
+        "name": "quilt_override_arrays_flatten_but_keep_order_and_breaks",
+        "status": "passed"
+      },
+      {
+        "name": "quilt_override_replacement_removal_addition_order_and_deduplication",
+        "status": "passed"
+      },
+      {
+        "name": "quilt_override_unmatched_selector_and_missing_old_condition_warn",
+        "status": "passed"
+      },
+      {
+        "name": "quilt_override_selector_validation_version_noop_and_duplicate_ids",
+        "status": "passed"
+      },
+      {
+        "name": "quilt_override_invalid_unmatched_rules_fail_closed",
+        "status": "passed"
+      },
+      {
+        "name": "quilt_override_strict_json_size_and_symlink_boundary",
+        "status": "passed"
+      },
+      {
+        "name": "quilt_override_local_disable_rollback_and_json5_production_rejection",
+        "status": "passed"
+      },
+      {
+        "name": "mcmod_index_chinese_slug_id_url_and_disjoint_pages",
+        "status": "passed"
+      },
+      {
+        "name": "mcmod_offline_search_never_requires_network_or_claims_compatibility",
+        "status": "passed"
+      },
+      {
+        "name": "mcmod_resolves_exact_slug_and_rechecks_release_kind_loader_version_identity",
+        "status": "passed"
+      },
+      {
+        "name": "mcmod_mapping_partial_failure_and_cancellation",
+        "status": "passed"
+      },
+      {
+        "name": "mcmod_cf_only_entries_do_not_guess_modrinth_identity",
+        "status": "passed"
+      },
+      {
+        "name": "microsoft_skin_profile_upload_selection_reset_and_owned_cape",
+        "status": "passed"
+      },
+      {
+        "name": "microsoft_skin_rejects_offline_wrong_identity_and_expired_token",
+        "status": "passed"
+      },
+      {
+        "name": "offline_skin_pack_uses_client_metadata_preserves_uuid_and_options",
+        "status": "passed"
+      },
+      {
+        "name": "offline_skin_legacy_and_new_major_minor_pack_formats",
+        "status": "passed"
+      },
+      {
+        "name": "offline_skin_corruption_and_filename_collision_preserve_user_files",
+        "status": "passed"
+      },
+      {
+        "name": "java_discovery_rejects_escaping_receipts_and_macos_stub",
+        "status": "passed"
+      },
+      {
+        "name": "world_entry_failure_survives_clean_exit_and_has_specific_advice",
+        "status": "passed"
+      },
+      {
+        "name": "network_probe_caps_ignored_range_and_never_queues_install",
+        "status": "passed"
+      },
+      {
+        "name": "network_probe_reports_redirect_and_bad_range_without_reading_body",
+        "status": "passed"
+      },
+      {
+        "name": "temporary_cache_excludes_active_recent_shared_and_symlink_files",
+        "status": "passed"
+      },
+      {
+        "name": "temporary_cache_rechecks_preview_and_restores_without_overwrite",
+        "status": "passed"
+      },
+      {
+        "name": "component_preview_requires_explicit_mod_disable",
+        "status": "passed"
+      },
+      {
+        "name": "component_copy_removes_loader_preserves_source_and_world",
+        "status": "passed"
+      },
+      {
+        "name": "component_install_failure_rolls_back_pending_copy",
+        "status": "passed"
+      },
+      {
+        "name": "component_source_changes_rejected_before_install",
+        "status": "passed"
+      },
+      {
+        "name": "component_symlink_data_rejected",
+        "status": "passed"
+      },
+      {
+        "name": "component_source_changes_during_copy_roll_back",
+        "status": "passed"
+      },
+      {
+        "name": "download_only_verified_jar_saved_without_installing",
+        "status": "passed"
+      },
+      {
+        "name": "download_only_never_overwrites_existing_target",
+        "status": "passed"
+      },
+      {
+        "name": "download_only_rejects_non_jar_and_cleans_partial",
+        "status": "passed"
+      },
+      {
+        "name": "quilt_disagreeing_official_checksums_are_not_silently_replaced",
+        "status": "passed"
+      },
+      {
+        "name": "official_notes_render_as_inert_plain_text",
+        "status": "passed"
+      },
+      {
+        "name": "optifabric_conflicts_detect_mod_id_not_filename",
+        "status": "passed"
+      },
+      {
+        "name": "optifabric_disabled_conflicting_mod_is_not_active",
+        "status": "passed"
+      },
+      {
+        "name": "optifabric_unknown_artifact_cannot_impersonate_tested_build",
+        "status": "passed"
+      },
+      {
+        "name": "optifabric_symlink_mod_directory_is_rejected",
+        "status": "passed"
+      },
+      {
+        "name": "optifabric_unknown_minecraft_fails_before_network",
+        "status": "passed"
+      },
+      {
+        "name": "external_https_discovery_and_no_password_redirect",
+        "status": "passed"
+      },
+      {
+        "name": "external_multirole_binding_keychain_identity_and_refresh",
+        "status": "passed"
+      },
+      {
+        "name": "external_skin_capability_bearer_and_png_bounds",
+        "status": "passed"
+      },
+      {
+        "name": "external_logout_revokes_and_removes_saved_credential",
+        "status": "passed"
+      }
+    ]
+  },
+  "build": {
+    "status": "passed",
+    "projects": [
+      "Pcl.Desktop (including Host and architecture guard)",
+      "Pcl.Tests",
+      "Pcl.Workspaces.Tests"
+    ],
+    "finalDesktopBuild": "artifacts/closeout-fifth/build-instance-fix.log",
+    "finalTestsBuild": "artifacts/closeout-fifth/build-tests-instance-fix.log",
+    "architectureGuardViolations": 0,
+    "warningScope": "Initial full Desktop build retained 3 existing warnings; final incremental build reported 0 warnings."
+  },
+  "currentEvidence": [
+    {
+      "path": "artifacts/closeout-fifth/ui-keep.json",
+      "sha256": "17da7307105cf0f7726cd0ce37bdca965bf0ecd7272d592f3a184b1df4bcd604",
+      "result": {
+        "status": "passed",
+        "mode": "keep",
+        "checks": [
+          "UI-002-brush-fill",
+          "UI-002-brush-fit",
+          "UI-002-brush-stretch",
+          "UI-002-brush-center",
+          "UI-002-brush-tile",
+          "UI-002-small-image-tiles-tile",
+          "UI-002-brush-top-left",
+          "UI-002-align-top-left",
+          "UI-002-brush-left",
+          "UI-002-align-left",
+          "UI-002-brush-bottom-left",
+          "UI-002-align-bottom-left",
+          "UI-002-brush-top",
+          "UI-002-brush-middle",
+          "UI-002-brush-bottom",
+          "UI-002-brush-top-right",
+          "UI-002-align-top-right",
+          "UI-002-brush-right",
+          "UI-002-align-right",
+          "UI-002-brush-bottom-right",
+          "UI-002-align-bottom-right",
+          "UI-002-brush-auto",
+          "UI-002-small-image-tiles-auto",
+          "UI-002-folder-avoids-current-file",
+          "UI-002-real-window-rendered",
+          "UI-003-real-afplay-playlist-advances",
+          "UI-003-real-game-start-pauses-music",
+          "JAVA-015-actual-window-state-keep",
+          "JAVA-015-real-game-renderer-ready-keep",
+          "UI-003-game-exit-restores-music",
+          "JAVA-015-post-game-window-visible-keep",
+          "UI-003-stop-does-not-start-next-track"
+        ]
+      }
+    },
+    {
+      "path": "artifacts/closeout-fifth/ui-fixed-hide-show.json",
+      "sha256": "fde312e369761f772855fc61953424f050add1f0c02c9c06867647124cd17570",
+      "result": {
+        "status": "passed",
+        "mode": "hide-show",
+        "checks": [
+          "UI-003-real-afplay-playlist-advances",
+          "UI-003-real-game-start-pauses-music",
+          "JAVA-015-actual-window-state-hide-show",
+          "JAVA-015-real-game-renderer-ready-hide-show",
+          "UI-003-game-exit-restores-music",
+          "JAVA-015-post-game-window-visible-hide-show",
+          "UI-003-stop-does-not-start-next-track"
+        ]
+      }
+    },
+    {
+      "path": "artifacts/closeout-fifth/ui-fixed-minimize.json",
+      "sha256": "9aedcb7a695e166184cf71c156ed9dcb2849bf654664c1658dc5c7c4c5a526f9",
+      "result": {
+        "status": "passed",
+        "mode": "minimize",
+        "checks": [
+          "UI-003-real-afplay-playlist-advances",
+          "UI-003-real-game-start-pauses-music",
+          "JAVA-015-actual-window-state-minimize",
+          "JAVA-015-real-game-renderer-ready-minimize",
+          "UI-003-game-exit-restores-music",
+          "JAVA-015-post-game-window-visible-minimize",
+          "UI-003-stop-does-not-start-next-track"
+        ]
+      }
+    },
+    {
+      "path": "artifacts/closeout-fifth/window-hide-close.json",
+      "sha256": "942a3aca6009ba26a11fa6cbc0767ad6566240b00157ac994094b9ee2a70f364",
+      "result": {
+        "status": "passed",
+        "mode": "hide-close",
+        "checks": [
+          "desktop-exits-with-code-zero",
+          "one-game-launch-per-window-lifecycle",
+          "host-launch-receipt-succeeded",
+          "launcher-hidden-until-real-game-exit",
+          "game-stopped-before-desktop-exit",
+          "desktop-exit-releases-owned-host"
+        ]
+      }
+    },
+    {
+      "path": "artifacts/closeout-fifth/window-close-fixed.json",
+      "sha256": "cc6c0ca32357917ba6776bf8df2aa4a819f1ed2f1111ec7a401e3c77c382ae31",
+      "result": {
+        "status": "passed",
+        "mode": "close",
+        "checks": [
+          "desktop-exits-with-code-zero",
+          "one-game-launch-per-window-lifecycle",
+          "host-launch-receipt-succeeded",
+          "close-policy-uses-detached-game",
+          "game-survives-desktop-exit",
+          "detached-game-renderer-ready-after-desktop-exit",
+          "desktop-exit-releases-owned-host",
+          "owned-test-game-cleanup-completed"
+        ]
+      }
+    },
+    {
+      "path": "artifacts/closeout-fifth/workspace-result.json",
+      "sha256": "5624b2b03462bf3bc3d070ea834170b15835909fadad3311d73653c854ec1087",
+      "result": {
+        "status": "passed",
+        "checks": [
+          "INST-012-real-instance-copy-registered",
+          "INST-012-copy-excludes-shared-cache",
+          "INST-012-delete-only-moves-selected-instance",
+          "INST-012-restore-keeps-instance-metadata",
+          "INST-012-all-shared-assets-libraries-clients-java-unchanged",
+          "RES-005-host-encyclopedia-association",
+          "RES-005-reconnect-keeps-associated-page"
+        ],
+        "sharedFiles": 11391,
+        "encyclopediaUrl": "https://www.mcmod.cn/class/2785.html",
+        "limitations": "Real cache files and Host transactions; no reference-count garbage collection or live encyclopedia download."
+      }
+    },
+    {
+      "path": "artifacts/closeout-fifth/link-result.json",
+      "sha256": "f12d65f53660b50463455e3d5eef5733c1c4a3a32885e3a134d36fdf39a46d51",
+      "result": {
+        "Status": "passed",
+        "Checks": [
+          "invalid-room-rejected-before-process-start",
+          "host-starts-real-easytier-and-returns-private-invitation",
+          "second-room-rejected-without-leaking-process",
+          "two-real-local-easytier-nodes-connected",
+          "real-tcp-payload-crosses-overlay-forward-and-returns",
+          "room-credentials-not-written-to-receipts-or-settings",
+          "client-reconnect-retains-host-owned-room",
+          "host-stops-owned-room",
+          "stopped-room-invitation-is-unavailable",
+          "host-shutdown-stops-owned-easytier-listener"
+        ],
+        "Limitations": "Loopback overlay test; not a remote Internet NAT or two-player world acceptance."
+      }
+    },
+    {
+      "path": "artifacts/closeout-fifth/planning/result.json",
+      "sha256": "d2e4d12ec26f33be0be67c0fb710c19cdc7fa5db39e52bd61b82bd7c272c83b9",
+      "result": {
+        "status": "passed",
+        "checks": [
+          "official-loader-oracle-legacy",
+          "official-loader-oracle-append",
+          "official-loader-oracle-replace-wins",
+          "official-loader-oracle-remove-before-add",
+          "official-loader-oracle-all-kinds",
+          "official-loader-oracle-legacy-override",
+          "malformed-override-6",
+          "malformed-override-7",
+          "malformed-override-8",
+          "malformed-override-9",
+          "malformed-override-10",
+          "unknown-schema-rejected",
+          "hash-lookup-preserves-non-primary-file",
+          "single-joint-backtracks-with-override",
+          "planning-does-not-install-live-files",
+          "single-batch-pack-identical-final-jars",
+          "shared-dependency-disable-rejected",
+          "disable-rejection-restores-original-files",
+          "complete-locked-pack-needs-no-network",
+          "context-change-invalidates-planning",
+          "context-change-leaves-live-mods",
+          "cancelled-plan-no-write",
+          "integrity-failure-not-a-compatible-fallback",
+          "failed-download-preserves-live-mods"
+        ],
+        "oracleLoader": "0.19.5",
+        "network": "HTTP fixture",
+        "realGame": false
+      }
+    },
+    {
+      "path": "artifacts/closeout-fifth/mcmod-browser.json",
+      "sha256": "691d1cf348b016e4394f5547af1b92e65e1d85d177b41cead4246739e24eaf1b",
+      "result": {
+        "date": "2026-10-27",
+        "url": "https://www.mcmod.cn/class/2785.html",
+        "title": "钠 (Sodium) - MC百科|最大的Minecraft中文MOD百科",
+        "state": "browser-page-visible",
+        "associationFrom": "workspace-result.json",
+        "observed": [
+          "钠",
+          "Sodium",
+          "Fabric",
+          "Quilt",
+          "NeoForge",
+          "Modrinth link",
+          "CurseForge link"
+        ],
+        "limitation": "Browser opened from Host result; not a native launcher button or live mod download test."
+      }
+    },
+    {
+      "path": "artifacts/closeout-fifth/legacy-first-thread.json",
+      "sha256": "dce6f8cbfeaf06d14b371485a806085c9ecc98ac5e5722fb2e65cd9f6fc99606",
+      "result": {
+        "status": "passed",
+        "cases": [
+          {
+            "version": "1.12.2",
+            "expectedJava": 8,
+            "status": "passed",
+            "worldPlay": "not_tested",
+            "termination": "owned-process-stop-at-menu",
+            "rendered": true,
+            "menuObservationSeconds": 30,
+            "observedJava": 8,
+            "architecture": "aarch64",
+            "exitCode": 137
+          }
+        ]
+      }
+    },
+    {
+      "path": "artifacts/closeout-fifth/legacy-default-fixed.json",
+      "sha256": "b5eef387d14c5252fdfcf6c37cc6dee32f0f44531d5948491523b50b2818b69e",
+      "result": {
+        "status": "passed",
+        "cases": [
+          {
+            "version": "1.12.2",
+            "expectedJava": 8,
+            "status": "passed",
+            "worldPlay": "not_tested",
+            "termination": "owned-process-stop-at-menu",
+            "rendered": true,
+            "menuObservationSeconds": 60,
+            "observedJava": 8,
+            "architecture": "aarch64",
+            "exitCode": 137
+          }
+        ]
+      }
+    },
+    {
+      "path": "artifacts/closeout-fifth/java-modern-current.json",
+      "sha256": "68ab93c2e4aae2c52bc21002b46303b9421f5e8b3c9e9b48ed76697ceaa835cf",
+      "result": {
+        "status": "passed",
+        "cases": [
+          {
+            "version": "1.18.2",
+            "expectedJava": 17,
+            "status": "passed",
+            "worldPlay": "not_tested",
+            "termination": "owned-process-stop-at-menu",
+            "rendered": true,
+            "observedJava": 17,
+            "architecture": "aarch64",
+            "exitCode": 137
+          },
+          {
+            "version": "26.3",
+            "expectedJava": 25,
+            "status": "passed",
+            "worldPlay": "not_tested",
+            "termination": "owned-process-stop-at-menu",
+            "rendered": true,
+            "observedJava": 25,
+            "architecture": "aarch64",
+            "exitCode": 137
+          }
+        ]
+      }
+    },
+    {
+      "path": "artifacts/closeout-fifth/java8-modern-current.json",
+      "sha256": "d00397c9d4aaca9dfc93917a84826f3c90ad1c3317265248b21a2f556a8782d8",
+      "result": {
+        "status": "passed",
+        "cases": [
+          {
+            "version": "1.16.5",
+            "expectedJava": 8,
+            "status": "passed",
+            "worldPlay": "not_tested",
+            "termination": "owned-process-stop-at-menu",
+            "rendered": true,
+            "observedJava": 8,
+            "architecture": "aarch64",
+            "exitCode": 137
+          }
+        ]
+      }
+    },
+    {
+      "path": "artifacts/closeout-fifth/java16-current.json",
+      "sha256": "a02af9e2bbbe64e18877a870d1b3538fb495e109d49d27e7d44848ba9ad22434",
+      "result": {
+        "status": "passed",
+        "cases": [
+          {
+            "version": "1.17.1",
+            "expectedJava": 16,
+            "status": "passed",
+            "worldPlay": "not_tested",
+            "termination": "owned-process-stop-at-menu",
+            "rendered": true,
+            "observedJava": 16,
+            "architecture": "aarch64",
+            "exitCode": 137
+          }
+        ]
+      }
+    },
+    {
+      "path": "artifacts/closeout-fifth/liteloader-current.json",
+      "sha256": "7d1d8f8c130ca3c208a29fdbaccafb0ca836bb632c60fe790af624fcb5cbd030",
+      "result": {
+        "status": "passed",
+        "cases": [
+          {
+            "version": "liteloader-1.12.2",
+            "expectedJava": 8,
+            "status": "passed",
+            "worldPlay": "not_tested",
+            "termination": "owned-process-stop-at-menu",
+            "rendered": true,
+            "menuObservationSeconds": 15,
+            "observedJava": 8,
+            "architecture": "aarch64",
+            "exitCode": 137
+          }
+        ]
+      }
+    },
+    {
+      "path": "artifacts/closeout-fifth/neoforge1201-current.json",
+      "sha256": "97d81e077d8a2a9a96f651422f15e86fc275f95a3c5ec9f5c5d7a248cb5a0917",
+      "result": {
+        "status": "passed",
+        "cases": [
+          {
+            "version": "neoforge-1.20.1-47.1.106",
+            "expectedJava": 17,
+            "status": "passed",
+            "worldPlay": "not_tested",
+            "termination": "owned-process-stop-at-menu",
+            "rendered": true,
+            "menuObservationSeconds": 15,
+            "observedJava": 17,
+            "architecture": "aarch64",
+            "exitCode": 137
+          }
+        ]
+      }
+    },
+    {
+      "path": "artifacts/closeout-fifth/optifabric-fixed.json",
+      "sha256": "fb9753d765cae5f28c1a03b07e1cc818ac193396db36b98830ac4cdf6cb164dc",
+      "result": {
+        "status": "passed",
+        "cases": [
+          {
+            "version": "optifabric-1.20.1-cf9cdacfded24fb88976c6178475a874",
+            "expectedJava": 17,
+            "status": "passed",
+            "worldPlay": "not_tested",
+            "termination": "owned-process-stop-at-menu",
+            "rendered": true,
+            "menuObservationSeconds": 30,
+            "observedJava": 17,
+            "architecture": "aarch64",
+            "exitCode": 137
+          }
+        ]
+      }
+    }
+  ],
+  "reviewedHistoricalEvidence": [
+    {
+      "path": "artifacts/verification-0.18/worlds/forge1211-menu-roundtrip.json",
+      "available": true,
+      "sha256": "2665efb8dd978c6d853c5fe2287be0bf37fd6400e772892c3ba14362d0f9f2d1",
+      "scope": "历史 Forge 1.21.1 双进程世界保存；本轮只核对原报告。"
+    },
+    {
+      "path": "artifacts/verification-0.18/worlds/neo1211-fixed-roundtrip.json",
+      "available": true,
+      "sha256": "3874283b6809f12015c19396a5b6d6937c9c4fc18ed2942c4374a682726f1aad",
+      "scope": "历史 NeoForge 1.21.1 世界保存及已知 OpenAL 退出错误；本轮未重跑。"
+    },
+    {
+      "path": "artifacts/verification-0.18/worlds/vanilla263-roundtrip.json",
+      "available": true,
+      "sha256": "fe166fff7951e76474abb599db6020daf5f2c9016e2bc62fb6eb53b6d426d30f",
+      "scope": "历史 26.3 世界升级与保存重进；本轮只做菜单。"
+    },
+    {
+      "path": "artifacts/verification-0.37/final/real-installs.json",
+      "available": true,
+      "sha256": "67cf2fbe83cb35337a1644c095b3496f74af22501b6451f94ac77b85d338aa59",
+      "scope": "历史真实安装，不替代本轮安装验收。"
+    },
+    {
+      "path": "artifacts/verification-0.38/final/game-first.json",
+      "available": true,
+      "sha256": "f48d43dfe60fcb9faf60b37dcefe2316a7a494a46406d81a39e14baa5cb736d9",
+      "scope": "历史 Fabric 嵌套选择与真实游戏，不替代本轮世界。"
+    },
+    {
+      "path": "artifacts/verification-0.39/final/world-roundtrip.json",
+      "available": true,
+      "sha256": "aa11d9b5ee1a288b6908375a4dffe36726df831df4a836e118ea736319678c5c",
+      "scope": "历史 Quilt 世界保存，不替代本轮世界。"
+    }
+  ],
+  "pendingFeatureDisposition": [
+    {
+      "id": "AUTH-013",
+      "name": "离线皮肤",
+      "disposition": "继续定向验收",
+      "scope": "公开玩家名获取、保存、刷新、导出、预设及重开恢复已实际运行；游戏内皮肤纹理/模型仍待观察。"
+    },
+    {
+      "id": "INST-011",
+      "name": "目录快捷入口",
+      "disposition": "继续定向验收",
+      "scope": "使用 macOS open 且 ArgumentList 传参；实际 Finder 打开验收待整合记录"
+    },
+    {
+      "id": "INST-012",
+      "name": "共享缓存安全复用",
+      "disposition": "限定范围验收通过",
+      "scope": "真实 Host 复制、移入回收站和恢复后，11,391 个共享 assets、libraries、客户端与 Java 文件逐项哈希不变；不包含引用计数垃圾回收。"
+    },
+    {
+      "id": "VER-004",
+      "name": "旧minecraftArguments适配",
+      "disposition": "限定范围验收通过",
+      "scope": "当前 Host 以旧 minecraftArguments 启动 1.12.2，修复后默认配置完成菜单渲染并观察 60 秒；本轮不含世界保存，其他远古版本逐版验证。"
+    },
+    {
+      "id": "VER-005",
+      "name": "LWJGL2 ARM64",
+      "disposition": "限定范围验收通过",
+      "scope": "Apple Silicon 的 LWJGL2 补入首线程参数后，1.12.2 默认配置菜单观察 60 秒通过，LiteLoader 1.12.2 观察 15 秒通过；不外推其他原生库、旁白或手柄。"
+    },
+    {
+      "id": "VER-006",
+      "name": "Fabric安装",
+      "disposition": "继续定向验收",
+      "scope": "0.18 Fabric 1.21.1 光影备份恢复副本通过世界保存和独立进程重进，用户确认标记与位置正常；本轮 Fabric 1.20.1 手动会话只有标题/退出记录，未核实进世界，不覆盖整个目录。"
+    },
+    {
+      "id": "VER-007",
+      "name": "Forge现代安装",
+      "disposition": "继续定向验收",
+      "scope": "Forge 1.21.1 普通菜单的两进程世界保存重进通过，用户确认标记；两次正常退出且无 ERROR/FATAL。单人 Quick Play 仍禁用，其他 Forge 版本未据此外推。"
+    },
+    {
+      "id": "VER-009",
+      "name": "NeoForge现代安装",
+      "disposition": "继续定向验收",
+      "scope": "0.17 正版启动 NeoForge 1.20.4-20.4.253 与 1.21.1-21.1.264，图形与材质初始化通过；未覆盖全部现代版本。 0.18.1 修复复制/恢复后客户端 JAR 排除项错绑；NeoForge 1.21.1 独立副本世界保存和重进通过，两次退出均有 OpenAL 音频错误，保留此已知问题。"
+    },
+    {
+      "id": "VER-010",
+      "name": "NeoForge1.20.1坐标",
+      "disposition": "限定范围验收通过",
+      "scope": "现有隔离副本的 NeoForge 1.20.1-47.1.106 经当前 Host、ARM64 Java 17 启动并观察菜单 15 秒；本批未重新安装，不外推其他构建。"
+    },
+    {
+      "id": "VER-012",
+      "name": "LiteLoader安装",
+      "disposition": "继续定向验收",
+      "scope": "当前 Host 启动现有 LiteLoader 1.12.2 隔离副本、菜单观察 15 秒通过；历史安全恢复原始报告部分已缺失，本批没有重新执行安装→取消→恢复，仍待补此证据。"
+    },
+    {
+      "id": "VER-014",
+      "name": "OptiFabric兼容组合",
+      "disposition": "继续定向验收",
+      "scope": "本轮修复预检误用 Host 默认 1.21.1 的故障；1.20.1/Fabric 0.16.14/OptiFabric 1.14.3/OptiFine I6 隔离副本经当前 Host 菜单观察 30 秒通过。未进入世界，继续待验收；未知组合不启用。"
+    },
+    {
+      "id": "VER-015",
+      "name": "客户端服务端安装器另存为",
+      "disposition": "继续定向验收",
+      "scope": "官方 JAR 下载取消、崩溃续做、分块保存已实测。Quilt 安装器上游元数据哈希冲突仍保留拒绝，其他类型不因单一 JAR 通过而全部升级状态。"
+    },
+    {
+      "id": "JAVA-001",
+      "name": "元数据Java自动匹配",
+      "disposition": "限定范围验收通过",
+      "scope": "当前 Host 实际匹配 1.12.2/1.16.5→Java 8、1.17.1→16、1.18.2→17、26.3→25，均核对 aarch64 预检并完成图形初始化；不是全部快照或模组组合保证。"
+    },
+    {
+      "id": "JAVA-002",
+      "name": "Java8ARM64",
+      "disposition": "限定范围验收通过",
+      "scope": "ARM64 Java 8 实际启动 1.12.2、1.16.5；1.12.2 修复后菜单观察 60 秒，LiteLoader 1.12.2 观察 15 秒。本批受控停止于菜单，不计世界验收。"
+    },
+    {
+      "id": "JAVA-003",
+      "name": "Java16ARM64",
+      "disposition": "限定范围验收通过",
+      "scope": "当前 Host 以 ARM64 Java 16 实际启动 1.17.1 并完成图形初始化；未进入世界，不外推全部 1.17 模组。"
+    },
+    {
+      "id": "JAVA-004",
+      "name": "Java17ARM64",
+      "disposition": "限定范围验收通过",
+      "scope": "当前 Host 以 ARM64 Java 17 启动 1.18.2；NeoForge 1.20.1 和 OptiFabric 1.20.1 分别菜单观察 15/30 秒通过；无长期世界稳定性结论。"
+    },
+    {
+      "id": "JAVA-006",
+      "name": "Java25ARM64",
+      "disposition": "限定范围验收通过",
+      "scope": "当前 Host 以 ARM64 Java 25 启动 26.3 并完成图形初始化；历史世界保存证据单列，不作为本轮重新验收。"
+    },
+    {
+      "id": "JAVA-007",
+      "name": "手动选择与检查Java",
+      "disposition": "继续定向验收",
+      "scope": "真实 Java 主版本/架构检查已有回归；手选不同 JDK 并游戏启动的 GUI 全链路待矩阵关联"
+    },
+    {
+      "id": "JAVA-010",
+      "name": "内存与GC参数",
+      "disposition": "继续定向验收",
+      "scope": "G1 调优参数新增；Java 8/21/25 启动与回归通过。各 GC 组合未全部进行长时间世界内稳定性测试。"
+    },
+    {
+      "id": "JAVA-011",
+      "name": "窗口分辨率全屏",
+      "disposition": "继续定向验收",
+      "scope": "原生标题、最大化、nice=10 在 Java 8/21/25 上有实际窗口回执；启动器五种可见性策略经 1.21.1 真实进程检查。全屏/尺寸有参数测试，仍无本轮世界内人工验收。"
+    },
+    {
+      "id": "JAVA-012",
+      "name": "自定义JVM游戏参数",
+      "disposition": "继续定向验收",
+      "scope": "0.18 增加元数据驱动的 QuickPlayWorld 字段与实例继承、路径/链接/缺失世界检查、多人参数互斥；Fabric 1.21.1 直达实测。Forge 直达已复现生命周期异常，本版禁止并提示使用主菜单；附加参数不能绕入。其余 JVM 参数/版本仍按既有边界。"
+    },
+    {
+      "id": "JAVA-013",
+      "name": "自动进入服务器",
+      "disposition": "继续定向验收",
+      "scope": "配置持久化和参数合并已验证；尚未逐个游戏内观察窗口/服务器/GC效果。"
+    },
+    {
+      "id": "JAVA-015",
+      "name": "启动器可见性策略",
+      "disposition": "限定范围验收通过",
+      "scope": "真实 Avalonia/Host/游戏进程完成保留、隐藏后恢复、最小化、隐藏后退出、立即关闭五种策略；立即关闭后游戏继续渲染、Host 退出。未人工遍历全部 Dock/系统版本组合。"
+    },
+    {
+      "id": "JAVA-016",
+      "name": "多平台规则和原生库审核",
+      "disposition": "继续定向验收",
+      "scope": "ARM64实际Mach-O检查；Intel/Rosetta未验收，无库可用时明确拒绝。"
+    },
+    {
+      "id": "RES-003",
+      "name": "跨平台结果去重",
+      "disposition": "继续定向验收",
+      "scope": "不按同名猜测跨商店映射；CF 在线依赖密钥未实测，百科仍为静态独立索引。"
+    },
+    {
+      "id": "RES-005",
+      "name": "百科关联",
+      "disposition": "继续定向验收",
+      "scope": "本轮 Host 百科关联和会话重连通过，返回的 Sodium 页面已在浏览器实际显示；未点击原生启动器跳转按钮，未实测站点资源下载，保留对应边界。"
+    },
+    {
+      "id": "RES-008",
+      "name": "Fabric语义版本与冲突",
+      "disposition": "限定范围验收通过",
+      "scope": "现有冲突/版本测试及 24 项规划检查通过，Fabric Loader 0.19.5 Java 解析器交叉核对覆盖/旧格式；依赖声明不覆盖动态代码、插件或未知原生库。"
+    },
+    {
+      "id": "PACK-001",
+      "name": "Modrinth搜索下载",
+      "disposition": "继续定向验收",
+      "scope": "Modrinth 整合包目录查询已实测；仍缺本轮最终 GUI 直接下载公开整合包的专门记录，不能用模组下载安装代替。"
+    },
+    {
+      "id": "PACK-007",
+      "name": "普通ZIP安装",
+      "disposition": "继续定向验收",
+      "scope": "缺少元数据无法自动推断所有组件；需用真实外部包做 GUI/启动验证"
+    },
+    {
+      "id": "PACK-010",
+      "name": "mrpack导出",
+      "disposition": "继续定向验收",
+      "scope": "合法 mrpack 导出、哈希记录和重导入已有真实证据；当前采用 overrides 打包本地文件，带自定义组件依赖 PCL 扩展。需补其他启动器导入兼容验收，不把模组依赖求解缺口复制到导出项。"
+    },
+    {
+      "id": "LINK-001",
+      "name": "EasyTierMac模块安装",
+      "disposition": "限定范围验收通过",
+      "scope": "官方 EasyTier 2.6.4 ARM64 模块真实下载校验、双 Host 本地节点 TCP 转发、客户端重连和停止清理通过；不代表互联网 NAT 或双玩家世界。"
+    },
+    {
+      "id": "LINK-005",
+      "name": "连接状态延迟与人数",
+      "disposition": "继续定向验收",
+      "scope": "本轮两个实际本地 EasyTier 节点状态可见并完成 TCP 传输、重连及清理；未验收具体延迟数值、GUI 人数展示或远端 NAT。"
+    },
+    {
+      "id": "UI-002",
+      "name": "背景图片",
+      "disposition": "限定范围验收通过",
+      "scope": "真实主窗口检查 15 种背景模式、目录避免连续同图并输出渲染截图，平铺/对齐属性通过；不外推全部屏幕或图片格式。"
+    },
+    {
+      "id": "UI-003",
+      "name": "背景音乐与游戏跟随",
+      "disposition": "限定范围验收通过",
+      "scope": "真实 afplay 播放列表推进，游戏启动暂停、退出恢复、停止不再切歌通过；测试音轨静音且音量为 0，未做听觉或全部编码验收。"
+    }
+  ],
+  "priorEvidenceAudit": [
+    {
+      "id": "AUTH-013",
+      "name": "离线皮肤",
+      "priorPendingReason": "公开玩家名获取、保存、刷新、导出、预设及重开恢复已实际运行；游戏内皮肤纹理/模型仍待观察。",
+      "files": [
+        {
+          "path": "docs/0.22-settings-binding-audit.json",
+          "available": true,
+          "sha256": "b9ed3f7230f538cf2489537ebc208c399fdb42a1762f275e0c82a7ad9c18beaf"
+        },
+        {
+          "path": "artifacts/verification-0.22/final-tests/test-results.json",
+          "available": true,
+          "sha256": "c828ea12670cf474ee21874890b4b61e30b47cc4cb87b95565138090305247e2"
+        },
+        {
+          "path": "artifacts/verification-0.22/final-local-ui/evidence/local-settings-ui.json",
+          "available": true,
+          "sha256": "3015c0b6a074518f247c744ce6ef3edfb6562f5c587a7a015166a751e0cb9cf7"
+        },
+        {
+          "path": "artifacts/architecture-0.32/release-browser.json",
+          "available": false
+        },
+        {
+          "path": "artifacts/architecture-0.32/release-browser-ui/report.json",
+          "available": false
+        },
+        {
+          "path": "artifacts/architecture-0.30/release-final-host.json",
+          "available": false
+        },
+        {
+          "path": "artifacts/architecture-0.30/release-final-ui/report.json",
+          "available": false
+        },
+        {
+          "path": "artifacts/verification-0.33/release-browser.json",
+          "available": false
+        },
+        {
+          "path": "artifacts/verification-0.34/release-browser.json",
+          "available": false
+        }
+      ]
+    },
+    {
+      "id": "INST-011",
+      "name": "目录快捷入口",
+      "priorPendingReason": "使用 macOS open 且 ArgumentList 传参；实际 Finder 打开验收待整合记录",
+      "files": []
+    },
+    {
+      "id": "INST-012",
+      "name": "共享缓存安全复用",
+      "priorPendingReason": "共享客户端与 assets 保留，加载器私有库按 receipt 读取；没有引用计数 GC，不执行可能破坏其他实例的共享清理",
+      "files": [
+        {
+          "path": "artifacts/evidence-0.8/tests-instance-fixes/test-results.json",
+          "available": true,
+          "sha256": "dfbe01ee5b1e8d27f0f4a511719fcae4fe324b50ffb36a70e3074a165e06ac3f"
+        },
+        {
+          "path": "artifacts/evidence-0.8/tests-instance-fixes/test-results.json",
+          "available": true,
+          "sha256": "dfbe01ee5b1e8d27f0f4a511719fcae4fe324b50ffb36a70e3074a165e06ac3f"
+        }
+      ]
+    },
+    {
+      "id": "VER-004",
+      "name": "旧minecraftArguments适配",
+      "priorPendingReason": "0.17 真实正版账户启动 1.12.2，旧 minecraftArguments 路径完成图形初始化；其他远古参数和资源布局仍需逐版验收。",
+      "files": [
+        {
+          "path": "artifacts/evidence-0.8-compat/compatibility-results.json",
+          "available": true,
+          "sha256": "b61c87881cf3309b3e191898f93d56acdf5d02b10c143a6df612651eba5640c7"
+        },
+        {
+          "path": "artifacts/verification-0.17/release-tests/test-results.json",
+          "available": true,
+          "sha256": "3d466b9b3d35c4a93fc621c148c40b2d12f101f36a68e6d3f6bfc7dde4d09171"
+        },
+        {
+          "path": "docs/0.17实现与验收.md",
+          "available": true,
+          "sha256": "c4cad52e25c4165c64332e6493eff86916359e1b070fa52cbe8702ce97329dcd"
+        },
+        {
+          "path": "artifacts/verification-0.17/owned-launches/matrix.json",
+          "available": true,
+          "sha256": "f324af4e02d9d129828b2d10c95f5965da1c0da220f7e8a3cb675c64701f6ede"
+        },
+        {
+          "path": "artifacts/verification-0.17/final-owned-launches/matrix.json",
+          "available": true,
+          "sha256": "559967442fc64816a4ea633cd1c1bc69139ed6713e22faa7897e310e29e68559"
+        },
+        {
+          "path": "artifacts/architecture-avalonia-host/legacy-host-live.json",
+          "available": false
+        }
+      ]
+    },
+    {
+      "id": "VER-005",
+      "name": "LWJGL2 ARM64",
+      "priorPendingReason": "0.17 原版 1.12.2 使用 ARM64 Java 8 与 LWJGL2 兼容层通过图形初始化；不声明全部 LWJGL2 游戏、旁白或手柄兼容。",
+      "files": [
+        {
+          "path": "artifacts/evidence-0.8-compat/compatibility-results.json",
+          "available": true,
+          "sha256": "b61c87881cf3309b3e191898f93d56acdf5d02b10c143a6df612651eba5640c7"
+        },
+        {
+          "path": "src/Pcl.Core/Compatibility/xmcl-macos-arm64.json",
+          "available": true,
+          "sha256": "2bb8dd2150385d6966374f76577fd57292ab9b29c74c1c5959ef8e1e85ff8b59"
+        },
+        {
+          "path": "artifacts/verification-0.17/release-tests/test-results.json",
+          "available": true,
+          "sha256": "3d466b9b3d35c4a93fc621c148c40b2d12f101f36a68e6d3f6bfc7dde4d09171"
+        },
+        {
+          "path": "docs/0.17实现与验收.md",
+          "available": true,
+          "sha256": "c4cad52e25c4165c64332e6493eff86916359e1b070fa52cbe8702ce97329dcd"
+        },
+        {
+          "path": "artifacts/verification-0.17/owned-launches/matrix.json",
+          "available": true,
+          "sha256": "f324af4e02d9d129828b2d10c95f5965da1c0da220f7e8a3cb675c64701f6ede"
+        },
+        {
+          "path": "artifacts/verification-0.17/final-owned-launches/matrix.json",
+          "available": true,
+          "sha256": "559967442fc64816a4ea633cd1c1bc69139ed6713e22faa7897e310e29e68559"
+        },
+        {
+          "path": "artifacts/architecture-avalonia-host/legacy-host-live.json",
+          "available": false
+        }
+      ]
+    },
+    {
+      "id": "VER-006",
+      "name": "Fabric安装",
+      "priorPendingReason": "0.18 Fabric 1.21.1 光影备份恢复副本通过世界保存和独立进程重进，用户确认标记与位置正常；本轮 Fabric 1.20.1 手动会话只有标题/退出记录，未核实进世界，不覆盖整个目录。",
+      "files": [
+        {
+          "path": "artifacts/evidence-0.8-compat/migration-smoke/result.json",
+          "available": true,
+          "sha256": "777a44e61db33a8234c96b6f71a649d0ce380aaaa1af95597af8936113ece35a"
+        },
+        {
+          "path": "artifacts/evidence-0.7/acceptance.json",
+          "available": true,
+          "sha256": "b2f6a21d6895a51f8a73329903672df66ecffa48402f9feb747684837e67a935"
+        },
+        {
+          "path": "artifacts/verification-0.17/release-tests/test-results.json",
+          "available": true,
+          "sha256": "3d466b9b3d35c4a93fc621c148c40b2d12f101f36a68e6d3f6bfc7dde4d09171"
+        },
+        {
+          "path": "docs/0.17实现与验收.md",
+          "available": true,
+          "sha256": "c4cad52e25c4165c64332e6493eff86916359e1b070fa52cbe8702ce97329dcd"
+        },
+        {
+          "path": "artifacts/verification-0.17/owned-launches/matrix.json",
+          "available": true,
+          "sha256": "f324af4e02d9d129828b2d10c95f5965da1c0da220f7e8a3cb675c64701f6ede"
+        },
+        {
+          "path": "artifacts/verification-0.17/final-owned-launches/matrix.json",
+          "available": true,
+          "sha256": "559967442fc64816a4ea633cd1c1bc69139ed6713e22faa7897e310e29e68559"
+        },
+        {
+          "path": "artifacts/verification-0.18/final-regression2/test-results.json",
+          "available": true,
+          "sha256": "ff4a03bc82f8e137d475a77c9114f31aa5888c64af6b1e69361553a03c89646b"
+        },
+        {
+          "path": "docs/0.18实现与验收.md",
+          "available": true,
+          "sha256": "ccc544738932ab7eda01b0f77873ee59c14dd1d2aa9972089e6158f169d60432"
+        },
+        {
+          "path": "artifacts/architecture-0.32/release-final-main.json",
+          "available": false
+        },
+        {
+          "path": "artifacts/architecture-0.27/final-components/result.json",
+          "available": false
+        }
+      ]
+    },
+    {
+      "id": "VER-007",
+      "name": "Forge现代安装",
+      "priorPendingReason": "Forge 1.21.1 普通菜单的两进程世界保存重进通过，用户确认标记；两次正常退出且无 ERROR/FATAL。单人 Quick Play 仍禁用，其他 Forge 版本未据此外推。",
+      "files": [
+        {
+          "path": "artifacts/evidence-0.7/acceptance.json",
+          "available": true,
+          "sha256": "b2f6a21d6895a51f8a73329903672df66ecffa48402f9feb747684837e67a935"
+        },
+        {
+          "path": "artifacts/verification-0.17/release-tests/test-results.json",
+          "available": true,
+          "sha256": "3d466b9b3d35c4a93fc621c148c40b2d12f101f36a68e6d3f6bfc7dde4d09171"
+        },
+        {
+          "path": "docs/0.17实现与验收.md",
+          "available": true,
+          "sha256": "c4cad52e25c4165c64332e6493eff86916359e1b070fa52cbe8702ce97329dcd"
+        },
+        {
+          "path": "artifacts/verification-0.17/owned-launches/matrix.json",
+          "available": true,
+          "sha256": "f324af4e02d9d129828b2d10c95f5965da1c0da220f7e8a3cb675c64701f6ede"
+        },
+        {
+          "path": "artifacts/verification-0.17/final-owned-launches/matrix.json",
+          "available": true,
+          "sha256": "559967442fc64816a4ea633cd1c1bc69139ed6713e22faa7897e310e29e68559"
+        },
+        {
+          "path": "artifacts/verification-0.18/final-regression2/test-results.json",
+          "available": true,
+          "sha256": "ff4a03bc82f8e137d475a77c9114f31aa5888c64af6b1e69361553a03c89646b"
+        },
+        {
+          "path": "docs/0.18实现与验收.md",
+          "available": true,
+          "sha256": "ccc544738932ab7eda01b0f77873ee59c14dd1d2aa9972089e6158f169d60432"
+        },
+        {
+          "path": "artifacts/verification-0.18/worlds/forge1211-first/result.json",
+          "available": true,
+          "sha256": "705f6fa84d9c889d035b922941ad831d873eee79e70d29160b3ee3fabbbc505f"
+        },
+        {
+          "path": "artifacts/verification-0.18/worlds/forge1211-isolated-first/result.json",
+          "available": true,
+          "sha256": "b4d65a30e3cfe241cf6327fe7b8329dfb17765d68cdbdf7fe9ebed97f197f258"
+        },
+        {
+          "path": "docs/0.18.1实现与验收.md",
+          "available": true,
+          "sha256": "4ee4e02da18203684dd0a14f28e74b727f02470f8427bb710632ba297d2186d6"
+        },
+        {
+          "path": "artifacts/verification-0.18/worlds/forge1211-menu-retest/result.json",
+          "available": true,
+          "sha256": "096d538ef2a998393d55ad92b056746662e15b6af7e9ef5d9c320792c549fc87"
+        },
+        {
+          "path": "artifacts/verification-0.18/worlds/forge1211-menu-roundtrip.json",
+          "available": true,
+          "sha256": "2665efb8dd978c6d853c5fe2287be0bf37fd6400e772892c3ba14362d0f9f2d1"
+        }
+      ]
+    },
+    {
+      "id": "VER-009",
+      "name": "NeoForge现代安装",
+      "priorPendingReason": "0.17 正版启动 NeoForge 1.20.4-20.4.253 与 1.21.1-21.1.264，图形与材质初始化通过；未覆盖全部现代版本。 0.18.1 修复复制/恢复后客户端 JAR 排除项错绑；NeoForge 1.21.1 独立副本世界保存和重进通过，两次退出均有 OpenAL 音频错误，保留此已知问题。",
+      "files": [
+        {
+          "path": "artifacts/evidence-0.7/acceptance.json",
+          "available": true,
+          "sha256": "b2f6a21d6895a51f8a73329903672df66ecffa48402f9feb747684837e67a935"
+        },
+        {
+          "path": "artifacts/verification-0.17/release-tests/test-results.json",
+          "available": true,
+          "sha256": "3d466b9b3d35c4a93fc621c148c40b2d12f101f36a68e6d3f6bfc7dde4d09171"
+        },
+        {
+          "path": "docs/0.17实现与验收.md",
+          "available": true,
+          "sha256": "c4cad52e25c4165c64332e6493eff86916359e1b070fa52cbe8702ce97329dcd"
+        },
+        {
+          "path": "artifacts/verification-0.17/owned-launches/matrix.json",
+          "available": true,
+          "sha256": "f324af4e02d9d129828b2d10c95f5965da1c0da220f7e8a3cb675c64701f6ede"
+        },
+        {
+          "path": "artifacts/verification-0.17/final-owned-launches/matrix.json",
+          "available": true,
+          "sha256": "559967442fc64816a4ea633cd1c1bc69139ed6713e22faa7897e310e29e68559"
+        },
+        {
+          "path": "docs/0.18.1实现与验收.md",
+          "available": true,
+          "sha256": "4ee4e02da18203684dd0a14f28e74b727f02470f8427bb710632ba297d2186d6"
+        },
+        {
+          "path": "artifacts/verification-0.18.1/regression/test-results.json",
+          "available": true,
+          "sha256": "b59404e847f8bdafa241933523b63be395a7f48705d0444d795445835c070bde"
+        },
+        {
+          "path": "artifacts/verification-0.18/worlds/neo1211-fixed-roundtrip.json",
+          "available": true,
+          "sha256": "3874283b6809f12015c19396a5b6d6937c9c4fc18ed2942c4374a682726f1aad"
+        }
+      ]
+    },
+    {
+      "id": "VER-010",
+      "name": "NeoForge1.20.1坐标",
+      "priorPendingReason": "1.20.1 47.1.106启动通过；未保证全部旧NeoForge构建。",
+      "files": [
+        {
+          "path": "artifacts/evidence-0.8-compat/compatibility-results.json",
+          "available": true,
+          "sha256": "b61c87881cf3309b3e191898f93d56acdf5d02b10c143a6df612651eba5640c7"
+        }
+      ]
+    },
+    {
+      "id": "VER-012",
+      "name": "LiteLoader安装",
+      "priorPendingReason": "1.12.2 LiteLoader 已完成真实 Host 重建恢复、启动及用户文件保留；其他历史构建需逐版验收，不存在本轮已证实的通用代码缺口。",
+      "files": [
+        {
+          "path": "artifacts/evidence-0.8-compat/compatibility-results.json",
+          "available": true,
+          "sha256": "b61c87881cf3309b3e191898f93d56acdf5d02b10c143a6df612651eba5640c7"
+        },
+        {
+          "path": "artifacts/architecture-avalonia-host/legacy-host-live.json",
+          "available": false
+        },
+        {
+          "path": "artifacts/architecture-contract-0.25/legacy-host-live.json",
+          "available": false
+        }
+      ]
+    },
+    {
+      "id": "VER-014",
+      "name": "OptiFabric兼容组合",
+      "priorPendingReason": "产品服务创建1.20.1/Fabric0.16.14/OptiFabric1.14.3/OptiFineI6独立实例并图形初始化45秒；未知版本不启用，未做世界内验收。",
+      "files": [
+        {
+          "path": "artifacts/evidence-0.8-compat/optifabric/service-result.json",
+          "available": true,
+          "sha256": "9e3b2e44eaba80e3badff00a36bcba8e920d3a35d0471e2d9fe0c585aabb72dd"
+        },
+        {
+          "path": "artifacts/evidence-0.8-compat/optifabric/probe-result.json",
+          "available": true,
+          "sha256": "e51b0835f6670432553d5069baec669417e03e7234561d665d681f5afa07d2b3"
+        },
+        {
+          "path": "docs/OptiFabric固定组合与文件另存为.md",
+          "available": true,
+          "sha256": "11da78748413c031c5cb0a98224247dbe8cbb2991fa86c045da09518b445d087"
+        },
+        {
+          "path": "artifacts/evidence-0.8-compat/optifabric/service-result.json",
+          "available": true,
+          "sha256": "9e3b2e44eaba80e3badff00a36bcba8e920d3a35d0471e2d9fe0c585aabb72dd"
+        },
+        {
+          "path": "artifacts/architecture-0.32/release-final-main.json",
+          "available": false
+        }
+      ]
+    },
+    {
+      "id": "VER-015",
+      "name": "客户端服务端安装器另存为",
+      "priorPendingReason": "官方 JAR 下载取消、崩溃续做、分块保存已实测。Quilt 安装器上游元数据哈希冲突仍保留拒绝，其他类型不因单一 JAR 通过而全部升级状态。",
+      "files": [
+        {
+          "path": "artifacts/evidence-0.8-compat/download-only-smoke/downloads/result.json",
+          "available": true,
+          "sha256": "504cd3692425763deb6d94ff5aa9b84d65b30f8adf380d9981966794e993303a"
+        },
+        {
+          "path": "artifacts/evidence-0.8-compat/download-only-smoke/quilt-official-metadata-check.json",
+          "available": true,
+          "sha256": "3d37ed8ee1a95e395c0d9be906188fb89c96edc25eccf2fa338c6cdd87adb34c"
+        },
+        {
+          "path": "artifacts/evidence-0.8-compat/download-only-smoke/quilt-hash-crosscheck.json",
+          "available": true,
+          "sha256": "92799af611eb6f4d65f6235c50d3da5d56e43c19dd221835385f71f27f4d4eec"
+        },
+        {
+          "path": "artifacts/evidence-0.8-compat/download-only-smoke/quilt-preflight-result.json",
+          "available": true,
+          "sha256": "f4f74bbf8e368e9801f7f342c5df122fc3cf5482405693ee2bfe7196bb95738c"
+        },
+        {
+          "path": "artifacts/architecture-0.27/final-download/result.json",
+          "available": false
+        },
+        {
+          "path": "artifacts/architecture-0.26/pages-live.json",
+          "available": false
+        }
+      ]
+    },
+    {
+      "id": "JAVA-001",
+      "name": "元数据Java自动匹配",
+      "priorPendingReason": "0.17 十个正版启动组合覆盖 ARM64 Java 8/17/21/25，核对实际进程版本与架构；不推定所有游戏、快照或模组适配。Java 16 单列保留待测边界。",
+      "files": [
+        {
+          "path": "artifacts/evidence-0.8/full-regression-7/test-results.json",
+          "available": true,
+          "sha256": "1e045503d6a0cb6db95f87316665dcb4ac0e275aa7165eb16e6105106c9566f3"
+        },
+        {
+          "path": "artifacts/evidence-0.7/acceptance.json",
+          "available": true,
+          "sha256": "b2f6a21d6895a51f8a73329903672df66ecffa48402f9feb747684837e67a935"
+        },
+        {
+          "path": "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json",
+          "available": true,
+          "sha256": "258d23d26043ad47e02e23a8749647f4a4ef24a4f6af77cae298ff3131614cce"
+        },
+        {
+          "path": "artifacts/verification-0.17/release-tests/test-results.json",
+          "available": true,
+          "sha256": "3d466b9b3d35c4a93fc621c148c40b2d12f101f36a68e6d3f6bfc7dde4d09171"
+        },
+        {
+          "path": "docs/0.17实现与验收.md",
+          "available": true,
+          "sha256": "c4cad52e25c4165c64332e6493eff86916359e1b070fa52cbe8702ce97329dcd"
+        },
+        {
+          "path": "artifacts/verification-0.17/owned-launches/matrix.json",
+          "available": true,
+          "sha256": "f324af4e02d9d129828b2d10c95f5965da1c0da220f7e8a3cb675c64701f6ede"
+        },
+        {
+          "path": "artifacts/verification-0.17/final-owned-launches/matrix.json",
+          "available": true,
+          "sha256": "559967442fc64816a4ea633cd1c1bc69139ed6713e22faa7897e310e29e68559"
+        }
+      ]
+    },
+    {
+      "id": "JAVA-002",
+      "name": "Java8ARM64",
+      "priorPendingReason": "0.17 真实正版启动原版 1.12.2、1.16.5，实际使用 Java 8 aarch64；历史 Forge/LiteLoader/OptiFine 证据保留原范围。",
+      "files": [
+        {
+          "path": "artifacts/evidence-0.8-compat/compatibility-results.json",
+          "available": true,
+          "sha256": "b61c87881cf3309b3e191898f93d56acdf5d02b10c143a6df612651eba5640c7"
+        },
+        {
+          "path": "artifacts/verification-0.17/release-tests/test-results.json",
+          "available": true,
+          "sha256": "3d466b9b3d35c4a93fc621c148c40b2d12f101f36a68e6d3f6bfc7dde4d09171"
+        },
+        {
+          "path": "docs/0.17实现与验收.md",
+          "available": true,
+          "sha256": "c4cad52e25c4165c64332e6493eff86916359e1b070fa52cbe8702ce97329dcd"
+        },
+        {
+          "path": "artifacts/verification-0.17/owned-launches/matrix.json",
+          "available": true,
+          "sha256": "f324af4e02d9d129828b2d10c95f5965da1c0da220f7e8a3cb675c64701f6ede"
+        },
+        {
+          "path": "artifacts/verification-0.17/final-owned-launches/matrix.json",
+          "available": true,
+          "sha256": "559967442fc64816a4ea633cd1c1bc69139ed6713e22faa7897e310e29e68559"
+        },
+        {
+          "path": "artifacts/architecture-avalonia-host/legacy-host-live.json",
+          "available": false
+        }
+      ]
+    },
+    {
+      "id": "JAVA-003",
+      "name": "Java16ARM64",
+      "priorPendingReason": "1.17.1原版40秒图形和atlas通过，不代表所有1.17模组兼容。",
+      "files": [
+        {
+          "path": "artifacts/evidence-0.8-compat/compatibility-results.json",
+          "available": true,
+          "sha256": "b61c87881cf3309b3e191898f93d56acdf5d02b10c143a6df612651eba5640c7"
+        }
+      ]
+    },
+    {
+      "id": "JAVA-004",
+      "name": "Java17ARM64",
+      "priorPendingReason": "0.17 十个正版启动组合覆盖 ARM64 Java 8/17/21/25，核对实际进程版本与架构；不推定所有游戏、快照或模组适配。Java 16 单列保留待测边界。",
+      "files": [
+        {
+          "path": "artifacts/evidence-0.8/full-regression-7/test-results.json",
+          "available": true,
+          "sha256": "1e045503d6a0cb6db95f87316665dcb4ac0e275aa7165eb16e6105106c9566f3"
+        },
+        {
+          "path": "artifacts/evidence-0.7/acceptance.json",
+          "available": true,
+          "sha256": "b2f6a21d6895a51f8a73329903672df66ecffa48402f9feb747684837e67a935"
+        },
+        {
+          "path": "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json",
+          "available": true,
+          "sha256": "258d23d26043ad47e02e23a8749647f4a4ef24a4f6af77cae298ff3131614cce"
+        },
+        {
+          "path": "artifacts/verification-0.17/release-tests/test-results.json",
+          "available": true,
+          "sha256": "3d466b9b3d35c4a93fc621c148c40b2d12f101f36a68e6d3f6bfc7dde4d09171"
+        },
+        {
+          "path": "docs/0.17实现与验收.md",
+          "available": true,
+          "sha256": "c4cad52e25c4165c64332e6493eff86916359e1b070fa52cbe8702ce97329dcd"
+        },
+        {
+          "path": "artifacts/verification-0.17/owned-launches/matrix.json",
+          "available": true,
+          "sha256": "f324af4e02d9d129828b2d10c95f5965da1c0da220f7e8a3cb675c64701f6ede"
+        },
+        {
+          "path": "artifacts/verification-0.17/final-owned-launches/matrix.json",
+          "available": true,
+          "sha256": "559967442fc64816a4ea633cd1c1bc69139ed6713e22faa7897e310e29e68559"
+        }
+      ]
+    },
+    {
+      "id": "JAVA-006",
+      "name": "Java25ARM64",
+      "priorPendingReason": "0.17 十个正版启动组合覆盖 ARM64 Java 8/17/21/25，核对实际进程版本与架构；不推定所有游戏、快照或模组适配。Java 16 单列保留待测边界。",
+      "files": [
+        {
+          "path": "artifacts/evidence-0.8/full-regression-7/test-results.json",
+          "available": true,
+          "sha256": "1e045503d6a0cb6db95f87316665dcb4ac0e275aa7165eb16e6105106c9566f3"
+        },
+        {
+          "path": "artifacts/evidence-0.7/acceptance.json",
+          "available": true,
+          "sha256": "b2f6a21d6895a51f8a73329903672df66ecffa48402f9feb747684837e67a935"
+        },
+        {
+          "path": "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json",
+          "available": true,
+          "sha256": "258d23d26043ad47e02e23a8749647f4a4ef24a4f6af77cae298ff3131614cce"
+        },
+        {
+          "path": "artifacts/verification-0.17/release-tests/test-results.json",
+          "available": true,
+          "sha256": "3d466b9b3d35c4a93fc621c148c40b2d12f101f36a68e6d3f6bfc7dde4d09171"
+        },
+        {
+          "path": "docs/0.17实现与验收.md",
+          "available": true,
+          "sha256": "c4cad52e25c4165c64332e6493eff86916359e1b070fa52cbe8702ce97329dcd"
+        },
+        {
+          "path": "artifacts/verification-0.17/owned-launches/matrix.json",
+          "available": true,
+          "sha256": "f324af4e02d9d129828b2d10c95f5965da1c0da220f7e8a3cb675c64701f6ede"
+        },
+        {
+          "path": "artifacts/verification-0.17/final-owned-launches/matrix.json",
+          "available": true,
+          "sha256": "559967442fc64816a4ea633cd1c1bc69139ed6713e22faa7897e310e29e68559"
+        }
+      ]
+    },
+    {
+      "id": "JAVA-007",
+      "name": "手动选择与检查Java",
+      "priorPendingReason": "真实 Java 主版本/架构检查已有回归；手选不同 JDK 并游戏启动的 GUI 全链路待矩阵关联",
+      "files": [
+        {
+          "path": "artifacts/evidence-0.8/tests-instance-fixes/test-results.json",
+          "available": true,
+          "sha256": "dfbe01ee5b1e8d27f0f4a511719fcae4fe324b50ffb36a70e3074a165e06ac3f"
+        },
+        {
+          "path": "artifacts/evidence-0.8/tests-instance-fixes/test-results.json",
+          "available": true,
+          "sha256": "dfbe01ee5b1e8d27f0f4a511719fcae4fe324b50ffb36a70e3074a165e06ac3f"
+        }
+      ]
+    },
+    {
+      "id": "JAVA-010",
+      "name": "内存与GC参数",
+      "priorPendingReason": "G1 调优参数新增；Java 8/21/25 启动与回归通过。各 GC 组合未全部进行长时间世界内稳定性测试。",
+      "files": [
+        {
+          "path": "artifacts/evidence-0.8/full-regression-7/test-results.json",
+          "available": true,
+          "sha256": "1e045503d6a0cb6db95f87316665dcb4ac0e275aa7165eb16e6105106c9566f3"
+        },
+        {
+          "path": "artifacts/ui-0.8-final/evidence/workspace-ui-result.json",
+          "available": true,
+          "sha256": "d4f98c85187817acba77f34c27c0ed330e98164571358206a482de3fd1dc17bf"
+        },
+        {
+          "path": "artifacts/verification-0.21/regression/test-results.json",
+          "available": true,
+          "sha256": "05c98f709eda77b6c11ef3e0e786a6fd2e6e326dbe45b36e3e48139476da914c"
+        },
+        {
+          "path": "artifacts/verification-0.21/settings-live-4/evidence/settings-ui.json",
+          "available": true,
+          "sha256": "a3f7f8772a63ef0d2dbfccc9e1f7986108036bcb4ceddb192ffaaef30e453f10"
+        },
+        {
+          "path": "artifacts/verification-0.21/settings-live-4/evidence/settings-reopen.json",
+          "available": true,
+          "sha256": "209e4f1317416fbdcfc4d52330ed93e6f9b0a5d37f67803c0ec023fe21498e4f"
+        },
+        {
+          "path": "artifacts/verification-0.21/minecraft-1.21.1-result.json",
+          "available": true,
+          "sha256": "5c16958efbb6876100050cf25d9e37024d4f42ac36d56c3f1ed4203bf4d30611"
+        },
+        {
+          "path": "artifacts/verification-0.21/minecraft-26.3-result.json",
+          "available": true,
+          "sha256": "7707c2803535a4c77014db43be30f62689d6a303c05ff693c330fc830182ccdc"
+        },
+        {
+          "path": "docs/0.22-settings-binding-audit.json",
+          "available": true,
+          "sha256": "b9ed3f7230f538cf2489537ebc208c399fdb42a1762f275e0c82a7ad9c18beaf"
+        },
+        {
+          "path": "artifacts/verification-0.22/final-tests/test-results.json",
+          "available": true,
+          "sha256": "c828ea12670cf474ee21874890b4b61e30b47cc4cb87b95565138090305247e2"
+        },
+        {
+          "path": "artifacts/verification-0.22/final-local-ui/evidence/local-settings-ui.json",
+          "available": true,
+          "sha256": "3015c0b6a074518f247c744ce6ef3edfb6562f5c587a7a015166a751e0cb9cf7"
+        }
+      ]
+    },
+    {
+      "id": "JAVA-011",
+      "name": "窗口分辨率全屏",
+      "priorPendingReason": "原生标题、最大化、nice=10 在 Java 8/21/25 上有实际窗口回执；启动器五种可见性策略经 1.21.1 真实进程检查。全屏/尺寸有参数测试，仍无本轮世界内人工验收。",
+      "files": [
+        {
+          "path": "artifacts/evidence-0.8/full-regression-7/test-results.json",
+          "available": true,
+          "sha256": "1e045503d6a0cb6db95f87316665dcb4ac0e275aa7165eb16e6105106c9566f3"
+        },
+        {
+          "path": "artifacts/ui-0.8-final/evidence/workspace-ui-result.json",
+          "available": true,
+          "sha256": "d4f98c85187817acba77f34c27c0ed330e98164571358206a482de3fd1dc17bf"
+        },
+        {
+          "path": "artifacts/verification-0.21/regression/test-results.json",
+          "available": true,
+          "sha256": "05c98f709eda77b6c11ef3e0e786a6fd2e6e326dbe45b36e3e48139476da914c"
+        },
+        {
+          "path": "artifacts/verification-0.21/settings-live-4/evidence/settings-ui.json",
+          "available": true,
+          "sha256": "a3f7f8772a63ef0d2dbfccc9e1f7986108036bcb4ceddb192ffaaef30e453f10"
+        },
+        {
+          "path": "artifacts/verification-0.21/settings-live-4/evidence/settings-reopen.json",
+          "available": true,
+          "sha256": "209e4f1317416fbdcfc4d52330ed93e6f9b0a5d37f67803c0ec023fe21498e4f"
+        },
+        {
+          "path": "docs/0.22-settings-binding-audit.json",
+          "available": true,
+          "sha256": "b9ed3f7230f538cf2489537ebc208c399fdb42a1762f275e0c82a7ad9c18beaf"
+        },
+        {
+          "path": "artifacts/verification-0.22/final-tests/test-results.json",
+          "available": true,
+          "sha256": "c828ea12670cf474ee21874890b4b61e30b47cc4cb87b95565138090305247e2"
+        },
+        {
+          "path": "artifacts/verification-0.22/final-local-ui/evidence/local-settings-ui.json",
+          "available": true,
+          "sha256": "3015c0b6a074518f247c744ce6ef3edfb6562f5c587a7a015166a751e0cb9cf7"
+        }
+      ]
+    },
+    {
+      "id": "JAVA-012",
+      "name": "自定义JVM游戏参数",
+      "priorPendingReason": "0.18 增加元数据驱动的 QuickPlayWorld 字段与实例继承、路径/链接/缺失世界检查、多人参数互斥；Fabric 1.21.1 直达实测。Forge 直达已复现生命周期异常，本版禁止并提示使用主菜单；附加参数不能绕入。其余 JVM 参数/版本仍按既有边界。",
+      "files": [
+        {
+          "path": "artifacts/evidence-0.8/full-regression-7/test-results.json",
+          "available": true,
+          "sha256": "1e045503d6a0cb6db95f87316665dcb4ac0e275aa7165eb16e6105106c9566f3"
+        },
+        {
+          "path": "artifacts/ui-0.8-final/evidence/workspace-ui-result.json",
+          "available": true,
+          "sha256": "d4f98c85187817acba77f34c27c0ed330e98164571358206a482de3fd1dc17bf"
+        },
+        {
+          "path": "artifacts/verification-0.18/final-regression2/test-results.json",
+          "available": true,
+          "sha256": "ff4a03bc82f8e137d475a77c9114f31aa5888c64af6b1e69361553a03c89646b"
+        },
+        {
+          "path": "docs/0.18实现与验收.md",
+          "available": true,
+          "sha256": "ccc544738932ab7eda01b0f77873ee59c14dd1d2aa9972089e6158f169d60432"
+        },
+        {
+          "path": "artifacts/verification-0.21/regression/test-results.json",
+          "available": true,
+          "sha256": "05c98f709eda77b6c11ef3e0e786a6fd2e6e326dbe45b36e3e48139476da914c"
+        },
+        {
+          "path": "artifacts/verification-0.21/settings-live-4/evidence/settings-ui.json",
+          "available": true,
+          "sha256": "a3f7f8772a63ef0d2dbfccc9e1f7986108036bcb4ceddb192ffaaef30e453f10"
+        },
+        {
+          "path": "artifacts/verification-0.21/settings-live-4/evidence/settings-reopen.json",
+          "available": true,
+          "sha256": "209e4f1317416fbdcfc4d52330ed93e6f9b0a5d37f67803c0ec023fe21498e4f"
+        }
+      ]
+    },
+    {
+      "id": "JAVA-013",
+      "name": "自动进入服务器",
+      "priorPendingReason": "配置持久化和参数合并已验证；尚未逐个游戏内观察窗口/服务器/GC效果。",
+      "files": [
+        {
+          "path": "artifacts/evidence-0.8/full-regression-7/test-results.json",
+          "available": true,
+          "sha256": "1e045503d6a0cb6db95f87316665dcb4ac0e275aa7165eb16e6105106c9566f3"
+        },
+        {
+          "path": "artifacts/ui-0.8-final/evidence/workspace-ui-result.json",
+          "available": true,
+          "sha256": "d4f98c85187817acba77f34c27c0ed330e98164571358206a482de3fd1dc17bf"
+        }
+      ]
+    },
+    {
+      "id": "JAVA-015",
+      "name": "启动器可见性策略",
+      "priorPendingReason": "隐藏/游戏退出恢复已实现；关闭/隐藏/Dock全部组合尚待手动验收。",
+      "files": [
+        {
+          "path": "artifacts/ui-0.8-final/evidence/workspace-ui-result.json",
+          "available": true,
+          "sha256": "d4f98c85187817acba77f34c27c0ed330e98164571358206a482de3fd1dc17bf"
+        },
+        {
+          "path": "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json",
+          "available": true,
+          "sha256": "258d23d26043ad47e02e23a8749647f4a4ef24a4f6af77cae298ff3131614cce"
+        },
+        {
+          "path": "artifacts/architecture-0.32/release-verified-managed.json",
+          "available": false
+        },
+        {
+          "path": "artifacts/architecture-0.32/release-verified-detached/packaged-detached-verification.json",
+          "available": false
+        },
+        {
+          "path": "artifacts/architecture-0.26/packaged-session.json",
+          "available": false
+        }
+      ]
+    },
+    {
+      "id": "JAVA-016",
+      "name": "多平台规则和原生库审核",
+      "priorPendingReason": "ARM64实际Mach-O检查；Intel/Rosetta未验收，无库可用时明确拒绝。",
+      "files": [
+        {
+          "path": "artifacts/evidence-0.8/full-regression-7/test-results.json",
+          "available": true,
+          "sha256": "1e045503d6a0cb6db95f87316665dcb4ac0e275aa7165eb16e6105106c9566f3"
+        },
+        {
+          "path": "artifacts/evidence-0.8-compat/compatibility-results.json",
+          "available": true,
+          "sha256": "b61c87881cf3309b3e191898f93d56acdf5d02b10c143a6df612651eba5640c7"
+        }
+      ]
+    },
+    {
+      "id": "RES-003",
+      "name": "跨平台结果去重",
+      "priorPendingReason": "不按同名猜测跨商店映射；CF 在线依赖密钥未实测，百科仍为静态独立索引。",
+      "files": [
+        {
+          "path": "artifacts/verification-0.13/final-tests/test-results.json",
+          "available": true,
+          "sha256": "92dd55cb3a0b26844658f5685786c2cdf07185b482df0987df94aa3b4923e9d3"
+        },
+        {
+          "path": "artifacts/verification-0.13/live/evidence/search-backup-result.json",
+          "available": true,
+          "sha256": "a22c1f93fecc8fbc0dd8725c5be5a614fbb003e1c1f260c39d58021ac19122df"
+        },
+        {
+          "path": "artifacts/verification-0.13/final-zip/evidence/search-backup-result.json",
+          "available": true,
+          "sha256": "1ab71a2f6a6568c7a93804ec5b7f81c6d382266aa1120410aae6047a23a4eef0"
+        },
+        {
+          "path": "docs/0.13实现与验收.md",
+          "available": true,
+          "sha256": "9b19a81566f4127ece670e1e9a6e1fe966b54b2e1c104fd03dda54d56964197d"
+        },
+        {
+          "path": "artifacts/architecture-0.29/release-discovery.json",
+          "available": false
+        }
+      ]
+    },
+    {
+      "id": "RES-005",
+      "name": "百科关联",
+      "priorPendingReason": "本地百科索引和关联查询已实际运行；mcmod.cn 浏览器跳转及站点实时下载不能从本地索引测试推定。",
+      "files": [
+        {
+          "path": "artifacts/evidence-0.8/full-regression-4/test-results.json",
+          "available": true,
+          "sha256": "813f205fa27fa4ef8656b3199b4606f42cde5f9b2aa7a96384d2a9da57d976ad"
+        },
+        {
+          "path": "artifacts/architecture-0.29/release-discovery.json",
+          "available": false
+        }
+      ]
+    },
+    {
+      "id": "RES-008",
+      "name": "Fabric语义版本与冲突",
+      "priorPendingReason": "依赖声明不能覆盖动态代码及模组自行下载的原生库",
+      "files": [
+        {
+          "path": "artifacts/evidence-0.8/full-regression-4/test-results.json",
+          "available": true,
+          "sha256": "813f205fa27fa4ef8656b3199b4606f42cde5f9b2aa7a96384d2a9da57d976ad"
+        },
+        {
+          "path": "docs/0.37-依赖规划与验收.md",
+          "available": true,
+          "sha256": "a1d4d008b1eb935f616993dcfdab025936cff1a52130c87c1437d7366c73c62a"
+        },
+        {
+          "path": "artifacts/verification-0.37/final/focused.json",
+          "available": true,
+          "sha256": "d2e4d12ec26f33be0be67c0fb710c19cdc7fa5db39e52bd61b82bd7c272c83b9"
+        },
+        {
+          "path": "artifacts/verification-0.37/final/real-installs.json",
+          "available": true,
+          "sha256": "67cf2fbe83cb35337a1644c095b3496f74af22501b6451f94ac77b85d338aa59"
+        }
+      ]
+    },
+    {
+      "id": "PACK-001",
+      "name": "Modrinth搜索下载",
+      "priorPendingReason": "Modrinth 整合包目录查询已实测；仍缺本轮最终 GUI 直接下载公开整合包的专门记录，不能用模组下载安装代替。",
+      "files": [
+        {
+          "path": "docs/Forge-NeoForge与整合包适配.md",
+          "available": true,
+          "sha256": "6e2ee02899a440cad7ff6e671db05531e374c8e96eb77dbbd76a64e62976b34d"
+        },
+        {
+          "path": "artifacts/architecture-0.32/release-browser.json",
+          "available": false
+        }
+      ]
+    },
+    {
+      "id": "PACK-007",
+      "name": "普通ZIP安装",
+      "priorPendingReason": "缺少元数据无法自动推断所有组件；需用真实外部包做 GUI/启动验证",
+      "files": [
+        {
+          "path": "artifacts/evidence-0.8/full-regression-4/test-results.json",
+          "available": true,
+          "sha256": "813f205fa27fa4ef8656b3199b4606f42cde5f9b2aa7a96384d2a9da57d976ad"
+        },
+        {
+          "path": "artifacts/architecture-0.28/workspaces2.json",
+          "available": false
+        },
+        {
+          "path": "artifacts/architecture-0.28/release-ui.json",
+          "available": false
+        }
+      ]
+    },
+    {
+      "id": "PACK-010",
+      "name": "mrpack导出",
+      "priorPendingReason": "合法 mrpack 导出、哈希记录和重导入已有真实证据；当前采用 overrides 打包本地文件，带自定义组件依赖 PCL 扩展。需补其他启动器导入兼容验收，不把模组依赖求解缺口复制到导出项。",
+      "files": [
+        {
+          "path": "artifacts/verification-0.14/release-tests/test-results.json",
+          "available": true,
+          "sha256": "4f35700896e2aed696a22f6f2994af66f9f932d24acf9a82549eab54733d5baf"
+        },
+        {
+          "path": "artifacts/verification-0.14/live/dependency-acceptance.json",
+          "available": true,
+          "sha256": "6494029be87777a908513503c5918dd4172fc7171a6f5a082254687bffb173ad"
+        },
+        {
+          "path": "artifacts/verification-0.14/live/evidence/dependency-pack-ui-result.json",
+          "available": true,
+          "sha256": "536e33fb364b2f93ec914570527db1a0ebe8b9d13244722ba4d0d84eeb3e91b9"
+        },
+        {
+          "path": "artifacts/release-verification-0.14.json",
+          "available": true,
+          "sha256": "bc800114e316b856805bd970ef6f9e21dbefd7a9b20be3b7b79427276aa90de1"
+        },
+        {
+          "path": "docs/0.14实现与验收.md",
+          "available": true,
+          "sha256": "f32c0a7aaa5542a9afcb0ae1b5ec7e17d6848a1f7ae30f6b2fe9281f13d9c67e"
+        },
+        {
+          "path": "artifacts/verification-0.15/release-tests/test-results.json",
+          "available": true,
+          "sha256": "3d838347e5392aeb6c4adc7744355956a04a734ca35712ee0e9482befa800603"
+        },
+        {
+          "path": "artifacts/verification-0.15/oracle/official-results.json",
+          "available": true,
+          "sha256": "ac1d810f82faf3f0a994eaf42ae7c3fd223f92d5490b7038a70eb287e54859bd"
+        },
+        {
+          "path": "artifacts/verification-0.15/live/evidence/quilt-overrides-ui-result.json",
+          "available": true,
+          "sha256": "a4ab9b40117fda5b1a3ba8ef99dc1cc5a4a751f3b0657e2f4dc6e17cded0ea79"
+        },
+        {
+          "path": "artifacts/release-verification-0.15.json",
+          "available": true,
+          "sha256": "9ed1442373411cee108ddadcdead801f111ee61e3998f53db94cebd4c1e52714"
+        },
+        {
+          "path": "docs/0.15实现与验收.md",
+          "available": true,
+          "sha256": "33f856de10f4efdb51423a502dd9fde8a1bac013b7cbe5c7d9b20e2eab635a53"
+        },
+        {
+          "path": "artifacts/architecture-0.28/workspaces2.json",
+          "available": false
+        }
+      ]
+    },
+    {
+      "id": "LINK-001",
+      "name": "EasyTierMac模块安装",
+      "priorPendingReason": "官方ARM64模块、无root/TUN本地双进程TCP转发通过；房间/节点/状态入口有GUI，跨网NAT与真实游戏双端待验收。",
+      "files": [
+        {
+          "path": "artifacts/evidence-0.8/link-live-data/evidence/easytier-smoke.json",
+          "available": true,
+          "sha256": "062e54bee2aefc6e9f0542402b295f763ef9a4d5a566fbac8cfb51d3d1df25a9"
+        },
+        {
+          "path": "artifacts/ui-0.8-final/evidence/workspace-ui-result.json",
+          "available": true,
+          "sha256": "d4f98c85187817acba77f34c27c0ed330e98164571358206a482de3fd1dc17bf"
+        },
+        {
+          "path": "artifacts/architecture-0.32/release-final-main.json",
+          "available": false
+        }
+      ]
+    },
+    {
+      "id": "LINK-005",
+      "name": "连接状态延迟与人数",
+      "priorPendingReason": "官方ARM64模块、无root/TUN本地双进程TCP转发通过；房间/节点/状态入口有GUI，跨网NAT与真实游戏双端待验收。",
+      "files": [
+        {
+          "path": "artifacts/evidence-0.8/link-live-data/evidence/easytier-smoke.json",
+          "available": true,
+          "sha256": "062e54bee2aefc6e9f0542402b295f763ef9a4d5a566fbac8cfb51d3d1df25a9"
+        },
+        {
+          "path": "artifacts/ui-0.8-final/evidence/workspace-ui-result.json",
+          "available": true,
+          "sha256": "d4f98c85187817acba77f34c27c0ed330e98164571358206a482de3fd1dc17bf"
+        },
+        {
+          "path": "artifacts/architecture-0.32/release-final-main.json",
+          "available": false
+        },
+        {
+          "path": "artifacts/architecture-0.32/release-main-ui/report.json",
+          "available": false
+        },
+        {
+          "path": "artifacts/architecture-0.31/release-main.json",
+          "available": false
+        }
+      ]
+    },
+    {
+      "id": "UI-002",
+      "name": "背景图片",
+      "priorPendingReason": "新增随机背景目录、平铺、9 方位、自动小图平铺和彩色叠加；发布包控件、渲染属性与截图测试。",
+      "files": [
+        {
+          "path": "artifacts/evidence-0.8/full-regression-7/test-results.json",
+          "available": true,
+          "sha256": "1e045503d6a0cb6db95f87316665dcb4ac0e275aa7165eb16e6105106c9566f3"
+        },
+        {
+          "path": "artifacts/ui-0.8-final/evidence/workspace-ui-result.json",
+          "available": true,
+          "sha256": "d4f98c85187817acba77f34c27c0ed330e98164571358206a482de3fd1dc17bf"
+        },
+        {
+          "path": "artifacts/verification-0.21/regression/test-results.json",
+          "available": true,
+          "sha256": "05c98f709eda77b6c11ef3e0e786a6fd2e6e326dbe45b36e3e48139476da914c"
+        },
+        {
+          "path": "artifacts/verification-0.21/settings-live-4/evidence/settings-ui.json",
+          "available": true,
+          "sha256": "a3f7f8772a63ef0d2dbfccc9e1f7986108036bcb4ceddb192ffaaef30e453f10"
+        },
+        {
+          "path": "artifacts/verification-0.21/settings-live-4/evidence/settings-reopen.json",
+          "available": true,
+          "sha256": "209e4f1317416fbdcfc4d52330ed93e6f9b0a5d37f67803c0ec023fe21498e4f"
+        },
+        {
+          "path": "docs/0.22-settings-binding-audit.json",
+          "available": true,
+          "sha256": "b9ed3f7230f538cf2489537ebc208c399fdb42a1762f275e0c82a7ad9c18beaf"
+        },
+        {
+          "path": "artifacts/verification-0.22/final-tests/test-results.json",
+          "available": true,
+          "sha256": "c828ea12670cf474ee21874890b4b61e30b47cc4cb87b95565138090305247e2"
+        },
+        {
+          "path": "artifacts/verification-0.22/final-local-ui/evidence/local-settings-ui.json",
+          "available": true,
+          "sha256": "3015c0b6a074518f247c744ce6ef3edfb6562f5c587a7a015166a751e0cb9cf7"
+        },
+        {
+          "path": "artifacts/architecture-0.29/release-ui.json",
+          "available": false
+        }
+      ]
+    },
+    {
+      "id": "UI-003",
+      "name": "背景音乐与游戏跟随",
+      "priorPendingReason": "本地播放列表真实 afplay 切歌/随机/停止测试通过；游戏内播放时机策略已绑定。未声明听觉验收或所有音频编码验证。",
+      "files": [
+        {
+          "path": "artifacts/evidence-0.8/full-regression-7/test-results.json",
+          "available": true,
+          "sha256": "1e045503d6a0cb6db95f87316665dcb4ac0e275aa7165eb16e6105106c9566f3"
+        },
+        {
+          "path": "artifacts/ui-0.8-final/evidence/workspace-ui-result.json",
+          "available": true,
+          "sha256": "d4f98c85187817acba77f34c27c0ed330e98164571358206a482de3fd1dc17bf"
+        },
+        {
+          "path": "docs/0.22-settings-binding-audit.json",
+          "available": true,
+          "sha256": "b9ed3f7230f538cf2489537ebc208c399fdb42a1762f275e0c82a7ad9c18beaf"
+        },
+        {
+          "path": "artifacts/verification-0.22/final-tests/test-results.json",
+          "available": true,
+          "sha256": "c828ea12670cf474ee21874890b4b61e30b47cc4cb87b95565138090305247e2"
+        },
+        {
+          "path": "artifacts/verification-0.22/final-local-ui/evidence/local-settings-ui.json",
+          "available": true,
+          "sha256": "3015c0b6a074518f247c744ce6ef3edfb6562f5c587a7a015166a751e0cb9cf7"
+        }
+      ]
+    }
+  ],
+  "missingHistoricalEvidence": {
+    "referencesIncludingDuplicates": 30,
+    "uniquePaths": [
+      "artifacts/architecture-0.26/packaged-session.json",
+      "artifacts/architecture-0.26/pages-live.json",
+      "artifacts/architecture-0.27/final-components/result.json",
+      "artifacts/architecture-0.27/final-download/result.json",
+      "artifacts/architecture-0.28/release-ui.json",
+      "artifacts/architecture-0.28/workspaces2.json",
+      "artifacts/architecture-0.29/release-discovery.json",
+      "artifacts/architecture-0.29/release-ui.json",
+      "artifacts/architecture-0.30/release-final-host.json",
+      "artifacts/architecture-0.30/release-final-ui/report.json",
+      "artifacts/architecture-0.31/release-main.json",
+      "artifacts/architecture-0.32/release-browser-ui/report.json",
+      "artifacts/architecture-0.32/release-browser.json",
+      "artifacts/architecture-0.32/release-final-main.json",
+      "artifacts/architecture-0.32/release-main-ui/report.json",
+      "artifacts/architecture-0.32/release-verified-detached/packaged-detached-verification.json",
+      "artifacts/architecture-0.32/release-verified-managed.json",
+      "artifacts/architecture-avalonia-host/legacy-host-live.json",
+      "artifacts/architecture-contract-0.25/legacy-host-live.json",
+      "artifacts/verification-0.33/release-browser.json",
+      "artifacts/verification-0.34/release-browser.json"
+    ]
+  },
+  "probeAndAssertionCorrections": [
+    "Four stale tests corrected: wrapped integrity error; Fabric caret differs from npm; official trial remains allowed; modern depends fixture needs schemaVersion 1. Initial 226/230, then 230/230; additional instance-version regression gives 231/231.",
+    "UI probe now guards repeat Opened on Show; repeated runs were probe failures, not product window bugs.",
+    "Detached process observer now reads detached-game logs as well as managed-game logs; original observer failure retained.",
+    "Legacy renderer detector accepts legacy atlas log; post-atlas observation then exposed a real native crash."
+  ],
+  "cleanup": {
+    "isolatedTestProcessesRemaining": 0,
+    "personalAccountsOrKeychainRead": false,
+    "personalWorldsOpened": false,
+    "worldPlayThisBatch": false,
+    "gameExitScope": "Owned test games intentionally stopped at menu; exit 137 is not claimed as normal save/exit."
+  },
+  "limits": [
+    "No fresh Microsoft account or skin acceptance. Existing authentication and skin code unchanged; fixture tests passed, not equivalent to real account login.",
+    "No audible music acceptance, native Finder test, world manual acceptance, cross-launcher import, Intel/Rosetta, remote NAT or second-account acceptance in this batch.",
+    "No package replacement, GitHub upload or new version published. Raw local logs remain in ignored artifacts; public result excludes account tokens, room secrets, PIDs and absolute home paths."
+  ]
+}

@@ -1,0 +1,188 @@
+{
+  "baseline": "0.40.1",
+  "date": "2026-10-27",
+  "scope": "Local post-release acceptance build; not the published binary.",
+  "ui": {
+    "status": "passed",
+    "checks": [
+      "INST-003-favorite-filter-after-ui-save",
+      "INST-003-hidden-excluded-from-visible-filter",
+      "INST-003-reopened-page-restores-favorite-and-hidden",
+      "INST-003-unhide-restores-visible-instance",
+      "INST-003-unfavorite-removes-from-favorites",
+      "UI-007-real-host-export-no-token-fields",
+      "UI-007-reset-and-import-restores-settings",
+      "UI-007-import-creates-backup",
+      "UI-007-invalid-import-preserves-current-settings"
+    ]
+  },
+  "localFirstRun": {
+    "status": "failed",
+    "results": [
+      {
+        "name": "copied_and_restored_instance_bootstrap_excludes_actual_client_filename",
+        "status": "passed"
+      },
+      {
+        "name": "quick_play_world_uses_metadata_and_rejects_missing_linked_or_conflicting_targets",
+        "status": "passed"
+      },
+      {
+        "name": "instance_groups_persist_compose_and_follow_copy_backup",
+        "status": "passed"
+      },
+      {
+        "name": "instance_settings_inheritance_override_and_argument_safety",
+        "status": "passed"
+      },
+      {
+        "name": "instance_copy_preserves_save_excludes_credentials_and_shared_cache",
+        "status": "passed"
+      },
+      {
+        "name": "instance_favorite_hidden_persisted_and_management_still_finds_hidden",
+        "status": "passed"
+      },
+      {
+        "name": "instance_trash_restore_preserves_save_and_parent_dependencies",
+        "status": "passed"
+      },
+      {
+        "name": "instance_backup_content_and_unsafe_restore_rejected",
+        "status": "passed"
+      },
+      {
+        "name": "instance_import_scan_rejects_unresolved_inherited_metadata_and_symlinks",
+        "status": "passed"
+      },
+      {
+        "name": "instance_trash_restore_rejects_replaced_data_symlink",
+        "status": "passed"
+      },
+      {
+        "name": "instance_filters_combine_loader_favorite_hidden_and_search",
+        "status": "passed"
+      },
+      {
+        "name": "instance_icon_is_passive_bounded_and_follows_copy_backup",
+        "status": "passed"
+      },
+      {
+        "name": "local_settings_metadata_fallback_invalid_json_and_priority",
+        "status": "passed"
+      },
+      {
+        "name": "local_settings_copy_toggle_debug_redaction_and_delay_cancel",
+        "status": "passed"
+      },
+      {
+        "name": "local_settings_window_size_and_instance_inheritance",
+        "status": "passed"
+      },
+      {
+        "name": "local_settings_resource_filename_formats_and_path_safety",
+        "status": "passed"
+      },
+      {
+        "name": "local_settings_home_presets_blank_and_hidden_restore_model",
+        "status": "passed"
+      },
+      {
+        "name": "local_settings_named_resource_install_update_disable_remove",
+        "status": "passed"
+      },
+      {
+        "name": "local_settings_unsafe_agent_compatibility_and_explicit_disable",
+        "status": "passed"
+      },
+      {
+        "name": "local_settings_random_background_and_portable_path_stripping",
+        "status": "passed"
+      },
+      {
+        "name": "local_settings_actual_afplay_playlist_stop_and_restart",
+        "status": "failed",
+        "error": "音频播放失败：Error: AudioQueueStart failed (-66680)\n"
+      },
+      {
+        "name": "pack_import_all_declared_formats",
+        "status": "passed"
+      },
+      {
+        "name": "pack_rejects_traversal_symlink_case_collision_and_custom_patch",
+        "status": "passed"
+      },
+      {
+        "name": "pack_export_privacy_hashes_and_roundtrip",
+        "status": "passed"
+      },
+      {
+        "name": "curse_api_metadata_and_publisher_disabled_download",
+        "status": "passed"
+      },
+      {
+        "name": "pack_update_baseline_distinguishes_modified_added_deleted_and_private",
+        "status": "passed"
+      },
+      {
+        "name": "curse_missing_credentials_blocks_before_instance_install",
+        "status": "passed"
+      },
+      {
+        "name": "curse_catalog_filters_dependencies_and_file_restrictions",
+        "status": "passed"
+      },
+      {
+        "name": "modrinth_datapack_filters_need_no_fabric_loader",
+        "status": "passed"
+      },
+      {
+        "name": "local_scan_toggle_and_dependency_rollback",
+        "status": "passed"
+      },
+      {
+        "name": "resource_metadata_legacy_forge_neoforge_quilt_liteloader",
+        "status": "passed"
+      },
+      {
+        "name": "resource_alias_embedded_database_and_explicit_cross_platform_identity",
+        "status": "passed"
+      },
+      {
+        "name": "forge_toml_dependencies_versions_side_and_neoforge_legacy_alias",
+        "status": "passed"
+      },
+      {
+        "name": "pack_export_recipe_selection_and_exact_payload_hash",
+        "status": "passed"
+      },
+      {
+        "name": "resource_activation_undo_history_and_external_change_protection",
+        "status": "passed"
+      },
+      {
+        "name": "resource_batch_update_projects_whole_dependency_set_and_preserves_external_edits",
+        "status": "passed"
+      },
+      {
+        "name": "world_datapack_install_toggle_backup_and_target_validation",
+        "status": "passed"
+      }
+    ]
+  },
+  "audioRetest": {
+    "status": "passed",
+    "results": [
+      {
+        "name": "local_settings_actual_afplay_playlist_stop_and_restart",
+        "status": "passed"
+      }
+    ]
+  },
+  "limitations": [
+    "Controlled metadata and API fixtures are not live third-party acceptance.",
+    "No keychain, user login, Minecraft world, second account or cross-internet multiplayer test.",
+    "UI-007 used Host export/import, not OS file picker.",
+    "RES-017 end-to-end GUI validation remains pending."
+  ]
+}

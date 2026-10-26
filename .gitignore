@@ -14,5 +14,5 @@ logs/
 .env
 .env.*
 
-# Developer-owned OAuth configuration; never commit an application identity.
+# Developer overrides stay local; tracked public client ID is separately owner-authorized.
 .local/

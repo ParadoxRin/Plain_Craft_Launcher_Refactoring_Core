@@ -28,8 +28,9 @@ public static class LegacyLaunchAdapter
 
     // [实现] SplitArguments 的实现：准备 var result = new List<string>()；准备 var word = new StringBuilder()；准备 char quote = '\0'。
     public static IReadOnlyList<string> SplitArguments(string text) => Pcl.Domain.LegacyArguments.SplitArguments(text);
-    // [实现] RequiresFirstThread 的实现：计算并返回 metadata["libraries"]?.Any( x => ((string? )x["name"])?.StartsWith("org.lwjgl.lwjgl:", StringCo…。
-    public static bool RequiresFirstThread(JObject metadata) => metadata["libraries"]?.Any(
+    // Apple Silicon 的 LWJGL2 也必须在首线程绘图，避免 AppKit 与 OpenGL 分离导致原生崩溃。
+    // 非 ARM64 宿主保留历史 LWJGL2 策略；该判断仅由 macOS 启动分支调用。
+    public static bool RequiresFirstThread(JObject metadata, bool appleSilicon = false) => appleSilicon || metadata["libraries"]?.Any(
         x => ((string? )x["name"])?.StartsWith("org.lwjgl.lwjgl:", StringComparison.Ordinal) == true
     ) != true;
     // [实现] GameAssets 的实现：准备 var indexPath = AppPaths.SafeChild( Path.Combine(assetsRoot, "indexes"), version.AssetIndex + "…；返回 File.Exists(indexPath) && (bool? )JsonFiles.Read(indexPath)["virtual"] == true ? AppPaths.SafeC…。

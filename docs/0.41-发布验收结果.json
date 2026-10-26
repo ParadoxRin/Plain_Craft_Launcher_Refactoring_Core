@@ -1,0 +1,172 @@
+{
+  "version": "0.41.0",
+  "date": "2026-10-27",
+  "sourceTag": "v0.41.0",
+  "repository": "ParadoxRin/Plain_Craft_Launcher_Refactoring_Core",
+  "repositoryVisibility": "public",
+  "channel": "prerelease",
+  "platform": "macOS 14+ arm64 reference app; Windows/Linux not runtime-verified",
+  "package": {
+    "file": "Plain-Craft-Launcher-Refactoring-0.41.0-macOS-arm64.zip",
+    "bytes": 80162716,
+    "sha256": "61dcae1aeb3f9724986d098618de45a26137b399ed1aa87df9cd7b5d7891dc91",
+    "signature": "ad-hoc; not Developer ID notarized",
+    "archiveVerification": {
+      "status": "passed",
+      "extractedSignatureVerified": true,
+      "appFilesVerified": 493,
+      "appleDoubleMetadataFiles": 546,
+      "utf8NamesCorrected": 2,
+      "sha256": "61dcae1aeb3f9724986d098618de45a26137b399ed1aa87df9cd7b5d7891dc91",
+      "extraction": "macOS ditto / Archive Utility with AppleDouble metadata"
+    }
+  },
+  "build": {
+    "status": "passed",
+    "architectureGuardViolations": 0,
+    "warningCodes": [
+      "AVLN3001",
+      "CS0618"
+    ]
+  },
+  "currentSourceTests": {
+    "core": {
+      "passed": 231,
+      "total": 231,
+      "resultSha256": "195ca8867f70b6569d07d36cd8e7e4ab9f6d9293f1db9155ff955746cf184f84"
+    },
+    "guidancePolicy": {
+      "status": "passed",
+      "checks": [
+        "chinese-purchase-and-sponsor-guidance",
+        "unverified-non-chinese-trial-required",
+        "reject-incomplete-consent-2",
+        "reject-incomplete-consent-3",
+        "reject-incomplete-consent-4",
+        "reject-incomplete-consent-5",
+        "trial-consent-accepted",
+        "chinese-offline-preserved-after-guidance",
+        "official-trial-identity-authorized",
+        "tampered-trial-rejected",
+        "offline-never-records-purchase",
+        "prior-verification-removes-purchase-and-trial-hint",
+        "windows-blue-no-dynamic-unlock-like-theme",
+        "mac-decoration-retained",
+        "executor-blocks-before-spawn-and-java",
+        "valid-consent-reaches-original-installation-validation",
+        "consent-idempotency-spawns-once-fixture",
+        "consent-and-detached-forwarded-to-executor",
+        "changed-consent-conflicts",
+        "restart-preserves-receipt-without-respawn-fixture"
+      ],
+      "windowsRuntimeTest": false,
+      "realGame": false
+    }
+  },
+  "finalPackagedAppTests": {
+    "aboutAndGuidance": {
+      "status": "passed",
+      "version": "0.41.0",
+      "checks": [
+        "three-component-version",
+        "product-name-in-window",
+        "upstream-author-first",
+        "upstream-sponsorship-second",
+        "explicit-independent-third-party-notice",
+        "current-source-status-visible",
+        "scoped-mit-license-visible",
+        "ai-development-responsibility-visible",
+        "real-host-chinese-guidance",
+        "official-destinations",
+        "links-do-not-authorize-launch",
+        "cancel-returns-no-consent",
+        "cancel-does-not-submit-game-launch",
+        "continue-returns-explicit-consent",
+        "real-host-non-chinese-trial-required",
+        "no-full-offline-button-in-restricted-flow",
+        "trial-choice-is-explicit"
+      ],
+      "gameStarted": false,
+      "networkAuthorization": false
+    },
+    "legacyMinecraft": {
+      "status": "passed",
+      "cases": [
+        {
+          "version": "1.12.2",
+          "expectedJava": 8,
+          "status": "passed",
+          "worldPlay": "not_tested",
+          "termination": "owned-process-stop-at-menu",
+          "rendered": true,
+          "menuObservationSeconds": 60,
+          "observedJava": 8,
+          "architecture": "aarch64",
+          "exitCode": 137
+        }
+      ]
+    },
+    "optifabric": {
+      "status": "passed",
+      "cases": [
+        {
+          "version": "optifabric-1.20.1-cf9cdacfded24fb88976c6178475a874",
+          "expectedJava": 17,
+          "status": "passed",
+          "worldPlay": "not_tested",
+          "termination": "owned-process-stop-at-menu",
+          "rendered": true,
+          "menuObservationSeconds": 30,
+          "observedJava": 17,
+          "architecture": "aarch64",
+          "exitCode": 137
+        }
+      ]
+    },
+    "detachedGame": {
+      "status": "passed",
+      "mode": "close",
+      "checks": [
+        "desktop-exits-with-code-zero",
+        "one-game-launch-per-window-lifecycle",
+        "host-launch-receipt-succeeded",
+        "close-policy-uses-detached-game",
+        "game-survives-desktop-exit",
+        "detached-game-renderer-ready-after-desktop-exit",
+        "desktop-exit-releases-owned-host",
+        "owned-test-game-cleanup-completed"
+      ]
+    },
+    "nativeInstallNames": {
+      "desktop": "@rpath/libpclwindow.dylib",
+      "host": "@rpath/libpclwindow.dylib"
+    }
+  },
+  "archivePrivacyAudit": {
+    "filesScanned": 1039,
+    "findings": [],
+    "scope": "current developer home, cloud project IDs, debug symbols, runtime state, credential patterns; not exhaustive"
+  },
+  "codeFingerprints": {
+    "src/Pcl.Core/LaunchService.cs": "fa9e5879deca51c3b5fc585e1eb389f506a7017f13296ee5b5f9cdce55413190",
+    "src/Pcl.Core/LegacyLaunchAdapter.cs": "c1a6a80cd7c10f1708ed180c6aa114e7ed069fe26cd68c015704cbced42031c3",
+    "src/Pcl.Contract/ProductIdentity.cs": "c8c4b489e7da2fca93ea60d119944d9d2fef9b2209ecb219d0b196c04acf164b",
+    "src/Pcl.Desktop/LicenseViews.cs": "a6aeb90ab6b2b1a6c602d92d78f44d58837b8c1cb0d4138f9379eabcb350a70d",
+    "src/Pcl.Desktop/Pcl.Desktop.csproj": "d15ed6ab1fd14706a214f3e01598d58009710efcddaa941eac4c014037e8bd98",
+    "release.json": "b7b7f00328a2208c80be9e49324b3a934150be61009e144c902ea44d2204cbfb"
+  },
+  "priorEvidence": [
+    "docs/收尾第二批验收结果.json",
+    "docs/收尾第三批验收结果.json",
+    "docs/收尾第四批验收结果.json",
+    "docs/收尾第五批验收结果.json"
+  ],
+  "limitations": [
+    "No fresh Microsoft login, second account, or skin visual acceptance; no personal credentials read.",
+    "Release game checks stop owned isolated games at the menu; exit 137 is intentional termination, not normal world save.",
+    "World/visual confirmations remain in historical scoped reports, not claimed as new 0.41 tests.",
+    "Windows/Linux and native SwiftUI clients remain unverified; current Host composition still binds macOS credentials.",
+    "Privacy scanning is bounded pattern checking, not proof that all possible unknown secrets are absent.",
+    "AI-assisted coding and human review/responsibility are stated; no claim that every historical line received recorded manual review."
+  ]
+}

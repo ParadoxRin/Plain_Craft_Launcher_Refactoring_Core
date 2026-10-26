@@ -59,7 +59,7 @@ public partial class MainWindow
                 TextWrapping = TextWrapping.Wrap
             }
         );
-        Link("本项目源码仓库（开发阶段私有）", ProductIdentity.SourceUrl);
+        Link("本项目公开源码仓库", ProductIdentity.SourceUrl);
         Link("PCL 上游源码", "https://github.com/Meloong-Git/PCL");
         Link(
             "PCL 存储库合理使用指南（随包原文）",
@@ -69,7 +69,18 @@ public partial class MainWindow
         panel.Children.Add(
             new TextBlock
             {
-                Text = "继续使用 PCL-LICENCE.txt 作为指南；第三方组件各自保留原许可，不将本项目改标为 CC BY-SA。\nWindows 运行时主色固定为蓝色，不提供赞助解锁或类似的主题表现。\n当前可用界面为 Avalonia；macOS 的目标界面为 SwiftUI，Windows/Linux 使用各自平台原生 UI。",
+                Text = "本项目有权授权的原创部分使用 MIT；PCL 衍生内容继续使用 PCL-LICENCE.txt 作为指南，第三方组件保留各自原许可。\nWindows 运行时主色固定为蓝色，不提供赞助解锁或类似的主题表现。\n当前参考界面为 Avalonia；可通过契约接入 SwiftUI、Windows/Linux 原生或其他自定义 UI。",
+                TextWrapping = TextWrapping.Wrap
+            }
+        );
+        Link(
+            "许可范围与 MIT 文本",
+            Path.Combine(AppContext.BaseDirectory, "..", "Resources", "Legal", "LICENSE.md")
+        );
+        panel.Children.Add(
+            new TextBlock
+            {
+                Text = "大量使用 AI 辅助编码。架构决策、功能取舍、边界判定与验收由人工负责；代码由 AI 生成并经人工审查。具体审查和验收范围以记录为准。",
                 TextWrapping = TextWrapping.Wrap
             }
         );

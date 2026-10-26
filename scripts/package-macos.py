@@ -1,10 +1,11 @@
 """Package this project's own executable; ad-hoc signing is local, not notarization."""
-import pathlib, plistlib, subprocess, sys, struct, zlib, shutil, os
+import pathlib, plistlib, subprocess, sys, struct, zlib, shutil, os, json
 
 root, app = map(pathlib.Path, sys.argv[1:])
+release = json.loads((root/"release.json").read_text())
 info = dict(CFBundleName='Plain Craft Launcher Refactoring', CFBundleDisplayName='Plain Craft Launcher Refactoring',
     CFBundleIdentifier='local.pcl.macport.preview', CFBundleExecutable='PCL-MacPort',
-    CFBundlePackageType='APPL', CFBundleShortVersionString=os.environ.get('PCL_PACKAGE_VERSION', '0.40.1'), CFBundleVersion=os.environ.get('PCL_PACKAGE_BUILD', '401'),
+    CFBundlePackageType='APPL', CFBundleShortVersionString=os.environ.get('PCL_PACKAGE_VERSION', release['version']), CFBundleVersion=os.environ.get('PCL_PACKAGE_BUILD', str(release['build'])),
     CFBundleIconFile='AppIcon.icns', NSHighResolutionCapable=True,
     LSMinimumSystemVersion='14.0', NSPrincipalClass='NSApplication',
     NSHumanReadableCopyright='PCL by 龙腾猫跃 (LTCatt). Independent third-party refactoring. See Resources/Legal.')

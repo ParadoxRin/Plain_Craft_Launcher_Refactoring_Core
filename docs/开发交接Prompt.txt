@@ -1,25 +1,33 @@
-你接手的是 Plain Craft Launcher Refactoring 0.38 私有开发版本，Git与隐私基线仍为0.36.1。
+你接手的是 Plain Craft Launcher Refactoring Core 0.41.0 Preview。仓库为 https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core ，现已公开。应用显示名仍为 Plain Craft Launcher Refactoring，Git/隐私基线仍从 v0.36.1 开始。
 
-先阅读 README.md、docs/0.38-嵌套依赖与验收.md、docs/0.36.1-内部基线与验收.md、docs/architecture/PCL-Mac架构规范.md、docs/架构与设计取舍.md、docs/功能实现导览.md 和 docs/0.38-剩余清单.md。
+任务目标：继续维护可供 macOS、Windows、Linux 共享的启动器核心，并让开发者使用各自喜欢的 UI 组件库与布局制作客户端。当前交付只有 Apple Silicon Mac 的 Avalonia 参考客户端和独立 .NET Host；SwiftUI 是原生 Mac 接入方向，Windows/Linux 客户端和平台 Adapter 尚未完成验收。不要把“通用核心目标”描述为“三平台已经可运行”，不要未经要求重写全部 UI。
 
-获取与历史：克隆 ParadoxRin/Plain-Craft-Launcher-Refactoring 或解压本版带Git包。运行 git status、git log --all --oneline、git fsck --full；基线为一个提交与v0.36.1标签。禁止从旧PCL_Mac、旧bundle或旧交接包合并历史，不能重新带入已清理的个人信息。后续提交可以正常追加。旧版本技术文档是参考，不等于本版实测，旧产物路径可能不再存在。
+先读 README.md、docs/0.41-核心平台定位与发布.md、docs/架构与设计取舍.md、docs/客户端接入指南.md、docs/architecture/PCL-Mac架构规范.md（v1.5）、docs/功能实现导览.md、docs/剩余清单.md，以及本轮涉及用例的源码和验收记录。旧版本报告保留历史语境，不是当前状态。
 
-架构：Desktop为暂用Avalonia Shell，只调用Contract/Client；独立Host拥有执行、账户与进程生命周期。Application编排，Domain为纯规则且不引用Ports，Core/Adapters提供现有实现。Mac目标UI为SwiftUI，Windows/Linux分别使用原生库，尚未完成。不要为换UI重写已验证的安装链。继续复用InstallOperations -> VersionInstaller；凭据沿用IAccountSecrets，不进入Shell、receipt或普通RPC。
+获取：优先 git clone 当前公开仓库，运行 git status、git log --all --oneline、git fsck --full。Git 从清理后的0.36.1起正常追加；禁止合并旧 PCL_Mac、旧 bundle 或旧交接包历史。Release 源码 ZIP 不含 .git；需要历史就克隆仓库，不假定 ZIP 自带 Git。游戏、Java、账户、钥匙串、SDK、个人世界及原始测试运行目录不随源码交付。
 
-当前能力：免登录下载，多版本与加载器安装；微软和离线账户；皮肤获取/保存/刷新；Modrinth与多源资源；模组依赖和多种整合包；实例复制/备份；Iris事务撤销、共享依赖保护；operationId、取消、幂等、快照、事件、会话恢复及部分安全续做。每项支持范围以矩阵和剩余清单为准，不宣布PCL全部等价。
+架构：Shell/Client仅引用Contract，Desktop已经移除Core/Application业务引用，Bootstrap也没有业务例外。Host负责组合根、数据根OS独占锁、执行和关闭。Application编排，Domain纯规则且不引用Ports；Core/Adapters实现外部能力。复用InstallOperations -> VersionInstaller与ResourceDependencyPlanner，不在UI另写下载、求解或安装。沿用IAccountSecrets；密钥不进Shell、receipt、设置导出或普通RPC。命名空间Pcl.Core.Contracts可以属于独立Contract程序集，以项目和符号归属为准。
 
-剩余工作：35项实现缺口仍在，包括完整复杂依赖语义、更多整合包兼容、Oculus卸载、部分自动修复/更新、3D皮肤、外置账户和原生UI。部分验收需要第二微软账户、API密钥或其他平台。优先无需额外账户的真实实现，不做矩阵子进度，不靠改状态或写说明关闭缺口。
+客户端：当前是PCL自定义RPC v1 / NDJSON，不声明JSON-RPC 2.0兼容。先host.hello，核对能力和帧上限。请求ID、operationId、幂等键分别管理；先订阅缓冲后取快照，断连查询权威状态，不因超时重复副作用。会话恢复与Host重启后任务安全续做不同。Swift等语言需实现传输与一致性测试，不能直接引用.NET对象，也不能声称已存在通用SDK或插件系统。
 
-0.36.1：产品显示名为Plain Craft Launcher Refactoring。关于页首位是龙腾猫跃署名和其官方赞助链接，明确第三方作品。每次启动显示原作者支持提示，未有正版验证记录的离线账户显示购买提示，非中文未验证流程仅试玩/取消。game.launch.v2在执行器检查确认，并将其纳入幂等指纹；先game.guidance再展示再确认。不要给旧测试增加生产绕过开关。赞助不解锁功能。Windows蓝色限制需保留。源码目前私有，尚未满足公开源码要求，不能对外宣称全部许可要求已满足。
+平台：当前Host仍绑定Mac Keychain，原生桥接和打包脚本也针对macOS。Windows/Linux需实现凭据、进程/独立运行、文件锁/路径/权限、系统集成以及Java/natives，逐平台实际测试。不要只替换OperatingSystem判断或交叉编译就写“已支持”。宿主平台探测不进入Domain，目标平台由显式上下文传入。
 
-保留行为：数据根、bundle和钥匙串标识不因改名而变；登录、皮肤、离线身份、窗口退出及独立游戏行为保留。不得读取/上传个人令牌、密码、钥匙串、存档或完整游戏进程命令行。默认OAuth client ID为空：验证微软功能需要你自己的获准应用ID以及自己的微软账号，仅有账号不能替代应用ID。
+当前证据：131项能力中68项已覆盖限定范围、35项实现缺口、20项定向验收、8项外部条件验收。详见docs/收尾第五批验收.md与JSON；标签统计是另一口径。既有Core测试最终231/231、规划24/24，五种窗口策略、共享缓存、本地双节点TCP及多个Java版本实际运行；不是全部平台或世界验收。原34项定向验收引用中发现21个不同历史证据路径缺失，不能按不存在文件追认结果。0.41最终包测试另见发布报告。
 
-构建：Apple Silicon macOS14+，Xcode CLI、Python3、curl，global.json固定.NET10.0.402。执行bash scripts/build-handoff.sh，输出artifacts/Plain Craft Launcher Refactoring 0.38.app。支持DOTNET指定SDK。当前ad-hoc签名、未公证；未配置云端CI。
+重要修复：LaunchService按所选实例profile.gameVersion做依赖预检，不再误用默认1.21.1；Apple Silicon LWJGL2加入-XstartOnFirstThread且去重，非ARM64策略保留。1.12.2与OptiFabric在隔离副本菜单复测通过；本轮菜单停止不是正常世界保存。不要把前述测试改为容忍故障来“通过”。
 
-测试：见docs/开发与验证.md。--license0361运行策略、执行边界和幂等/恢复定向测试；--license0361-smoke运行真实Avalonia/Host关于页和启动提示交互。另有--iris036、--txn035等套件；使用全新隔离目录。HTTP替身、编译、标题渲染、进世界与人工确认分别报告，不混称平台验收。旧启动探针未提供Guidance时会拒绝，这是契约变化，不应关闭生产检查来迁就测试。
+保留行为：免登录下载；微软与离线登录各自身份语义；账户/皮肤持久化；数据根、bundle与钥匙串标识；游戏独立运行；窗口与任务取消分离、单一释放责任；文件归属/哈希/依赖/事务检查；授权与劝导不能在新客户端绕过。Forge单人Quick Play的已有拒绝、Iris未知归属及自定义覆盖卸载的拒绝等限制不能删掉充当支持。
 
-隐私：提交前执行scripts/audit-repository-privacy.py，检查暂存清单，禁止整体强制加入artifacts。脚本仅为模式扫描，不保证未知秘密不存在。不得恢复旧OAuth标识或Git个人邮箱。PCL-LICENCE.txt及第三方许可原文必须保留。
+OAuth：0.40.1已按所有者授权恢复公开client ID，0.41继续使用。普通用户登录自己的微软账号，不提供密码给开发者。公开client ID不是秘密；不得添加client secret、密码、刷新令牌或租户身份。派生产品可以配置自身获准应用ID，见docs/微软登录开发配置.md；不要沿用旧Prompt中“默认ID为空”的过时说法。
 
-0.37：先读 ResourceDependencyPlanner、Domain/FabricMetadata、FabricVersions。三类入口共用规划和原事务安装器，覆盖文件由Core适配器读取，Domain保持纯规则。不要重新引入单独贪心规划器或跳过锁定文件哈希。未完成范围包含完整Quilt覆盖、官方可选候选软权重偏好、未声明远程前置与语言插件。Iris卸载仍拒绝覆盖文件，不把本轮安装支持误扩大成卸载安全性。
+许可：阅读LICENSE.md。其余有权授权的原创内容采用MIT，PCL/PCLCS衍生与各第三方内容保留原许可/NOTICE；AI生成不自动证明独立原创。PCL-LICENCE.txt原文不得删改。关于页首位保留龙腾猫跃署名与官方赞助链接，继续第三方声明、源码入口、购买/赞助劝导、Windows蓝色与无赞助解锁。源码已公开，但不因此宣称所有其他分发义务自动满足。
 
-0.38：FabricCandidateSolver是Domain纯有界硬约束求解，FabricDependencySet负责真实文件输入。所有根包锁定，嵌套候选依父包激活，内容哈希标记候选。冲突沿DependencyDiagnostic契约进入任务receipt/客户端，不能退回仅显示INVALID_DATA。不要声称与官方软权重最优结果完全等价。复现--nested038、--live038及两个test-nested-038脚本，证据见final目录；真实世界与用户画面确认已完成。
+开发方式：大量使用AI辅助编码。架构决策、功能取舍、边界判定与验收由人工负责；代码由AI生成并经人工审查。记录实际人工审查和验收范围，不补造“所有历史代码逐行审查”或未经发生的用户确认。
+
+构建：Apple Silicon macOS14+、Xcode CLI、Python3、curl、global.json指定.NET10.0.402。bash scripts/build-handoff.sh，版本入口release.json，并与Desktop项目版本一致。当前产物artifacts/Plain Craft Launcher Refactoring 0.41.0.app，ad-hoc签名、未公证。尚无远程CI通过记录，不因增加README而声明CI或Windows/Linux测试成功。
+
+测试：docs/开发与验证.md列出控制台入口，不能只运行dotnet test。选择与本次修改相称的测试，不无故全项目反复回归。实际发布包需要解压签名/权限/哈希、dylib install_name、隐私模式扫描、真实Host/UI及适用游戏启动检查。使用全新隔离目录，不打开重要存档，不读取完整含令牌进程命令行，只清理本次拥有的进程。编译/替身/真实安装/菜单/世界/人工确认分别记录。
+
+优先级：先完成20项待验收中不需要额外条件的场景；35项实现缺口保持明确，不因更改目标删掉。复杂Quilt插件/虚拟多父路径/软偏好、完整TOML、更多包兼容、Oculus卸载、外置账户启动、3D皮肤、自动更新等仍有缺口。百宝箱已取消；不新增矩阵子进度，不靠改状态关闭缺口。修改需求范围需要人工决定并登记。
+
+提交发布：检查暂存清单、审查差异、扫描秘密/个人路径，使用GitHub noreply身份。不强制加入artifacts、.local、SDK、缓存或账户文件。内置公开OAuth ID按授权白名单处理，不把它误删为密钥。发布只上传明确的源码/应用/脱敏证据和校验文件；保留包哈希与来源提交。原始日志、玩家文件标识和房间秘密不上传。不要修改历史证据来掩盖失败。

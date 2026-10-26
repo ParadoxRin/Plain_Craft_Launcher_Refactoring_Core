@@ -204,6 +204,42 @@ public partial class MainWindow : Window
                 return;
             }
 
+            if (Program.Arguments.Contains("--closeout-fifth"))
+            {
+                await CloseoutFifthAcceptanceAsync();
+                return;
+            }
+
+            if (Program.Arguments.Contains("--drop-world-acceptance"))
+            {
+                await DropWorldAcceptanceAsync();
+                return;
+            }
+
+            if (Program.Arguments.Contains("--closeout-third"))
+            {
+                await CloseoutThirdAcceptanceAsync();
+                return;
+            }
+
+            if (Program.Arguments.Contains("--update-ignore-acceptance"))
+            {
+                await UpdateIgnoreAcceptanceAsync();
+                return;
+            }
+
+            if (Program.Arguments.Contains("--file-picker-acceptance"))
+            {
+                await FilePickerAcceptanceAsync();
+                return;
+            }
+
+            if (Program.Arguments.Contains("--closeout-smoke"))
+            {
+                await CloseoutSmokeAsync();
+                return;
+            }
+
             if (Program.Arguments.Contains("--navigation040-smoke"))
             {
                 await Navigation040SmokeAsync();

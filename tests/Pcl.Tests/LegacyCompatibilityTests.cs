@@ -101,6 +101,12 @@ public static class LegacyCompatibilityTests
                     JObject.Parse("{\"libraries\":[{\"name\":\"org.lwjgl.lwjgl:lwjgl:2.9.2\"}]}")
                 )
             );
+            Require(
+                LegacyLaunchAdapter.RequiresFirstThread(
+                    JObject.Parse("{\"libraries\":[{\"name\":\"org.lwjgl.lwjgl:lwjgl:2.9.2\"}]}"),
+                    appleSilicon: true
+                )
+            );
         });
         yield return ("optifine_catalog_filters_version_and_preview", () =>
         {

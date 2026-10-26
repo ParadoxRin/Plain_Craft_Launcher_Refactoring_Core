@@ -5,6 +5,24 @@ using Pcl.Core.Contracts.Pages;
 using Pcl.Core.Contracts.Workspaces;
 using Pcl.Core.Contracts.Operations;
 
+if (args[0] == "--closeout-workspace")
+{
+    await CloseoutWorkspaceFlow.Run(args[1], args[2]);
+    return;
+}
+
+if (args[0] == "--closeout-link")
+{
+    await CloseoutLinkFlow.Run(args[1], args[2]);
+    return;
+}
+
+if (args[0] == "--export-privacy")
+{
+    await ExportPrivacyFlow.Run(args[1], args[2]);
+    return;
+}
+
 if (args[0] == "--iris036-preview")
 {
     await using var probeSession = new LauncherSession(

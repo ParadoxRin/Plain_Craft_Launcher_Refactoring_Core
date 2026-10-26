@@ -1,0 +1,106 @@
+{
+  "date": "2026-10-27",
+  "baseline": "0.40.1 + local acceptance changes",
+  "platform": "macOS Apple Silicon",
+  "gameVersion": "1.21.1 vanilla",
+  "nativeDropAndHost": {
+    "status": "passed",
+    "checks": [
+      "UI-013-real-drop-confirmation-imports-resource-through-host",
+      "UI-013-imported-resource-hash-matches-dropped-file",
+      "RES-012-host-activates-dropped-resource-pack",
+      "RES-013-host-installs-datapack-into-selected-disposable-world"
+    ]
+  },
+  "publicResourceDownload": {
+    "status": "passed",
+    "checks": [
+      "host-records-public-resource-release",
+      "download-matches-public-size",
+      "download-matches-public-sha1",
+      "downloaded-pack-activation-persists-options",
+      "host-clean-exit"
+    ],
+    "projectId": "xnKSRpXg",
+    "versionId": "p6IKJYJf",
+    "filename": "Lower Defaults (Shield & Fire) - Release 1.0.0 1.14-1.20.4.zip",
+    "bytes": 108030,
+    "sha1": "10703768f153c8bb9479327ef68dd66ed88bfc37",
+    "gameTested": false
+  },
+  "firstGameProcess": {
+    "detached": false,
+    "state": "completed",
+    "checks": [
+      "host-retains-launch-guidance",
+      "launch-retry-reuses-operation",
+      "actual-game-joined-test-world",
+      "actual-datapack-load-function-executed",
+      "actual-game-resource-manager-loaded-test-pack",
+      "actual-world-save-recorded",
+      "actual-world-save-completed",
+      "managed-game-exit-zero",
+      "game-keeps-resource-and-data-pack-files",
+      "test-world-files-updated"
+    ],
+    "exitCode": 0
+  },
+  "secondGameProcess": {
+    "detached": true,
+    "state": "completed",
+    "checks": [
+      "host-retains-launch-guidance",
+      "launch-retry-reuses-operation",
+      "actual-game-joined-test-world",
+      "actual-datapack-load-function-executed",
+      "actual-game-resource-manager-loaded-test-pack",
+      "host-clean-shutdown",
+      "game-survives-host-exit",
+      "actual-world-save-recorded",
+      "actual-world-save-completed",
+      "game-keeps-resource-and-data-pack-files",
+      "test-world-files-updated"
+    ],
+    "exitCode": null
+  },
+  "worldHandoff": {
+    "identicalFiles": 48,
+    "allHashesMatch": true,
+    "excludes": [
+      "session.lock"
+    ]
+  },
+  "fixtures": {
+    "PCL-Acceptance-Resources.zip": {
+      "sha256": "4520ccc61584d9f583875bb5668c25de9ddbb57727325f489fb37f20aac105b4",
+      "bytes": 671
+    },
+    "PCL-Acceptance-Data.zip": {
+      "sha256": "3c29f4bedbbc9368165a3b802442a206c1f0554afedacd3b661bfc06dd80d13e",
+      "bytes": 1245
+    }
+  },
+  "packFormatsFromOfficialClient": {
+    "resource": 34,
+    "data": 48
+  },
+  "userObservations": {
+    "nativeFinderDropAndConfirmation": "完成",
+    "firstWorldSidebarGoldBlocksAndCheckerTexture": "看到了，以及确认正常",
+    "secondWorldMarkerPositionTextureLoadsIncreaseAndExit": "一切正常",
+    "exactLoadsValuesRecorded": false
+  },
+  "build": {
+    "status": "passed",
+    "architectureGuardViolations": 0,
+    "warnings": 3
+  },
+  "limits": [
+    "Controlled local texture/datapack fixtures exercised in vanilla 1.21.1; not arbitrary pack compatibility.",
+    "Public resource download independently tested in a separate fresh root; that public pack was not tested in game.",
+    "TreeMiner public datapack download evidence is historical, not rerun in this batch; in-game behavior belongs to the controlled fixture.",
+    "First game exit code was 0; detached second game exit code is unavailable, with saving logs and user exit confirmation retained.",
+    "Offline isolated test account only; Microsoft login, keychain and skin rendering were not retested.",
+    "Local Debug builds, not a new packaged release; raw logs and world filename hashes remain local."
+  ]
+}

@@ -1406,12 +1406,13 @@
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
       "macImplementation": "src/Pcl.Core/LauncherSettings.cs; src/Pcl.Core/InstanceRegistry.cs",
       "ui": "实例管理 → 收藏/在首页隐藏",
-      "status": "已实现待验收",
+      "status": "已验收",
       "testEvidence": [
         "artifacts/evidence-0.8/tests-instance-fixes/test-results.json#instance_favorite_hidden_persisted_and_management_still_finds_hidden",
-        "artifacts/architecture-0.28/workspaces2.json#preferences-and-hidden-instance-remain-addressable"
+        "artifacts/architecture-0.28/workspaces2.json#preferences-and-hidden-instance-remain-addressable",
+        "docs/收尾首批验收结果.json"
       ],
-      "remaining": "Host 已验证保存偏好、隐藏后可寻址；仍需完整 GUI 收藏/隐藏/恢复和重开筛选的定向验收。",
+      "remaining": "本轮真实 Avalonia 收藏、隐藏、页面重开、组合筛选及恢复通过；限定实例偏好管理，不外推其他页面或完整游戏启动。",
       "externalConditions": [],
       "implementationSummary": "",
       "evidenceLevels": {
@@ -1435,12 +1436,26 @@
         "evidenceState": "平台实际运行",
         "implementationGap": false,
         "requiresExternalCondition": false,
-        "workKind": "定向验收",
+        "workKind": "已覆盖限定范围",
         "acceptanceScope": [
-          "Host 保存偏好并能再次寻址隐藏实例；未补齐完整 GUI 重开筛选。"
+          "Host 保存偏好并能再次寻址隐藏实例；未补齐完整 GUI 重开筛选。",
+          "2026-10-27 收尾首批验收补齐真实页面保存、关闭重开、筛选、恢复；详见 closeoutAcceptance。"
         ],
-        "nextAction": "Host 已验证保存偏好、隐藏后可寻址；仍需完整 GUI 收藏/隐藏/恢复和重开筛选的定向验收。",
+        "nextAction": "本轮真实 Avalonia 收藏、隐藏、页面重开、组合筛选及恢复通过；限定实例偏好管理，不外推其他页面或完整游戏启动。",
         "note": "无本范围证据时保留历史结论；矩阵状态不等同当前包逐项重测。"
+      },
+      "closeoutAcceptance": {
+        "date": "2026-10-27",
+        "evidence": "docs/收尾首批验收结果.json",
+        "sha256": "cb5a26bd2087616bc55cbf6f8ba4fd2692aa2d41f8bac11f07877c7f7339c74e",
+        "checks": [
+          "INST-003-favorite-filter-after-ui-save",
+          "INST-003-hidden-excluded-from-visible-filter",
+          "INST-003-reopened-page-restores-favorite-and-hidden",
+          "INST-003-unhide-restores-visible-instance",
+          "INST-003-unfavorite-removes-from-favorites"
+        ],
+        "scope": "Real UI + Host"
       }
     },
     {
@@ -1452,13 +1467,14 @@
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
       "macImplementation": "src/Pcl.Core/LauncherSettings.cs; src/Pcl.Core/InstanceIconService.cs; src/Pcl.Desktop/InstanceWorkspace.cs",
       "ui": "实例管理 → 名称/描述 → 保存",
-      "status": "已实现待验收",
+      "status": "已验收",
       "testEvidence": [
         "tests/Pcl.Tests/InstanceManagementTests.cs#instance_icon_is_passive_bounded_and_follows_copy_backup",
         "artifacts/architecture-0.28/workspaces2.json#icon-controlled-export-roundtrip",
-        "artifacts/architecture-0.28/release-ui.json#instance-page-save-button-persists-through-host,instance-page-launch-setting-button-persists-through-host"
+        "artifacts/architecture-0.28/release-ui.json#instance-page-save-button-persists-through-host,instance-page-launch-setting-button-persists-through-host",
+        "docs/收尾第二批验收结果.json"
       ],
-      "remaining": "真实 Host 图标导出/移除和 GUI 名称/分组保存已有证据；图片选择、更换与重开视觉仍需定向验收。",
+      "remaining": "名称描述保存保留历史证据；本轮 PNG 经真实 macOS 选择器保存、渲染、页面重开字节一致及恢复默认通过；不外推全部图片编码。",
       "externalConditions": [],
       "implementationSummary": "",
       "evidenceLevels": {
@@ -1492,13 +1508,20 @@
         "evidenceState": "平台实际运行",
         "implementationGap": false,
         "requiresExternalCondition": false,
-        "workKind": "定向验收",
+        "workKind": "已覆盖限定范围",
         "acceptanceScope": [
           "Host 图标受控导出往返和移除；GUI 图片选择仍单列。",
-          "实际实例分组和启动设置按钮保存，不把这条扩展为图标导入。"
+          "实际实例分组和启动设置按钮保存，不把这条扩展为图标导入。",
+          "收尾第二批限定验收：名称描述保存保留历史证据；本轮 PNG 经真实 macOS 选择器保存、渲染、页面重开字节一致及恢复默认通过；不外推全部图片编码。"
         ],
-        "nextAction": "真实 Host 图标导出/移除和 GUI 名称/分组保存已有证据；图片选择、更换与重开视觉仍需定向验收。",
+        "nextAction": "名称描述保存保留历史证据；本轮 PNG 经真实 macOS 选择器保存、渲染、页面重开字节一致及恢复默认通过；不外推全部图片编码。",
         "note": "无本范围证据时保留历史结论；矩阵状态不等同当前包逐项重测。"
+      },
+      "closeoutSecondAcceptance": {
+        "date": "2026-10-27",
+        "evidence": "docs/收尾第二批验收结果.json",
+        "sha256": "f8e4c82c2771005061c592c34cf615c00b792d74b6c651059602aea76cc053a2",
+        "scope": "名称描述保存保留历史证据；本轮 PNG 经真实 macOS 选择器保存、渲染、页面重开字节一致及恢复默认通过；不外推全部图片编码。"
       }
     },
     {
@@ -1923,12 +1946,13 @@
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
       "macImplementation": "src/Pcl.Core/InstanceRegistry.cs; src/Pcl.Core/InstanceManager.cs",
       "ui": "自动用于实例启动/复制/删除",
-      "status": "已实现待验收",
+      "status": "已验收",
       "testEvidence": [
         "artifacts/evidence-0.8/tests-instance-fixes/test-results.json#instance_copy_preserves_save_excludes_credentials_and_shared_cache",
-        "artifacts/evidence-0.8/tests-instance-fixes/test-results.json#instance_trash_restore_preserves_save_and_parent_dependencies"
+        "artifacts/evidence-0.8/tests-instance-fixes/test-results.json#instance_trash_restore_preserves_save_and_parent_dependencies",
+        "docs/收尾第五批验收结果.json"
       ],
-      "remaining": "共享客户端与 assets 保留，加载器私有库按 receipt 读取；没有引用计数 GC，不执行可能破坏其他实例的共享清理",
+      "remaining": "真实 Host 复制、移入回收站和恢复后，11,391 个共享 assets、libraries、客户端与 Java 文件逐项哈希不变；不包含引用计数垃圾回收。",
       "externalConditions": [],
       "implementationSummary": "",
       "evidenceLevels": {
@@ -1942,10 +1966,19 @@
         "evidenceState": "本范围未新增直接证据",
         "implementationGap": false,
         "requiresExternalCondition": false,
-        "workKind": "定向验收",
-        "acceptanceScope": [],
-        "nextAction": "共享客户端与 assets 保留，加载器私有库按 receipt 读取；没有引用计数 GC，不执行可能破坏其他实例的共享清理",
+        "workKind": "已覆盖限定范围",
+        "acceptanceScope": [
+          "真实 Host 复制、移入回收站和恢复后，11,391 个共享 assets、libraries、客户端与 Java 文件逐项哈希不变；不包含引用计数垃圾回收。"
+        ],
+        "nextAction": "真实 Host 复制、移入回收站和恢复后，11,391 个共享 assets、libraries、客户端与 Java 文件逐项哈希不变；不包含引用计数垃圾回收。",
         "note": "无本范围证据时保留历史结论；矩阵状态不等同当前包逐项重测。"
+      },
+      "closeoutFifthAcceptance": {
+        "date": "2026-10-27",
+        "evidence": "docs/收尾第五批验收结果.json",
+        "sha256": "86d8ec5e81e627036effbdc843c5405768091499cfef8bedc8705d9ac694e665",
+        "scope": "真实 Host 复制、移入回收站和恢复后，11,391 个共享 assets、libraries、客户端与 Java 文件逐项哈希不变；不包含引用计数垃圾回收。",
+        "accepted": true
       }
     },
     {
@@ -2162,7 +2195,7 @@
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
       "macImplementation": "src/Pcl.Core/VersionInstaller.cs",
       "ui": "下载版本 / 加载器",
-      "status": "部分实现",
+      "status": "已验收",
       "testEvidence": [
         "artifacts/evidence-0.8-compat/compatibility-results.json",
         "tests/Pcl.Tests/LegacyCompatibilityTests.cs",
@@ -2170,9 +2203,10 @@
         "docs/0.17实现与验收.md",
         "artifacts/verification-0.17/owned-launches/matrix.json",
         "artifacts/verification-0.17/final-owned-launches/matrix.json",
-        "artifacts/architecture-avalonia-host/legacy-host-live.json#optifine:renderer=True,userFilePreserved=True,liteloader:renderer=True,userFilePreserved=True"
+        "artifacts/architecture-avalonia-host/legacy-host-live.json#optifine:renderer=True,userFilePreserved=True,liteloader:renderer=True,userFilePreserved=True",
+        "docs/收尾第五批验收结果.json"
       ],
-      "remaining": "0.17 真实正版账户启动 1.12.2，旧 minecraftArguments 路径完成图形初始化；其他远古参数和资源布局仍需逐版验收。",
+      "remaining": "当前 Host 以旧 minecraftArguments 启动 1.12.2，修复后默认配置完成菜单渲染并观察 60 秒；本轮不含世界保存，其他远古版本逐版验证。",
       "externalConditions": [],
       "implementationSummary": "LegacyLaunchAdapter.NormalizeMetadata/SplitArguments、FabricService.Merge，老参数替换及变量适配",
       "evidenceLevels": {
@@ -2197,12 +2231,20 @@
         "evidenceState": "平台实际运行",
         "implementationGap": false,
         "requiresExternalCondition": false,
-        "workKind": "定向验收",
+        "workKind": "已覆盖限定范围",
         "acceptanceScope": [
-          "OptiFine/LiteLoader 1.12.2 安装取消、完整 Host 重建续做、用户文件保留及渲染初始化。"
+          "OptiFine/LiteLoader 1.12.2 安装取消、完整 Host 重建续做、用户文件保留及渲染初始化。",
+          "当前 Host 以旧 minecraftArguments 启动 1.12.2，修复后默认配置完成菜单渲染并观察 60 秒；本轮不含世界保存，其他远古版本逐版验证。"
         ],
-        "nextAction": "0.17 真实正版账户启动 1.12.2，旧 minecraftArguments 路径完成图形初始化；其他远古参数和资源布局仍需逐版验收。",
+        "nextAction": "当前 Host 以旧 minecraftArguments 启动 1.12.2，修复后默认配置完成菜单渲染并观察 60 秒；本轮不含世界保存，其他远古版本逐版验证。",
         "note": "无本范围证据时保留历史结论；矩阵状态不等同当前包逐项重测。"
+      },
+      "closeoutFifthAcceptance": {
+        "date": "2026-10-27",
+        "evidence": "docs/收尾第五批验收结果.json",
+        "sha256": "86d8ec5e81e627036effbdc843c5405768091499cfef8bedc8705d9ac694e665",
+        "scope": "当前 Host 以旧 minecraftArguments 启动 1.12.2，修复后默认配置完成菜单渲染并观察 60 秒；本轮不含世界保存，其他远古版本逐版验证。",
+        "accepted": true
       }
     },
     {
@@ -2214,7 +2256,7 @@
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
       "macImplementation": "src/Pcl.Core/VersionInstaller.cs",
       "ui": "下载版本 / 加载器",
-      "status": "部分实现",
+      "status": "已验收",
       "testEvidence": [
         "artifacts/evidence-0.8-compat/compatibility-results.json",
         "src/Pcl.Core/Compatibility/xmcl-macos-arm64.json",
@@ -2222,9 +2264,10 @@
         "docs/0.17实现与验收.md",
         "artifacts/verification-0.17/owned-launches/matrix.json",
         "artifacts/verification-0.17/final-owned-launches/matrix.json",
-        "artifacts/architecture-avalonia-host/legacy-host-live.json#optifine:renderer=True,userFilePreserved=True,liteloader:renderer=True,userFilePreserved=True"
+        "artifacts/architecture-avalonia-host/legacy-host-live.json#optifine:renderer=True,userFilePreserved=True,liteloader:renderer=True,userFilePreserved=True",
+        "docs/收尾第五批验收结果.json"
       ],
-      "remaining": "0.17 原版 1.12.2 使用 ARM64 Java 8 与 LWJGL2 兼容层通过图形初始化；不声明全部 LWJGL2 游戏、旁白或手柄兼容。",
+      "remaining": "Apple Silicon 的 LWJGL2 补入首线程参数后，1.12.2 默认配置菜单观察 60 秒通过，LiteLoader 1.12.2 观察 15 秒通过；不外推其他原生库、旁白或手柄。",
       "externalConditions": [],
       "implementationSummary": "固定XMCL osx-arm64映射、HMCL LWJGL2 natives、逐Mach-O审核、第一线程规则",
       "evidenceLevels": {
@@ -2249,12 +2292,20 @@
         "evidenceState": "平台实际运行",
         "implementationGap": false,
         "requiresExternalCondition": false,
-        "workKind": "定向验收",
+        "workKind": "已覆盖限定范围",
         "acceptanceScope": [
-          "OptiFine/LiteLoader 1.12.2 安装取消、完整 Host 重建续做、用户文件保留及渲染初始化。"
+          "OptiFine/LiteLoader 1.12.2 安装取消、完整 Host 重建续做、用户文件保留及渲染初始化。",
+          "Apple Silicon 的 LWJGL2 补入首线程参数后，1.12.2 默认配置菜单观察 60 秒通过，LiteLoader 1.12.2 观察 15 秒通过；不外推其他原生库、旁白或手柄。"
         ],
-        "nextAction": "0.17 原版 1.12.2 使用 ARM64 Java 8 与 LWJGL2 兼容层通过图形初始化；不声明全部 LWJGL2 游戏、旁白或手柄兼容。",
+        "nextAction": "Apple Silicon 的 LWJGL2 补入首线程参数后，1.12.2 默认配置菜单观察 60 秒通过，LiteLoader 1.12.2 观察 15 秒通过；不外推其他原生库、旁白或手柄。",
         "note": "无本范围证据时保留历史结论；矩阵状态不等同当前包逐项重测。"
+      },
+      "closeoutFifthAcceptance": {
+        "date": "2026-10-27",
+        "evidence": "docs/收尾第五批验收结果.json",
+        "sha256": "86d8ec5e81e627036effbdc843c5405768091499cfef8bedc8705d9ac694e665",
+        "scope": "Apple Silicon 的 LWJGL2 补入首线程参数后，1.12.2 默认配置菜单观察 60 秒通过，LiteLoader 1.12.2 观察 15 秒通过；不外推其他原生库、旁白或手柄。",
+        "accepted": true
       }
     },
     {
@@ -2457,11 +2508,12 @@
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
       "macImplementation": "src/Pcl.Core/VersionInstaller.cs",
       "ui": "下载版本 / 加载器",
-      "status": "部分实现",
+      "status": "已验收",
       "testEvidence": [
-        "artifacts/evidence-0.8-compat/compatibility-results.json"
+        "artifacts/evidence-0.8-compat/compatibility-results.json",
+        "docs/收尾第五批验收结果.json"
       ],
-      "remaining": "1.20.1 47.1.106启动通过；未保证全部旧NeoForge构建。",
+      "remaining": "现有隔离副本的 NeoForge 1.20.1-47.1.106 经当前 Host、ARM64 Java 17 启动并观察菜单 15 秒；本批未重新安装，不外推其他构建。",
       "externalConditions": [],
       "implementationSummary": "旧net.neoforged:forge与forge文件名/--installClient",
       "evidenceLevels": {
@@ -2475,10 +2527,19 @@
         "evidenceState": "本范围未新增直接证据",
         "implementationGap": false,
         "requiresExternalCondition": false,
-        "workKind": "定向验收",
-        "acceptanceScope": [],
-        "nextAction": "1.20.1 47.1.106启动通过；未保证全部旧NeoForge构建。",
+        "workKind": "已覆盖限定范围",
+        "acceptanceScope": [
+          "现有隔离副本的 NeoForge 1.20.1-47.1.106 经当前 Host、ARM64 Java 17 启动并观察菜单 15 秒；本批未重新安装，不外推其他构建。"
+        ],
+        "nextAction": "现有隔离副本的 NeoForge 1.20.1-47.1.106 经当前 Host、ARM64 Java 17 启动并观察菜单 15 秒；本批未重新安装，不外推其他构建。",
         "note": "无本范围证据时保留历史结论；矩阵状态不等同当前包逐项重测。"
+      },
+      "closeoutFifthAcceptance": {
+        "date": "2026-10-27",
+        "evidence": "docs/收尾第五批验收结果.json",
+        "sha256": "86d8ec5e81e627036effbdc843c5405768091499cfef8bedc8705d9ac694e665",
+        "scope": "现有隔离副本的 NeoForge 1.20.1-47.1.106 经当前 Host、ARM64 Java 17 启动并观察菜单 15 秒；本批未重新安装，不外推其他构建。",
+        "accepted": true
       }
     },
     {
@@ -2567,9 +2628,10 @@
         "artifacts/evidence-0.8-compat/compatibility-results.json",
         "src/Pcl.Core/LiteLoaderService.cs",
         "artifacts/architecture-avalonia-host/legacy-host-live.json#optifine:renderer=True,userFilePreserved=True,liteloader:renderer=True,userFilePreserved=True",
-        "artifacts/architecture-contract-0.25/legacy-host-live.json#optifine:renderer=True,userFilePreserved=True,liteloader:renderer=True,userFilePreserved=True"
+        "artifacts/architecture-contract-0.25/legacy-host-live.json#optifine:renderer=True,userFilePreserved=True,liteloader:renderer=True,userFilePreserved=True",
+        "docs/收尾第五批验收结果.json"
       ],
-      "remaining": "1.12.2 LiteLoader 已完成真实 Host 重建恢复、启动及用户文件保留；其他历史构建需逐版验收，不存在本轮已证实的通用代码缺口。",
+      "remaining": "当前 Host 启动现有 LiteLoader 1.12.2 隔离副本、菜单观察 15 秒通过；历史安全恢复原始报告部分已缺失，本批没有重新执行安装→取消→恢复，仍待补此证据。",
       "externalConditions": [],
       "implementationSummary": "官方目录及Maven快照/SHA1，旧Sponge地址升级官方现址",
       "evidenceLevels": {
@@ -2609,8 +2671,15 @@
           "OptiFine/LiteLoader 1.12.2 安装取消、完整 Host 重建续做、用户文件保留及渲染初始化。",
           "0.25 发布 Host 复测同一旧加载器恢复链路；不扩展其他历史构建。"
         ],
-        "nextAction": "1.12.2 LiteLoader 已完成真实 Host 重建恢复、启动及用户文件保留；其他历史构建需逐版验收，不存在本轮已证实的通用代码缺口。",
+        "nextAction": "当前 Host 启动现有 LiteLoader 1.12.2 隔离副本、菜单观察 15 秒通过；历史安全恢复原始报告部分已缺失，本批没有重新执行安装→取消→恢复，仍待补此证据。",
         "note": "无本范围证据时保留历史结论；矩阵状态不等同当前包逐项重测。"
+      },
+      "closeoutFifthAcceptance": {
+        "date": "2026-10-27",
+        "evidence": "docs/收尾第五批验收结果.json",
+        "sha256": "86d8ec5e81e627036effbdc843c5405768091499cfef8bedc8705d9ac694e665",
+        "scope": "当前 Host 启动现有 LiteLoader 1.12.2 隔离副本、菜单观察 15 秒通过；历史安全恢复原始报告部分已缺失，本批没有重新执行安装→取消→恢复，仍待补此证据。",
+        "accepted": false
       }
     },
     {
@@ -2688,9 +2757,10 @@
         "tests/Pcl.Tests/OptiFabricTests.cs",
         "docs/OptiFabric固定组合与文件另存为.md",
         "artifacts/evidence-0.8-compat/optifabric/service-result.json",
-        "artifacts/architecture-0.32/release-final-main.json#host-validates-existing-reviewed-optifabric-artifact,host-installs-real-optifabric-compatibility-instance"
+        "artifacts/architecture-0.32/release-final-main.json#host-validates-existing-reviewed-optifabric-artifact,host-installs-real-optifabric-compatibility-instance",
+        "docs/收尾第五批验收结果.json"
       ],
-      "remaining": "产品服务创建1.20.1/Fabric0.16.14/OptiFabric1.14.3/OptiFineI6独立实例并图形初始化45秒；未知版本不启用，未做世界内验收。",
+      "remaining": "本轮修复预检误用 Host 默认 1.21.1 的故障；1.20.1/Fabric 0.16.14/OptiFabric 1.14.3/OptiFine I6 隔离副本经当前 Host 菜单观察 30 秒通过。未进入世界，继续待验收；未知组合不启用。",
       "externalConditions": [],
       "implementationSummary": "OptiFabricService/Window：固定1.20.1、Fabric0.16.14、OptiFabric1.14.3、OptiFineI6；新实例、作者手动文件或合法CF API、冲突/指纹预检",
       "evidenceLevels": {
@@ -2719,8 +2789,15 @@
         "acceptanceScope": [
           "已审定 OptiFine/OptiFabric 固定组合的真实安装，不泛化其他组合。"
         ],
-        "nextAction": "产品服务创建1.20.1/Fabric0.16.14/OptiFabric1.14.3/OptiFineI6独立实例并图形初始化45秒；未知版本不启用，未做世界内验收。",
+        "nextAction": "本轮修复预检误用 Host 默认 1.21.1 的故障；1.20.1/Fabric 0.16.14/OptiFabric 1.14.3/OptiFine I6 隔离副本经当前 Host 菜单观察 30 秒通过。未进入世界，继续待验收；未知组合不启用。",
         "note": "无本范围证据时保留历史结论；矩阵状态不等同当前包逐项重测。"
+      },
+      "closeoutFifthAcceptance": {
+        "date": "2026-10-27",
+        "evidence": "docs/收尾第五批验收结果.json",
+        "sha256": "86d8ec5e81e627036effbdc843c5405768091499cfef8bedc8705d9ac694e665",
+        "scope": "本轮修复预检误用 Host 默认 1.21.1 的故障；1.20.1/Fabric 0.16.14/OptiFabric 1.14.3/OptiFine I6 隔离副本经当前 Host 菜单观察 30 秒通过。未进入世界，继续待验收；未知组合不启用。",
+        "accepted": false
       }
     },
     {
@@ -2890,7 +2967,7 @@
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
       "macImplementation": "src/Pcl.Core/JavaService.cs; src/Pcl.Core/MacCompatibility.cs",
       "ui": "实例管理 → 启动设置",
-      "status": "已实现待验收",
+      "status": "已验收",
       "testEvidence": [
         "artifacts/evidence-0.8/full-regression-7/test-results.json",
         "artifacts/evidence-0.7/acceptance.json",
@@ -2898,9 +2975,10 @@
         "artifacts/verification-0.17/release-tests/test-results.json",
         "docs/0.17实现与验收.md",
         "artifacts/verification-0.17/owned-launches/matrix.json",
-        "artifacts/verification-0.17/final-owned-launches/matrix.json"
+        "artifacts/verification-0.17/final-owned-launches/matrix.json",
+        "docs/收尾第五批验收结果.json"
       ],
-      "remaining": "0.17 十个正版启动组合覆盖 ARM64 Java 8/17/21/25，核对实际进程版本与架构；不推定所有游戏、快照或模组适配。Java 16 单列保留待测边界。",
+      "remaining": "当前 Host 实际匹配 1.12.2/1.16.5→Java 8、1.17.1→16、1.18.2→17、26.3→25，均核对 aarch64 预检并完成图形初始化；不是全部快照或模组组合保证。",
       "externalConditions": [],
       "evidenceLevels": {
         "automatedRegression": "artifacts/verification-0.17/release-tests/test-results.json"
@@ -2914,10 +2992,19 @@
         "evidenceState": "本范围未新增直接证据",
         "implementationGap": false,
         "requiresExternalCondition": false,
-        "workKind": "定向验收",
-        "acceptanceScope": [],
-        "nextAction": "0.17 十个正版启动组合覆盖 ARM64 Java 8/17/21/25，核对实际进程版本与架构；不推定所有游戏、快照或模组适配。Java 16 单列保留待测边界。",
+        "workKind": "已覆盖限定范围",
+        "acceptanceScope": [
+          "当前 Host 实际匹配 1.12.2/1.16.5→Java 8、1.17.1→16、1.18.2→17、26.3→25，均核对 aarch64 预检并完成图形初始化；不是全部快照或模组组合保证。"
+        ],
+        "nextAction": "当前 Host 实际匹配 1.12.2/1.16.5→Java 8、1.17.1→16、1.18.2→17、26.3→25，均核对 aarch64 预检并完成图形初始化；不是全部快照或模组组合保证。",
         "note": "无本范围证据时保留历史结论；矩阵状态不等同当前包逐项重测。"
+      },
+      "closeoutFifthAcceptance": {
+        "date": "2026-10-27",
+        "evidence": "docs/收尾第五批验收结果.json",
+        "sha256": "86d8ec5e81e627036effbdc843c5405768091499cfef8bedc8705d9ac694e665",
+        "scope": "当前 Host 实际匹配 1.12.2/1.16.5→Java 8、1.17.1→16、1.18.2→17、26.3→25，均核对 aarch64 预检并完成图形初始化；不是全部快照或模组组合保证。",
+        "accepted": true
       }
     },
     {
@@ -2929,16 +3016,17 @@
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
       "macImplementation": "src/Pcl.Core/LaunchService.cs",
       "ui": "实例管理 → 启动设置",
-      "status": "部分实现",
+      "status": "已验收",
       "testEvidence": [
         "artifacts/evidence-0.8-compat/compatibility-results.json",
         "artifacts/verification-0.17/release-tests/test-results.json",
         "docs/0.17实现与验收.md",
         "artifacts/verification-0.17/owned-launches/matrix.json",
         "artifacts/verification-0.17/final-owned-launches/matrix.json",
-        "artifacts/architecture-avalonia-host/legacy-host-live.json#optifine:renderer=True,userFilePreserved=True,liteloader:renderer=True,userFilePreserved=True"
+        "artifacts/architecture-avalonia-host/legacy-host-live.json#optifine:renderer=True,userFilePreserved=True,liteloader:renderer=True,userFilePreserved=True",
+        "docs/收尾第五批验收结果.json"
       ],
-      "remaining": "0.17 真实正版启动原版 1.12.2、1.16.5，实际使用 Java 8 aarch64；历史 Forge/LiteLoader/OptiFine 证据保留原范围。",
+      "remaining": "ARM64 Java 8 实际启动 1.12.2、1.16.5；1.12.2 修复后菜单观察 60 秒，LiteLoader 1.12.2 观察 15 秒。本批受控停止于菜单，不计世界验收。",
       "externalConditions": [],
       "implementationSummary": "Azul官方SHA256与真实JVM架构检查，实体bin/java查找",
       "evidenceLevels": {
@@ -2963,12 +3051,20 @@
         "evidenceState": "平台实际运行",
         "implementationGap": false,
         "requiresExternalCondition": false,
-        "workKind": "定向验收",
+        "workKind": "已覆盖限定范围",
         "acceptanceScope": [
-          "OptiFine/LiteLoader 1.12.2 安装取消、完整 Host 重建续做、用户文件保留及渲染初始化。"
+          "OptiFine/LiteLoader 1.12.2 安装取消、完整 Host 重建续做、用户文件保留及渲染初始化。",
+          "ARM64 Java 8 实际启动 1.12.2、1.16.5；1.12.2 修复后菜单观察 60 秒，LiteLoader 1.12.2 观察 15 秒。本批受控停止于菜单，不计世界验收。"
         ],
-        "nextAction": "0.17 真实正版启动原版 1.12.2、1.16.5，实际使用 Java 8 aarch64；历史 Forge/LiteLoader/OptiFine 证据保留原范围。",
+        "nextAction": "ARM64 Java 8 实际启动 1.12.2、1.16.5；1.12.2 修复后菜单观察 60 秒，LiteLoader 1.12.2 观察 15 秒。本批受控停止于菜单，不计世界验收。",
         "note": "无本范围证据时保留历史结论；矩阵状态不等同当前包逐项重测。"
+      },
+      "closeoutFifthAcceptance": {
+        "date": "2026-10-27",
+        "evidence": "docs/收尾第五批验收结果.json",
+        "sha256": "86d8ec5e81e627036effbdc843c5405768091499cfef8bedc8705d9ac694e665",
+        "scope": "ARM64 Java 8 实际启动 1.12.2、1.16.5；1.12.2 修复后菜单观察 60 秒，LiteLoader 1.12.2 观察 15 秒。本批受控停止于菜单，不计世界验收。",
+        "accepted": true
       }
     },
     {
@@ -2980,11 +3076,12 @@
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
       "macImplementation": "src/Pcl.Core/LaunchService.cs",
       "ui": "实例管理 → 启动设置",
-      "status": "部分实现",
+      "status": "已验收",
       "testEvidence": [
-        "artifacts/evidence-0.8-compat/compatibility-results.json"
+        "artifacts/evidence-0.8-compat/compatibility-results.json",
+        "docs/收尾第五批验收结果.json"
       ],
-      "remaining": "1.17.1原版40秒图形和atlas通过，不代表所有1.17模组兼容。",
+      "remaining": "当前 Host 以 ARM64 Java 16 实际启动 1.17.1 并完成图形初始化；未进入世界，不外推全部 1.17 模组。",
       "externalConditions": [],
       "implementationSummary": "Azul16.0.2 ARM64，跳过链接重复bin/java，官方SHA256",
       "evidenceLevels": {
@@ -2998,10 +3095,19 @@
         "evidenceState": "本范围未新增直接证据",
         "implementationGap": false,
         "requiresExternalCondition": false,
-        "workKind": "定向验收",
-        "acceptanceScope": [],
-        "nextAction": "1.17.1原版40秒图形和atlas通过，不代表所有1.17模组兼容。",
+        "workKind": "已覆盖限定范围",
+        "acceptanceScope": [
+          "当前 Host 以 ARM64 Java 16 实际启动 1.17.1 并完成图形初始化；未进入世界，不外推全部 1.17 模组。"
+        ],
+        "nextAction": "当前 Host 以 ARM64 Java 16 实际启动 1.17.1 并完成图形初始化；未进入世界，不外推全部 1.17 模组。",
         "note": "无本范围证据时保留历史结论；矩阵状态不等同当前包逐项重测。"
+      },
+      "closeoutFifthAcceptance": {
+        "date": "2026-10-27",
+        "evidence": "docs/收尾第五批验收结果.json",
+        "sha256": "86d8ec5e81e627036effbdc843c5405768091499cfef8bedc8705d9ac694e665",
+        "scope": "当前 Host 以 ARM64 Java 16 实际启动 1.17.1 并完成图形初始化；未进入世界，不外推全部 1.17 模组。",
+        "accepted": true
       }
     },
     {
@@ -3013,7 +3119,7 @@
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
       "macImplementation": "src/Pcl.Core/JavaService.cs; src/Pcl.Core/MacCompatibility.cs",
       "ui": "实例管理 → 启动设置",
-      "status": "已实现待验收",
+      "status": "已验收",
       "testEvidence": [
         "artifacts/evidence-0.8/full-regression-7/test-results.json",
         "artifacts/evidence-0.7/acceptance.json",
@@ -3021,9 +3127,10 @@
         "artifacts/verification-0.17/release-tests/test-results.json",
         "docs/0.17实现与验收.md",
         "artifacts/verification-0.17/owned-launches/matrix.json",
-        "artifacts/verification-0.17/final-owned-launches/matrix.json"
+        "artifacts/verification-0.17/final-owned-launches/matrix.json",
+        "docs/收尾第五批验收结果.json"
       ],
-      "remaining": "0.17 十个正版启动组合覆盖 ARM64 Java 8/17/21/25，核对实际进程版本与架构；不推定所有游戏、快照或模组适配。Java 16 单列保留待测边界。",
+      "remaining": "当前 Host 以 ARM64 Java 17 启动 1.18.2；NeoForge 1.20.1 和 OptiFabric 1.20.1 分别菜单观察 15/30 秒通过；无长期世界稳定性结论。",
       "externalConditions": [],
       "evidenceLevels": {
         "automatedRegression": "artifacts/verification-0.17/release-tests/test-results.json"
@@ -3037,10 +3144,19 @@
         "evidenceState": "本范围未新增直接证据",
         "implementationGap": false,
         "requiresExternalCondition": false,
-        "workKind": "定向验收",
-        "acceptanceScope": [],
-        "nextAction": "0.17 十个正版启动组合覆盖 ARM64 Java 8/17/21/25，核对实际进程版本与架构；不推定所有游戏、快照或模组适配。Java 16 单列保留待测边界。",
+        "workKind": "已覆盖限定范围",
+        "acceptanceScope": [
+          "当前 Host 以 ARM64 Java 17 启动 1.18.2；NeoForge 1.20.1 和 OptiFabric 1.20.1 分别菜单观察 15/30 秒通过；无长期世界稳定性结论。"
+        ],
+        "nextAction": "当前 Host 以 ARM64 Java 17 启动 1.18.2；NeoForge 1.20.1 和 OptiFabric 1.20.1 分别菜单观察 15/30 秒通过；无长期世界稳定性结论。",
         "note": "无本范围证据时保留历史结论；矩阵状态不等同当前包逐项重测。"
+      },
+      "closeoutFifthAcceptance": {
+        "date": "2026-10-27",
+        "evidence": "docs/收尾第五批验收结果.json",
+        "sha256": "86d8ec5e81e627036effbdc843c5405768091499cfef8bedc8705d9ac694e665",
+        "scope": "当前 Host 以 ARM64 Java 17 启动 1.18.2；NeoForge 1.20.1 和 OptiFabric 1.20.1 分别菜单观察 15/30 秒通过；无长期世界稳定性结论。",
+        "accepted": true
       }
     },
     {
@@ -3105,7 +3221,7 @@
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
       "macImplementation": "src/Pcl.Core/JavaService.cs; src/Pcl.Core/MacCompatibility.cs",
       "ui": "实例管理 → 启动设置",
-      "status": "已实现待验收",
+      "status": "已验收",
       "testEvidence": [
         "artifacts/evidence-0.8/full-regression-7/test-results.json",
         "artifacts/evidence-0.7/acceptance.json",
@@ -3113,9 +3229,10 @@
         "artifacts/verification-0.17/release-tests/test-results.json",
         "docs/0.17实现与验收.md",
         "artifacts/verification-0.17/owned-launches/matrix.json",
-        "artifacts/verification-0.17/final-owned-launches/matrix.json"
+        "artifacts/verification-0.17/final-owned-launches/matrix.json",
+        "docs/收尾第五批验收结果.json"
       ],
-      "remaining": "0.17 十个正版启动组合覆盖 ARM64 Java 8/17/21/25，核对实际进程版本与架构；不推定所有游戏、快照或模组适配。Java 16 单列保留待测边界。",
+      "remaining": "当前 Host 以 ARM64 Java 25 启动 26.3 并完成图形初始化；历史世界保存证据单列，不作为本轮重新验收。",
       "externalConditions": [],
       "evidenceLevels": {
         "automatedRegression": "artifacts/verification-0.17/release-tests/test-results.json"
@@ -3129,10 +3246,19 @@
         "evidenceState": "本范围未新增直接证据",
         "implementationGap": false,
         "requiresExternalCondition": false,
-        "workKind": "定向验收",
-        "acceptanceScope": [],
-        "nextAction": "0.17 十个正版启动组合覆盖 ARM64 Java 8/17/21/25，核对实际进程版本与架构；不推定所有游戏、快照或模组适配。Java 16 单列保留待测边界。",
+        "workKind": "已覆盖限定范围",
+        "acceptanceScope": [
+          "当前 Host 以 ARM64 Java 25 启动 26.3 并完成图形初始化；历史世界保存证据单列，不作为本轮重新验收。"
+        ],
+        "nextAction": "当前 Host 以 ARM64 Java 25 启动 26.3 并完成图形初始化；历史世界保存证据单列，不作为本轮重新验收。",
         "note": "无本范围证据时保留历史结论；矩阵状态不等同当前包逐项重测。"
+      },
+      "closeoutFifthAcceptance": {
+        "date": "2026-10-27",
+        "evidence": "docs/收尾第五批验收结果.json",
+        "sha256": "86d8ec5e81e627036effbdc843c5405768091499cfef8bedc8705d9ac694e665",
+        "scope": "当前 Host 以 ARM64 Java 25 启动 26.3 并完成图形初始化；历史世界保存证据单列，不作为本轮重新验收。",
+        "accepted": true
       }
     },
     {
@@ -3178,11 +3304,12 @@
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
       "macImplementation": "src/Pcl.Core/JavaDiscovery.cs; src/Pcl.Desktop/InstanceWorkspace.cs",
       "ui": "实例管理 → 启动设置 → 查找已安装 Java",
-      "status": "已实现待验收",
+      "status": "已验收",
       "testEvidence": [
-        "tests/Pcl.Tests/AccountAppearanceTests.cs#java_discovery_rejects_escaping_receipts_and_macos_stub"
+        "tests/Pcl.Tests/AccountAppearanceTests.cs#java_discovery_rejects_escaping_receipts_and_macos_stub",
+        "docs/收尾第三批验收结果.json"
       ],
-      "remaining": "支持启动器 runtime、系统/用户 JDK、Homebrew、JAVA_HOME，跳过安装弹窗 stub；待最终 fixture 和实际发现/选择验收，不承诺遍历所有第三方管理器路径",
+      "remaining": "真实ARM64 Java 8/17/21/25经Host版本检查、去重及排序通过；JAVA_HOME候选经UI发现、选择保存通过；receipt越界与系统stub保护夹具通过。不承诺全部Java管理器目录或Intel/Rosetta。",
       "externalConditions": [],
       "implementationSummary": "",
       "evidenceLevels": {
@@ -3196,10 +3323,18 @@
         "evidenceState": "本范围未新增直接证据",
         "implementationGap": false,
         "requiresExternalCondition": false,
-        "workKind": "定向验收",
-        "acceptanceScope": [],
-        "nextAction": "支持启动器 runtime、系统/用户 JDK、Homebrew、JAVA_HOME，跳过安装弹窗 stub；待最终 fixture 和实际发现/选择验收，不承诺遍历所有第三方管理器路径",
+        "workKind": "已覆盖限定范围",
+        "acceptanceScope": [
+          "收尾第三批限定验收：真实ARM64 Java 8/17/21/25经Host版本检查、去重及排序通过；JAVA_HOME候选经UI发现、选择保存通过；receipt越界与系统stub保护夹具通过。不承诺全部Java管理器目录或Intel/Rosetta。"
+        ],
+        "nextAction": "真实ARM64 Java 8/17/21/25经Host版本检查、去重及排序通过；JAVA_HOME候选经UI发现、选择保存通过；receipt越界与系统stub保护夹具通过。不承诺全部Java管理器目录或Intel/Rosetta。",
         "note": "无本范围证据时保留历史结论；矩阵状态不等同当前包逐项重测。"
+      },
+      "closeoutThirdAcceptance": {
+        "date": "2026-10-27",
+        "evidence": "docs/收尾第三批验收结果.json",
+        "sha256": "aeb0b6c7e43595487be63cd803194f1f6bb9b8c734c74f8fe14bbe6ecb540b95",
+        "scope": "真实ARM64 Java 8/17/21/25经Host版本检查、去重及排序通过；JAVA_HOME候选经UI发现、选择保存通过；receipt越界与系统stub保护夹具通过。不承诺全部Java管理器目录或Intel/Rosetta。"
       }
     },
     {
@@ -3480,15 +3615,16 @@
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
       "macImplementation": "src/Pcl.Desktop/MainWindow.axaml.cs; src/Pcl.Core/AppearanceService.cs",
       "ui": "实例管理 → 启动设置",
-      "status": "已实现待验收",
+      "status": "已验收",
       "testEvidence": [
         "artifacts/ui-0.8-final/evidence/workspace-ui-result.json",
         "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json",
         "artifacts/architecture-0.32/release-verified-managed.json#rootLocked=True,admissionBlocked=True,remoteInstall=True,hidden=True,rendered=True,restored=True",
         "artifacts/architecture-0.32/release-verified-detached/packaged-detached-verification.json#rendererInitialized=True",
-        "artifacts/architecture-0.26/packaged-session.json#game-launch-completes-through-subscription,same-managed-game-restored-after-reconnect,reconnected-game-renderer-initialized"
+        "artifacts/architecture-0.26/packaged-session.json#game-launch-completes-through-subscription,same-managed-game-restored-after-reconnect,reconnected-game-renderer-initialized",
+        "docs/收尾第五批验收结果.json"
       ],
-      "remaining": "隐藏/游戏退出恢复已实现；关闭/隐藏/Dock全部组合尚待手动验收。",
+      "remaining": "真实 Avalonia/Host/游戏进程完成保留、隐藏后恢复、最小化、隐藏后退出、立即关闭五种策略；立即关闭后游戏继续渲染、Host 退出。未人工遍历全部 Dock/系统版本组合。",
       "externalConditions": [],
       "evidenceLevels": {
         "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
@@ -3537,14 +3673,22 @@
         "evidenceState": "平台实际运行",
         "implementationGap": false,
         "requiresExternalCondition": false,
-        "workKind": "定向验收",
+        "workKind": "已覆盖限定范围",
         "acceptanceScope": [
           "真实窗口隐藏、渲染和恢复；测试主动停止退出码137，不是正常菜单退出。",
           "UI/Host 退出后游戏继续渲染并存活5秒，随后清理本轮进程。",
-          "0.26 实际会话断线重连后恢复同一游戏并完成渲染；不是新账号登录或跨版本兼容证明。"
+          "0.26 实际会话断线重连后恢复同一游戏并完成渲染；不是新账号登录或跨版本兼容证明。",
+          "真实 Avalonia/Host/游戏进程完成保留、隐藏后恢复、最小化、隐藏后退出、立即关闭五种策略；立即关闭后游戏继续渲染、Host 退出。未人工遍历全部 Dock/系统版本组合。"
         ],
-        "nextAction": "隐藏/游戏退出恢复已实现；关闭/隐藏/Dock全部组合尚待手动验收。",
+        "nextAction": "真实 Avalonia/Host/游戏进程完成保留、隐藏后恢复、最小化、隐藏后退出、立即关闭五种策略；立即关闭后游戏继续渲染、Host 退出。未人工遍历全部 Dock/系统版本组合。",
         "note": "无本范围证据时保留历史结论；矩阵状态不等同当前包逐项重测。"
+      },
+      "closeoutFifthAcceptance": {
+        "date": "2026-10-27",
+        "evidence": "docs/收尾第五批验收结果.json",
+        "sha256": "86d8ec5e81e627036effbdc843c5405768091499cfef8bedc8705d9ac694e665",
+        "scope": "真实 Avalonia/Host/游戏进程完成保留、隐藏后恢复、最小化、隐藏后退出、立即关闭五种策略；立即关闭后游戏继续渲染、Host 退出。未人工遍历全部 Dock/系统版本组合。",
+        "accepted": true
       }
     },
     {
@@ -4692,9 +4836,10 @@
       "testEvidence": [
         "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: resource_alias_embedded_database_and_explicit_cross_platform_identity",
         "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API",
-        "artifacts/architecture-0.29/release-discovery.json#offline-mcmod-index-search"
+        "artifacts/architecture-0.29/release-discovery.json#offline-mcmod-index-search",
+        "docs/收尾第五批验收结果.json"
       ],
-      "remaining": "本地百科索引和关联查询已实际运行；mcmod.cn 浏览器跳转及站点实时下载不能从本地索引测试推定。",
+      "remaining": "本轮 Host 百科关联和会话重连通过，返回的 Sodium 页面已在浏览器实际显示；未点击原生启动器跳转按钮，未实测站点资源下载，保留对应边界。",
       "externalConditions": [],
       "implementationScope": "已知条目直达 class/id，未知条目进入百科搜索",
       "evidenceLevels": {
@@ -4728,8 +4873,15 @@
         "acceptanceScope": [
           "本地百科索引搜索，不是 mcmod.cn 全站实时下载或浏览器跳转验收。"
         ],
-        "nextAction": "本地百科索引和关联查询已实际运行；mcmod.cn 浏览器跳转及站点实时下载不能从本地索引测试推定。",
+        "nextAction": "本轮 Host 百科关联和会话重连通过，返回的 Sodium 页面已在浏览器实际显示；未点击原生启动器跳转按钮，未实测站点资源下载，保留对应边界。",
         "note": "无本范围证据时保留历史结论；矩阵状态不等同当前包逐项重测。"
+      },
+      "closeoutFifthAcceptance": {
+        "date": "2026-10-27",
+        "evidence": "docs/收尾第五批验收结果.json",
+        "sha256": "86d8ec5e81e627036effbdc843c5405768091499cfef8bedc8705d9ac694e665",
+        "scope": "本轮 Host 百科关联和会话重连通过，返回的 Sodium 页面已在浏览器实际显示；未点击原生启动器跳转按钮，未实测站点资源下载，保留对应边界。",
+        "accepted": false
       }
     },
     {
@@ -5053,15 +5205,16 @@
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
       "macImplementation": "src/Pcl.Core/FabricModPlanner.cs; src/Pcl.Core/LocalResourceService.cs; src/Pcl.Domain/FabricMetadata.cs; src/Pcl.Domain/FabricVersions.cs; src/Pcl.Core/FabricDependencyOverrides.cs",
       "ui": "模组安装 / 本地资源 → 检查依赖关系",
-      "status": "已实现待验收",
+      "status": "已验收",
       "testEvidence": [
         "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: local_scan_toggle_and_dependency_rollback；既有 Fabric 语义版本测试",
         "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API",
         "docs/0.37-依赖规划与验收.md",
         "artifacts/verification-0.37/final/focused.json",
-        "artifacts/verification-0.37/final/real-installs.json"
+        "artifacts/verification-0.37/final/real-installs.json",
+        "docs/收尾第五批验收结果.json"
       ],
-      "remaining": "依赖声明不能覆盖动态代码及模组自行下载的原生库",
+      "remaining": "现有冲突/版本测试及 24 项规划检查通过，Fabric Loader 0.19.5 Java 解析器交叉核对覆盖/旧格式；依赖声明不覆盖动态代码、插件或未知原生库。",
       "externalConditions": [],
       "implementationScope": "Fabric depends/breaks/provides、嵌套模组、重复外部 ID；安装和批量启停提交前校验",
       "evidenceLevels": {
@@ -5081,10 +5234,19 @@
         "evidenceState": "本范围未新增直接证据",
         "implementationGap": false,
         "requiresExternalCondition": false,
-        "workKind": "定向验收",
-        "acceptanceScope": [],
-        "nextAction": "依赖声明不能覆盖动态代码及模组自行下载的原生库",
+        "workKind": "已覆盖限定范围",
+        "acceptanceScope": [
+          "现有冲突/版本测试及 24 项规划检查通过，Fabric Loader 0.19.5 Java 解析器交叉核对覆盖/旧格式；依赖声明不覆盖动态代码、插件或未知原生库。"
+        ],
+        "nextAction": "现有冲突/版本测试及 24 项规划检查通过，Fabric Loader 0.19.5 Java 解析器交叉核对覆盖/旧格式；依赖声明不覆盖动态代码、插件或未知原生库。",
         "note": "无本范围证据时保留历史结论；矩阵状态不等同当前包逐项重测。"
+      },
+      "closeoutFifthAcceptance": {
+        "date": "2026-10-27",
+        "evidence": "docs/收尾第五批验收结果.json",
+        "sha256": "86d8ec5e81e627036effbdc843c5405768091499cfef8bedc8705d9ac694e665",
+        "scope": "现有冲突/版本测试及 24 项规划检查通过，Fabric Loader 0.19.5 Java 解析器交叉核对覆盖/旧格式；依赖声明不覆盖动态代码、插件或未知原生库。",
+        "accepted": true
       }
     },
     {
@@ -5384,21 +5546,22 @@
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
       "macImplementation": "src/Pcl.Core/ResourceInstaller.cs; src/Pcl.Desktop/ResourceBrowser.cs",
       "ui": "资源包 → 安装 → 应用",
-      "status": "已实现待验收",
+      "status": "已验收",
       "testEvidence": [
         "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: resource_activation_undo_history_and_external_change_protection",
         "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API",
-        "artifacts/architecture-0.28/release-resources.json#browser-resource-pack-activation-writes-real-game-options,browser-undo-and-remove-use-host"
+        "artifacts/architecture-0.28/release-resources.json#browser-resource-pack-activation-writes-real-game-options,browser-undo-and-remove-use-host",
+        "docs/收尾第四批验收结果.json"
       ],
-      "remaining": "游戏内材质显示需实际验收",
+      "remaining": "本轮真实 Host 下载公开资源包并校验 SHA-1、应用配置通过；另用自制材质包在原版1.21.1世界观察、保存和独立重进通过。公开下载包本身未进入游戏；不保证任意资源包兼容。",
       "externalConditions": [],
       "implementationScope": "ZIP/pack.mcmeta 校验、写 options.txt、保存原配置及撤销",
       "evidenceLevels": {
         "source": true,
         "fixture": "resource_activation_undo_history_and_external_change_protection",
-        "realNetworkAndFiles": "本模块本轮未单独实测",
+        "realNetworkAndFiles": "收尾第四批：全新目录真实 Host 下载 xnKSRpXg/p6IKJYJf，108030字节，官方SHA-1核对及应用配置通过。",
         "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
-        "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过",
+        "inGame": "本轮真实 Host 下载公开资源包并校验 SHA-1、应用配置通过；另用自制材质包在原版1.21.1世界观察、保存和独立重进通过。公开下载包本身未进入游戏；不保证任意资源包兼容。",
         "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
       },
       "implementationSummary": "",
@@ -5421,12 +5584,19 @@
         "evidenceState": "平台实际运行",
         "implementationGap": false,
         "requiresExternalCondition": false,
-        "workKind": "定向验收",
+        "workKind": "已覆盖限定范围",
         "acceptanceScope": [
-          "资源包应用写入 options 并撤销/移除；未检查游戏内材质。"
+          "资源包应用写入 options 并撤销/移除；未检查游戏内材质。",
+          "本轮真实 Host 下载公开资源包并校验 SHA-1、应用配置通过；另用自制材质包在原版1.21.1世界观察、保存和独立重进通过。公开下载包本身未进入游戏；不保证任意资源包兼容。"
         ],
-        "nextAction": "游戏内材质显示需实际验收",
+        "nextAction": "本轮真实 Host 下载公开资源包并校验 SHA-1、应用配置通过；另用自制材质包在原版1.21.1世界观察、保存和独立重进通过。公开下载包本身未进入游戏；不保证任意资源包兼容。",
         "note": "无本范围证据时保留历史结论；矩阵状态不等同当前包逐项重测。"
+      },
+      "closeoutFourthAcceptance": {
+        "date": "2026-10-27",
+        "evidence": "docs/收尾第四批验收结果.json",
+        "sha256": "dcec360422ef4cacfb3b79869eb6f366a227a5858e123b3f7b1a6a9c4934ef35",
+        "scope": "本轮真实 Host 下载公开资源包并校验 SHA-1、应用配置通过；另用自制材质包在原版1.21.1世界观察、保存和独立重进通过。公开下载包本身未进入游戏；不保证任意资源包兼容。"
       }
     },
     {
@@ -5438,14 +5608,15 @@
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
       "macImplementation": "src/Pcl.Core/DataPackService.cs; src/Pcl.Desktop/ResourceBrowser.cs; src/Pcl.Desktop/LocalResourcesWindow.cs",
       "ui": "数据包 → 版本 → 选择当前实例存档；本地资源 → 数据包",
-      "status": "已实现待验收",
+      "status": "已验收",
       "testEvidence": [
         "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: world_datapack_install_toggle_backup_and_target_validation；modrinth_datapack_filters_need_no_fabric_loader",
         "artifacts/evidence-complete/pack-live-3/pack-live-result.json（真实 Modrinth 下载、导出/导入/更新；无游戏世界验收）：TreeMiner 5.0.0 / 19,397 bytes / SHA1 a9e9a1a63c70f5cefc7bbf333c286a872e70896f",
         "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API",
-        "artifacts/architecture-0.28/workspaces2.json#host-lists-world-directories,host-installs-and-disables-world-datapack,host-removes-datapack-to-backup"
+        "artifacts/architecture-0.28/workspaces2.json#host-lists-world-directories,host-installs-and-disables-world-datapack,host-removes-datapack-to-backup",
+        "docs/收尾第四批验收结果.json"
       ],
-      "remaining": "真实下载与 staging 存档目录安装已过；尚未在游戏世界内观察数据包行为",
+      "remaining": "历史公开数据包下载证据保留；本轮自制包通过 Host 按世界安装，在原版1.21.1执行加载函数、显示计分板并发放物品，独立重进计数增加由用户确认。不代表任意数据包兼容。",
       "externalConditions": [],
       "implementationScope": "Modrinth 联网检索及下载前置；按世界安全安装、启停和备份移除",
       "evidenceLevels": {
@@ -5453,7 +5624,7 @@
         "fixture": "world_datapack_install_toggle_backup_and_target_validation；modrinth_datapack_filters_need_no_fabric_loader",
         "realNetworkAndFiles": "artifacts/evidence-complete/pack-live-3/pack-live-result.json（真实 Modrinth 下载、导出/导入/更新；无游戏世界验收）：TreeMiner 5.0.0 / 19,397 bytes / SHA1 a9e9a1a63c70f5cefc7bbf333c286a872e70896f",
         "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
-        "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过",
+        "inGame": "历史公开数据包下载证据保留；本轮自制包通过 Host 按世界安装，在原版1.21.1执行加载函数、显示计分板并发放物品，独立重进计数增加由用户确认。不代表任意数据包兼容。",
         "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
       },
       "implementationSummary": "",
@@ -5477,12 +5648,19 @@
         "evidenceState": "平台实际运行",
         "implementationGap": false,
         "requiresExternalCondition": false,
-        "workKind": "定向验收",
+        "workKind": "已覆盖限定范围",
         "acceptanceScope": [
-          "真实世界目录安装/启停/移除数据包，未在游戏内验收行为。"
+          "真实世界目录安装/启停/移除数据包，未在游戏内验收行为。",
+          "历史公开数据包下载证据保留；本轮自制包通过 Host 按世界安装，在原版1.21.1执行加载函数、显示计分板并发放物品，独立重进计数增加由用户确认。不代表任意数据包兼容。"
         ],
-        "nextAction": "真实下载与 staging 存档目录安装已过；尚未在游戏世界内观察数据包行为",
+        "nextAction": "历史公开数据包下载证据保留；本轮自制包通过 Host 按世界安装，在原版1.21.1执行加载函数、显示计分板并发放物品，独立重进计数增加由用户确认。不代表任意数据包兼容。",
         "note": "无本范围证据时保留历史结论；矩阵状态不等同当前包逐项重测。"
+      },
+      "closeoutFourthAcceptance": {
+        "date": "2026-10-27",
+        "evidence": "docs/收尾第四批验收结果.json",
+        "sha256": "dcec360422ef4cacfb3b79869eb6f366a227a5858e123b3f7b1a6a9c4934ef35",
+        "scope": "历史公开数据包下载证据保留；本轮自制包通过 Host 按世界安装，在原版1.21.1执行加载函数、显示计分板并发放物品，独立重进计数增加由用户确认。不代表任意数据包兼容。"
       }
     },
     {
@@ -5494,13 +5672,14 @@
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
       "macImplementation": "src/Pcl.Core/LocalResourceService.cs; src/Pcl.Desktop/LocalResourcesWindow.cs",
       "ui": "本地资源 → 分类/搜索",
-      "status": "已实现待验收",
+      "status": "已验收",
       "testEvidence": [
         "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: local_scan_toggle_and_dependency_rollback；resource_metadata_legacy_forge_neoforge_quilt_liteloader",
         "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API",
-        "artifacts/architecture-0.28/workspaces2.json#host-parses-local-mod-jar,host-disables-local-mod,host-reenables-local-mod,host-backs-up-removed-resource"
+        "artifacts/architecture-0.28/workspaces2.json#host-parses-local-mod-jar,host-disables-local-mod,host-reenables-local-mod,host-backs-up-removed-resource",
+        "docs/收尾第三批验收结果.json"
       ],
-      "remaining": "各加载器的身份扫描不代表其所有依赖已被分析",
+      "remaining": "本轮真实Host及UI扫描7种合成元数据样本、2个公开模组及1个损坏JAR；身份、错误隔离、停用和异常筛选通过。元数据识别不等于完整依赖或所有加载器兼容。",
       "externalConditions": [],
       "implementationScope": "扫描未登记外部 JAR/ZIP/disabled；Fabric/Quilt/Forge/NeoForge/LiteLoader 元数据、大小哈希、损坏状态",
       "evidenceLevels": {
@@ -5533,12 +5712,19 @@
         "evidenceState": "平台实际运行",
         "implementationGap": false,
         "requiresExternalCondition": false,
-        "workKind": "定向验收",
+        "workKind": "已覆盖限定范围",
         "acceptanceScope": [
-          "真实本地 JAR 扫描、启停与删除备份；不是全部复杂依赖约束。"
+          "真实本地 JAR 扫描、启停与删除备份；不是全部复杂依赖约束。",
+          "收尾第三批限定验收：本轮真实Host及UI扫描7种合成元数据样本、2个公开模组及1个损坏JAR；身份、错误隔离、停用和异常筛选通过。元数据识别不等于完整依赖或所有加载器兼容。"
         ],
-        "nextAction": "各加载器的身份扫描不代表其所有依赖已被分析",
+        "nextAction": "本轮真实Host及UI扫描7种合成元数据样本、2个公开模组及1个损坏JAR；身份、错误隔离、停用和异常筛选通过。元数据识别不等于完整依赖或所有加载器兼容。",
         "note": "无本范围证据时保留历史结论；矩阵状态不等同当前包逐项重测。"
+      },
+      "closeoutThirdAcceptance": {
+        "date": "2026-10-27",
+        "evidence": "docs/收尾第三批验收结果.json",
+        "sha256": "aeb0b6c7e43595487be63cd803194f1f6bb9b8c734c74f8fe14bbe6ecb540b95",
+        "scope": "本轮真实Host及UI扫描7种合成元数据样本、2个公开模组及1个损坏JAR；身份、错误隔离、停用和异常筛选通过。元数据识别不等于完整依赖或所有加载器兼容。"
       }
     },
     {
@@ -5803,9 +5989,11 @@
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
       "macImplementation": "src/Pcl.Core/LocalResourceService.cs; src/Pcl.Desktop/LocalResourcesWindow.cs",
       "ui": "本地资源 → 可更新列表 → 忽略此版本",
-      "status": "已实现待验收",
-      "testEvidence": [],
-      "remaining": "需 GUI 保存/重开验证",
+      "status": "已验收",
+      "testEvidence": [
+        "docs/收尾第二批验收结果.json"
+      ],
+      "remaining": "真实 Modrinth 两模组更新：空选择拒绝、只忽略所选版本、其他更新保留、页面重开及新 Host 进程重新查询通过；未改动原 JAR，不外推 CurseForge。",
       "externalConditions": [],
       "implementationScope": "实例持久化忽略特定项目+版本，下次检查不重复提醒",
       "evidenceLevels": {
@@ -5825,10 +6013,18 @@
         "evidenceState": "本范围未新增直接证据",
         "implementationGap": false,
         "requiresExternalCondition": false,
-        "workKind": "定向验收",
-        "acceptanceScope": [],
-        "nextAction": "需 GUI 保存/重开验证",
+        "workKind": "已覆盖限定范围",
+        "acceptanceScope": [
+          "收尾第二批限定验收：真实 Modrinth 两模组更新：空选择拒绝、只忽略所选版本、其他更新保留、页面重开及新 Host 进程重新查询通过；未改动原 JAR，不外推 CurseForge。"
+        ],
+        "nextAction": "真实 Modrinth 两模组更新：空选择拒绝、只忽略所选版本、其他更新保留、页面重开及新 Host 进程重新查询通过；未改动原 JAR，不外推 CurseForge。",
         "note": "无本范围证据时保留历史结论；矩阵状态不等同当前包逐项重测。"
+      },
+      "closeoutSecondAcceptance": {
+        "date": "2026-10-27",
+        "evidence": "docs/收尾第二批验收结果.json",
+        "sha256": "f8e4c82c2771005061c592c34cf615c00b792d74b6c651059602aea76cc053a2",
+        "scope": "真实 Modrinth 两模组更新：空选择拒绝、只忽略所选版本、其他更新保留、页面重开及新 Host 进程重新查询通过；未改动原 JAR，不外推 CurseForge。"
       }
     },
     {
@@ -6570,13 +6766,14 @@
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
       "macImplementation": "src/Pcl.Core/PortableModpackService.cs; src/Pcl.Desktop/PackManagerWindow.cs",
       "ui": "整合包管理 → 导出目录/存档/选项复选框",
-      "status": "已实现待验收",
+      "status": "已验收",
       "testEvidence": [
         "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: pack_export_privacy_hashes_and_roundtrip；pack_export_recipe_selection_and_exact_payload_hash",
         "artifacts/evidence-complete/pack-live-3/pack-live-result.json（真实 Modrinth 下载、导出/导入/更新；无游戏世界验收）",
-        "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+        "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API",
+        "docs/收尾第二批验收结果.json"
       ],
-      "remaining": "任意自定义 config 内容里的秘密无法自动识别，发布前需自行检查",
+      "remaining": "真实 Host 导出 ZIP 验证已知隐私文件、选择目录、存档／选项 opt-in、宿主路径及符号链接保护；任意自定义 config 内容里的秘密不能自动识别，已用合成 apiKey 确认仍会导出。",
       "externalConditions": [],
       "implementationScope": "默认排除存档、options、账号、token、日志和服务器列表；已知数据目录可选，私密文件名过滤",
       "evidenceLevels": {
@@ -6596,10 +6793,18 @@
         "evidenceState": "本范围未新增直接证据",
         "implementationGap": false,
         "requiresExternalCondition": false,
-        "workKind": "定向验收",
-        "acceptanceScope": [],
-        "nextAction": "任意自定义 config 内容里的秘密无法自动识别，发布前需自行检查",
+        "workKind": "已覆盖限定范围",
+        "acceptanceScope": [
+          "收尾第二批限定验收：真实 Host 导出 ZIP 验证已知隐私文件、选择目录、存档／选项 opt-in、宿主路径及符号链接保护；任意自定义 config 内容里的秘密不能自动识别，已用合成 apiKey 确认仍会导出。"
+        ],
+        "nextAction": "真实 Host 导出 ZIP 验证已知隐私文件、选择目录、存档／选项 opt-in、宿主路径及符号链接保护；任意自定义 config 内容里的秘密不能自动识别，已用合成 apiKey 确认仍会导出。",
         "note": "无本范围证据时保留历史结论；矩阵状态不等同当前包逐项重测。"
+      },
+      "closeoutSecondAcceptance": {
+        "date": "2026-10-27",
+        "evidence": "docs/收尾第二批验收结果.json",
+        "sha256": "f8e4c82c2771005061c592c34cf615c00b792d74b6c651059602aea76cc053a2",
+        "scope": "真实 Host 导出 ZIP 验证已知隐私文件、选择目录、存档／选项 opt-in、宿主路径及符号链接保护；任意自定义 config 内容里的秘密不能自动识别，已用合成 apiKey 确认仍会导出。"
       }
     },
     {
@@ -7124,13 +7329,14 @@
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
       "macImplementation": "src/Pcl.Core/EasyTierService.cs; src/Pcl.Desktop/MultiplayerWindow.cs",
       "ui": "联机",
-      "status": "已实现待验收",
+      "status": "已验收",
       "testEvidence": [
         "artifacts/evidence-0.8/link-live-data/evidence/easytier-smoke.json",
         "artifacts/ui-0.8-final/evidence/workspace-ui-result.json",
-        "artifacts/architecture-0.32/release-final-main.json#invalid-room-rejected-before-process-start,host-starts-real-easytier-and-returns-private-invitation,second-room-rejected-without-leaking-process,two-real-local-easytier-nodes-connected,real-tcp-payload-crosses-overlay-forward-and-returns,room-credentials-not-written-to-receipts-or-settings,client-reconnect-retains-host-owned-room,offline-game-launch-with-room-running,multiplayer-status-during-game-has-no-legacy-writer-grant,multiplayer-exception-does-not-open-unrelated-game-time-writes,stop-room-while-minecraft-is-running,stopping-room-does-not-stop-minecraft,stopped-room-invitation-is-unavailable,host-shutdown-stops-owned-easytier-listener"
+        "artifacts/architecture-0.32/release-final-main.json#invalid-room-rejected-before-process-start,host-starts-real-easytier-and-returns-private-invitation,second-room-rejected-without-leaking-process,two-real-local-easytier-nodes-connected,real-tcp-payload-crosses-overlay-forward-and-returns,room-credentials-not-written-to-receipts-or-settings,client-reconnect-retains-host-owned-room,offline-game-launch-with-room-running,multiplayer-status-during-game-has-no-legacy-writer-grant,multiplayer-exception-does-not-open-unrelated-game-time-writes,stop-room-while-minecraft-is-running,stopping-room-does-not-stop-minecraft,stopped-room-invitation-is-unavailable,host-shutdown-stops-owned-easytier-listener",
+        "docs/收尾第五批验收结果.json"
       ],
-      "remaining": "官方ARM64模块、无root/TUN本地双进程TCP转发通过；房间/节点/状态入口有GUI，跨网NAT与真实游戏双端待验收。",
+      "remaining": "官方 EasyTier 2.6.4 ARM64 模块真实下载校验、双 Host 本地节点 TCP 转发、客户端重连和停止清理通过；不代表互联网 NAT 或双玩家世界。",
       "externalConditions": [],
       "evidenceLevels": {
         "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
@@ -7167,12 +7373,20 @@
         "evidenceState": "平台实际运行",
         "implementationGap": false,
         "requiresExternalCondition": false,
-        "workKind": "定向验收",
+        "workKind": "已覆盖限定范围",
         "acceptanceScope": [
-          "两个本机真实节点和 TCP 往返，房间/邀请码/状态/关闭实际运行；不证明远程 NAT 或游戏双端连接。"
+          "两个本机真实节点和 TCP 往返，房间/邀请码/状态/关闭实际运行；不证明远程 NAT 或游戏双端连接。",
+          "官方 EasyTier 2.6.4 ARM64 模块真实下载校验、双 Host 本地节点 TCP 转发、客户端重连和停止清理通过；不代表互联网 NAT 或双玩家世界。"
         ],
-        "nextAction": "官方ARM64模块、无root/TUN本地双进程TCP转发通过；房间/节点/状态入口有GUI，跨网NAT与真实游戏双端待验收。",
+        "nextAction": "官方 EasyTier 2.6.4 ARM64 模块真实下载校验、双 Host 本地节点 TCP 转发、客户端重连和停止清理通过；不代表互联网 NAT 或双玩家世界。",
         "note": "无本范围证据时保留历史结论；矩阵状态不等同当前包逐项重测。"
+      },
+      "closeoutFifthAcceptance": {
+        "date": "2026-10-27",
+        "evidence": "docs/收尾第五批验收结果.json",
+        "sha256": "86d8ec5e81e627036effbdc843c5405768091499cfef8bedc8705d9ac694e665",
+        "scope": "官方 EasyTier 2.6.4 ARM64 模块真实下载校验、双 Host 本地节点 TCP 转发、客户端重连和停止清理通过；不代表互联网 NAT 或双玩家世界。",
+        "accepted": true
       }
     },
     {
@@ -7449,9 +7663,10 @@
         "artifacts/ui-0.8-final/evidence/workspace-ui-result.json",
         "artifacts/architecture-0.32/release-final-main.json#invalid-room-rejected-before-process-start,host-starts-real-easytier-and-returns-private-invitation,second-room-rejected-without-leaking-process,two-real-local-easytier-nodes-connected,real-tcp-payload-crosses-overlay-forward-and-returns,room-credentials-not-written-to-receipts-or-settings,client-reconnect-retains-host-owned-room,offline-game-launch-with-room-running,multiplayer-status-during-game-has-no-legacy-writer-grant,multiplayer-exception-does-not-open-unrelated-game-time-writes,stop-room-while-minecraft-is-running,stopping-room-does-not-stop-minecraft,stopped-room-invitation-is-unavailable,host-shutdown-stops-owned-easytier-listener",
         "artifacts/architecture-0.32/release-main-ui/report.json#ui-invalid-room-input-does-not-start-process,ui-real-room-start-and-invitation,ui-window-close-awaits-host-room-stop",
-        "artifacts/architecture-0.31/release-main.json#invalid-room-rejected-before-process-start,host-starts-real-easytier-and-returns-private-invitation,second-room-rejected-without-leaking-process,two-real-local-easytier-nodes-connected,real-tcp-payload-crosses-overlay-forward-and-returns,room-credentials-not-written-to-receipts-or-settings,client-reconnect-retains-host-owned-room,offline-game-launch-with-room-running,stop-room-while-minecraft-is-running,stopping-room-does-not-stop-minecraft,stopped-room-invitation-is-unavailable,host-shutdown-stops-owned-easytier-listener"
+        "artifacts/architecture-0.31/release-main.json#invalid-room-rejected-before-process-start,host-starts-real-easytier-and-returns-private-invitation,second-room-rejected-without-leaking-process,two-real-local-easytier-nodes-connected,real-tcp-payload-crosses-overlay-forward-and-returns,room-credentials-not-written-to-receipts-or-settings,client-reconnect-retains-host-owned-room,offline-game-launch-with-room-running,stop-room-while-minecraft-is-running,stopping-room-does-not-stop-minecraft,stopped-room-invitation-is-unavailable,host-shutdown-stops-owned-easytier-listener",
+        "docs/收尾第五批验收结果.json"
       ],
-      "remaining": "官方ARM64模块、无root/TUN本地双进程TCP转发通过；房间/节点/状态入口有GUI，跨网NAT与真实游戏双端待验收。",
+      "remaining": "本轮两个实际本地 EasyTier 节点状态可见并完成 TCP 传输、重连及清理；未验收具体延迟数值、GUI 人数展示或远端 NAT。",
       "externalConditions": [],
       "evidenceLevels": {
         "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
@@ -7525,8 +7740,15 @@
           "真实联机窗口创建/刷新/关闭；没有两名玩家人数验收。",
           "0.31 本机双节点 TCP、邀请码和生命周期；不外推跨网 NAT 或双人游戏。"
         ],
-        "nextAction": "官方ARM64模块、无root/TUN本地双进程TCP转发通过；房间/节点/状态入口有GUI，跨网NAT与真实游戏双端待验收。",
+        "nextAction": "本轮两个实际本地 EasyTier 节点状态可见并完成 TCP 传输、重连及清理；未验收具体延迟数值、GUI 人数展示或远端 NAT。",
         "note": "无本范围证据时保留历史结论；矩阵状态不等同当前包逐项重测。"
+      },
+      "closeoutFifthAcceptance": {
+        "date": "2026-10-27",
+        "evidence": "docs/收尾第五批验收结果.json",
+        "sha256": "86d8ec5e81e627036effbdc843c5405768091499cfef8bedc8705d9ac694e665",
+        "scope": "本轮两个实际本地 EasyTier 节点状态可见并完成 TCP 传输、重连及清理；未验收具体延迟数值、GUI 人数展示或远端 NAT。",
+        "accepted": false
       }
     },
     {
@@ -7643,7 +7865,7 @@
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
       "macImplementation": "src/Pcl.Desktop/AppearanceWorkspace.cs; src/Pcl.Core/AppearanceService.cs; src/Pcl.Core/AppearanceFeatures.cs; src/Pcl.Desktop/LocalAppearanceFeatures.cs",
       "ui": "设置 → 个性化 → 背景图片",
-      "status": "已实现待验收",
+      "status": "已验收",
       "testEvidence": [
         "artifacts/evidence-0.8/full-regression-7/test-results.json",
         "artifacts/ui-0.8-final/evidence/workspace-ui-result.json",
@@ -7653,9 +7875,10 @@
         "docs/0.22-settings-binding-audit.json",
         "artifacts/verification-0.22/final-tests/test-results.json",
         "artifacts/verification-0.22/final-local-ui/evidence/local-settings-ui.json",
-        "artifacts/architecture-0.29/release-ui.json#ui-background-directory-applies-selected-file-with-empty-single-image"
+        "artifacts/architecture-0.29/release-ui.json#ui-background-directory-applies-selected-file-with-empty-single-image",
+        "docs/收尾第五批验收结果.json"
       ],
-      "remaining": "新增随机背景目录、平铺、9 方位、自动小图平铺和彩色叠加；发布包控件、渲染属性与截图测试。",
+      "remaining": "真实主窗口检查 15 种背景模式、目录避免连续同图并输出渲染截图，平铺/对齐属性通过；不外推全部屏幕或图片格式。",
       "externalConditions": [],
       "evidenceLevels": {
         "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json",
@@ -7680,12 +7903,20 @@
         "evidenceState": "平台实际运行",
         "implementationGap": false,
         "requiresExternalCondition": false,
-        "workKind": "定向验收",
+        "workKind": "已覆盖限定范围",
         "acceptanceScope": [
-          "实际背景目录选择并应用一张图片，不覆盖所有布局。"
+          "实际背景目录选择并应用一张图片，不覆盖所有布局。",
+          "真实主窗口检查 15 种背景模式、目录避免连续同图并输出渲染截图，平铺/对齐属性通过；不外推全部屏幕或图片格式。"
         ],
-        "nextAction": "新增随机背景目录、平铺、9 方位、自动小图平铺和彩色叠加；发布包控件、渲染属性与截图测试。",
+        "nextAction": "真实主窗口检查 15 种背景模式、目录避免连续同图并输出渲染截图，平铺/对齐属性通过；不外推全部屏幕或图片格式。",
         "note": "无本范围证据时保留历史结论；矩阵状态不等同当前包逐项重测。"
+      },
+      "closeoutFifthAcceptance": {
+        "date": "2026-10-27",
+        "evidence": "docs/收尾第五批验收结果.json",
+        "sha256": "86d8ec5e81e627036effbdc843c5405768091499cfef8bedc8705d9ac694e665",
+        "scope": "真实主窗口检查 15 种背景模式、目录避免连续同图并输出渲染截图，平铺/对齐属性通过；不外推全部屏幕或图片格式。",
+        "accepted": true
       }
     },
     {
@@ -7697,15 +7928,16 @@
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
       "macImplementation": "src/Pcl.Desktop/AppearanceWorkspace.cs; src/Pcl.Core/AppearanceService.cs; src/Pcl.Core/LocalMusicPlayer.cs",
       "ui": "设置与帮助",
-      "status": "已实现待验收",
+      "status": "已验收",
       "testEvidence": [
         "artifacts/evidence-0.8/full-regression-7/test-results.json",
         "artifacts/ui-0.8-final/evidence/workspace-ui-result.json",
         "docs/0.22-settings-binding-audit.json",
         "artifacts/verification-0.22/final-tests/test-results.json",
-        "artifacts/verification-0.22/final-local-ui/evidence/local-settings-ui.json"
+        "artifacts/verification-0.22/final-local-ui/evidence/local-settings-ui.json",
+        "docs/收尾第五批验收结果.json"
       ],
-      "remaining": "本地播放列表真实 afplay 切歌/随机/停止测试通过；游戏内播放时机策略已绑定。未声明听觉验收或所有音频编码验证。",
+      "remaining": "真实 afplay 播放列表推进，游戏启动暂停、退出恢复、停止不再切歌通过；测试音轨静音且音量为 0，未做听觉或全部编码验收。",
       "externalConditions": [],
       "evidenceLevels": {
         "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json",
@@ -7720,10 +7952,19 @@
         "evidenceState": "本范围未新增直接证据",
         "implementationGap": false,
         "requiresExternalCondition": false,
-        "workKind": "定向验收",
-        "acceptanceScope": [],
-        "nextAction": "本地播放列表真实 afplay 切歌/随机/停止测试通过；游戏内播放时机策略已绑定。未声明听觉验收或所有音频编码验证。",
+        "workKind": "已覆盖限定范围",
+        "acceptanceScope": [
+          "真实 afplay 播放列表推进，游戏启动暂停、退出恢复、停止不再切歌通过；测试音轨静音且音量为 0，未做听觉或全部编码验收。"
+        ],
+        "nextAction": "真实 afplay 播放列表推进，游戏启动暂停、退出恢复、停止不再切歌通过；测试音轨静音且音量为 0，未做听觉或全部编码验收。",
         "note": "无本范围证据时保留历史结论；矩阵状态不等同当前包逐项重测。"
+      },
+      "closeoutFifthAcceptance": {
+        "date": "2026-10-27",
+        "evidence": "docs/收尾第五批验收结果.json",
+        "sha256": "86d8ec5e81e627036effbdc843c5405768091499cfef8bedc8705d9ac694e665",
+        "scope": "真实 afplay 播放列表推进，游戏启动暂停、退出恢复、停止不再切歌通过；测试音轨静音且音量为 0，未做听觉或全部编码验收。",
+        "accepted": true
       }
     },
     {
@@ -7800,7 +8041,7 @@
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
       "macImplementation": "src/Pcl.Desktop/SettingsHelpWindow.cs; src/Pcl.Core/AppearanceService.cs; src/Pcl.Desktop/LocalAppearanceFeatures.cs",
       "ui": "设置 → 个性化 → 功能隐藏",
-      "status": "已实现待验收",
+      "status": "已验收",
       "testEvidence": [
         "artifacts/evidence-0.8/full-regression-7/test-results.json",
         "artifacts/ui-0.8-final/evidence/workspace-ui-result.json",
@@ -7809,9 +8050,10 @@
         "artifacts/verification-0.21/settings-live-4/evidence/settings-reopen.json",
         "docs/0.22-settings-binding-audit.json",
         "artifacts/verification-0.22/final-tests/test-results.json",
-        "artifacts/verification-0.22/final-local-ui/evidence/local-settings-ui.json"
+        "artifacts/verification-0.22/final-local-ui/evidence/local-settings-ui.json",
+        "docs/收尾第三批验收结果.json"
       ],
-      "remaining": "设置/启动/细粒度管理项可隐藏；发布包逐项勾选保存及恢复成功。邮箱不保存/显示，原版联机服务位置仍有平台差异。",
+      "remaining": "本轮真实UI保存全部22个隐藏开关，Host逐项核对；主入口及本地资源更新动作隐藏、恢复按钮清空设置和重开恢复通过。隐藏是界面偏好，不是访问控制；不外推每页像素人工验收。",
       "externalConditions": [],
       "evidenceLevels": {
         "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json",
@@ -7826,10 +8068,18 @@
         "evidenceState": "本范围未新增直接证据",
         "implementationGap": false,
         "requiresExternalCondition": false,
-        "workKind": "定向验收",
-        "acceptanceScope": [],
-        "nextAction": "设置/启动/细粒度管理项可隐藏；发布包逐项勾选保存及恢复成功。邮箱不保存/显示，原版联机服务位置仍有平台差异。",
+        "workKind": "已覆盖限定范围",
+        "acceptanceScope": [
+          "收尾第三批限定验收：本轮真实UI保存全部22个隐藏开关，Host逐项核对；主入口及本地资源更新动作隐藏、恢复按钮清空设置和重开恢复通过。隐藏是界面偏好，不是访问控制；不外推每页像素人工验收。"
+        ],
+        "nextAction": "本轮真实UI保存全部22个隐藏开关，Host逐项核对；主入口及本地资源更新动作隐藏、恢复按钮清空设置和重开恢复通过。隐藏是界面偏好，不是访问控制；不外推每页像素人工验收。",
         "note": "无本范围证据时保留历史结论；矩阵状态不等同当前包逐项重测。"
+      },
+      "closeoutThirdAcceptance": {
+        "date": "2026-10-27",
+        "evidence": "docs/收尾第三批验收结果.json",
+        "sha256": "aeb0b6c7e43595487be63cd803194f1f6bb9b8c734c74f8fe14bbe6ecb540b95",
+        "scope": "本轮真实UI保存全部22个隐藏开关，Host逐项核对；主入口及本地资源更新动作隐藏、恢复按钮清空设置和重开恢复通过。隐藏是界面偏好，不是访问控制；不外推每页像素人工验收。"
       }
     },
     {
@@ -7841,13 +8091,14 @@
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
       "macImplementation": "src/Pcl.Desktop/SettingsHelpWindow.cs; src/Pcl.Core/AppearanceService.cs",
       "ui": "设置与帮助",
-      "status": "已实现待验收",
+      "status": "已验收",
       "testEvidence": [
         "artifacts/evidence-0.8/full-regression-7/test-results.json",
         "artifacts/ui-0.8-final/evidence/workspace-ui-result.json",
-        "artifacts/architecture-0.29/release-ui.json#ui-classic-global-settings-save-through-host,ui-settings-help-save-applies-and-persists"
+        "artifacts/architecture-0.29/release-ui.json#ui-classic-global-settings-save-through-host,ui-settings-help-save-applies-and-persists",
+        "docs/收尾第三批验收结果.json"
       ],
-      "remaining": "导航隐藏恢复、帮助检索、设置备份/净化导入导出实现；设置不携带凭据或执行项。重置当前外观，不删除用户世界。",
+      "remaining": "本轮修复仅查文件名及旧正文残留；真实帮助页的正文查询、文件名查询、选择阅读、无结果清空及清空查询恢复通过。",
       "externalConditions": [],
       "evidenceLevels": {
         "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
@@ -7872,12 +8123,19 @@
         "evidenceState": "平台实际运行",
         "implementationGap": false,
         "requiresExternalCondition": false,
-        "workKind": "定向验收",
+        "workKind": "已覆盖限定范围",
         "acceptanceScope": [
-          "实际设置帮助页保存，不是帮助全文检索验收。"
+          "实际设置帮助页保存，不是帮助全文检索验收。",
+          "收尾第三批限定验收：本轮修复仅查文件名及旧正文残留；真实帮助页的正文查询、文件名查询、选择阅读、无结果清空及清空查询恢复通过。"
         ],
-        "nextAction": "导航隐藏恢复、帮助检索、设置备份/净化导入导出实现；设置不携带凭据或执行项。重置当前外观，不删除用户世界。",
+        "nextAction": "本轮修复仅查文件名及旧正文残留；真实帮助页的正文查询、文件名查询、选择阅读、无结果清空及清空查询恢复通过。",
         "note": "无本范围证据时保留历史结论；矩阵状态不等同当前包逐项重测。"
+      },
+      "closeoutThirdAcceptance": {
+        "date": "2026-10-27",
+        "evidence": "docs/收尾第三批验收结果.json",
+        "sha256": "aeb0b6c7e43595487be63cd803194f1f6bb9b8c734c74f8fe14bbe6ecb540b95",
+        "scope": "本轮修复仅查文件名及旧正文残留；真实帮助页的正文查询、文件名查询、选择阅读、无结果清空及清空查询恢复通过。"
       }
     },
     {
@@ -7889,7 +8147,7 @@
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
       "macImplementation": "src/Pcl.Desktop/SettingsHelpWindow.cs; src/Pcl.Core/AppearanceService.cs; src/Pcl.Desktop/TaskCenterWindow.cs; src/Pcl.Core/AppearanceService.cs",
       "ui": "设置与帮助",
-      "status": "已实现待验收",
+      "status": "已验收",
       "testEvidence": [
         "artifacts/evidence-0.8/full-regression-7/test-results.json",
         "artifacts/ui-0.8-final/evidence/workspace-ui-result.json",
@@ -7897,9 +8155,11 @@
         "artifacts/verification-0.22/final-tests/test-results.json",
         "artifacts/verification-0.22/final-local-ui/evidence/local-settings-ui.json",
         "artifacts/architecture-0.29/release-discovery.json#appearance-save-through-host,stale-settings-snapshot-cannot-overwrite-new-value,validate-all-settings-before-any-write,global-launch-network-and-hook-save-and-read,controlled-settings-export-omits-trusted-hook,settings-import-restores-portable-values-backs-up-and-preserves-hook",
-        "artifacts/architecture-0.29/release-ui.json#ui-classic-global-settings-save-through-host,ui-settings-help-save-applies-and-persists"
+        "artifacts/architecture-0.29/release-ui.json#ui-classic-global-settings-save-through-host,ui-settings-help-save-applies-and-persists",
+        "docs/收尾首批验收结果.json",
+        "docs/收尾第二批验收结果.json"
       ],
-      "remaining": "新增媒体目录与标题图片在导出中移除机器路径；辅助网络保存不会丢失来源、命名与调试项。",
+      "remaining": "真实 macOS 设置保存和打开选择器、导入后重开显示通过；Host 重置、备份、非法输入保护及路径／命令／服务器字段净化通过。",
       "externalConditions": [],
       "evidenceLevels": {
         "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json",
@@ -7939,13 +8199,32 @@
         "evidenceState": "平台实际运行",
         "implementationGap": false,
         "requiresExternalCondition": false,
-        "workKind": "定向验收",
+        "workKind": "已覆盖限定范围",
         "acceptanceScope": [
           "真实设置持久化和导入/导出保护；不是代理服务器数据链路。",
-          "实际设置帮助页保存，不是帮助全文检索验收。"
+          "实际设置帮助页保存，不是帮助全文检索验收。",
+          "收尾第二批限定验收：真实 macOS 设置保存和打开选择器、导入后重开显示通过；Host 重置、备份、非法输入保护及路径／命令／服务器字段净化通过。"
         ],
-        "nextAction": "新增媒体目录与标题图片在导出中移除机器路径；辅助网络保存不会丢失来源、命名与调试项。",
+        "nextAction": "真实 macOS 设置保存和打开选择器、导入后重开显示通过；Host 重置、备份、非法输入保护及路径／命令／服务器字段净化通过。",
         "note": "无本范围证据时保留历史结论；矩阵状态不等同当前包逐项重测。"
+      },
+      "closeoutAcceptance": {
+        "date": "2026-10-27",
+        "evidence": "docs/收尾首批验收结果.json",
+        "sha256": "cb5a26bd2087616bc55cbf6f8ba4fd2692aa2d41f8bac11f07877c7f7339c74e",
+        "checks": [
+          "UI-007-real-host-export-no-token-fields",
+          "UI-007-reset-and-import-restores-settings",
+          "UI-007-import-creates-backup",
+          "UI-007-invalid-import-preserves-current-settings"
+        ],
+        "scope": "Real Host; OS file picker not exercised"
+      },
+      "closeoutSecondAcceptance": {
+        "date": "2026-10-27",
+        "evidence": "docs/收尾第二批验收结果.json",
+        "sha256": "f8e4c82c2771005061c592c34cf615c00b792d74b6c651059602aea76cc053a2",
+        "scope": "真实 macOS 设置保存和打开选择器、导入后重开显示通过；Host 重置、备份、非法输入保护及路径／命令／服务器字段净化通过。"
       }
     },
     {
@@ -8148,16 +8427,18 @@
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
       "macImplementation": "src/Pcl.Desktop/DropWorkspace.cs",
       "ui": "设置与帮助",
-      "status": "已实现待验收",
+      "status": "已验收",
       "testEvidence": [
         "artifacts/evidence-0.8/full-regression-7/test-results.json",
         "artifacts/architecture-0.32/release-verified-shell.json#host-classifies-dropped-archive,host-imports-real-resource-archive",
-        "artifacts/architecture-0.32/release-verified-shell-ui/report.json#network-tab-loads-authoritative-host-value,network-save-button-persists-in-host,download-pause-button-controls-host,download-resume-button-controls-host,diagnostic-tab-shows-redacted-host-analysis,reopened-task-window-restores-network-settings,drop-confirm-button-imports-resource-through-host"
+        "artifacts/architecture-0.32/release-verified-shell-ui/report.json#network-tab-loads-authoritative-host-value,network-save-button-persists-in-host,download-pause-button-controls-host,download-resume-button-controls-host,diagnostic-tab-shows-redacted-host-analysis,reopened-task-window-restores-network-settings,drop-confirm-button-imports-resource-through-host",
+        "docs/收尾第四批验收结果.json"
       ],
-      "remaining": "真实 ZIP 分类、导入确认按钮和安装处理器已通过；尚未手动测试 macOS 系统拖放事件。",
+      "remaining": "macOS Finder 原生拖入单个资源包 ZIP、用户确认、Host 安装及输入文件哈希一致已通过；不外推为所有类型、多文件或全部系统版本。",
       "externalConditions": [],
       "evidenceLevels": {
-        "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
+        "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json",
+        "gui": "macOS Finder 原生拖入单个资源包 ZIP、用户确认、Host 安装及输入文件哈希一致已通过；不外推为所有类型、多文件或全部系统版本。"
       },
       "implementationSummary": "",
       "audit033": {
@@ -8194,13 +8475,20 @@
         "evidenceState": "平台实际运行",
         "implementationGap": false,
         "requiresExternalCondition": false,
-        "workKind": "定向验收",
+        "workKind": "已覆盖限定范围",
         "acceptanceScope": [
           "Host ZIP 分类与实际导入；系统拖放事件不在此测试中。",
-          "真实 UI 保存/重开、暂停/继续、诊断与拖入确认处理器；网络保存不等于真实代理，导入处理器不等于系统拖放。"
+          "真实 UI 保存/重开、暂停/继续、诊断与拖入确认处理器；网络保存不等于真实代理，导入处理器不等于系统拖放。",
+          "macOS Finder 原生拖入单个资源包 ZIP、用户确认、Host 安装及输入文件哈希一致已通过；不外推为所有类型、多文件或全部系统版本。"
         ],
-        "nextAction": "真实 ZIP 分类、导入确认按钮和安装处理器已通过；尚未手动测试 macOS 系统拖放事件。",
+        "nextAction": "macOS Finder 原生拖入单个资源包 ZIP、用户确认、Host 安装及输入文件哈希一致已通过；不外推为所有类型、多文件或全部系统版本。",
         "note": "无本范围证据时保留历史结论；矩阵状态不等同当前包逐项重测。"
+      },
+      "closeoutFourthAcceptance": {
+        "date": "2026-10-27",
+        "evidence": "docs/收尾第四批验收结果.json",
+        "sha256": "dcec360422ef4cacfb3b79869eb6f366a227a5858e123b3f7b1a6a9c4934ef35",
+        "scope": "macOS Finder 原生拖入单个资源包 ZIP、用户确认、Host 安装及输入文件哈希一致已通过；不外推为所有类型、多文件或全部系统版本。"
       }
     },
     {
@@ -8322,23 +8610,23 @@
   ],
   "currentMatrixReview": {
     "date": "2026-10-27",
-    "sourceVersion": "0.40",
-    "reviewKind": "记录、口径和引用核对，不是新增运行验收",
+    "sourceVersion": "0.40.1 + local closeout fixes",
+    "reviewKind": "Fourteen bounded acceptances with real UI/Host/Java evidence; two production startup defects fixed; manual and external gates retained.",
     "activeFeatures": 131,
     "statusCounts": {
-      "已验收": 41,
-      "已实现待验收": 36,
-      "部分实现": 47,
+      "已验收": 67,
+      "已实现待验收": 15,
+      "部分实现": 42,
       "未实现": 2,
       "外部条件阻塞": 4,
       "平台适配实现": 1
     },
     "workKinds": {
-      "已覆盖限定范围": 42,
+      "已覆盖限定范围": 68,
       "外部条件验收": 8,
       "实现缺口": 35,
-      "定向验收": 46
+      "定向验收": 20
     },
-    "report": "docs/0.40-功能矩阵核对.md"
+    "report": "docs/收尾第五批验收.md"
   }
 }

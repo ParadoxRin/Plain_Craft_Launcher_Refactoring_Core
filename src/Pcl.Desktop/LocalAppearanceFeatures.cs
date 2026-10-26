@@ -311,7 +311,7 @@ public partial class MainWindow
                 button.IsVisible = !hiddenRoutes.Contains("version-edit");
             }
 
-            if (text is "更新" or "检查更新" or "批量更新" or "安装所选更新" or "批量更新所选" or "提交整批更新")
+            if (text is "更新" or "检查更新" or "批量更新" or "安装所选更新" or "批量更新所选" or "提交整批更新" or "忽略此版本")
             {
                 // [实现] 条件成立（text is "更新" or "检查更新" or "批量更新" or "安装所选更新" or "批量更新所选" or "提交整批更新"）时：执行 button.IsVisible = !hiddenRoutes.Contains("mod-update")。
                 button.IsVisible = !hiddenRoutes.Contains("mod-update");

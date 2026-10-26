@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup><OutputType>WinExe</OutputType><TargetFramework>net10.0</TargetFramework><AssemblyName>PCL-MacPort</AssemblyName><Version>0.40.1</Version></PropertyGroup>
+  <PropertyGroup><OutputType>WinExe</OutputType><TargetFramework>net10.0</TargetFramework><AssemblyName>PCL-MacPort</AssemblyName><Version>0.41.0</Version></PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="../../docs/windows-layout-baseline.json" LogicalName="windows-layout.json" />
     <EmbeddedResource Include="../../docs/PCL2完整功能矩阵.json" LogicalName="feature-matrix.json" />

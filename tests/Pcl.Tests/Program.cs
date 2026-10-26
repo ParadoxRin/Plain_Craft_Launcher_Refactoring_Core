@@ -10,6 +10,74 @@ using Pcl.Legacy;
 
 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 MeloongCore.Main.Init("PCLMacPortTests");
+// Focused closeout suite: real isolated files with controlled external metadata.
+if (args.FirstOrDefault() == "--closeout-local")
+{
+    var folder = Path.GetFullPath(args[1]);
+    Directory.CreateDirectory(folder);
+    var results = new List<object>();
+    var failed = 0;
+    async Task Run(string name, Func<Task> body)
+    {
+        if (args.Length > 3 && name != args[3])
+        {
+            return;
+        }
+
+        try
+        {
+            await body();
+            results.Add(
+                new
+                {
+                    name,
+                    status = "passed"
+                }
+            );
+        }
+        catch (Exception ex)
+        {
+            failed++;
+            results.Add(
+                new
+                {
+                    name,
+                    status = "failed",
+                    error = ex.Message
+                }
+            );
+        }
+    }
+
+    if (args.ElementAtOrDefault(3) == "java_discovery_rejects_escaping_receipts_and_macos_stub")
+    {
+        await AccountAppearanceTests.RunAll(folder, Run);
+    }
+
+    await InstanceManagementTests.RunAll(folder, Run);
+    await LocalSettingsTests.RunAsync(folder, Run);
+    await PackResourceTests.RunAsync(folder, Run);
+    File.WriteAllText(
+        args[2],
+        System.Text.Json.JsonSerializer.Serialize(
+            new
+            {
+                status = failed == 0
+                    ? "passed"
+                    : "failed",
+                results
+            },
+            new System.Text.Json.JsonSerializerOptions
+            {
+                WriteIndented = true
+            }
+        )
+    );
+    return failed == 0
+        ? 0
+        : 1;
+}
+
 if (args.FirstOrDefault() == "--live039")
 {
     return await Live039Tests.Run(args[1]);
@@ -48,7 +116,9 @@ if (args.FirstOrDefault() == "--license0361")
 if (args.FirstOrDefault() == "--auth-privacy")
 {
     return await AuthPrivacyTests.Run(
-        args.ElementAtOrDefault(1) ?? (MicrosoftApplication.BuiltIn.IsConfigured ? "configured" : "empty")
+        args.ElementAtOrDefault(1) ?? (MicrosoftApplication.BuiltIn.IsConfigured
+            ? "configured"
+            : "empty")
     );
 }
 
@@ -1450,8 +1520,9 @@ await Test(
                 )
             );
         }
-        catch (InvalidDataException)
+        catch (IOException error)when (error.InnerException is InvalidDataException)
         {
+            // Integrity failures must not be treated as a candidate compatibility rejection.
             rejected = true;
         }
 
@@ -1535,8 +1606,13 @@ await Test(
                 "predicate assertion 5"
             );
             Check(
-                !FabricVersionPredicate.Matches("0.7.0", "^0.6.1"),
+                FabricVersionPredicate.Matches("0.7.0", "^0.6.1"),
                 "predicate assertion 6"
+            );
+            // Fabric caret ranges retain the major component even when it is zero.
+            Check(
+                !FabricVersionPredicate.Matches("1.0.0", "^0.6.1"),
+                "caret upper bound"
             );
             Check(
                 FabricVersionPredicate.Compare("1.0.0-beta.10", "1.0.0-beta.2") > 0,
@@ -2528,6 +2604,113 @@ await Test(
     )
 );
 await Test(
+    "launch_preflight_uses_instance_game_version_for_dependencies",
+    async () =>
+    {
+        // 默认 Host 绑定 1.21.1，而所选 Fabric 实例绑定 1.20.1；预检必须按实例判断，且不能跳过真正的冲突。
+        var dir = Path.Combine(scratch, "launch-instance-version");
+        var instance = Path.Combine(dir, "instances", "fabric-1201");
+        Directory.CreateDirectory(
+            Path.Combine(instance, "mods")
+        );
+        using var service = new MinecraftService(
+            new AppPaths(dir),
+            new("osx", "aarch64", "27")
+        );
+        var profile = new JObject
+        {
+            ["loader"] = "fabric",
+            ["loaderVersion"] = "0.16.14",
+            ["gameVersion"] = "1.20.1"
+        };
+        JsonFiles.Write(
+            Path.Combine(instance, "profile.json"),
+            profile
+        );
+        using (var zip = ZipFile.Open(
+            Path.Combine(instance, "mods", "fixture.jar"),
+            ZipArchiveMode.Create
+        ))
+        {
+            using var writer = new StreamWriter(
+                zip.CreateEntry("fabric.mod.json")
+                    .Open()
+            );
+            writer.Write(
+                "{\"schemaVersion\":1,\"id\":\"versionfixture\",\"version\":\"1.0.0\",\"depends\":{\"minecraft\":\"=1.20.1\"}}"
+            );
+        }
+
+        var metadata = Path.Combine(instance, "version.json");
+        JsonFiles.Write(
+            metadata,
+            new
+            {
+                javaVersion = new
+                {
+                    majorVersion = 17
+                },
+                downloads = new
+                {
+                    client = new
+                    {
+                        size = 99,
+                        sha1 = new string ('0', 40)
+                    }
+                }
+            }
+        );
+        var jar = Path.Combine(instance, "client.jar");
+        File.WriteAllText(jar, "deliberately corrupt client");
+        var version = new InstalledVersion(
+            "fabric-1201",
+            metadata,
+            jar,
+            "5",
+            [],
+            17
+        );
+        // 用下游客户端完整性检查作边界：兼容依赖必须通过到此处，不运行伪造游戏或触发网络。
+        var reachedClientValidation = false;
+        try
+        {
+            await new LaunchService(service).PrepareAsync(
+                version,
+                new("java", "aarch64", 17),
+                GameSession.Trial,
+                gameDirectory: instance
+            );
+        }
+        catch (InvalidDataException ex)
+        {
+            reachedClientValidation = ex.Message.Contains("客户端已损坏");
+        }
+
+        Check(reachedClientValidation);
+        profile["gameVersion"] = "1.21.1";
+        JsonFiles.Write(
+            Path.Combine(instance, "profile.json"),
+            profile
+        );
+        var rejectedConflict = false;
+        try
+        {
+            await new LaunchService(service).PrepareAsync(
+                version,
+                new("java", "aarch64", 17),
+                GameSession.Trial,
+                gameDirectory: instance
+            );
+        }
+        catch (InvalidDataException ex)
+        {
+            rejectedConflict = ex.Message.Contains("Fabric 依赖冲突");
+        }
+
+        Check(rejectedConflict);
+    }
+);
+await Test(
     "mac_preflight_blocks_corrupt_library_and_instance_client",
     async () =>
     {
@@ -3427,7 +3610,6 @@ await Test(
                 {
                     UserType = "msa"
                 },
-                GameSession.Trial,
                 new GameSession("PCL_Test", LoginUuid, "fixture-fake-access", "msa", false)
             }
 
@@ -3447,6 +3629,10 @@ await Test(
                     )
                 );
             }
+
+            // Official trial is a supported identity; it does not grant full-game ownership.
+            GameLaunchAuthorization.Require(GameSession.Trial);
+            Check(GameSession.Trial.Demo);
         }
     )
 );
@@ -3974,7 +4160,10 @@ await Test(
                 zip.CreateEntry("fabric.mod.json")
                     .Open()
             );
-            writer.Write("{\"id\":\"javafixture\",\"version\":\"1\",\"depends\":{\"java\":\">=21\"}}");
+            // `depends` belongs to schema 1; missing schemaVersion selects legacy schema 0.
+            writer.Write(
+                "{\"schemaVersion\":1,\"id\":\"javafixture\",\"version\":\"1\",\"depends\":{\"java\":\">=21\"}}"
+            );
         }
 
         var bytes = memory.ToArray();

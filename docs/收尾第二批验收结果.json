@@ -1,0 +1,77 @@
+{
+  "date": "2026-10-27",
+  "baseline": "0.40.1 + local changes",
+  "reports": {
+    "picker": {
+      "status": "passed",
+      "checks": [
+        "INST-004-isolated-instance-has-no-icon",
+        "INST-004-native-picker-saves-and-renders-icon",
+        "INST-004-reopened-icon-bytes-preserved",
+        "INST-004-restore-default-removes-custom-image",
+        "UI-007-native-save-picker-exports-settings",
+        "UI-007-native-open-picker-imports-settings",
+        "UI-007-reopened-settings-renders-imported-title"
+      ]
+    },
+    "updates": {
+      "status": "passed",
+      "checks": [
+        "RES-017-live-catalog-finds-two-old-mod-updates",
+        "RES-017-no-selection-rejected-without-clearing-list",
+        "RES-017-only-selected-update-removed-from-list",
+        "RES-017-reopened-page-requeries-and-keeps-other-mod-update"
+      ]
+    },
+    "updates-restart": {
+      "status": "passed",
+      "checks": [
+        "RES-017-new-host-process-still-excludes-only-ignored-version"
+      ]
+    },
+    "privacy-final": {
+      "status": "passed",
+      "checks": [
+        "PACK-011-default-excludes-known-private-and-unselected-files",
+        "PACK-011-world-and-options-excluded-by-default",
+        "PACK-011-default-preserves-config-without-host-path",
+        "PACK-011-documented-limit-arbitrary-config-content-not-secret-scanned-False",
+        "PACK-011-opt-in-still-excludes-known-private-and-unselected-files",
+        "PACK-011-explicit-opt-in-includes-world-and-options",
+        "PACK-011-opt-in-preserves-config-without-host-path",
+        "PACK-011-documented-limit-arbitrary-config-content-not-secret-scanned-True",
+        "PACK-011-outside-symlink-rejected-without-delivery",
+        "UI-007-import-strips-local-media-and-home-paths",
+        "UI-007-import-strips-executable-arguments-server-and-world",
+        "UI-007-export-contains-portable-values-only"
+      ]
+    }
+  },
+  "publicModInputs": [
+    {
+      "project": "fabric-api",
+      "current": "VAjB0MYF",
+      "latest": "Mys3P7lK",
+      "sha1": "669a75bcbba10bc3fa15f31733587cefb8779064",
+      "file": "fabric-api-0.102.0+1.21.1.jar"
+    },
+    {
+      "project": "modmenu",
+      "current": "xhN1IvHi",
+      "latest": "6lgOkclV",
+      "sha1": "e4ba66f6036a4902433bb517d55120c4237c512f",
+      "file": "modmenu-11.0.1.jar"
+    }
+  ],
+  "ignoredVersionIds": [
+    "Mys3P7lK"
+  ],
+  "originalJarsUnchanged": true,
+  "userConfirmedNativePickerActions": true,
+  "limits": [
+    "Arbitrary custom config apiKey content is retained, not automatically redacted.",
+    "Modrinth update path only; no CurseForge key.",
+    "One PNG sample; no broad image format compatibility claim.",
+    "No account, keychain, game world or network multiplayer verification."
+  ]
+}

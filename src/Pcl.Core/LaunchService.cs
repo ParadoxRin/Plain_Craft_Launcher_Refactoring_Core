@@ -30,10 +30,12 @@ public sealed class LaunchService(MinecraftService service)
             var profilePath = ResourceInstaller.SafeTarget(gameDirectory, "profile.json");
             if (File.Exists(profilePath))
             {
-                // [实现] 条件成立（File.Exists(profilePath)）时：准备 var receipt = JsonFiles.Read(profilePath)；准备 var loader = (string? )receipt["loader"] ?? "vanilla"；执行 new LocalResourceService(gameDirectory, loader, service.GameVersion).ValidateEnabledResources()。
+                // Host 的共享 service 可能仍绑定默认版本；依赖预检必须使用所选实例的父版，避免误拒绝其他版本的模组。
                 var receipt = JsonFiles.Read(profilePath);
                 var loader = (string? )receipt["loader"] ?? "vanilla";
-                new LocalResourceService(gameDirectory, loader, service.GameVersion).ValidateEnabledResources(ct);
+                var gameVersion = (string? )receipt["gameVersion"] ?? service.GameVersion;
+                VersionCatalog.ValidateId(gameVersion);
+                new LocalResourceService(gameDirectory, loader, gameVersion).ValidateEnabledResources(ct);
             }
 
             var configuredJava = new LauncherSettingsStore(service.Paths).Effective(gameDirectory)
@@ -332,8 +334,8 @@ public sealed class LaunchService(MinecraftService service)
 
         if (service.Platform.Os == "osx")
         {
-            // [实现] 条件成立（service.Platform.Os == "osx"）时：按 (json["libraries"] is null || LegacyLaunchAdapter.RequiresFirstThread(json)) && !args.Contains(… 分支处理；执行 args.Add("-Xdock:name=Minecraft · PCL Mac")；准备 var index = Path.Combine(service.Paths.Game, "assets/indexes", version.AssetIndex + ".json")。
-            if ((json["libraries"] is null || LegacyLaunchAdapter.RequiresFirstThread(json)) && !args.Contains("-XstartOnFirstThread"))
+            // macOS 在首线程启动图形界面；Apple Silicon 的 LWJGL2 兼容层同样需要此参数，且不重复添加用户参数。
+            if ((json["libraries"] is null || LegacyLaunchAdapter.RequiresFirstThread(json, service.Platform.Architecture == "aarch64")) && !args.Contains("-XstartOnFirstThread"))
                 args.Add("-XstartOnFirstThread");
             args.Add("-Xdock:name=Minecraft · PCL Mac");
             var index = Path.Combine(service.Paths.Game, "assets/indexes", version.AssetIndex + ".json");

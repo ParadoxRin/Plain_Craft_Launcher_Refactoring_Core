@@ -1,7 +1,7 @@
-# PCL Mac 架构规范
+# Plain Craft Launcher Refactoring Core 架构规范
 
-版本：1.4\
-日期：2026-10-26（Australia/Sydney）\
+版本：1.5\
+日期：2026-10-27（Australia/Sydney）\
 性质：后续增量重构的实施规范  
 依据：已落盘的《分层架构实施规范 v2》、本轮评审共识、当前仓库实际调用链。
 
@@ -11,6 +11,8 @@
 
 目标是让 macOS、Windows 和 Linux 各自使用平台原生 UI，共享安装、资源管理、账户、依赖求解和游戏启动核心。macOS 使用 SwiftUI；Windows 和 Linux 分别使用适合各自平台的原生 UI 库，具体库尚未选定。Desktop 与 Core 分离的首要目的，是让三个原生客户端复用同一套业务能力，而不复制业务实现。CLI 也可复用这些能力。
 
+0.41 起产品目标明确为可供不同开发者定制启动器的三平台核心。原生 UI 是参考接入方向，客户端可以选择其他合适的组件库与布局；本轮不要求把三套 UI 全部完成作为核心收尾条件。可替换 UI 不等于已实现插件系统或任意语言 SDK，跨平台可用须逐平台实际测试。开发责任与许可分别见[开发方式](../开发方式与责任.md)和[许可范围](../../LICENSE.md)。
+
 本规范采用六种职责：Shell、Contract、Application、Domain、Ports、Adapters；Host 是部署入口与组合根，不强行作为第七层。职责不等于程序集数量。
 
 约束用语：
@@ -19,9 +21,9 @@
 - **建议**：默认做法，有具体理由时可选其他实现。
 - **后续阶段**：尚未实现的目标，不得据此宣称现有功能已具备。
 
-当前0.40实现仍是 Apple Silicon Mac 上的 Avalonia + 独立 Host。Avalonia 是渐进迁移期间的可用入口和功能对照，不是三平台最终统一 UI；SwiftUI 是 Mac 端明确的目标，不再表述为可选设想。Windows/Linux 原生界面和各平台 Adapter 必须分别实施及验收，不能从 Mac 运行证据推导三平台可用。
+当前0.41.0实现仍是 Apple Silicon Mac 上的 Avalonia + 独立 Host。Avalonia 是渐进迁移期间的可用入口和功能对照，不是三平台最终统一 UI；SwiftUI 是 Mac 端明确的目标，不再表述为可选设想。Windows/Linux 原生界面和各平台 Adapter 必须分别实施及验收，不能从 Mac 运行证据推导三平台可用。
 
-当前实现追踪：[0.40 Core 职责与页面生命周期验收](../0.40-Core职责与页面生命周期验收.md)。具体验收状态以该报告为准，规范本身不作为运行证据。
+当前实现追踪：[0.41.0 发布记录](../0.41-核心平台定位与发布.md)、[收尾第五批](../收尾第五批验收.md)及[0.40 生命周期记录](../0.40-Core职责与页面生命周期验收.md)。规范不作为运行证据。
 
 ### 1.1 三平台 Shell 与共享核心
 
@@ -68,7 +70,7 @@ Contract          -> 标准库
 3. Adapters 不得依赖 Shell、Application 的编排实现或 Host。Adapter 实现 Ports；核心不引用其实现类型。
 4. Application 负责 Contract 与 Domain 类型的映射。Domain 不为适配界面或 RPC 字段而改变业务语义。
 5. Client 是可选客户端代码，负责传输、请求关联和事件分发，不承载业务流程。
-6. 当前 Avalonia 可在可执行项目内保留 `Bootstrap/Composition.cs`。该目录是组合根例外，不视作 Shell 展示代码。程序集拆分后，独立 Host 无须反向依赖 Shell。
+6. 阶段一历史实现曾在 Avalonia 的 `Bootstrap/Composition.cs` 组装业务服务。当前独立 Host 已接管该职责，Shell Bootstrap 只组装 Client 和展示依赖，不能引用 Core/Application；独立 Host 不反向依赖 Shell。
 7. 目录阶段采用命名空间、迁移清单和用例追踪约束；程序集阶段再增加项目引用及传递依赖约束。目录分层本身不提供编译隔离。
 
 本规范没有 `Domain -> Ports` 的引用边，因此 `Ports -> Domain` 不构成环。不得从讨论稿中补回前一条边。需要外部数据时，由 Application 经 Port 获取，再作为显式输入交给 Domain。
@@ -81,7 +83,7 @@ Contract          -> 标准库
 | `FileSystemCaps`、内部 `ProcessSpec` | Ports | 描述技术能力／执行输入，Domain 不依赖它们 |
 | `OperationId`、请求及公开事件结构 | Contract | 不成为 Domain 的依赖；不将内部进程参数投射为公开 DTO |
 
-现有 `TargetPlatform.Current` 在迁移时需要把宿主探测移到 Adapter／组合根，不能原样搬进纯 Domain。内部需要操作标识时可使用应用层标识或显式映射，不以复用字段为理由引入反向引用。
+原 `TargetPlatform.Current` 的宿主探测已移至 Adapter；纯 Domain 的平台值不得重新加入隐式宿主探测。内部需要操作标识时可使用应用层标识或显式映射，不以复用字段为理由引入反向引用。
 
 当前不建立 `Pcl.Kernel`。只有出现确实独立于 Domain、Ports、Contract，且被多个边界共同需要的稳定值类型时，才通过决策记录引入叶子程序集；不得用 Kernel 或 Shared 收容所有暂时不知归属的类型。
 
@@ -419,39 +421,30 @@ MeloongCore、PCLCS、Pcl.Legacy 当前是 Core 的直接依赖。迁移时逐�
 ## 12. 安全与产品行为边界
 
 - 保持下载、安装与账号认证的现有产品分离；架构重构不顺带改变离线登录或微软登录策略。
-- 不新增赞助、支付或主题解锁流程；保留上游必要署名与许可证。
+- 保留既有原作者赞助与正版购买劝导；不新增支付或赞助/主题解锁流程，保留上游署名、源码和许可证要求。
 - 公共 OAuth client ID 可作为应用配置；client secret、refresh token、access token 不进入公开配置、receipt、日志或普通 RPC DTO。
 - Shell 通过 accountId 请求登录或启动，由 Host 内部管理敏感凭据。需要给用户展示的短时授权提示另设最小数据契约。
 - 进程参数可能包含敏感值，内部 `ProcessSpec` 与可记录／可公开的命令摘要必须分开；不因“统一 DTO”将完整参数暴露给 UI。
 - 架构迁移不得放松文件哈希、归档路径、加载器依赖、Java 匹配或原生库适配的既有保护。
 
-## 13. 当前代码与迁移路径
+## 13. 当前代码与迁移路径（0.41.0）
 
-以下为源码阅读确认的实际结构，不是运行测试结论：
-
-| 当前位置 | 现状 | 迁移目标 |
+| 当前模块 | 已落地边界 | 尚未完成 |
 |---|---|---|
-| `Pcl.Desktop/MainWindow.axaml.cs` 的安装分支 | 新安装经 Contract 调用 VersionInstallService，修复仍走 `InstanceManager.RepairAsync` | 先接新安装应用入口，修复保留显式独立路径，后续再迁 |
-| `Pcl.Desktop/VersionManager.cs` | 版本安装已通过同一 Contract 应用入口 | 同一用例复用应用入口，不能另建一套流程 |
-| `Pcl.Core/InstallOperations.cs` | 记录安装历史、中断标记，内部调用 `VersionInstaller` | 第一阶段复用；后续演进为任务注册／持久化边界 |
-| `Pcl.Core/MinecraftService.cs` | 版本服务与原版安装，`ForVersion` 创建可释放对象 | 保持已有版本选择与释放语义 |
-| `Pcl.Core/Accounts.cs` 与 `MacAccountSecrets.cs` | 已有凭据接口和 Keychain 实现 | 沿用接口、分离技术实现 |
-| `Pcl.Core/LaunchService.cs` | 管理托管和独立游戏进程 | 逐步接入长进程边界，保留现有可见性与退出策略 |
-| `tests/Pcl.Tests` | 控制台测试程序，只引用 Core | 独立用例验证；不能以普通 `dotnet test` 无报错代替执行结果 |
+| Desktop / Bootstrap | 全部生产展示通过 Contract/Client；不再有 Core/Application 业务引用 | SwiftUI 与 Windows/Linux 自定义客户端 |
+| Client | 私有 RPC、订阅/快照、请求关联、会话重连 | 非 .NET SDK 与跨语言一致性验收 |
+| Host / Application | 独立组合根、账户与进程用例、持久化受理与关闭协调 | 所有操作类型完整安全续做；各平台组合根 |
+| Domain / Ports | 独立程序集、纯规则与外部能力边界 | 剩余规则整理以具体用例决定，不按文件数强拆 |
+| Core / Adapters | 复用既有下载、安装、资源、账户与系统执行 | Windows/Linux 凭据/文件/进程适配和实机证据 |
+| 导航与窗口 | 0.40 统一现有 Avalonia 页面导航、工作租约与关闭责任 | 新客户端必须重新接线和测试对应生命周期 |
 
-阶段一现已落地 `Bootstrap/Composition` 与 `Application/Installation/VersionInstallService`，通过 Contract 接入两个 Avalonia 安装入口。原 `InstallOperations -> VersionInstaller` 仍为执行链；独立纯 Domain `InstallPlanner` 尚未抽取。完成证据、关闭责任和未迁移范围见 [阶段一实施与测试](阶段一实施与测试.md)。
+安装继续复用 InstallOperations → VersionInstaller；凭据继续沿用 IAccountSecrets。当前 HostRuntime 仍直接选择 Mac Keychain Adapter，不能声称全部平台可运行。0.41 修复实例版本依赖预检及 ARM64 LWJGL2 首线程行为，见发布与收尾记录。
 
-阶段二已接入原凭据接口及长短进程 Adapter，Apple Silicon Mac 的针对性执行证据及兼容例外见 [阶段二实施与测试](阶段二实施与测试.md)。此记录不表示账户应用 Contract 或进程外 Host 已完成。
-
-阶段三首批已建立同进程操作受理、持久化和原版续做链路，当前能力与未完成范围见 [阶段三操作模型与测试](阶段三操作模型与测试.md)。尚无进程外 Host，不将其追认为完整阶段三完成。
-
-阶段三第二批已实现主要加载器恢复、统一启动受理以及私有 Host/Client 和 CLI 接线；能力边界、DEC-003/004/005 本批实现及实际证据见 [阶段三加载器恢复与独立 Host](阶段三加载器恢复与独立Host.md)。Avalonia 尚未整体远程化，未将本批追认为所有阶段三目标完成。
-
-0.25 已按现有规范抽出 Contract、Domain、Ports 和操作 Application 程序集，Client 仅依赖 Contract。远程会话与游戏观察移至 Client；Desktop 旧页面与 Bootstrap 仍借用旧 Core/Application，保留显式过渡边。当前状态与证据见 [0.25 架构实现与验收](../0.25-架构实现与验收.md)。该进展不等于所有业务规则、账户执行桥、UI 或功能矩阵已迁移完毕。
-
-当前 README、历史报告及版本包的统计可能来自不同快照；不把历史行数、功能数或测试次数作为本次架构基线。
+阶段一至0.31报告描述当时的过渡状态，不是当前允许恢复 Desktop→Core 的例外。历史报告保留不改写，原始证据缺失时登记缺失，不自动追认结果。当前图见[详细架构](../架构与设计取舍.md)，接入步骤见[客户端指南](../客户端接入指南.md)。
 
 ## 14. 迁移阶段与完成条件
+
+阶段一至三保留原实施顺序和验收定义，描述历史推进过程；当前落地情况以§13为准，不重开已关闭的迁移项。后续平台和客户端按目标分别实施。
 
 ### 阶段一：应用入口与最小组合根
 
@@ -515,7 +508,7 @@ src/Pcl.Desktop/
 
 恢复实验分别覆盖 UI 断连、Host 重启和提交中断；不以一次普通安装成功代表恢复通过。未支持的安装器续做能力明确暴露。
 
-### 阶段四：SwiftUI 最小链路
+### 阶段四：可替换客户端最小链路（SwiftUI 参考方向）
 
 SwiftUI 通过 Swift 客户端适配接入现有 Host 契约，先跑通安装 → 取消 → 会话恢复 → 任务续做 → 启动，再扩大功能覆盖。验证请求/响应类型映射、错误码、事件水位、重连、退出及单一释放；不直接依赖 .NET Client 程序集或复制业务规则。
 
@@ -527,13 +520,14 @@ SwiftUI 通过 Swift 客户端适配接入现有 Host 契约，先跑通安装 �
 
 ## 15. 完成证据、用例追踪与变更控制
 
-每个迁移用例维护：
+每个迁移用例维护。以下按0.41.0结构更新，详细结论仍由对应报告限定：
 
 | 用例 | 规则所在位置 | 应用入口 | 无 UI 调用路径 | 验证证据 | 未迁移／未执行 |
 |---|---|---|---|---|---|
-| 新安装 | 现有 VersionInstaller / MinecraftService（尚未拆纯 Domain） | VersionInstallService 经 Contract 接口 | 可独立调用；真实安装本轮在 Avalonia 中运行 | 主按钮／版本窗口安装与关闭取消、针对性测试，见阶段一记录 | 修复、任务中心续做及其他安装入口另列 |
-| 启动 | 现有规则与参数生成链 | 待迁移 | CLI / 核心调用待对应核实 | 按实际记录 | 长进程恢复能力另列 |
-| 凭据恢复 | 账户规则与凭据 Port | 待分离 | 待对应核实 | Fake 与真实 Keychain 分开记录 | 权限、重启场景另列 |
+| 版本安装 | VersionInstaller / MinecraftService，纯约束位于Domain | InstallOperationService + ExistingVersionInstaller | Host version.install / operation.get/cancel | 阶段三及加载器/后续版本报告 | 任意任务续做与全部加载器兼容未完成 |
+| 资源安装 | ResourceDependencyPlanner + Domain求解，原事务执行器提交 | 工作区应用操作 + Adapter | Host page.begin/get/cancel | 0.37–0.39及收尾记录 | 复杂插件语义、全部包格式和平台另列 |
+| 启动 | Domain授权/参数规则、Core LaunchService、进程Port | GameLaunchOperationService / GameLaunchBackend | Host game.guidance / game.launch | 0.41最终包、收尾第五批及历史世界记录 | 本版菜单不替代世界验收，外置账户启动仍缺 |
+| 凭据恢复 | 账户规则与IAccountSecrets | HostAccountService / AccountBackend | Host account.* | 历史真实Keychain与自动化分别记录 | 本版未重做微软登录；Windows/Linux凭据Adapter待实现 |
 
 验证分工：
 
@@ -552,24 +546,18 @@ SwiftUI 通过 Swift 客户端适配接入现有 Host 契约，先跑通安装 �
 
 重要选择写入简短决策记录：问题、选择、理由、影响、兼容方案和重新考虑的触发条件。技术债记录位置、原因、目标职责、受影响用例和迁移状态；不把所有历史债务变成每次改动的阻塞项。
 
-### 15.1 过渡期可执行守卫
+### 15.1 当前可执行守卫
 
-Desktop 的 `EnforceArchitecture` 构建目标执行 `scripts/ArchitectureGuard`：检查 Core/Client/Desktop/Host 的实际项目运行时引用集合，并扫描已编译 Desktop 方法体与字段符号；Bootstrap 之外不得引用或构造 `Pcl.Core.Application.*`、`Pcl.Core.Adapters.*` 的实现。别名、全限定名、目标类型 `new`、异步状态机仍按解析后的符号判断。违规使构建失败；`ReferenceOutputAssembly=false` 的 Host/守卫构建依赖不当作运行时引用。
+Desktop 的 EnforceArchitecture 构建目标检查项目引用、传递运行时依赖及已编译字段、方法、IL 与异步状态机。当前 Shell **包含 Bootstrap** 均不得依赖 Core、Application、Ports 或 Domain 业务实现；Host 与 ArchitectureGuard 的 ReferenceOutputAssembly=false 只作构建依赖。Client 只引用 Contract。不得恢复旧 Bootstrap 接线白名单。
 
-以下为0.25过渡期记录，不是允许恢复旧依赖的现行例外；0.32已移除 Desktop → Core/Application 及 Bootstrap 业务桥，见[0.32验收](../0.32-架构实现与验收.md)。0.25时已移除 Client → Core，但当时仍保留 Desktop → Core/Application 和 Bootstrap 接线例外，见技术债及构建输出的 `architecture-guard.json`。守卫尚未禁止全部旧 Core 根命名空间 API，也不是业务规则用例追踪的替代品；字符串反射不在静态符号检查的证明范围内。不得将“当前守卫通过”写成“Shell 已无法访问 Core”。
+Domain 不引用 Ports/Contract/Application/Host；Application 不引用 Core/Adapters。源码路径、程序集与命名空间可能不同，以实际符号和项目归属为准。守卫不能证明字符串反射没有绕过，也不能证明业务规则没有只存在于 UI；仍需用例追踪和实际测试。
 
-Contract 可在阶段五前单独抽成程序集，不要求一次拆完所有层。但要分别验收：
-
-1. Contract 只保留 DTO/应用接口，无 Core、传输、文件或进程实现依赖；Client 迁出对 Core 分帧/诊断工具的依赖后，项目及传递编译引用才可收紧为 Client → Contract。
-2. Desktop 的旧页面和 Bootstrap 仍依赖 Core 时，必须保留并登记该过渡边，不能因抽出了 Contract 就宣称 Desktop 获得编译隔离。移除该边需要迁移剩余页面与公开类型，并复核传递引用。
-3. 引用策略变更必须同步修改守卫、正反例测试和用例追踪，不得靠增加泛化白名单让违规通过。
-
-守卫正反例由 `scripts/test-architecture-guard.py` 执行；生产编译通过、故障样本被拒绝分别留证。历史发布包的运行证据与当前源码构建守卫证据分别记录。
+新增平台/客户端需记录引用图和契约一致性测试；策略变化同步更新守卫正反例，不添加泛化白名单。编译通过、故障样本被拒绝与真实运行分别留证。
 
 ## 16. 来源与维护
 
 - 讨论基线：`<developer-home>/Documents/deepseek-harness/default-workspace/notes/pcl-mac/five-layer-architecture.md`，落盘 v2。
-- 本规范所在工程：`output/pcl-mac-port`。规范最初整理仅包含源码阅读与文档修改；随后按用户授权实施阶段一，当前状态及本轮编译／测试范围见 [阶段一实施与测试](阶段一实施与测试.md)。
+- 本规范所在工程：`output/pcl-mac-port`。规范最初整理仅包含源码阅读与文档修改；随后按用户授权实施阶段一，阶段一记录仅是历史；当前以 0.41.0 发布和收尾报告为准。
 - 上游参照：[Microsoft — Common web application architectures](https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/common-web-application-architectures)、[JSON-RPC 2.0 specification](https://www.jsonrpc.org/specification)。外部参考帮助解释原则，不替代本项目明确选择的自定义协议与迁移规则。
 
 修改本规范时，优先更新具体职责、契约语义、迁移范围和完成条件。不要仅增加口号、接口数量或未经执行的成功标记。
@@ -595,3 +583,10 @@ Contract 可在阶段五前单独抽成程序集，不要求一次拆完所有�
 1.3 修订（2026-10-25）：明确 Shell 宿主平台探测的界面／系统集成边界；补充过渡期项目引用与已编译符号守卫、Contract 提前拆分的分阶段验收。保留 v1.2 原文于 archive。本轮未迁移 Contract 程序集，未新增游戏运行验收。
 
 1.4 修订（2026-10-26）：按用户明确的产品目标，将Desktop定义为三平台原生Shell；确定Mac使用SwiftUI，Windows/Linux原生库待选型。明确Avalonia过渡定位、跨语言Client/Contract边界与逐平台验收条件；澄清0.25旧依赖例外仅为历史记录。v1.3原文保留于archive。本轮只修改文档，未新增原生客户端、修改运行代码或执行游戏测试。
+
+### v1.5 修订（0.41.0）
+
+- DEC-008：以三平台核心与自定义客户端接入为产品目标；原生 UI 参考方向保留，任意合适 UI 组件库可通过契约接入。不能用目标定位冒充 Windows/Linux 已验收。
+- 修正 §13/§15 中过时的同进程、旧 Desktop→Core 与 Bootstrap 例外表述，保留历史报告作为历史。
+- 新客户端必须遵守版本协商、能力、事件/快照、幂等、取消、凭据与退出语义；当前不承诺稳定跨语言 SDK、C ABI 或插件系统。
+- 大量 AI 辅助编码，人工负责架构、取舍、边界及验收；不能补造人工审查记录。原创 MIT 与上游/第三方许可并存。

@@ -1,0 +1,68 @@
+{
+  "date": "2026-10-27",
+  "baseline": "0.40.1 + local acceptance changes",
+  "uiAndHost": {
+    "status": "passed",
+    "checks": [
+      "UI-005-all-22-supported-route-switches-present",
+      "UI-005-all-route-switches-persist-through-host",
+      "UI-005-main-tabs-and-version-actions-hidden-recovery-retained",
+      "UI-005-local-resource-update-actions-obey-hidden-setting",
+      "UI-005-recovery-clears-persisted-hidden-settings",
+      "UI-005-reopened-resource-page-restores-actions",
+      "RES-014-host-scans-all-local-archives",
+      "RES-014-identifies-accept_fabric",
+      "RES-014-identifies-accept_quilt",
+      "RES-014-identifies-accept_forge",
+      "RES-014-identifies-accept_neoforge",
+      "RES-014-identifies-accept_legacy",
+      "RES-014-identifies-accept_lite",
+      "RES-014-identifies-accept_disabled",
+      "RES-014-identifies-fabric-api",
+      "RES-014-identifies-modmenu",
+      "RES-014-corrupt-archive-reported-without-aborting-scan",
+      "RES-014-disabled-filter-shows-disabled-archive",
+      "RES-014-error-filter-shows-corrupt-archive",
+      "UI-006-help-search-matches-document-body",
+      "UI-006-selected-help-displays-matching-body",
+      "UI-006-no-result-clears-stale-body",
+      "UI-006-filename-search-remains-supported",
+      "UI-006-clearing-query-restores-document-list",
+      "JAVA-008-real-java-21-arm64-inspected",
+      "JAVA-008-real-java-8-arm64-inspected",
+      "JAVA-008-real-java-17-arm64-inspected",
+      "JAVA-008-real-java-25-arm64-inspected",
+      "JAVA-008-deduplicates-and-skips-system-install-stub",
+      "JAVA-008-native-runtime-version-order-correct",
+      "JAVA-008-ui-applies-discovered-java-selection",
+      "JAVA-008-selected-java-persists-through-host"
+    ]
+  },
+  "javaCandidateFixture": {
+    "status": "passed",
+    "results": [
+      {
+        "name": "java_discovery_rejects_escaping_receipts_and_macos_stub",
+        "status": "passed"
+      }
+    ]
+  },
+  "realJavaMajors": [
+    8,
+    17,
+    21,
+    25
+  ],
+  "architecture": "aarch64",
+  "scanFixtures": {
+    "syntheticMetadataArchives": 7,
+    "realPublicMods": 2,
+    "corruptArchive": 1
+  },
+  "limits": [
+    "No account, keychain, Minecraft world or multiplayer verification.",
+    "Metadata parsing does not establish mod execution compatibility.",
+    "JAVA_HOME configured only for acceptance process; no system environment changes.",
+    "No Intel/Rosetta, Java 16 or all third-party Java manager locations verified."
+  ]
+}

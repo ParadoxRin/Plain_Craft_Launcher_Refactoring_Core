@@ -1,0 +1,7 @@
+{
+  "version": "0.41.0",
+  "build": 410,
+  "repository": "https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core",
+  "channel": "preview",
+  "verifiedPackageTarget": "osx-arm64"
+}

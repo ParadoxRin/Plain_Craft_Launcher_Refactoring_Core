@@ -1,6 +1,6 @@
 # 来源与许可证
 
-本工程是基于 PCL 的第三方 Mac 移植预览版，与 PCL 官方发布相区分。
+本工程是基于 PCL 的第三方核心平台项目，与 PCL 官方发布相区分；当前可运行参考包为 macOS ARM64。原创且有权授权的其余部分使用 MIT，见根目录 LICENSE.md 与 LICENSE-MIT.txt；以下上游和第三方内容仍适用各自许可。
 
 - PCL / PCLCS：龙腾猫跃（LTCatt）及贡献者，来源 https://github.com/Meloong-Git/PCL ，提交 6b9a50df911c9d68b69b24c979efba477fb14b67。许可全文见 PCL-LICENCE.txt。
 - MeloongCore：Meloong 及贡献者，来源 https://github.com/Meloong-Git/MeloongCore ，提交 98157d65c7627721c816c02e8be96ac4fe61d615；Apache-2.0，全文随包保留。Shared 内的 Mac 移植修改已在工程记录中标注。

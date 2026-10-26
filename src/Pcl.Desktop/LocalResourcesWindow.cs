@@ -340,15 +340,22 @@ public sealed class LocalResourcesWindow : WorkspaceWindow, IHostWorkspace
                 "忽略此版本",
                 async () =>
                 {
-                    if (updates.SelectedItem is LocalResourceUpdate update)
-                        await Call<bool>(
-                            "resources.ignore",
-                            new
-                            {
-                                selection = update.SelectionId
-                            }
-                        );
-                    updates.ItemsSource = null;
+                    if (updates.SelectedItem is not LocalResourceUpdate update)
+                    {
+                        throw new InvalidOperationException("请选择要忽略的更新。");
+                    }
+
+                    // Host 持久化成功后只移除这一项，保留其他尚未处理的更新。
+                    await Call<bool>(
+                        "resources.ignore",
+                        new
+                        {
+                            selection = update.SelectionId
+                        }
+                    );
+                    updates.ItemsSource = updates.Items.Cast<LocalResourceUpdate>()
+                        .Where(item => item.SelectionId != update.SelectionId)
+                        .ToArray();
                     status.Text = "已忽略所选版本";
                 }
             )
@@ -496,6 +503,8 @@ public sealed class LocalResourcesWindow : WorkspaceWindow, IHostWorkspace
             async () =>
             {
                 await ReloadAsync();
+                var settings = await api.CallAsync<SettingsSnapshot>("workspace.settings.read", null);
+                MainWindow.ApplyHiddenActions(this, settings.Appearance);
                 worlds.ItemsSource = await Call<WorldDirectory[]>("datapacks.worlds");
                 worlds.SelectedIndex = 0;
                 await RefreshPacks();

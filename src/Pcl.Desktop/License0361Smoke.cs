@@ -42,12 +42,17 @@ public partial class MainWindow
 
         try
         {
-            if (!(paths.Root.Contains("verification-0.36.1") || paths.Root.Contains("verification-0.38")) || !paths.Root.EndsWith("license-ui-data"))
+            if (!(File.Exists(
+                Path.Combine(paths.Root, ".license-ui-test")
+            ) || paths.Root.Contains("verification-0.36.1") || paths.Root.Contains("verification-0.38")) || !paths.Root.EndsWith("license-ui-data"))
             {
                 throw new InvalidOperationException("ISOLATED_LICENSE_TEST_ROOT_REQUIRED");
             }
 
-            Check(ProductInfo.Version == "0.38.0", "three-component-version");
+            Check(
+                Version.TryParse(ProductInfo.Version, out var version) && version.Build >= 0 && version.Revision == -1,
+                "three-component-version"
+            );
             Check(Title == ProductIdentity.Name, "product-name-in-window");
             var about = BuildAboutContent();
             Check(
@@ -70,7 +75,21 @@ public partial class MainWindow
                     .Any(
                         x => x.Text == ProductIdentity.SourceStatus
                     ),
-                "private-source-limitation-visible"
+                "current-source-status-visible"
+            );
+            Check(
+                about.Children.OfType<TextBlock>()
+                    .Any(
+                        x => x.Text?.Contains("原创部分使用 MIT") == true
+                    ),
+                "scoped-mit-license-visible"
+            );
+            Check(
+                about.Children.OfType<TextBlock>()
+                    .Any(
+                        x => x.Text?.Contains("大量使用 AI 辅助编码") == true
+                    ),
+                "ai-development-responsibility-visible"
             );
             var aboutWindow = new WorkspaceWindow
             {
@@ -201,6 +220,7 @@ public partial class MainWindow
                     new
                     {
                         status = "passed",
+                        version = ProductInfo.Version,
                         checks,
                         gameStarted = false,
                         networkAuthorization = false

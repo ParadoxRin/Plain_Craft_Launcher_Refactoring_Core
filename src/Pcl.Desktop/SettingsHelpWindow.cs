@@ -555,6 +555,9 @@ public sealed class SettingsHelpWindow : WorkspaceWindow, IHostWorkspace
             : local;
         void Search()
         {
+            // 新查询先清空旧正文，避免无结果时显示与查询无关的文章。
+            list.SelectedItem = null;
+            body.Text = "";
             list.ItemsSource = HelpFiles(docs, search.Text ?? "")
                 .Select(
                     x => new HelpItem(x)
@@ -565,8 +568,9 @@ public sealed class SettingsHelpWindow : WorkspaceWindow, IHostWorkspace
         search.TextChanged += (_, _) => Search();
         list.SelectionChanged += (_, _) =>
         {
-            if (list.SelectedItem is HelpItem item)
-                body.Text = File.ReadAllText(item.Path);
+            body.Text = list.SelectedItem is HelpItem item
+                ? ReadHelp(item.Path)
+                : "";
         };
         Search();
         tabs.ItemsSource = new[]
@@ -603,10 +607,28 @@ public sealed class SettingsHelpWindow : WorkspaceWindow, IHostWorkspace
         ? Directory.GetFiles(folder, "*.md")
             .Where(
                 p => Path.GetFileName(p)
+                    .Contains(query, StringComparison.OrdinalIgnoreCase) || ReadHelp(p)
                     .Contains(query, StringComparison.OrdinalIgnoreCase)
+            )
+            .OrderBy(
+                p => Path.GetFileName(p),
+                StringComparer.OrdinalIgnoreCase
             )
             .ToArray()
         : [];
+    // 帮助文档属于被动文本；单文件缺失或无法读取不阻断整个本地检索页。
+    private static string ReadHelp(string path)
+    {
+        try
+        {
+            return File.ReadAllText(path);
+        }
+        catch (Exception error)when (error is IOException or UnauthorizedAccessException)
+        {
+            return "";
+        }
+    }
+
     private sealed record HelpItem(string Path)
     {
         public override string ToString() => System.IO.Path.GetFileNameWithoutExtension(Path);
