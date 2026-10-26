@@ -4,7 +4,7 @@ import pathlib, plistlib, subprocess, sys, struct, zlib, shutil, os
 root, app = map(pathlib.Path, sys.argv[1:])
 info = dict(CFBundleName='Plain Craft Launcher Refactoring', CFBundleDisplayName='Plain Craft Launcher Refactoring',
     CFBundleIdentifier='local.pcl.macport.preview', CFBundleExecutable='PCL-MacPort',
-    CFBundlePackageType='APPL', CFBundleShortVersionString=os.environ.get('PCL_PACKAGE_VERSION', '0.38'), CFBundleVersion=os.environ.get('PCL_PACKAGE_BUILD', '380'),
+    CFBundlePackageType='APPL', CFBundleShortVersionString=os.environ.get('PCL_PACKAGE_VERSION', '0.39'), CFBundleVersion=os.environ.get('PCL_PACKAGE_BUILD', '390'),
     CFBundleIconFile='AppIcon.icns', NSHighResolutionCapable=True,
     LSMinimumSystemVersion='14.0', NSPrincipalClass='NSApplication',
     NSHumanReadableCopyright='PCL by 龙腾猫跃 (LTCatt). Independent third-party refactoring. See Resources/Legal.')

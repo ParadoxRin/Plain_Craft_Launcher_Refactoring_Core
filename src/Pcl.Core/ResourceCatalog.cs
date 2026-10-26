@@ -232,8 +232,11 @@ public sealed class ResourceCatalog : IDisposable
         CancellationToken ct = default
     )
     {
+        // Quilt can consider Fabric artifacts; final installed metadata is still checked by the Quilt solver.
         var filter = kind == ResourceKind.Mod && !string.IsNullOrWhiteSpace(loader)
-            ? "&loaders=" + EscapeArray(loader)
+            ? "&loaders=" + (loader == "quilt"
+                ? EscapeArray("quilt", "fabric")
+                : EscapeArray(loader))
             : kind == ResourceKind.Shader && !string.IsNullOrWhiteSpace(loader)
                 ? "&loaders=" + EscapeArray("iris")
                 : kind == ResourceKind.DataPack
@@ -447,7 +450,7 @@ public sealed class ResourceCatalog : IDisposable
         {
             ct.ThrowIfCancellationRequested();
             discovered?.Invoke(current);
-            if (!current.GameVersions.Contains(gameVersion) || (kind == ResourceKind.Mod && !current.Loaders.Contains(loader)) || (kind == ResourceKind.DataPack && !current.Loaders.Contains("datapack")))
+            if (!current.GameVersions.Contains(gameVersion) || (kind == ResourceKind.Mod && !current.Loaders.Contains(loader) && !(loader == "quilt" && current.Loaders.Contains("fabric"))) || (kind == ResourceKind.DataPack && !current.Loaders.Contains("datapack")))
                 throw new InvalidDataException($"{current.Name} 不兼容 Minecraft {gameVersion} / {loader}。");
             if (byProject.TryGetValue(current.ProjectId, out var previous))
             {

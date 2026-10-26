@@ -400,15 +400,14 @@ internal static class QuiltOverrideTests
             }
         );
         await test(
-            "quilt_override_unsupported_selectors_versions_and_fabric_are_explicit",
+            "quilt_override_selector_validation_version_noop_and_duplicate_ids",
             () =>
             {
                 var dir = Folder();
                 foreach (var key in new[]
                 {
                     "path",
-                    "pattern",
-                    "version"
+                    "pattern"
                 }
 
                 )
@@ -424,29 +423,50 @@ internal static class QuiltOverrideTests
                     );
                 }
 
+                var versionRule = Rule();
+                versionRule["version"] = "999";
+                Write(dir, versionRule);
+                Check(
+                    Resolve(
+                        dir,
+                        Mod()
+                    )
+                        .Selected.Any(
+                        x => x.Id == "application" && x.Version == "1"
+                    ),
+                    "Parsed version must not rewrite runtime metadata"
+                );
                 Write(
                     dir,
                     Rule(),
                     Rule()
                 );
-                Reject(
-                    () => Resolve(
+                Check(
+                    Resolve(
                         dir,
                         Mod()
                     )
+                        .Selected.Any(
+                        x => x.Id == "application"
+                    ),
+                    "Duplicate ID no-op rules should be accepted"
                 );
                 Write(
                     dir,
                     Rule()
                 );
-                Reject(
-                    () => Resolve(
+                Check(
+                    Resolve(
                         dir,
                         Mod()with
                         {
                             Fabric = true
                         }
                     )
+                        .Selected.Any(
+                        x => x.Id == "application"
+                    ),
+                    "Fabric no-op must not require runtime conversion"
                 );
                 return Task.CompletedTask;
             }
@@ -500,7 +520,9 @@ internal static class QuiltOverrideTests
                 Reject(
                     () => Resolve(
                         dir,
-                        Mod()
+                        Mod(
+                            new JArray("first")
+                        )
                     )
                 );
                 return Task.CompletedTask;

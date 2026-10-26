@@ -18,7 +18,8 @@ public sealed record QuiltCandidate(
     bool Fabric,
     JArray Depends,
     JArray Breaks,
-    IReadOnlyList<QuiltProvided> Provides
+    IReadOnlyList<QuiltProvided> Provides,
+    bool QuiltDependencySemantics = false
 );
 // [实现] 数据约定：QuiltResolution 汇集 Selected、Candidates、Warnings，供该模块传递状态。
 public sealed record QuiltResolution(IReadOnlyList<QuiltCandidate> Selected, int Candidates, IReadOnlyList<string> Warnings);
@@ -98,7 +99,7 @@ public static class QuiltDependencies
             if (!Regex.IsMatch(id, @"^[a-z][a-z0-9_-]{1,63}$"))
                 throw new InvalidDataException("模组 ID 无效：" + id);
             var group = fabric
-                ? ""
+                ? "loader.fabric"
                 : Required("group");
             var version = Required("version");
             if (!fabric && !Regex.IsMatch(group, @"^[a-zA-Z0-9_.-]+$"))
@@ -235,7 +236,9 @@ public static class QuiltDependencies
         string loaderVersion,
         int javaMajor,
         CancellationToken ct = default,
-        string? gameDirectory = null
+        string? gameDirectory = null,
+        string? runtimeContextDirectory = null,
+        Pcl.Core.Adapters.Compatibility.QuiltOverrideRuntime? overrideRuntime = null
     )
     {
         var candidates = input.ToList();
@@ -271,7 +274,7 @@ public static class QuiltDependencies
         // 在线下载计划、本地事务与启动预检共用同一覆盖入口，防止预览与提交使用不同约束。
         var warnings = new List<string>();
         if (gameDirectory is not null)
-            candidates = QuiltDependencyOverrides.Read(gameDirectory)
+            candidates = QuiltDependencyOverrides.Read(gameDirectory, runtimeContextDirectory, javaMajor, overrideRuntime, ct)
                 .Apply(candidates, warnings)
                 .ToList();
         var sat = new ConstraintSolver();
@@ -432,12 +435,12 @@ public static class QuiltDependencies
             foreach (var dependency in candidate.Depends)
                 sat.Add(
                     -v,
-                    Dependency(dependency, candidate.Fabric, false, 0)
+                    Dependency(dependency, candidate.Fabric && !candidate.QuiltDependencySemantics, false, 0)
                 );
             foreach (var conflict in candidate.Breaks)
                 sat.Add(
                     -v,
-                    -Dependency(conflict, candidate.Fabric, true, 0)
+                    -Dependency(conflict, candidate.Fabric && !candidate.QuiltDependencySemantics, true, 0)
                 );
         }
 
@@ -484,7 +487,8 @@ public static class QuiltDependencies
             loaderVersion,
             javaMajor,
             ct,
-            directory
+            directory,
+            libraryContextDirectory
         );
     }
 

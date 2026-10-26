@@ -1,8 +1,9 @@
 using Newtonsoft.Json.Linq;
+using Pcl.Core.Adapters.Compatibility;
 
 namespace Pcl.Core;
 /// <summary>
-/// 读取实例自带的 Quilt schema 1 依赖覆盖配置。只支持精确 id 选择器，
+/// 读取实例自带的 Quilt schema 1 依赖覆盖配置，支持路径、ID和Java正则选择器。
 /// 在求解前复制并改写候选依赖；不会修改模组 JAR，也不会执行加载器插件。
 /// </summary>
 public sealed class QuiltDependencyOverrides
@@ -14,18 +15,42 @@ public sealed class QuiltDependencyOverrides
         IReadOnlyList<JToken> Removals,
         IReadOnlyList<JToken> Additions
     );
-    // [实现] 数据约定：Rule 汇集 Id、Depends、Breaks，供该模块传递状态。
-    private sealed record Rule(string Id, Changes Depends, Changes Breaks);
+    private sealed record Rule(
+        int Number,
+        string Kind,
+        string Selector,
+        string? Version,
+        Changes Depends,
+        Changes Breaks
+    );
     private readonly List<Rule> rules = [];
-    /// <summary>使用实例路径边界和大小限制读取配置；解析所有规则后才允许求解。</summary>
-    public static QuiltDependencyOverrides Read(string directory)
+    private string directory = "";
+    private string contextDirectory = "";
+    private int javaMajor;
+    private QuiltOverrideRuntime? runtime;
+    private CancellationToken cancellation;
+    /// <summary>Parse every declaration, including unmatched rules; duplicate path keys retain the last complete rule like Quilt's map.</summary>
+    public static QuiltDependencyOverrides Read(
+        string directory,
+        string? contextDirectory = null,
+        int javaMajor = 21,
+        QuiltOverrideRuntime? runtime = null,
+        CancellationToken ct = default
+    )
     {
-        var result = new QuiltDependencyOverrides();
+        var result = new QuiltDependencyOverrides
+        {
+            directory = directory,
+            contextDirectory = contextDirectory ?? directory,
+            javaMajor = javaMajor,
+            runtime = runtime,
+            cancellation = ct
+        };
         var path = ResourceInstaller.SafeTarget(directory, RelativePath);
         if (!File.Exists(path))
             return result;
         if (new FileInfo(path).Length > 2 * 1024 * 1024)
-            throw new InvalidDataException("Quilt 依赖覆盖配置超过 2 MiB。");
+            throw new InvalidDataException("Quilt 依赖覆盖配置超过2 MiB。");
         var root = QuiltMetadataJson.Parse(
             File.ReadAllText(path)
         );
@@ -34,28 +59,42 @@ public sealed class QuiltDependencyOverrides
         if (root["overrides"] is null)
             return result;
         if (root["overrides"] is not JArray entries || entries.Count > 512)
-            throw new InvalidDataException("Quilt overrides 必须是最多 512 项的数组。");
-        // 官方按路径和 Java 正则匹配；本地尚未复现这两种语义，因此明确停止，避免忽略配置。
-        foreach (var entry in entries)
+            throw new InvalidDataException("Quilt overrides 必须是最多512项的数组。");
+        for (var i = 0; i < entries.Count; i++)
         {
-            // [实现] 对 entries 中的每一项：按 entry is not JObject obj || obj["id"]?.Type != JTokenType.String || string.IsNullOrWhiteSpace((… 分支处理；按 obj["version"] is not null 分支处理；准备 var id = (string)obj["id"]!。
-            if (entry is not JObject obj || obj["id"]?.Type != JTokenType.String || string.IsNullOrWhiteSpace((string? )obj["id"]) || obj["path"] is not null || obj["pattern"] is not null)
-                throw new NotSupportedException("Quilt 覆盖目前支持精确 id；path / pattern 选择器尚未支持。");
-            if (obj["version"] is not null)
-                throw new NotSupportedException("Quilt 版本覆盖尚未完成官方行为对照，不能静态判定兼容。");
-            var id = (string)obj["id"]!;
-            // 官方保存为无序规则集合；同一 id 多条规则存在顺序歧义，要求合并后再导入。
-            if (result.rules.Any(
-                x => x.Id == id
-            ))
-                throw new NotSupportedException("同一 Quilt id 存在多条覆盖规则，请合并：" + id);
-            result.rules.Add(
-                new(
-                    id,
-                    ParseChanges(obj["depends"]),
-                    ParseChanges(obj["breaks"])
-                )
+            ct.ThrowIfCancellationRequested();
+            if (entries[i] is not JObject obj)
+                throw new InvalidDataException("Quilt 覆盖规则必须是对象。");
+            var selectors = new[]
+            {
+                "path",
+                "id",
+                "pattern"
+            }.Where(
+                key => obj.Property(key)is not null
+            )
+                .ToArray();
+            if (selectors.Length != 1 || obj[selectors[0]]?.Type != JTokenType.String)
+                throw new InvalidDataException("Quilt 覆盖需要且只能有一个字符串 path、id 或 pattern。");
+            var kind = selectors[0];
+            var selector = (string)obj[kind]!;
+            if (selector.Length > 4096)
+                throw new NotSupportedException("Quilt 选择器超过4096字符预算。");
+            if (obj["version"] is { Type: not JTokenType.String })
+                throw new InvalidDataException("Quilt version 覆盖必须是字符串。");
+            var rule = new Rule(
+                i,
+                kind,
+                selector,
+                (string? )obj["version"],
+                ParseChanges(obj["depends"]),
+                ParseChanges(obj["breaks"])
             );
+            if (kind == "path")
+                result.rules.RemoveAll(
+                    previous => previous.Kind == "path" && previous.Selector == selector
+                );
+            result.rules.Add(rule);
         }
 
         return result;
@@ -121,11 +160,9 @@ public sealed class QuiltDependencyOverrides
             {
                 // [实现] 条件成立（keys.SequenceEqual( new[] { "replace", "with" } )）时：准备 var from = ValidateDependency(obj["replace"]!)；按 replacements.Any( x => Equal(x.Item1, from) ) 分支处理；执行 replacements.Add( (from, ValidateDependency(obj["with"]!)) )。
                 var from = ValidateDependency(obj["replace"]!);
-                // 无序 replacement map 中的链式替换可能依赖遍历顺序；在 Apply 中再检查交叉影响。
-                if (replacements.Any(
-                    x => Equal(x.Item1, from)
-                ))
-                    throw new InvalidDataException("重复的 Quilt replace 条件。");
+                replacements.RemoveAll(
+                    previous => Equal(previous.Item1, from)
+                );
                 replacements.Add(
                     (from, ValidateDependency(obj["with"]!))
                 );
@@ -134,12 +171,6 @@ public sealed class QuiltDependencyOverrides
                 throw new InvalidDataException("Quilt 覆盖需要 add、remove 或 replace 与 with 配对。");
         }
 
-        if (replacements.Any(
-            x => replacements.Any(
-                y => Equal(x.Item2, y.Item1)
-            )
-        ))
-            throw new NotSupportedException("Quilt 连锁 replace 存在执行顺序歧义，请合并覆盖规则。");
         return new(replacements, removals, additions);
     }
 
@@ -210,89 +241,296 @@ public sealed class QuiltDependencyOverrides
             : right["unless"] is { } other && Equal(left["unless"]!, other));
     }
 
-    /// <summary>复制候选并应用匹配规则；返回诊断信息，让界面展示覆盖实际影响的模组。</summary>
+    /// <summary>Path changes precede ID/pattern changes. Unordered overlaps must have one result for every bounded ordering.</summary>
     public IReadOnlyList<QuiltCandidate> Apply(IEnumerable<QuiltCandidate> candidates, List<string> warnings)
     {
+        var source = candidates.ToArray();
+        var matched = new HashSet<int>();
+        var patterns = rules.Where(
+            rule => rule.Kind == "pattern"
+        )
+            .ToArray();
+        QuiltOverrideRuntime Runtime() => runtime ??= QuiltOverrideRuntime.ForInstance(contextDirectory, javaMajor, source, cancellation);
+        var patternResults = patterns.Length == 0
+            ? []
+            : Runtime()
+                .Match(
+                    patterns.Select(
+                        rule => rule.Selector
+                    )
+                        .ToArray(),
+                    source.Select(
+                        candidate => candidate.Id
+                    )
+                        .ToArray(),
+                    cancellation
+                );
         var result = new List<QuiltCandidate>();
-        var matched = new HashSet<string>();
-        foreach (var candidate in candidates)
+        for (var i = 0; i < source.Length; i++)
         {
-            // [实现] 对 candidates 中的每一项：准备 var rule = rules.SingleOrDefault( x => x.Id == candidate.Id )；按 rule is null 分支处理；按 candidate.Fabric 分支处理。
-            var rule = rules.SingleOrDefault(
-                x => x.Id == candidate.Id
+            cancellation.ThrowIfCancellationRequested();
+            var candidate = source[i];
+            var path = DescribePath(candidate.Source, directory);
+            var pathRule = rules.SingleOrDefault(
+                rule => rule.Kind == "path" && rule.Selector == path
             );
-            if (rule is null)
+            var selected = rules.Where(
+                rule => rule.Kind == "id" && rule.Selector == candidate.Id || rule.Kind == "pattern" && patternResults[Array.IndexOf(patterns, rule)][i]
+            )
+                .ToArray();
+            var all = (pathRule is null
+                ? selected
+                : selected.Prepend(pathRule)).ToArray();
+            foreach (var rule in all)
+                matched.Add(rule.Number);
+            if (candidate.Fabric && !candidate.QuiltDependencySemantics && all.Any(
+                rule => Changed(rule.Depends) || Changed(rule.Breaks)
+            ))
+                candidate = Runtime()
+                    .ConvertFabric(candidate, cancellation);
+            if (pathRule is not null)
+                candidate = ApplyRule(candidate, pathRule, true, warnings);
+            if (selected.All(
+                rule => OnlyAdds(rule.Depends) && OnlyAdds(rule.Breaks)
+            ))
             {
-                // [实现] 条件成立（rule is null）时：执行 result.Add(candidate)；执行 continue;。
-                result.Add(candidate);
-                continue;
+                foreach (var rule in selected)
+                    candidate = ApplyRule(candidate, rule, false, warnings);
+            }
+            else
+            {
+                candidate = StableOrder(
+                    candidate,
+                    selected.Select<Rule, Func<QuiltCandidate, QuiltCandidate>>(
+                        rule => value => ApplyRule(value, rule, false, warnings)
+                    )
+                        .ToArray(),
+                    (left, right) => SameSet(left.Depends, right.Depends) && SameSet(left.Breaks, right.Breaks),
+                    value => Key(value.Depends) + "|" + Key(value.Breaks)
+                );
             }
 
-            // Fabric 到 Quilt 的转换会改变范围语义；未对照该适配层前不替换 Fabric 依赖。
-            if (candidate.Fabric)
-                throw new NotSupportedException("对 Fabric 模组应用 Quilt 覆盖尚未完成对照：" + candidate.Id);
-            matched.Add(rule.Id);
-            result.Add(
-                candidate with
-                {
-                    Depends = ApplyChanges(candidate.Depends, rule.Depends, candidate.Id, warnings),
-                    Breaks = ApplyChanges(candidate.Breaks, rule.Breaks, candidate.Id, warnings)
-                }
-            );
+            result.Add(candidate);
         }
 
         foreach (var rule in rules)
-            warnings.Add(
-                matched.Contains(rule.Id)
-                    ? "已应用 Quilt 依赖覆盖：" + rule.Id + "；覆盖不保证运行时兼容。"
-                    : "Quilt 依赖覆盖未匹配当前候选：" + rule.Id
+        {
+            Warn(
+                warnings,
+                matched.Contains(rule.Number)
+                    ? "已应用 Quilt 依赖覆盖：" + rule.Kind + " " + rule.Selector + "；覆盖不保证运行时兼容。"
+                    : "Quilt 依赖覆盖未匹配当前候选：" + rule.Selector
             );
+            if (rule.Version is not null)
+                Warn(warnings, "Quilt 0.27.1/0.30.1 仅解析 version 覆盖字段而不应用；未更改运行时版本：" + rule.Selector);
+        }
+
         return result;
     }
 
-    /// <summary>按官方顺序变换依赖集合；找不到旧条件时保留原约束并报告，不擅自放宽版本。</summary>
-    private static JArray ApplyChanges(JArray original, Changes changes, string id, List<string> warnings)
+    private static bool Changed(Changes value) => value.Replacements.Count + value.Removals.Count + value.Additions.Count != 0;
+    private static bool OnlyAdds(Changes value) => value.Replacements.Count + value.Removals.Count == 0;
+    private static bool SameSet(JArray left, JArray right) => left.Count == right.Count && left.All(
+        value => right.Any(
+            other => Equal(value, other)
+        )
+    );
+    private static string Key(JArray values) => string.Join(
+        "|",
+        values.Select(
+            value => value.ToString(Newtonsoft.Json.Formatting.None)
+        )
+            .Order(StringComparer.Ordinal)
+    );
+    private static void Warn(List<string> warnings, string message)
     {
-        var result = new JArray();
-        foreach (var token in original)
-            AddUnique(token);
-        foreach (var replacement in changes.Replacements)
-            if (Remove(replacement.From))
-                AddUnique(replacement.To);
-        foreach (var removal in changes.Removals)
-            Remove(removal);
-        foreach (var addition in changes.Additions)
-            AddUnique(addition);
-        return result;
-        // JToken 必须深拷贝，避免修改缓存中的元数据或其他回溯分支。
-        void AddUnique(JToken token)
+        if (warnings.Count < 128 && !warnings.Contains(message))
+            warnings.Add(message);
+    }
+
+    /// <summary>Describe installed or staged files exactly as ordinary Quilt mod origins; retain case and nested archive boundaries.</summary>
+    public static string DescribePath(string source, string directory)
+    {
+        if (source.StartsWith("builtin:", StringComparison.Ordinal))
+            return source;
+        var boundary = source.IndexOf('!');
+        var root = boundary < 0
+            ? source
+            : source[..boundary];
+        if (!Path.IsPathFullyQualified(root))
+            return source;
+        var mods = Path.Combine(
+            Path.GetFullPath(directory),
+            "mods"
+        ) + Path.DirectorySeparatorChar;
+        var game = Path.GetFullPath(directory)
+            .TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+        var absolute = Path.GetFullPath(root);
+        var description = absolute.StartsWith(mods, StringComparison.Ordinal)
+            ? "<mods>/" + absolute[mods.Length..]
+            : absolute.StartsWith(game, StringComparison.Ordinal)
+                ? "<game>/" + absolute[game.Length..]
+                : absolute;
+        // An archive root contributes its slash before the parent archive boundary.
+        // Quilt describes nested origins as outer.jar!/lib/child.jar, retaining every boundary.
+        if (boundary >= 0)
+            description += source[boundary..];
+        return description.Replace(Path.DirectorySeparatorChar, '/');
+    }
+
+    private QuiltCandidate ApplyRule(QuiltCandidate candidate, Rule rule, bool fuzzy, List<string> warnings) => candidate with
+    {
+        Depends = ApplyChanges(candidate.Depends, rule.Depends, candidate.Id, fuzzy, warnings),
+        Breaks = ApplyChanges(candidate.Breaks, rule.Breaks, candidate.Id, fuzzy, warnings)
+    };
+    /// <summary>Explore unordered rule maps with deduplication; never invent an ordering when it changes compatibility.</summary>
+    private T StableOrder<T>(
+        T initial,
+        IReadOnlyList<Func<T, T>> operations,
+        Func<T, T, bool> equal,
+        Func<T, string> key,
+        Func<T, T>? finish = null
+    )
+    {
+        if (operations.Count == 0)
+            return initial;
+        if (operations.Count > 12)
+            throw new NotSupportedException("Quilt 重叠覆盖超过12条无序操作预算，请合并规则。");
+        var pending = new Stack<(T Value, int Mask)>();
+        pending.Push((initial, 0));
+        var seen = new HashSet<string>();
+        var complete = (1 << operations.Count) - 1;
+        T? final = default;
+        var found = false;
+        while (pending.TryPop(out var state))
+        {
+            cancellation.ThrowIfCancellationRequested();
+            if (!seen.Add(
+                state.Mask + ":" + key(state.Value)
+            ))
+                continue;
+            if (seen.Count > 4096)
+                throw new NotSupportedException("Quilt 无序覆盖检查超过4096状态，尚未判定兼容性。");
+            if (state.Mask == complete)
+            {
+                var completed = finish is null
+                    ? state.Value
+                    : finish(state.Value);
+                if (found && !equal(final!, completed))
+                    throw new NotSupportedException("Quilt 重叠/连锁覆盖随无序执行顺序改变结果，请合并为无歧义规则。");
+                final = completed;
+                found = true;
+                continue;
+            }
+
+            for (var i = 0; i < operations.Count; i++)
+            {
+                if ((state.Mask & (1 << i)) == 0)
+                    pending.Push(
+                        (operations[i](state.Value), state.Mask | (1 << i))
+                    );
+            }
+        }
+
+        return final!;
+    }
+
+    /// <summary>Replacement maps are unordered, followed by removals and additions. Only path selectors enable unique-ID fuzzy removal.</summary>
+    private JArray ApplyChanges(JArray original, Changes changes, string id, bool fuzzy, List<string> warnings)
+    {
+        JArray Copy(JArray source)
+        {
+            var result = new JArray();
+            foreach (var token in source)
+                Add(result, token);
+            return result;
+        }
+
+        void Add(JArray result, JToken token)
         {
             if (!result.Any(
-                x => Equal(x, token)
+                value => Equal(value, token)
             ))
                 result.Add(
-                    token.DeepClone()
+                    ValidateDependency(token)
                 );
         }
 
-        // [实现] Remove 的实现：准备 var found = result.FirstOrDefault( x => Equal(x, token) )；按 found is not null 分支处理；执行 warnings.Add( "Quilt 覆盖未找到待替换/移除依赖：" + id + " / " + token.ToString(Newtonsoft.Json.Formatting.N…。
-        bool Remove(JToken token)
+        bool Remove(JArray result, JToken token)
         {
             var found = result.FirstOrDefault(
-                x => Equal(x, token)
+                value => Equal(value, token)
             );
+            if (found is null && fuzzy && token is not JArray && token["unless"] is null && QuiltVersionRange.Equivalent(token["versions"], null))
+            {
+                var matches = result.Where(
+                    value => value is not JArray && (string? )value["id"] == (string? )token["id"]
+                )
+                    .ToArray();
+                if (matches.Length == 1)
+                    found = matches[0];
+            }
+
             if (found is not null)
             {
-                // [实现] 条件成立（found is not null）时：执行 found.Remove()；返回 true。
                 found.Remove();
                 return true;
             }
 
-            warnings.Add(
-                "Quilt 覆盖未找到待替换/移除依赖：" + id + " / " + token.ToString(Newtonsoft.Json.Formatting.None)
+            Warn(
+                warnings,
+                "Quilt 覆盖未找到唯一待替换/移除依赖：" + id + " / " + token.ToString(Newtonsoft.Json.Formatting.None)
             );
             return false;
         }
+
+        var value = Copy(original);
+        var operations = changes.Replacements.Select<(JToken From, JToken To), Func<JArray, JArray>>(
+            replacement => source =>
+            {
+                var result = Copy(source);
+                if (Remove(result, replacement.From))
+                    Add(result, replacement.To);
+                return result;
+            }
+        )
+            .ToArray();
+        var chained = changes.Replacements.Any(
+            left => changes.Replacements.Any(
+                right => Equal(left.To, right.From)
+            )
+        );
+        JArray Additions(JArray source)
+        {
+            var result = Copy(source);
+            foreach (var addition in changes.Additions)
+                Add(result, addition);
+            return result;
+        }
+
+        JArray Remainder(JArray source)
+        {
+            var removals = changes.Removals.Select<JToken, Func<JArray, JArray>>(
+                token => input =>
+                {
+                    var result = Copy(input);
+                    Remove(result, token);
+                    return result;
+                }
+            )
+                .ToArray();
+            // Quilt stores removals in an ordered List, retaining repeated fuzzy removals.
+            foreach (var removal in removals)
+                source = removal(source);
+            return Additions(source);
+        }
+
+        if (chained || fuzzy && operations.Length > 1)
+            return StableOrder(value, operations, SameSet, Key, Remainder);
+        foreach (var operation in operations)
+            value = operation(value);
+        value = Remainder(value);
+        return value;
     }
 }
 
