@@ -27,4 +27,5 @@ cp "$project_root/docs/"*-NOTICE.txt "$project_root/docs/"*-LICENSE.txt "$projec
 cp "$project_root/docs/0.38-嵌套依赖与验收.md" "$app/Contents/Resources/"
 PCL_PACKAGE_VERSION=0.38 PCL_PACKAGE_BUILD=380 python3 "$project_root/scripts/package-macos.py" "$project_root" "$app"
 python3 "$project_root/scripts/audit-release-privacy.py" "$app" --report "$artifact_dir/release-privacy-0.38.json"
+python3 "$project_root/scripts/package-app-archive.py" "$app" "$artifact_dir/Plain-Craft-Launcher-Refactoring-0.38-macOS-arm64.zip" --report "$artifact_dir/release-archive-0.38.json"
 echo "Built: $app"
