@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "entries": 1142,
+  "findings": [],
+  "classifiedUpstreamBuildAgentPaths": [
+    "Plain Craft Launcher Refactoring 0.38.app/Contents/MacOS/host/libcoreclr.dylib",
+    "Plain Craft Launcher Refactoring 0.38.app/Contents/MacOS/host/libmscordaccore.dylib",
+    "Plain Craft Launcher Refactoring 0.38.app/Contents/MacOS/host/libmscordbi.dylib",
+    "Plain Craft Launcher Refactoring 0.38.app/Contents/MacOS/host/libclrjit.dylib",
+    "Plain Craft Launcher Refactoring 0.38.app/Contents/MacOS/libcoreclr.dylib",
+    "Plain Craft Launcher Refactoring 0.38.app/Contents/MacOS/libAvaloniaNative.dylib",
+    "Plain Craft Launcher Refactoring 0.38.app/Contents/MacOS/libmscordaccore.dylib",
+    "Plain Craft Launcher Refactoring 0.38.app/Contents/MacOS/libmscordbi.dylib",
+    "Plain Craft Launcher Refactoring 0.38.app/Contents/MacOS/libclrjit.dylib"
+  ],
+  "scope": "archive payload and AppleDouble metadata; current developer paths and credential patterns; generic upstream CI paths classified separately; not exhaustive"
+}

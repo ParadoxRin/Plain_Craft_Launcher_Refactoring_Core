@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "extractedSignatureVerified": true,
+  "appFilesVerified": 490,
+  "appleDoubleMetadataFiles": 543,
+  "utf8NamesCorrected": 2,
+  "sha256": "d66ca15d558205cb56a4936044997d862b2024df53d101db4d3049f7ee9f3754",
+  "extraction": "macOS ditto / Archive Utility with AppleDouble metadata"
+}
