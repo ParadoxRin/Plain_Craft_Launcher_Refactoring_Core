@@ -1,0 +1,89 @@
+{
+  "version": "0.40.1",
+  "date": "2026-10-27",
+  "platform": "macOS arm64",
+  "status": "passed-with-explicit-scope",
+  "oauthConfiguration": {
+    "ownerAuthorizedPublicClientId": true,
+    "containsClientSecret": false,
+    "containsUserCredentials": false
+  },
+  "oauthDeviceFlow": {
+    "status": "passed",
+    "checks": [
+      "isolated-host-has-no-account",
+      "microsoft-accepted-embedded-client-id-and-issued-device-prompt",
+      "login-admission-is-idempotent",
+      "device-prompt-and-tokens-not-written-to-receipts",
+      "cancel-observes-terminal-state-without-saving-account",
+      "packaged-host-exits-cleanly"
+    ],
+    "scope": "Real Microsoft device authorization initiation and cancellation only; no user login, entitlements, refresh, or game test."
+  },
+  "packagedNavigation": {
+    "status": "passed",
+    "checks": [
+      "same-page-reuses-live-state",
+      "different-context-pages-nonmodal",
+      "close-waits-without-cancelling-host-work",
+      "close-finishes-automatically-after-work",
+      "parent-exit-drains-child-before-own-release",
+      "repeated-close-releases-once",
+      "parent-ordinary-close-preserves-child-work",
+      "application-exit-escalates-pending-child-close",
+      "typed-confirmation-result-preserved",
+      "real-instance-page-preserves-search",
+      "real-skin-page-load-and-close-without-account",
+      "real-task-center-stops-refresh-before-release",
+      "removed-toolbox-not-restored"
+    ]
+  },
+  "packagedHost": {
+    "status": "passed",
+    "checks": [
+      "client-assembly-has-no-core-reference",
+      "host-supplies-profile-account-and-appearance-snapshot",
+      "legacy-writer-grant-removed",
+      "host-checks-installed-profile",
+      "selected-profile-snapshot-refreshed-after-command",
+      "window-size-written-by-host",
+      "account-write-refreshes-display-snapshot",
+      "settings-write-refreshes-appearance-snapshot",
+      "download-and-network-snapshots-from-host",
+      "paused-real-download-remains-queryable",
+      "install-admission-waits-for-active-workspace-instead-of-host-busy-rejection",
+      "resume-and-retry-real-download-with-hash-verification",
+      "queued-install-accepted-and-explicitly-cancelled-without-full-download",
+      "host-diagnostic-analysis-redacts-secret",
+      "diagnostic-export-stream-is-redacted",
+      "host-classifies-dropped-archive",
+      "host-imports-real-resource-archive",
+      "disabled-release-notification-suppresses-query",
+      "automatic-reconnect-refreshes-public-snapshot-without-manual-refresh",
+      "session-reconnect-restores-public-state-without-writer-grant",
+      "host-restart-restores-profile-settings-and-account"
+    ]
+  },
+  "archive": {
+    "status": "passed",
+    "extractedSignatureVerified": true,
+    "appFilesVerified": 492,
+    "appleDoubleMetadataFiles": 545,
+    "utf8NamesCorrected": 6,
+    "sha256": "86252c8d296a1ed322c75030856d926861ab3ea344c21f1f8f459b62dc4f6ab7",
+    "extraction": "macOS ditto / Archive Utility with AppleDouble metadata"
+  },
+  "privacy": {
+    "filesScanned": 492,
+    "findings": [],
+    "scope": "current developer home, cloud project IDs, debug symbols, runtime state, credential patterns; not exhaustive"
+  },
+  "authConfigurationFixture": "passed; configured client ID reaches device flow without secret/password",
+  "notRetested": [
+    "User-completed Microsoft sign-in",
+    "Minecraft ownership and token refresh",
+    "real keychain access",
+    "Minecraft world/render/save gameplay"
+  ],
+  "firstProbeCorrection": "The test initially treated cancellation acknowledgement as a terminal state; it now waits for the owned runner to finish. Product behavior unchanged."
+}

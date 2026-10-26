@@ -506,7 +506,7 @@ public sealed class LaunchService(MinecraftService service)
 }
 
 /// <summary>兼容核心调用门面，只暴露逻辑身份、退出任务和日志；不再向 UI 递交 Process 对象。</summary>
-public sealed class RunningGame : Pcl.Core.Contracts.Launch.IGameSession
+public sealed class RunningGame : Pcl.Core.Contracts.Launch.IGameSession, Pcl.Core.Ports.Launch.IGameObservation
 {
     private readonly IGameProcessHost host;
     private readonly GameProcessHandle handle;

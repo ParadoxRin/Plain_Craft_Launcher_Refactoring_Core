@@ -226,6 +226,20 @@ void Require(bool condition, string reason)
 
 async Task Run(string name, Func<Task> body)
 {
+    // 无凭据架构验收不触碰系统钥匙串；明确记为未执行，不能计入通过数。
+    if (args.Contains("--without-keychain") && name == "real-keychain-compatible-scope-update-and-delete")
+    {
+        results.Add(
+            new
+            {
+                name,
+                status = "not-run",
+                reason = "explicit-without-keychain"
+            }
+        );
+        return;
+    }
+
     try
     {
         await body()
@@ -848,40 +862,46 @@ await Run(
             "版本服务提前释放了借用的游戏 Host"
         );
         await host.ReleaseAsync(handle);
-        var scope = Pcl.Desktop.Bootstrap.Composition.Create(
-            new AppPaths(
-                Path.Combine(output, "root-single")
-            )
+        var rootPaths = new AppPaths(
+            Path.Combine(output, "root-single")
         );
-        await scope.Lifetime.ShutdownAsync(
-            Task.CompletedTask,
-            TimeSpan.FromSeconds(2)
+        var scope = new Pcl.Host.HostRuntime(
+            rootPaths,
+            new Pcl.Host.OperationEventBroker()
         );
-        await scope.Lifetime.ShutdownAsync(
-            Task.CompletedTask,
-            TimeSpan.FromSeconds(2)
-        );
-        var journal = File.ReadAllLines(
-            Path.Combine(scope.LegacyService.Paths.Evidence, "phase-one-lifecycle.jsonl")
-        )
-            .Select(
-                line => JsonDocument.Parse(line)
-                    .RootElement.GetProperty("name")
-                    .GetString()
-            )
-            .ToArray();
+        var shutdown = scope.ShutdownAsync(true);
         Require(
-            journal.Count(
-                x => x == "minecraft.disposed"
-            ) == 1 && journal.Count(
-                x => x == "game-processes.disposed"
-            ) == 1 && Array.IndexOf(journal, "game-processes.disposed") < Array.IndexOf(journal, "root-lock.releasing"),
-            "共享资源双重释放或释放顺序错误"
+            ReferenceEquals(
+                shutdown,
+                scope.ShutdownAsync(true)
+            ),
+            "退出任务没有复用"
         );
+        await shutdown;
+        var disposal = scope.DisposeAsync()
+            .AsTask();
+        Require(
+            ReferenceEquals(
+                disposal,
+                scope.DisposeAsync()
+                    .AsTask()
+            ),
+            "组合根重复释放没有复用"
+        );
+        await disposal;
+        // 同一目录再次构造真实根，证明私有 receipt 文件锁已经释放。
+        await using (var reopened = new Pcl.Host.HostRuntime(
+            rootPaths,
+            new Pcl.Host.OperationEventBroker()
+        ))
+        {
+            await reopened.ShutdownAsync(true);
+        }
+
         bool stopped = false;
         try
         {
-            await scope.LegacyService.GameProcesses.StartAsync(
+            await scope.Source.GameProcesses.StartAsync(
                 Shell("exit 0"),
                 new(
                     Path.Combine(output, "should-not-start.log")

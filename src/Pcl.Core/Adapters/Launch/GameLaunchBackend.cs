@@ -1,16 +1,14 @@
 using System.Collections.Concurrent;
 using Pcl.Core.Ports.Operations;
 
-namespace Pcl.Core.Application.Launch;
-// 应用层启动编排：客户端只选账户/实例；凭据和进程通过注入的旧核心边界调用，不由平台 Adapter 决定授权政策。
-public sealed class ExistingGameLaunchExecutor(MinecraftService source, AccountManager accounts, string? javaOverride = null) : IGameLaunchExecutor, IDisposable
+namespace Pcl.Core.Adapters.Launch;
+// 执行已授权的启动准备和物理进程操作；购买劝导及用例受理由 Application 决定。
+public sealed class GameLaunchBackend(MinecraftService source, AccountManager accounts, string? javaOverride = null) : Pcl.Core.Ports.Launch.IGameLaunchBackend
 {
     private readonly ConcurrentDictionary<string, RunningGame> games = new();
     private readonly ConcurrentDictionary<string, (Pcl.Core.Ports.Processes.GameProcessHandle Handle, string Instance)> detached = new();
     private readonly ConcurrentDictionary<string, string> instances = new();
     private readonly LaunchHookRunner hooks = new(source.Commands);
-    private readonly LaunchGuidanceService guidance = new(source.Paths, accounts);
-    public Pcl.Core.Contracts.Launch.LaunchGuidance GetGuidance(string accountId, string culture) => guidance.Get(accountId, culture);
     public bool HasManagedRunning => games.Values.Any(
         x => !x.Completion.IsCompleted
     );
@@ -26,7 +24,7 @@ public sealed class ExistingGameLaunchExecutor(MinecraftService source, AccountM
         x => source.GameProcesses.IsRunning(x.Handle)
     );
 
-    public Pcl.Core.Contracts.Accounts.GameDetails Details(string id)
+    public Pcl.Core.Ports.Launch.GameProcessDetails Details(string id)
     {
         if (games.TryGetValue(id, out var game))
         {
@@ -44,15 +42,14 @@ public sealed class ExistingGameLaunchExecutor(MinecraftService source, AccountM
         throw new OperationInstallException("GAME_NOT_MANAGED_BY_THIS_HOST");
     }
 
-    public RunningGame? BorrowLocalSession(string id) => games.GetValueOrDefault(id);
-    public async Task<StartedGameProcess> StartAsync(GameLaunchInput input, Action beforeSpawn, CancellationToken ct)
+    public Pcl.Core.Ports.Launch.IGameObservation? Borrow(string id) => games.GetValueOrDefault(id);
+    public async Task<StartedGameProcess> StartAsync(GameLaunchInput input, bool trial, Action beforeSpawn, CancellationToken ct)
     {
         if (HasRunning)
         {
             throw new OperationInstallException("GAME_ALREADY_RUNNING");
         }
 
-        var trial = guidance.Require(input.AccountId, input.Culture, input.SponsorRead, input.PurchaseRead, input.Demo);
         var account = trial
             ? null
             : accounts.Accounts.SingleOrDefault(
@@ -71,7 +68,7 @@ public sealed class ExistingGameLaunchExecutor(MinecraftService source, AccountM
             : await accounts.ResolveAsync(account!.Id, auth, ct)
                 .ConfigureAwait(false);
         GameLaunchAuthorization.Require(session);
-        LaunchGuidanceService.RecordVerified(source.Paths, session);
+        LaunchGuidanceState.RecordVerified(source.Paths, session);
         var profile = InstanceRegistry.List(source, true)
             .SingleOrDefault(
                 x => x.Id == input.InstanceId

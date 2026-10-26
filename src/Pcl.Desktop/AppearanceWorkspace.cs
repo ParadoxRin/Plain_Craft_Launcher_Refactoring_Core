@@ -21,8 +21,15 @@ public partial class MainWindow
         // Native window decoration must not mimic sponsor-unlocked colour themes on Windows.
         if (OperatingSystem.IsWindows())
         {
-            settings = settings with { Accent = "#0875D1", AccentMode = "static", TitleMode = "default", TitleImage = "" };
+            settings = settings with
+            {
+                Accent = "#0875D1",
+                AccentMode = "static",
+                TitleMode = "default",
+                TitleImage = ""
+            };
         }
+
         Bitmap? next = null;
         var imageFile = AppearanceFeatures.SelectBackground(settings, displayedBackground);
         if (imageFile.Length > 0)
@@ -208,7 +215,7 @@ public partial class MainWindow
                 panel.Children.Add(button);
             }
 
-            await window.ShowDialog(this);
+            await window.PresentAsync(this);
         }
         catch (Exception ex)
         {
@@ -248,7 +255,7 @@ public partial class MainWindow
                         }
                     },
                     WindowStartupLocation = WindowStartupLocation.CenterOwner
-                }.ShowDialog(window ?? this);
+                }.PresentAsync(window ?? this);
             else
             {
                 // [实现] 前一条件不成立时：执行 window.Close()；按 link.Kind == "refresh" 分支处理。
@@ -266,16 +273,8 @@ public partial class MainWindow
                 }
                 else if (link.Kind == "join_room")
                 {
-                    // [实现] 条件成立（link.Kind == "join_room"）时：按 multiplayer is null 分支处理。
-                    if (multiplayer is null)
-                    {
-                        // [实现] 条件成立（multiplayer is null）时：执行 multiplayer = new(service, link.Url)；执行 multiplayer.Closed += (_, _) => multiplayer = null；执行 multiplayer.Show(this)。
-                        multiplayer = Bootstrap.WorkspacePages.Multiplayer(this, service, link.Url);
-                        multiplayer.Closed += (_, _) => multiplayer = null;
-                        multiplayer.Show(this);
-                    }
-                    else
-                        multiplayer.Activate();
+                    await Bootstrap.WorkspacePages.Multiplayer(this, service, link.Url)
+                        .PresentAsync(this);
                 }
                 else if (link.Kind == "launch")
                 {
@@ -311,16 +310,16 @@ public partial class MainWindow
                                 RunAsync,
                                 Open,
                                 () => operation?.Cancel()
-                            ).ShowDialog(this);
+                            ).PresentAsync(this);
                             break;
                         case "settings":
                             await Bootstrap.WorkspacePages.Settings(this, service, ApplyAppearance, Open)
-                                .ShowDialog(this);
+                                .PresentAsync(this);
                             break;
                         case "resources":
                             if (ProfileBox.SelectedItem is GameProfile selected)
                                 await Bootstrap.WorkspacePages.Local(this, service, selected)
-                                    .ShowDialog(this);
+                                    .PresentAsync(this);
                             break;
                         case "packs":
                             if (ProfileBox.SelectedItem is GameProfile pack)
@@ -330,11 +329,11 @@ public partial class MainWindow
                                     pack,
                                     p => RefreshProfiles(p.Id)
                                 )
-                                    .ShowDialog(this);
+                                    .PresentAsync(this);
                             break;
                         case "network":
                             await Bootstrap.WorkspacePages.Cache(this, paths)
-                                .ShowDialog(this);
+                                .PresentAsync(this);
                             break;
                     }
             }

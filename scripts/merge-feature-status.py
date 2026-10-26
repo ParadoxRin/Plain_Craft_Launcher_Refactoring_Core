@@ -46,8 +46,6 @@ merged['UI-010']['name']='首次游戏中文与界面语言基线'
 merged['UI-010']['sourceEntry']='Pages/PageSetup/PageSetupSystem.xaml:103-104,167-184'
 row('UI-013','已实现待验收','src/Pcl.Desktop/DropWorkspace.cs',[reg],'本地JAR/litemod和ZIP分类预览；文件拖入的实际系统事件尚未人工回归。')
 row('UI-014','已实现待验收','src/Pcl.Cli/Program.cs; src/Pcl.Desktop/Program.cs',[reg,'artifacts/evidence-0.8-compat/compatibility-results.json'],'CLI与GUI使用同一Core；CLI未覆盖所有GUI操作，原Windows命令入口不逐字兼容。')
-row('UI-015','外部条件阻塞','docs/PCL2完整功能矩阵.md',[],'公开仓库删节百宝箱等功能；无法观察的发行版行为仍待核实，没有删除这一项。')
-merged['UI-015']['externalConditions']=['可观察的授权发行版行为或公开实现']
 # Latest integration results augment, rather than erase, domain-specific evidence.
 for k,v in merged.items():
  v.setdefault('evidenceLevels',{})['automatedRegression']=reg

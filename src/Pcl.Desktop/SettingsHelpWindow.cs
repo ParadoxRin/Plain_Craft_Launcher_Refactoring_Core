@@ -35,7 +35,13 @@ public sealed class SettingsHelpWindow : WorkspaceWindow, IHostWorkspace
         };
         Opened += async (_, _) =>
         {
+            if (ViewClosing)
+            {
+                return;
+            }
+
             operation = new();
+            using var viewActivity = ViewLifetime.Begin(operation.Cancel);
             try
             {
                 await BuildAsync();
@@ -51,14 +57,6 @@ public sealed class SettingsHelpWindow : WorkspaceWindow, IHostWorkspace
             {
                 operation.Dispose();
                 operation = null;
-            }
-        };
-        Closing += (_, e) =>
-        {
-            if (operation is not null)
-            {
-                operation.Cancel();
-                e.Cancel = true;
             }
         };
     }
@@ -134,12 +132,13 @@ public sealed class SettingsHelpWindow : WorkspaceWindow, IHostWorkspace
             };
             button.Click += async (_, _) =>
             {
-                if (Busy)
+                if (Busy || ViewClosing)
                 {
                     return;
                 }
 
                 operation = new();
+                using var viewActivity = ViewLifetime.Begin(operation.Cancel);
                 if (Content is Control view)
                 {
                     view.IsEnabled = false;

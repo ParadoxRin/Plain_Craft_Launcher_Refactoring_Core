@@ -454,7 +454,7 @@ public partial class MainWindow
                     }
 
                     await Bootstrap.WorkspacePages.Skins(this, accounts)
-                        .ShowDialog(this);
+                        .PresentAsync(this);
                 }
             );
             var advanced = Card("高级选项");
@@ -1036,7 +1036,7 @@ public partial class MainWindow
                             Text = "点击生成教学文件，修改 title、body 与 links。链接 kind 可为 url、navigate、copy、message、launch、refresh 或 join_room；navigate 支持 downloads、instances、tasks、settings、resources、packs、network。保存为 UTF-8 JSON，在主页地址中选择文件或填写 HTTPS URL，保存后回到启动页。网络文档不会执行 shell 或加载程序集。"
                         }
                     };
-                    await guide.ShowDialog(this);
+                    await guide.PresentAsync(this);
                 }
             );
             var document = Text(
@@ -1114,7 +1114,6 @@ public partial class MainWindow
                 ("setup-link", "联机设置"),
                 ("help", "帮助"),
                 ("about", "关于与鸣谢"),
-                ("toolbox", "百宝箱"),
                 ("feedback", "反馈"),
                 ("vote", "新功能投票"),
                 ("mod", "Mod"),
@@ -1241,7 +1240,7 @@ public partial class MainWindow
                     RunAsync,
                     Open,
                     () => operation?.Cancel()
-                ).ShowDialog(this)
+                ).PresentAsync(this)
             );
             var community = Card("社区资源");
             Choice(
@@ -1395,7 +1394,7 @@ public partial class MainWindow
                 launcher,
                 "打开缓存与诊断",
                 async () => await Bootstrap.WorkspacePages.Cache(this, paths)
-                    .ShowDialog(this)
+                    .PresentAsync(this)
             );
             Note(launcher, "当前构建没有签名更新源和公告服务，也不收集匿名统计。");
             var debug = Card("调试选项");
@@ -1439,7 +1438,7 @@ public partial class MainWindow
                     RunAsync,
                     Open,
                     () => operation?.Cancel()
-                ).ShowDialog(this)
+                ).PresentAsync(this)
             );
             Note(debug, "保留现有运行日志与诊断导出；原版动画调速和人为延迟测试未移植。");
         }
@@ -1451,14 +1450,14 @@ public partial class MainWindow
                 connection,
                 "创建 / 加入房间与配置节点",
                 async () => await Bootstrap.WorkspacePages.Multiplayer(this, service)
-                    .ShowDialog(this)
+                    .PresentAsync(this)
             );
             var advanced = Card("高级设置");
             Action(
                 advanced,
                 "网络检查",
                 async () => await Bootstrap.WorkspacePages.Cache(this, paths)
-                    .ShowDialog(this)
+                    .PresentAsync(this)
             );
             save.IsVisible = false;
             status.Text = "连接设置在房间窗口应用；状态由实际子进程报告。";
@@ -1473,6 +1472,12 @@ public partial class MainWindow
     // 主页异步加载使用版本号避免旧请求覆盖新的设置；失败时显示错误而不执行文档内容。
     private async Task RefreshClassicHomeAsync()
     {
+        if (navigationLifetime.IsStopping)
+        {
+            return;
+        }
+
+        using var navigationActivity = navigationLifetime.Begin();
         if (!WindowsLayout)
         {
             return;

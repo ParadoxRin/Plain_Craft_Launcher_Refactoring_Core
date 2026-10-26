@@ -1103,7 +1103,7 @@
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
       "macImplementation": "src/Pcl.Core/OfflineSkinService.cs; src/Pcl.Desktop/SkinManagerWindow.cs; src/Pcl.Core/LocalSkinPresets.cs",
       "ui": "微软与离线皮肤 → 离线账户 → 导入/恢复",
-      "status": "已实现（本轮功能运行）",
+      "status": "已实现待验收",
       "testEvidence": [
         "tests/Pcl.Tests/AccountAppearanceTests.cs#offline_skin_pack_uses_client_metadata_preserves_uuid_and_options",
         "tests/Pcl.Tests/AccountAppearanceTests.cs#offline_skin_legacy_and_new_major_minor_pack_formats",
@@ -4183,7 +4183,7 @@
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
       "macImplementation": "src/Pcl.Core/DownloadTasks.cs; src/Pcl.Desktop/TaskCenterWindow.cs",
       "ui": "任务与诊断",
-      "status": "已实现待验收",
+      "status": "部分实现",
       "testEvidence": [
         "artifacts/evidence-0.8/full-regression-7/test-results.json",
         "artifacts/ui-0.8-final/evidence/workspace-ui-result.json",
@@ -4635,7 +4635,7 @@
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
       "macImplementation": "src/Pcl.Core/ResourceAliases.cs; vendor/PCLCS/Resource/WikiEntry.cs",
       "ui": "Modrinth / CurseForge → 中文搜索",
-      "status": "已实现待验收",
+      "status": "部分实现",
       "testEvidence": [
         "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: resource_alias_embedded_database_and_explicit_cross_platform_identity",
         "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API",
@@ -5189,7 +5189,7 @@
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
       "macImplementation": "src/Pcl.Core/ResourceInstaller.cs; src/Pcl.Core/ResourceHistory.cs; src/Pcl.Desktop/ResourceBrowser.cs",
       "ui": "光影 → 下载/应用/撤销应用",
-      "status": "已实现待验收",
+      "status": "部分实现",
       "testEvidence": [
         "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: resource_activation_undo_history_and_external_change_protection",
         "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API",
@@ -8212,7 +8212,7 @@
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
       "macImplementation": "src/Pcl.Cli/Program.cs; src/Pcl.Desktop/Program.cs",
       "ui": "设置与帮助",
-      "status": "已实现待验收",
+      "status": "部分实现",
       "testEvidence": [
         "artifacts/evidence-0.8/full-regression-7/test-results.json",
         "artifacts/evidence-0.8-compat/compatibility-results.json",
@@ -8236,39 +8236,6 @@
         "workKind": "实现缺口",
         "acceptanceScope": [],
         "nextAction": "0.18 CLI 新增实例复制、备份、恢复并复用产品事务；已完成真实文件操作。并非所有 GUI 动作都有 CLI 等价入口。",
-        "note": "无本范围证据时保留历史结论；矩阵状态不等同当前包逐项重测。"
-      }
-    },
-    {
-      "id": "UI-015",
-      "domain": "个性化与系统",
-      "name": "百宝箱未公开部分",
-      "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
-      "sourceEntry": "Pages/PageSetup",
-      "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
-      "macImplementation": "docs/PCL2完整功能矩阵.md",
-      "ui": "设置与帮助",
-      "status": "外部条件阻塞",
-      "testEvidence": [],
-      "remaining": "公开仓库删节百宝箱等功能；无法观察的发行版行为仍待核实，没有删除这一项。",
-      "externalConditions": [
-        "可观察的授权发行版行为或公开实现"
-      ],
-      "evidenceLevels": {
-        "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
-      },
-      "implementationSummary": "",
-      "audit033": {
-        "reviewed": true,
-        "baselineStatus": "外部条件阻塞",
-        "evidenceRange": "0.24–0.32",
-        "evidence": [],
-        "evidenceState": "本范围未新增直接证据",
-        "implementationGap": false,
-        "requiresExternalCondition": true,
-        "workKind": "外部条件验收",
-        "acceptanceScope": [],
-        "nextAction": "公开仓库删节百宝箱等功能；无法观察的发行版行为仍待核实，没有删除这一项。",
         "note": "无本范围证据时保留历史结论；矩阵状态不等同当前包逐项重测。"
       }
     }
@@ -8343,5 +8310,35 @@
       "JarJar显式模块与Multi-Release身份",
       "经校验自定义mainClass及schema2往返"
     ]
+  },
+  "scopeChanges": [
+    {
+      "date": "2026-10-27",
+      "removedFeature": "UI-015",
+      "reason": "用户明确取消百宝箱；移除入口和待办，不计为已完成。",
+      "activeFeatureCount": 131,
+      "note": "evidenceReconciliation 为历史审查快照，含取消前的132项统计。"
+    }
+  ],
+  "currentMatrixReview": {
+    "date": "2026-10-27",
+    "sourceVersion": "0.40",
+    "reviewKind": "记录、口径和引用核对，不是新增运行验收",
+    "activeFeatures": 131,
+    "statusCounts": {
+      "已验收": 41,
+      "已实现待验收": 36,
+      "部分实现": 47,
+      "未实现": 2,
+      "外部条件阻塞": 4,
+      "平台适配实现": 1
+    },
+    "workKinds": {
+      "已覆盖限定范围": 42,
+      "外部条件验收": 8,
+      "实现缺口": 35,
+      "定向验收": 46
+    },
+    "report": "docs/0.40-功能矩阵核对.md"
   }
 }

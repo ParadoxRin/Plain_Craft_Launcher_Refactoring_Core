@@ -46,8 +46,13 @@ public sealed class GuardFaultFixture
 }
 ''')
 (fixture / 'BadBootstrap.cs').write_text('namespace Pcl.Desktop.Bootstrap; public sealed class Composition { public Pcl.Core.MinecraftService? ForbiddenField; }')
+# 使用实际 Avalonia 类型构造绕过统一导航入口的调用，不靠源码字符串测试。
+project = fixture / 'Fixture.csproj'
+refs = ''.join(f'<Reference Include="{dll.stem}"><HintPath>{dll}</HintPath></Reference>' for dll in desktop.parent.glob('Avalonia*.dll'))
+project.write_text(project.read_text().replace('</Project>', '<ItemGroup>' + refs + '</ItemGroup></Project>'))
+(fixture / 'BadNavigation.cs').write_text('namespace Pcl.Desktop; public static class BadNavigation { public static System.Threading.Tasks.Task Open(Avalonia.Controls.Window owner) => new Avalonia.Controls.Window().ShowDialog(owner); }')
 with (output / 'negative-fixture-build.log').open('w') as log:
-    subprocess.run([str(sdk), 'build', str(fixture / 'Fixture.csproj'), '--nologo'], cwd=root, env=env, stdout=log, stderr=subprocess.STDOUT, check=True)
+    subprocess.run([str(sdk), 'build', str(fixture / 'Fixture.csproj'), '--nologo', '-m:1', '-nr:false', '-p:UseSharedCompilation=false', '-p:NuGetAudit=false', '--source', str(root / '.cache/nuget')], cwd=root, env=env, stdout=log, stderr=subprocess.STDOUT, check=True)
 
 
 def run_case(name, project_root, assembly, expected_code=None):
@@ -71,6 +76,7 @@ negative = json.loads((output / 'negative-symbols.json').read_text())['violation
 for name in ('MainWindow', 'Bootstrap.Composition', 'ResourceBrowser', 'SkinManagerWindow', 'AccountToolsWindow', 'MultiplayerWindow', 'OptiFabricWindow'):
     assert any('Pcl.Desktop.' + name + '.ForbiddenField' in item for item in negative), name
 assert any(item.startswith('SHELL_EXECUTION_USE:Pcl.Desktop.MainWindow.LoginClick') for item in negative)
+assert any(item.startswith('UNMANAGED_DIALOG_PRESENTATION:') for item in negative)
 # 只更改测试副本的 Client 引用，验证真实项目引用检查，保留生产 csproj。
 clone = output / 'negative-project-root'
 for name in ('Pcl.Domain','Pcl.Ports','Pcl.Application','Pcl.Contract', 'Pcl.Core', 'Pcl.Client', 'Pcl.Desktop', 'Pcl.Host'):
@@ -89,5 +95,17 @@ desktop_project.write_text(original_desktop.replace('</Project>', '<ItemGroup><P
 results.append(run_case('negative-desktop-project-reference', clone, desktop, 'PROJECT_REFERENCES_CHANGED:Pcl.Desktop'))
 desktop_project.write_text(original_desktop.replace('</Project>', '<ItemGroup><Reference Include="Pcl.Core" /></ItemGroup></Project>'))
 results.append(run_case('negative-desktop-manual-reference', clone, desktop, 'UNREVIEWED_MANUAL_REFERENCE:Pcl.Desktop'))
+# Domain 反例在独立程序集副本构建，保留所有现有值类型，绝不改动生产源码。
+domain = output / 'domain-negative'
+domain.mkdir(exist_ok=True)
+(domain / 'Pcl.Domain.csproj').write_text(f'<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><TargetFramework>net10.0</TargetFramework><AssemblyName>Pcl.Domain</AssemblyName></PropertyGroup><ItemGroup><Compile Include="{root}/src/Pcl.Domain/**/*.cs" Exclude="{root}/src/Pcl.Domain/obj/**;{root}/src/Pcl.Domain/bin/**" /></ItemGroup></Project>')
+(domain / 'BadDomain.cs').write_text('namespace Pcl.Domain; public static class BadDomain { public static bool Read() => System.IO.File.Exists("fixture"); }')
+with (output / 'negative-domain-build.log').open('w') as log:
+    subprocess.run([str(sdk), 'build', str(domain / 'Pcl.Domain.csproj'), '-m:1', '-nr:false', '-p:UseSharedCompilation=false', '-p:NuGetAudit=false', '--source', str(root / '.cache/nuget')], cwd=root, env=env, stdout=log, stderr=subprocess.STDOUT, check=True)
+# Guard uses only metadata: a copied bundle with the injected Domain exposes the forbidden IL.
+bundle = output / 'negative-domain-bundle'
+shutil.copytree(desktop.parent, bundle, dirs_exist_ok=True)
+shutil.copy2(domain / 'bin/Debug/net10.0/Pcl.Domain.dll', bundle / 'host/Pcl.Domain.dll')
+results.append(run_case('negative-domain-io', root, bundle / desktop.name, 'DOMAIN_EXTERNAL_DEPENDENCY:'))
 (output / 'guard-tests.json').write_text(json.dumps({'tests': results}, indent=2))
 print(json.dumps(results))

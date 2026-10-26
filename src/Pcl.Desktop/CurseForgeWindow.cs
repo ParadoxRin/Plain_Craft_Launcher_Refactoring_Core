@@ -80,6 +80,7 @@ public sealed class CurseForgeWindow : WorkspaceWindow, IHostWorkspace
         this.profile = profile;
         this.onInstalled = onInstalled;
         this.open = open;
+        NavigationContext = profile.Id;
         Title = "CurseForge · " + profile.GameVersion;
         Width = 760;
         Height = 730;
@@ -250,15 +251,13 @@ public sealed class CurseForgeWindow : WorkspaceWindow, IHostWorkspace
         {
             Content = panel
         };
-        Closing += (_, e) =>
-        {
-            if (cancellation is not null)
+        ViewLifetime.OnStop(
+            () =>
             {
-                cancellation.Cancel();
-                e.Cancel = true;
+                key.Text = "";
+                return Task.CompletedTask;
             }
-        };
-        Closed += (_, _) => key.Text = "";
+        );
         key.TextChanged += (_, _) =>
         {
             secretHandle = null;
@@ -368,9 +367,10 @@ public sealed class CurseForgeWindow : WorkspaceWindow, IHostWorkspace
 
     private async Task Run(Func<Task> action)
     {
-        if (cancellation is not null)
+        if (cancellation is not null || ViewClosing)
             return;
         cancellation = new();
+        using var viewActivity = ViewLifetime.Begin(cancellation.Cancel);
         foreach (var button in buttons)
             button.IsEnabled = false;
         projects.IsEnabled = versions.IsEnabled = kind.IsEnabled = key.IsEnabled = query.IsEnabled = false;

@@ -15,7 +15,7 @@ groups=[
 ('PACK','整合包','Modules/Minecraft','PortableModpackService.cs','整合包 / 整合包管理','Modrinth搜索下载;mrpack安装;CurseForge包安装;HMCL包安装;MultiMC包安装;MCBBS包安装;普通ZIP安装;含启动器包识别;可选文件选择;mrpack导出;导出包含项与隐私;导出配置保存读取;整合包升级合并用户改动;缺失受限资源手动匹配'),
 ('DIAG','诊断','Modules/Minecraft','DiagnosticsService.cs','任务与诊断 → 日志诊断','实时启动输出;进程退出与崩溃区分;错误报告导入;Java内存原生库诊断;模组依赖图形网络诊断;脱敏诊断包;原版完整崩溃规则集'),
 ('LINK','联机','Pages/PageLink','EasyTierService.cs','联机','EasyTierMac模块安装;房间创建加入;邀请码与自定义节点;本地端口转发;连接状态延迟与人数;双端Minecraft联机;PCL原版节点和邀请码互通'),
-('UI','个性化与系统','Pages/PageSetup','AppearanceService.cs','设置与帮助','深浅主题配色;背景图片;背景音乐与游戏跟随;自定义主页;功能隐藏恢复;帮助检索;设置导入导出重置;启动器自动更新;公告;语言切换;缓存清理;自定义事件;拖入安装;命令行入口;百宝箱未公开部分')]
+('UI','个性化与系统','Pages/PageSetup','AppearanceService.cs','设置与帮助','深浅主题配色;背景图片;背景音乐与游戏跟随;自定义主页;功能隐藏恢复;帮助检索;设置导入导出重置;启动器自动更新;公告;语言切换;缓存清理;自定义事件;拖入安装;命令行入口')]
 features=[]
 for prefix,domain,src,mac,ui,names in groups:
     for i,name in enumerate(names.split(';'),1):
@@ -36,8 +36,15 @@ for p in sorted(source.rglob('*')):
 archive=Path.home() / 'Downloads' / 'PCL-2.99.0.0.zip'
 provenance=dict(baseline='PCL 2.99.0.0',upstreamCommit='6b9a50df911c9d68b69b24c979efba477fb14b67',upstreamHeadVerified='2026-10-23',upstreamDelta='当前API默认分支最新提交与基线一致',sourceIsPatched=True,originalZipSha256=hashlib.sha256(archive.read_bytes()).hexdigest() if archive.exists() else None)
 (docs/'source-ui-inventory.json').write_text(json.dumps(inventory,ensure_ascii=False,indent=2))
-(docs/'PCL2完整功能矩阵.json').write_text(json.dumps(dict(provenance=provenance,features=features),ensure_ascii=False,indent=2))
-lines=['# PCL2 完整功能矩阵','', '固定基线：PCL 2.99.0.0 / `6b9a50df911c9d68b69b24c979efba477fb14b67`。2026-10-23 查询上游默认分支，最新提交仍为此基线。参考树含本地下载修复，原档哈希另存 JSON。','',f'本表登记 {len(features)} 项用户能力；源码入口清单包含 {len(inventory)} 条页面、设置和过程记录。此为追踪范围，不是已实现数量，也不代表发行版未公开代码已获得。','', '公开删节：ModSecret 更新/服务器配置等存在空实现，百宝箱未公开；需独立等效实现或外部条件，不能算成已复用。Mac Windows专属能力逐项处理，当前未从清单删除。','', '| ID | 功能 | 状态 | Mac 实现 / 界面 | 验收 / 剩余 |','|---|---|---|---|---|']
+# 重建条目时保留历史核对和当前统计，不能删除已审查的版本依据。
+matrix_path=docs/'PCL2完整功能矩阵.json'
+previous=json.loads(matrix_path.read_text()) if matrix_path.exists() else {}
+previous.update(provenance=provenance,features=features)
+if 'currentMatrixReview' in previous:
+    from collections import Counter
+    previous['currentMatrixReview'].update(activeFeatures=len(features),statusCounts=dict(Counter(f['status'] for f in features)),workKinds=dict(Counter(f['audit033']['workKind'] for f in features)))
+matrix_path.write_text(json.dumps(previous,ensure_ascii=False,indent=2)+'\n')
+lines=['# PCL2 完整功能矩阵','', '固定基线：PCL 2.99.0.0 / `6b9a50df911c9d68b69b24c979efba477fb14b67`。2026-10-23 查询上游默认分支，最新提交仍为此基线。参考树含本地下载修复，原档哈希另存 JSON。','',f'本表登记 {len(features)} 项用户能力；源码入口清单包含 {len(inventory)} 条页面、设置和过程记录。此为追踪范围，不是已实现数量，也不代表发行版未公开代码已获得。','', '公开删节能力不能算成已复用。按用户要求取消百宝箱（原UI-015），不纳入当前功能计划，也不计为已完成；历史资料保留原始范围。','', '| ID | 功能 | 状态 | Mac 实现 / 界面 | 验收 / 剩余 |','|---|---|---|---|---|']
 for f in features:lines.append(f"| {f['id']} | {f['domain']} · {f['name']} | {f['status']} | `{f['macImplementation']}` / {f['ui']} | {'; '.join(f['testEvidence'])} {f['remaining']} |")
 lines+=['','机器可读记录：PCL2完整功能矩阵.json；页面/设置/事件符号：source-ui-inventory.json。状态修改保存在feature-status-overrides.json，由scripts/build-feature-matrix.py复现。']
 (docs/'PCL2完整功能矩阵.md').write_text('\n'.join(lines)+'\n')

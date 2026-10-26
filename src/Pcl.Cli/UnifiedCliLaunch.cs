@@ -42,7 +42,12 @@ internal static class UnifiedCliLaunch
             x => x.Id == accountId
         );
         using var store = new FileOperationStore(source.Paths.Root, "launch-operations-v1");
-        using var executor = new ExistingGameLaunchExecutor(source, accounts, javaOverride);
+        using var executor = new ExistingGameLaunchExecutor(
+            new Pcl.Core.Adapters.Launch.GameLaunchBackend(source, accounts, javaOverride),
+            new LaunchGuidanceService(
+                new Pcl.Core.Adapters.Launch.LaunchGuidanceState(source.Paths, accounts)
+            )
+        );
         var revision = javaOverride is null
             ? null
             : Convert.ToHexString(
@@ -60,11 +65,17 @@ internal static class UnifiedCliLaunch
             {
                 culture = "en-US";
             }
-            var consent = await ConfirmGuidanceAsync(executor.GetGuidance(accountId, culture), culture, ct);
+
+            var consent = await ConfirmGuidanceAsync(
+                executor.GetGuidance(accountId, culture),
+                culture,
+                ct
+            );
             if (consent is null)
             {
                 return 1;
             }
+
             var accepted = await launches.AcceptAsync(
                 new(key, accountId, profile.Id, detached, consent),
                 ct
@@ -174,6 +185,7 @@ internal static class UnifiedCliLaunch
             await launches.StopAsync();
         }
     }
+
     // CLI owns text interaction only; Host/core decides the same guidance policy as Desktop.
     internal static async Task<Pcl.Core.Contracts.Launch.LaunchGuidanceConsent?> ConfirmGuidanceAsync(Pcl.Core.Contracts.Launch.LaunchGuidance guide, string culture, CancellationToken ct)
     {
@@ -182,14 +194,19 @@ internal static class UnifiedCliLaunch
         {
             Console.WriteLine("请购买正版 Minecraft 支持开发者：" + guide.PurchaseUrl);
         }
-        Console.WriteLine(guide.RequireDemo ? "尚未验证正版。输入 demo 启动官方试玩，其他输入取消。" : "阅读提示后输入 continue 继续、demo 试玩，其他输入取消。");
+
+        Console.WriteLine(
+            guide.RequireDemo
+                ? "尚未验证正版。输入 demo 启动官方试玩，其他输入取消。"
+                : "阅读提示后输入 continue 继续、demo 试玩，其他输入取消。"
+        );
         var input = await Console.In.ReadLineAsync(ct);
         var demo = input == "demo";
         if (!demo && (guide.RequireDemo || input != "continue"))
         {
             return null;
         }
+
         return new(culture, true, guide.ShowPurchase, demo);
     }
-
 }

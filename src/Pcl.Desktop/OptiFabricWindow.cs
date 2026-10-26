@@ -142,9 +142,10 @@ public sealed class OptiFabricWindow : WorkspaceWindow, IHostWorkspace
         choose.Click += async (_, _) =>
         {
             // [实现] 回调触发时：执行受异常处理保护的操作。
-            if (operation is not null)
+            if (operation is not null || ViewClosing)
                 return;
             operation = new();
+            using var viewActivity = ViewLifetime.Begin(operation.Cancel);
             choose.IsEnabled = install.IsEnabled = key.IsEnabled = false;
             cancel.IsVisible = true;
             try
@@ -198,9 +199,10 @@ public sealed class OptiFabricWindow : WorkspaceWindow, IHostWorkspace
         install.Click += async (_, _) =>
         {
             // [实现] 回调触发时：按 operation is not null 分支处理；执行 operation = new()；执行 choose.IsEnabled = install.IsEnabled = key.IsEnabled = false。
-            if (operation is not null)
+            if (operation is not null || ViewClosing)
                 return;
             operation = new();
+            using var viewActivity = ViewLifetime.Begin(operation.Cancel);
             choose.IsEnabled = install.IsEnabled = key.IsEnabled = false;
             cancel.IsVisible = true;
             try
@@ -245,15 +247,5 @@ public sealed class OptiFabricWindow : WorkspaceWindow, IHostWorkspace
             }
         };
         cancel.Click += (_, _) => operation?.Cancel();
-        Closing += (_, e) =>
-        {
-            // [实现] 回调触发时：按 operation is not null 分支处理。
-            if (operation is not null)
-            {
-                // [实现] 条件成立（operation is not null）时：执行 e.Cancel = true；执行 status.Text = "请先取消或等待当前任务。"。
-                e.Cancel = true;
-                status.Text = "请先取消或等待当前任务。";
-            }
-        };
     }
 }

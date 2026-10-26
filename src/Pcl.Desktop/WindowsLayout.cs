@@ -642,14 +642,18 @@ public partial class MainWindow
                 : [
                     "help",
                     "about",
-                    "toolbox",
                     "feedback",
                     "vote"
                 ];
-        var items = WindowsBaseline["menus"]![area]!.AsArray();
-        for (int i = 0; i < items.Count; i++)
+        // 保留原版布局资料，仅从产品导航中排除已取消的项目；路由与可见菜单保持同序。
+        var items = WindowsBaseline["menus"]![area]!.AsArray()
+            .Where(
+                item => item?["title"]?.GetValue<string>() != "百宝箱"
+            )
+            .ToArray();
+        for (int i = 0; i < items.Length; i++)
         {
-            // [实现] 每次迭代（i < items.Count）：按 section == "download" && i == 1 分支处理；准备 var item = items[i]!；准备 string route = routes[i]。
+            // 依照过滤后的菜单顺序绑定路由；下载页面在社区资源前插入分组标题。
             if (section == "download" && i == 1)
             {
                 // [实现] 条件成立（section == "download" && i == 1）时：执行 classicNavigation.Children.Add( new TextBlock { Text = "社区资源", Margin = new Thickness(13, 20, 5…。
@@ -750,6 +754,12 @@ public partial class MainWindow
     // 导航仅调度操作；网络异常通过页面错误反馈，旧页面异步返回不会覆盖新页面。
     private async Task NavigateClassicAsync(string route)
     {
+        if (navigationLifetime.IsStopping)
+        {
+            return;
+        }
+
+        using var navigationActivity = navigationLifetime.Begin();
         if (operation is not null)
         {
             // [实现] 条件成立（operation is not null）时：执行 Log("当前操作结束后可切换页面。")；结束当前过程。
@@ -1109,9 +1119,14 @@ public partial class MainWindow
         };
     }
 
-    // [实现] BuildClassicOther 的实现：准备 var panel = new StackPanel { Margin = new Thickness(24), Spacing = 15 }；准备 string title = route switch { "about" => "关于与鸣谢", "toolbox" => "百宝箱", "feedback" => "反馈", "vote…；执行 panel.Children.Add( new TextBlock { Text = title, FontSize = 22 } )。
+    // 构建帮助、关于及服务说明页；已取消或未知路由回到帮助页。
     private Control BuildClassicOther(string route)
     {
+        if (route is not ("about" or "help" or "feedback" or "vote"))
+        {
+            route = "help";
+        }
+
         var panel = new StackPanel
         {
             Margin = new Thickness(24),
@@ -1120,7 +1135,6 @@ public partial class MainWindow
         string title = route switch
         {
             "about" => "关于与鸣谢",
-            "toolbox" => "百宝箱",
             "feedback" => "反馈",
             "vote" => "新功能投票",
             _ => "帮助"
@@ -1135,7 +1149,9 @@ public partial class MainWindow
         if (route == "about")
         {
             panel.Children.Clear();
-            panel.Children.Add(BuildAboutContent());
+            panel.Children.Add(
+                BuildAboutContent()
+            );
         }
         else if (route == "help")
         {
@@ -1183,15 +1199,13 @@ public partial class MainWindow
         }
         else
         {
-            // [实现] 前一条件不成立时：执行 panel.Children.Add( ClassicCard( title, new TextBlock { Text = route == "toolbox" ? "Windows 开源…。
+            // 反馈和投票尚未接入服务，展示现有状态说明。
             panel.Children.Add(
                 ClassicCard(
                     title,
                     new TextBlock
                     {
-                        Text = route == "toolbox"
-                            ? "Windows 开源版未提供百宝箱完整实现。Mac 的现有工具放在“Mac 扩展”中，此入口保留用于对照。"
-                            : "尚未接入 Mac 版专属服务。保留 Windows 原版入口用于对照，当前不提交信息。",
+                        Text = "尚未接入 Mac 版专属服务。保留 Windows 原版入口用于对照，当前不提交信息。",
                         TextWrapping = TextWrapping.Wrap
                     }
                 )

@@ -85,6 +85,14 @@ foreach (var(name, allowed)in expected)
     }
 }
 
+// Core 提供既有执行适配，应用用例必须归属独立 Application，禁止重新塞回 Core/Application。
+var coreApplication = Path.Combine(root, "src", "Pcl.Core", "Application");
+if (Directory.Exists(coreApplication) && Directory.EnumerateFiles(coreApplication, "*.cs", SearchOption.AllDirectories)
+    .Any())
+{
+    violations.Add("APPLICATION_IMPLEMENTATION_IN_CORE");
+}
+
 var directory = Path.GetDirectoryName(desktopFile)!;
 AssemblyLoadContext.Default.Resolving += (_, name) =>
 {
@@ -159,6 +167,79 @@ var codes = typeof(OpCodes).GetFields(BindingFlags.Public | BindingFlags.Static)
     .ToDictionary(
         x => unchecked((ushort)x.Value)
     );
+// Domain 的框架引用仍可能隐藏文件、进程或宿主探测；检查实际 IL，允许内存流与密码学等纯计算。
+var domainAssembly = AppDomain.CurrentDomain.GetAssemblies()
+    .Single(
+        x => x.GetName()
+            .Name == "Pcl.Domain"
+    );
+var domainMethods = 0;
+foreach (var type in domainAssembly.GetTypes())
+{
+    foreach (var method in type.GetMethods(
+        BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly
+    )
+        .Cast<MethodBase>()
+        .Concat(
+            type.GetConstructors(
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance
+            )
+        ))
+    {
+        domainMethods++;
+        if ((method.Attributes & MethodAttributes.PinvokeImpl) != 0)
+        {
+            violations.Add("DOMAIN_NATIVE_CALL:" + type.FullName + "." + method.Name);
+        }
+
+        var il = method.GetMethodBody()?.GetILAsByteArray();
+        if (il is null)
+        {
+            continue;
+        }
+
+        for (int offset = 0; offset < il.Length;)
+        {
+            ushort key = il[offset++];
+            if (key == 0xfe)
+            {
+                key = (ushort)(0xfe00 | il[offset++]);
+            }
+
+            var code = codes[key];
+            var size = code.OperandType switch
+            {
+                OperandType.InlineNone => 0,
+                OperandType.ShortInlineBrTarget or OperandType.ShortInlineI or OperandType.ShortInlineVar => 1,
+                OperandType.InlineVar => 2,
+                OperandType.InlineI8 or OperandType.InlineR => 8,
+                OperandType.InlineSwitch => 4 + 4 * BitConverter.ToInt32(il, offset),
+                _ => 4
+            };
+            if (code.OperandType is OperandType.InlineMethod or OperandType.InlineField or OperandType.InlineType or OperandType.InlineTok)
+            {
+                var used = method.Module.ResolveMember(
+                    BitConverter.ToInt32(il, offset),
+                    type.GetGenericArguments(),
+                    method.IsGenericMethod
+                        ? method.GetGenericArguments()
+                        : null
+                );
+                var full = (used as Type ?? used?.DeclaringType)?.FullName ?? "";
+                bool external = full.StartsWith("System.Net.", StringComparison.Ordinal) || full is "System.IO.File" or "System.IO.Directory" or "System.IO.FileInfo" or "System.IO.DirectoryInfo" or "System.IO.FileStream" or "System.IO.FileSystemWatcher" or "System.IO.DriveInfo" or "System.IO.Path" or "System.Diagnostics.Process" or "System.Environment" or "System.OperatingSystem" or "System.Runtime.InteropServices.RuntimeInformation" or "System.Console" or "System.Random" || (full is "System.DateTime" or "System.DateTimeOffset") && used?.Name is "get_Now" or "get_UtcNow" or "get_Today" || full == "System.Guid" && used?.Name == "NewGuid";
+                if (external)
+                {
+                    violations.Add(
+                        "DOMAIN_EXTERNAL_DEPENDENCY:" + type.FullName + "." + method.Name + " -> " + full + "." + used?.Name
+                    );
+                }
+            }
+
+            offset += size;
+        }
+    }
+}
+
 int methods = 0, memberUses = 0;
 bool strictPage = false;
 bool Forbidden(Type? type)
@@ -277,6 +358,11 @@ foreach (var type in assembly.GetTypes())
                         : null
                 );
                 memberUses++;
+                if (symbol is MethodInfo called && called.DeclaringType?.FullName == "Avalonia.Controls.Window" && called.Name == "ShowDialog" && type.FullName?.Contains("Smoke", StringComparison.Ordinal) != true && !method.Name.Contains("Smoke", StringComparison.Ordinal) && type.FullName != "Pcl.Desktop.WindowPresentation")
+                {
+                    violations.Add("UNMANAGED_DIALOG_PRESENTATION:" + type.FullName + "." + method.Name);
+                }
+
                 var usedType = symbol as Type ?? symbol?.DeclaringType;
                 // Transitional MainWindow still has legacy display models, but these migrated handlers cannot call old executors.
                 var migratedMain = type.FullName!.StartsWith("Pcl.Desktop.MainWindow", StringComparison.Ordinal) && new[]
@@ -330,13 +416,10 @@ File.WriteAllText(
                 ? "passed"
                 : "failed",
             runtimeProjectReferences = graph,
+            checkedDomainMethods = domainMethods,
             checkedMethods = methods,
             checkedMemberUses = memberUses,
-            knownTransitionExceptions = new[]
-            {
-                "Desktop -> Core (legacy pages and Bootstrap)",
-                "Bootstrap may wire migrated implementations"
-            },
+            knownTransitionExceptions = Array.Empty<string>(),
             violations
         },
         new JsonSerializerOptions

@@ -5,7 +5,7 @@ using Pcl.Core.Ports.Operations;
 
 namespace Pcl.Core.Application.Accounts;
 // Host 持有认证执行任务与所有会话；UI 只轮询短时提示和公开账户索引。
-public sealed class HostAccountService(AccountManager accounts, IOperationStore store)
+public sealed class HostAccountService(Pcl.Core.Ports.Accounts.IAccountBackend accounts, IOperationStore store)
 {
     private sealed record Saved(int FormatVersion, string Key, bool Remember, LoginSnapshot Snapshot);
     private readonly object gate = new();
@@ -52,24 +52,29 @@ public sealed class HostAccountService(AccountManager accounts, IOperationStore 
         }
     }
 
-    public AccountSnapshot Snapshot() => new(
-        accounts.Accounts.Select(
-            x => new AccountInfo(
-                x.Id,
-                (int)x.Kind,
-                x.Name,
-                x.Uuid,
-                x.ClientId,
-                x.Remembered,
-                x.Server,
-                x.Identifier,
-                x.ServerName,
-                x.Kind == AccountKind.Microsoft && accounts.HasMicrosoftCredential(x.Id)
+    public AccountSnapshot Snapshot()
+    {
+        var index = accounts.Read();
+        return new(
+            index.Accounts.Select(
+                x => new AccountInfo(
+                    x.Id,
+                    x.Kind,
+                    x.Name,
+                    x.Uuid,
+                    x.ClientId,
+                    x.Remembered,
+                    x.Server,
+                    x.Identifier,
+                    x.ServerName,
+                    x.HasCredential
+                )
             )
-        )
-            .ToArray(),
-        accounts.SelectedId
-    );
+                .ToArray(),
+            index.SelectedId
+        );
+    }
+
     public LoginSnapshot Begin(string key, bool remember)
     {
         lock (gate)
@@ -126,42 +131,33 @@ public sealed class HostAccountService(AccountManager accounts, IOperationStore 
     {
         try
         {
-            using var auth = new MicrosoftAuthentication();
-            var clientId = MicrosoftApplication.BuiltIn.RequireClientId();
-            var challenge = await auth.BeginAsync(clientId, ct)
-                .ConfigureAwait(false);
-            lock (gate)
-            {
-                Save(
-                    rows[id] with
+            var accountId = await accounts.LoginAsync(
+                remember,
+                challenge =>
+                {
+                    lock (gate)
                     {
-                        Snapshot = new(
-                            id,
-                            "challenge",
-                            new(challenge.UserCode, challenge.VerificationUri, challenge.ExpiresIn)
-                        )
+                        Save(
+                            rows[id] with
+                            {
+                                Snapshot = new(
+                                    id,
+                                    "challenge",
+                                    new(challenge.UserCode, challenge.VerificationUri, challenge.ExpiresIn)
+                                )
+                            }
+                        );
                     }
-                );
-            }
-
-            var login = await auth.CompleteLoginAsync(clientId, challenge, ct)
+                },
+                ct
+            )
                 .ConfigureAwait(false);
-            LauncherAccount account;
-            try
-            {
-                account = accounts.SaveMicrosoft(login, remember);
-            }
-            catch (System.Security.Cryptography.CryptographicException)
-            {
-                account = accounts.SaveSession(login);
-            }
-
             lock (gate)
             {
                 Save(
                     rows[id] with
                     {
-                        Snapshot = new(id, "succeeded", AccountId: account.Id)
+                        Snapshot = new(id, "succeeded", AccountId: accountId)
                     }
                 );
             }
@@ -230,12 +226,16 @@ public sealed class HostAccountService(AccountManager accounts, IOperationStore 
     {
         try
         {
-            await Task.WhenAll(
+            // 即使某个取消回调失败，也必须等待所有执行 finally 后再释放 CTS。
+            var signals = Task.WhenAll(
                 cancel.Select(
                     x => x.CancelAsync()
                 )
             );
-            await Task.WhenAll(work);
+            await Task.WhenAll(
+                signals,
+                Task.WhenAll(work)
+            );
         }
         finally
         {
@@ -246,18 +246,7 @@ public sealed class HostAccountService(AccountManager accounts, IOperationStore 
         }
     }
 
-    public void Logout(string id, bool remove)
-    {
-        if (remove)
-        {
-            accounts.Remove(id);
-        }
-        else
-        {
-            accounts.Logout(id);
-        }
-    }
-
+    public void Logout(string id, bool remove) => accounts.Logout(id, remove);
     private readonly Dictionary<string, AppearanceSnapshot> appearances = new();
     public AppearanceSnapshot BeginAppearance(string id, string action, string? value, byte[]? png, bool slim)
     {
@@ -333,48 +322,26 @@ public sealed class HostAccountService(AccountManager accounts, IOperationStore 
         CancellationToken ct = default
     )
     {
-        using var auth = new MicrosoftAuthentication();
-        var session = await accounts.ResolveAsync(id, auth, ct);
-        using var skins = new MicrosoftSkinService();
-        switch (action)
-        {
-            case "get":
-                var appearance = await skins.GetAsync(session, ct);
-                return new AccountAppearance(
-                    appearance.Id,
-                    appearance.Name,
-                    appearance.Skins.Select(
-                        x => new SkinInfo(x.Id, x.State, x.Url, x.Variant)
-                    )
-                        .ToArray(),
-                    appearance.Capes.Select(
-                        x => new CapeInfo(x.Id, x.State, x.Url, x.Name)
-                    )
-                        .ToArray()
-                );
-            case "skin.use":
-                await skins.UseSkinAsync(session, value!, ct);
-                break;
-            case "skin.upload":
-                await skins.UploadSkinAsync(session, png!, slim, ct);
-                break;
-            case "skin.reset":
-                await skins.ResetSkinAsync(session, ct);
-                break;
-            case "cape.use":
-                await skins.UseCapeAsync(session, value!, ct);
-                break;
-            case "cape.hide":
-                await skins.HideCapeAsync(session, ct);
-                break;
-            default:
-                throw new OperationRejectedException("INVALID_ACCOUNT_ACTION");
-        }
+        var look = await accounts.AppearanceAsync(id, action, value, png, slim, ct)
+            .ConfigureAwait(false);
+        return look is null
+            ? new
+            {
+                completed = true
+            }
 
-        return new
-        {
-            completed = true
-        };
+            : new AccountAppearance(
+                look.Id,
+                look.Name,
+                look.Skins.Select(
+                    x => new SkinInfo(x.Id, x.State, x.Url, x.Variant)
+                )
+                    .ToArray(),
+                look.Capes.Select(
+                    x => new CapeInfo(x.Id, x.State, x.Url, x.Name)
+                )
+                    .ToArray()
+            );
     }
 
     private void Save(Saved saved)

@@ -14,7 +14,10 @@ import zipfile
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--refs', nargs='+', default=['main', 'refs/tags/v0.36.1'])
 parser.add_argument('--forbidden-file', help='Local JSON array of exact private strings; never commit this file')
+parser.add_argument('--allowed-oauth-client-id', action='append', default=[], help='Explicitly owner-authorized public application IDs; never secrets')
 args = parser.parse_args()
+import uuid
+allowed_oauth_ids = {str(uuid.UUID(value)) for value in args.allowed_oauth_client_id}
 
 
 def git(*parts):
@@ -54,7 +57,10 @@ for row in objects:
         data = git('cat-file', 'blob', oid)
         scan(data, path or oid)
         if path == 'src/Pcl.Core/Authentication/microsoft-application.json':
-            if json.loads(data).get('clientId') != '':
+            configuration = json.loads(data)
+            if set(configuration) != {'clientId'}:
+                findings.append({'location': path, 'kind': 'unexpected_oauth_configuration_fields'})
+            if configuration.get('clientId') not in ('', *allowed_oauth_ids):
                 findings.append({'location': path, 'kind': 'nonempty_tracked_oauth_identity'})
         if data.startswith(b'PK'):
             with zipfile.ZipFile(io.BytesIO(data)) as archive:

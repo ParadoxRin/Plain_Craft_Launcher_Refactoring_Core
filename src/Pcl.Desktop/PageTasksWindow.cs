@@ -89,11 +89,14 @@ public sealed class PageTasksWindow : WorkspaceWindow, IHostWorkspace
 
         async Task Run(Func<Task> action)
         {
-            if (busy)
+            if (busy || ViewClosing)
             {
                 return;
             }
 
+            using var viewActivity = ViewLifetime.Begin(
+                () => resumeCancellation?.Cancel()
+            );
             busy = true;
             refresh.IsEnabled = resume.IsEnabled = save.IsEnabled = false;
             try
@@ -217,14 +220,6 @@ public sealed class PageTasksWindow : WorkspaceWindow, IHostWorkspace
                 }
             }
         );
-        Closing += (_, e) =>
-        {
-            if (busy)
-            {
-                e.Cancel = true;
-                status.Text = "请等待任务结束；可取消正在执行的任务。";
-            }
-        };
     }
 
     // 协议状态保持稳定英文，界面只展示任务名称、状态与时间。

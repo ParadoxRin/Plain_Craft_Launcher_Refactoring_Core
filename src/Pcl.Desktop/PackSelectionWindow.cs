@@ -153,7 +153,7 @@ public sealed class PackSelectionWindow : WorkspaceWindow, IHostWorkspace
                 () => window.Close()
             )
         );
-        var selected = await window.ShowDialog<string[]?>(owner);
+        var selected = await window.PresentAsync<string[]?>(owner);
         ct.ThrowIfCancellationRequested();
         return selected ?? throw new OperationCanceledException("已取消整合包选择。");
     }

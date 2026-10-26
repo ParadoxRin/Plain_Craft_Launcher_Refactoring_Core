@@ -148,7 +148,12 @@ if (args.FirstOrDefault() == "--loaders")
                     x => x.Kind == AccountKind.Offline
                 ) ?? accounts.AddOffline("LoaderRecovery");
                 using var launchStore = new FileOperationStore(root, "launch-operations-v1");
-                using var executor = new ExistingGameLaunchExecutor(source, accounts);
+                using var executor = new ExistingGameLaunchExecutor(
+                    new Pcl.Core.Adapters.Launch.GameLaunchBackend(source, accounts),
+                    new LaunchGuidanceService(
+                        new Pcl.Core.Adapters.Launch.LaunchGuidanceState(source.Paths, accounts)
+                    )
+                );
                 var launches = new GameLaunchOperationService(launchStore, executor);
                 var launch = await launches.AcceptAsync(
                     new("launch-" + family + attempt, account.Id, profile.Id)
@@ -290,7 +295,7 @@ if (args.FirstOrDefault() == "--host")
             throw new Exception("HELLO_FAILED");
         }
 
-        var platform = TargetPlatform.Current;
+        var platform = Pcl.Core.Adapters.Platform.HostPlatform.Detect();
         var target = new InstallationTarget(platform.Os, platform.Architecture, platform.OsVersion);
         // Host 接收安装并取消排队/规划，之后同一 key 必须重查旧结果，不能重跑。
         var install = await client.Installations.AcceptAsync(
@@ -1012,7 +1017,12 @@ if (args.FirstOrDefault() == "--microsoft")
     );
     using var source = new MinecraftService(paths);
     using var store = new FileOperationStore(root, "launch-operations-v1");
-    using var executor = new ExistingGameLaunchExecutor(source, accounts);
+    using var executor = new ExistingGameLaunchExecutor(
+        new Pcl.Core.Adapters.Launch.GameLaunchBackend(source, accounts),
+        new LaunchGuidanceService(
+            new Pcl.Core.Adapters.Launch.LaunchGuidanceState(source.Paths, accounts)
+        )
+    );
     var launches = new GameLaunchOperationService(store, executor);
     var accepted = await launches.AcceptAsync(
         new(

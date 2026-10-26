@@ -91,7 +91,13 @@ public sealed class TaskCenterWindow : WorkspaceWindow, IHostWorkspace
             : refreshTask = RefreshCore();
         async Task RefreshCore()
         {
-            if (lifetime.IsCancellationRequested)
+            if (ViewClosing)
+            {
+                return;
+            }
+
+            using var viewActivity = ViewLifetime.Begin(lifetime.Cancel);
+            if (lifetime.IsCancellationRequested || ViewClosing)
                 return;
             try
             {
@@ -133,6 +139,12 @@ public sealed class TaskCenterWindow : WorkspaceWindow, IHostWorkspace
         };
         pause.Click += async (_, _) =>
         {
+            if (ViewClosing)
+            {
+                return;
+            }
+
+            using var viewActivity = ViewLifetime.Begin(lifetime.Cancel);
             // 暂停由 Host 控制；断线错误留在窗口内，不让 async void 事件退出应用。
             try
             {
@@ -156,6 +168,12 @@ public sealed class TaskCenterWindow : WorkspaceWindow, IHostWorkspace
         };
         retry.Click += async (_, _) =>
         {
+            if (ViewClosing)
+            {
+                return;
+            }
+
+            using var viewActivity = ViewLifetime.Begin(lifetime.Cancel);
             // [实现] 回调触发时：按 list.SelectedItem is not DownloadTaskRow row || row.State is "下载中" or "排队中" 分支处理；执行受异常处理保护的操作。
             if (list.SelectedItem is not DownloadTaskRow row || row.State is "下载中" or "排队中")
                 return;
@@ -190,25 +208,28 @@ public sealed class TaskCenterWindow : WorkspaceWindow, IHostWorkspace
         timer.Tick += async (_, _) => await Refresh();
         Opened += async (_, _) =>
         {
+            if (ViewClosing)
+            {
+                return;
+            }
+
+            using var viewActivity = ViewLifetime.Begin(lifetime.Cancel);
             // [实现] 回调触发时：执行 Refresh()；执行 timer.Start()。
             await Refresh();
-            timer.Start();
-        };
-        Closed += async (_, _) =>
-        {
-            // [实现] 回调触发时：执行 timer.Stop()；执行 tasks.Flush()。
-            timer.Stop();
-            lifetime.Cancel();
-            try
+            if (!ViewClosing)
             {
-                if (refreshTask is not null)
-                    await refreshTask;
+                timer.Start();
             }
-            finally
+        };
+        ViewLifetime.OnStop(
+            () =>
             {
+                timer.Stop();
+                lifetime.Cancel();
                 lifetime.Dispose();
+                return Task.CompletedTask;
             }
-        };
+        );
         var net = new StackPanel
         {
             Spacing = 12
@@ -274,10 +295,16 @@ public sealed class TaskCenterWindow : WorkspaceWindow, IHostWorkspace
             Content = "测速与临时缓存管理"
         };
         inspect.Click += async (_, _) => await Bootstrap.WorkspacePages.Cache(this, paths)
-            .ShowDialog(this);
+            .PresentAsync(this);
         net.Children.Add(inspect);
         save.Click += async (_, _) =>
         {
+            if (ViewClosing)
+            {
+                return;
+            }
+
+            using var viewActivity = ViewLifetime.Begin(lifetime.Cancel);
             // [实现] 回调触发时：执行受异常处理保护的操作。
             try
             {
@@ -331,6 +358,12 @@ public sealed class TaskCenterWindow : WorkspaceWindow, IHostWorkspace
         string? log = null;
         async Task Load(string selected)
         {
+            if (ViewClosing)
+            {
+                return;
+            }
+
+            using var viewActivity = ViewLifetime.Begin(lifetime.Cancel);
             log = selected;
             analysis.Text = await api.CallAsync<string>(
                 "workspace.shell.diagnostic",
@@ -345,6 +378,12 @@ public sealed class TaskCenterWindow : WorkspaceWindow, IHostWorkspace
 
         Opened += async (_, _) =>
         {
+            if (ViewClosing)
+            {
+                return;
+            }
+
+            using var viewActivity = ViewLifetime.Begin(lifetime.Cancel);
             await Refresh();
             logFiles.ItemsSource = tasks.Logs;
             parallel.Text = tasks.Options.ConcurrentFiles.ToString();
@@ -359,6 +398,12 @@ public sealed class TaskCenterWindow : WorkspaceWindow, IHostWorkspace
         };
         logFiles.SelectionChanged += async (_, _) =>
         {
+            if (ViewClosing)
+            {
+                return;
+            }
+
+            using var viewActivity = ViewLifetime.Begin(lifetime.Cancel);
             // [实现] 回调触发时：执行受异常处理保护的操作。
             try
             {
@@ -379,6 +424,12 @@ public sealed class TaskCenterWindow : WorkspaceWindow, IHostWorkspace
         };
         import.Click += async (_, _) =>
         {
+            if (ViewClosing)
+            {
+                return;
+            }
+
+            using var viewActivity = ViewLifetime.Begin(lifetime.Cancel);
             // [实现] 回调触发时：执行受异常处理保护的操作。
             try
             {
@@ -405,6 +456,12 @@ public sealed class TaskCenterWindow : WorkspaceWindow, IHostWorkspace
         };
         export.Click += async (_, _) =>
         {
+            if (ViewClosing)
+            {
+                return;
+            }
+
+            using var viewActivity = ViewLifetime.Begin(lifetime.Cancel);
             // [实现] 回调触发时：按 log is null 分支处理；执行受异常处理保护的操作。
             if (log is null)
                 return;
@@ -459,6 +516,12 @@ public sealed class TaskCenterWindow : WorkspaceWindow, IHostWorkspace
         };
         Opened += async (_, _) =>
         {
+            if (ViewClosing)
+            {
+                return;
+            }
+
+            using var viewActivity = ViewLifetime.Begin(lifetime.Cancel);
             await Refresh();
             installList.ItemsSource = tasks.Installations;
         };
@@ -483,6 +546,12 @@ public sealed class TaskCenterWindow : WorkspaceWindow, IHostWorkspace
         installList.SelectionChanged += (_, _) => installStatus.Text = (installList.SelectedItem as InstallOperation)?.Error;
         resume.Click += async (_, _) =>
         {
+            if (ViewClosing)
+            {
+                return;
+            }
+
+            using var viewActivity = ViewLifetime.Begin(lifetime.Cancel);
             // [实现] 回调触发时：按 installList.SelectedItem is not InstallOperation item || item.State is "已完成" or "安装中" 分支处理；执行 await run( async ct => { using var service = new MinecraftService(paths); await new InstallOper…；执行 installList.ItemsSource = tasks.Installations。
             if (installList.SelectedItem is not InstallOperation item || item.State is "已完成" or "安装中")
                 return;
@@ -570,6 +639,12 @@ public sealed class TaskCenterWindow : WorkspaceWindow, IHostWorkspace
         operationPanel.Children.Add(resumeOperation);
         async Task RefreshOperations()
         {
+            if (ViewClosing)
+            {
+                return;
+            }
+
+            using var viewActivity = ViewLifetime.Begin(lifetime.Cancel);
             if (operations is null)
             {
                 operationStatus.Text = "此入口尚未接入操作服务";
@@ -596,6 +671,12 @@ public sealed class TaskCenterWindow : WorkspaceWindow, IHostWorkspace
         refreshOperations.Click += async (_, _) => await RefreshOperations();
         cancelOperation.Click += async (_, _) =>
         {
+            if (ViewClosing)
+            {
+                return;
+            }
+
+            using var viewActivity = ViewLifetime.Begin(lifetime.Cancel);
             if (operations is not null && operationList.SelectedItem is OperationSnapshot row)
             {
                 await operations.CancelAsync(row.OperationId);
@@ -604,6 +685,12 @@ public sealed class TaskCenterWindow : WorkspaceWindow, IHostWorkspace
         };
         resumeOperation.Click += async (_, _) =>
         {
+            if (ViewClosing)
+            {
+                return;
+            }
+
+            using var viewActivity = ViewLifetime.Begin(lifetime.Cancel);
             if (operations is null || operationList.SelectedItem is not OperationSnapshot row)
             {
                 return;

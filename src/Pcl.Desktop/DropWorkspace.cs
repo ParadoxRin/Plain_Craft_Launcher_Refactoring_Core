@@ -62,7 +62,7 @@ public partial class MainWindow
                 : Enum.Parse<ResourceKind>(classified.Kind);
             if (kind is null)
             {
-                // [实现] 条件成立（kind is null）时：准备 var manager = new PackManagerWindow( service, profile, p => RefreshProfiles(p.Id) )；执行 await manager.SelectArchiveAsync(path)；执行 await manager.ShowDialog(this)。
+                // [实现] 条件成立（kind is null）时：准备 var manager = new PackManagerWindow( service, profile, p => RefreshProfiles(p.Id) )；执行 await manager.SelectArchiveAsync(path)；执行 await manager.PresentAsync(this)。
                 var manager = Bootstrap.WorkspacePages.Pack(
                     this,
                     service,
@@ -70,7 +70,7 @@ public partial class MainWindow
                     p => RefreshProfiles(p.Id)
                 );
                 await manager.SelectArchiveAsync(path);
-                await manager.ShowDialog(this);
+                await manager.PresentAsync(this);
                 return;
             }
 
@@ -100,7 +100,7 @@ public partial class MainWindow
             confirm.Click += (_, _) => dialog.Close(true);
             panel.Children.Add(confirm);
             dialog.Content = panel;
-            if (await dialog.ShowDialog<bool>(this))
+            if (await dialog.PresentAsync<bool>(this))
                 await RunAsync(
                     async ct =>
                     {

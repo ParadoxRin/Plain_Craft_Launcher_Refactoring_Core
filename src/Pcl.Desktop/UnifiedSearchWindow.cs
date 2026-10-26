@@ -100,6 +100,9 @@ public sealed class UnifiedSearchWindow : WorkspaceWindow, IHostWorkspace
         this.profile = profile;
         this.installed = installed;
         this.open = open;
+        NavigationContext = profile.Id + (mcmodOnly
+            ? ":mcmod"
+            : ":all");
         Title = "多源搜索 · " + profile.GameVersion;
         Width = 900;
         Height = 720;
@@ -330,15 +333,13 @@ public sealed class UnifiedSearchWindow : WorkspaceWindow, IHostWorkspace
             }
         };
         online.IsCheckedChanged += (_, _) => Reset();
-        Closing += (_, e) =>
-        {
-            if (operation is not null)
+        ViewLifetime.OnStop(
+            () =>
             {
-                operation.Cancel();
-                e.Cancel = true;
+                key.Text = "";
+                return Task.CompletedTask;
             }
-        };
-        Closed += (_, _) => key.Text = "";
+        );
     }
 
     private Button Action(string text, Func<CancellationToken, Task> action)
@@ -354,9 +355,10 @@ public sealed class UnifiedSearchWindow : WorkspaceWindow, IHostWorkspace
 
     private async Task Run(Func<CancellationToken, Task> action)
     {
-        if (operation is not null)
+        if (operation is not null || ViewClosing)
             return;
         operation = new();
+        using var viewActivity = ViewLifetime.Begin(operation.Cancel);
         foreach (var b in buttons)
             b.IsEnabled = false;
         results.IsEnabled = query.IsEnabled = kind.IsEnabled = key.IsEnabled = online.IsEnabled = source.IsEnabled = false;

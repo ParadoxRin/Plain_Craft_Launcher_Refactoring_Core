@@ -165,7 +165,7 @@ public partial class MainWindow
                     dialog.Close(null);
                 };
             dialog.Opened += (_, _) => Console.WriteLine("VERSION_UI_DIALOG_OPENED");
-            var choice = await dialog.ShowDialog<(string Version, int Loader)?>(this);
+            var choice = await dialog.PresentAsync<(string Version, int Loader)?>(this);
             if (choice is null)
             {
                 // [实现] 条件成立（choice is null）时：执行 StatusText.Text = ""；结束当前过程。

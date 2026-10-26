@@ -44,7 +44,7 @@ public sealed class MinecraftService : IDisposable
         GameVersion = gameVersion ?? Version;
         VersionCatalog.ValidateId(GameVersion);
         Paths = paths;
-        Platform = platform ?? TargetPlatform.Current;
+        Platform = platform ?? Pcl.Core.Adapters.Platform.HostPlatform.Detect();
         handlerOptions = DownloadTasks.For(paths)
             .Options;
         Downloads = new(paths: paths);

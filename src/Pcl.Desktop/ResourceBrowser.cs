@@ -567,7 +567,7 @@ public sealed partial class ResourceBrowser : UserControl, IDisposable
                 Margin = new Thickness(18)
             }
         };
-        await dialog.ShowDialog(owner);
+        await dialog.PresentAsync(owner);
     }
 
     private static Border Card(Control child) => new()
@@ -858,7 +858,7 @@ public sealed partial class ResourceBrowser : UserControl, IDisposable
                         }
                     };
                     confirm.Click += (_, _) => dialog.Close(choices.SelectedItem as Pcl.Core.Contracts.Workspaces.WorldDirectory);
-                    var world = await dialog.ShowDialog<Pcl.Core.Contracts.Workspaces.WorldDirectory?>(owner);
+                    var world = await dialog.PresentAsync<Pcl.Core.Contracts.Workspaces.WorldDirectory?>(owner);
                     if (world is null)
                         return;
                     await Api.CallAsync<bool>(
@@ -928,7 +928,7 @@ public sealed partial class ResourceBrowser : UserControl, IDisposable
             return;
         }
 
-        var accepted = await new IrisEnvironmentWindow(plan).ShowDialog<bool>(owner);
+        var accepted = await new IrisEnvironmentWindow(plan).PresentAsync<bool>(owner);
         if (!accepted)
         {
             status.Text = "已取消，未卸载环境。";

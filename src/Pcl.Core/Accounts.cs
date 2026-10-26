@@ -261,7 +261,7 @@ public sealed class AccountManager
             )
         );
         sessions[id] = login;
-        Pcl.Core.Application.Launch.LaunchGuidanceService.RecordVerified(Paths, login.Session);
+        Pcl.Core.Adapters.Launch.LaunchGuidanceState.RecordVerified(Paths, login.Session);
         return account;
     }
 
@@ -280,7 +280,7 @@ public sealed class AccountManager
             )
         );
         sessions[id] = login;
-        Pcl.Core.Application.Launch.LaunchGuidanceService.RecordVerified(Paths, login.Session);
+        Pcl.Core.Adapters.Launch.LaunchGuidanceState.RecordVerified(Paths, login.Session);
         return account;
     }
 

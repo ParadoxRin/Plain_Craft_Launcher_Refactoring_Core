@@ -35,7 +35,22 @@ public sealed record AppearanceSettings
     public string HomeMode { get; init; } = "document";
     public string HomePreset { get; init; } = "welcome";
     public string LauncherVisibility { get; init; } = "legacy";
-    public string[] HiddenRoutes { get; init; } = [];
+
+    private string[] hiddenRoutes = [];
+    // 读取旧设置、导入备份和接收旧客户端设置时，丢弃已取消项目的隐藏标记。
+    // 其他未知键继续由 Validate 拒绝；保存后不再写回废弃键。
+    public string[] HiddenRoutes
+    {
+        get => hiddenRoutes;
+        init
+        {
+            hiddenRoutes = value.Where(
+                route => route != "toolbox"
+            )
+                .ToArray();
+        }
+    }
+
     public string[] HiddenNavigation { get; init; } = [];
 
     // [实现] Validate 的实现：按 !double.IsFinite(WindowOpacity) || WindowOpacity is < .5 or > 1 || !double.IsFinite(BackgroundB… 分支处理；按 HiddenRoutes.Length > 32 || HiddenRoutes.Any( x => !AppearanceFeatures.HiddenRoutes.Contains(x)… 分支处理；按 MusicMode is not ("normal" or "game") || AccentMode is not ("static" or "rainbow" or "aurora") … 分支处理。
@@ -157,7 +172,10 @@ public sealed class AppearanceService(AppPaths paths)
             ? JsonFiles.Read(file)
                 .ToObject<AppearanceSettings>() ?? new()
             : new();
-        value = Adapters.Appearance.PlatformAppearance.Normalize(value, OperatingSystem.IsWindows());
+        value = Adapters.Appearance.PlatformAppearance.Normalize(
+            value,
+            OperatingSystem.IsWindows()
+        );
         value.Validate();
         return value;
     }
@@ -165,7 +183,10 @@ public sealed class AppearanceService(AppPaths paths)
     // [实现] Save 的实现：执行 value.Validate()；执行 JsonFiles.Write( Path.Combine(paths.Root, "appearance.json"), value )。
     public void Save(AppearanceSettings value)
     {
-        value = Adapters.Appearance.PlatformAppearance.Normalize(value, OperatingSystem.IsWindows());
+        value = Adapters.Appearance.PlatformAppearance.Normalize(
+            value,
+            OperatingSystem.IsWindows()
+        );
         value.Validate();
         JsonFiles.Write(
             Path.Combine(paths.Root, "appearance.json"),

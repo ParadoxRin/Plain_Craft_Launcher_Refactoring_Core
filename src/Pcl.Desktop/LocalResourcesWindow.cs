@@ -65,6 +65,7 @@ public sealed class LocalResourcesWindow : WorkspaceWindow, IHostWorkspace
     {
         this.profile = profile;
         api = new(operations);
+        NavigationContext = profile.Id;
         Title = "本地资源 · " + profile.Name;
         Width = 760;
         Height = 790;
@@ -198,7 +199,7 @@ public sealed class LocalResourcesWindow : WorkspaceWindow, IHostWorkspace
                         WindowStartupLocation = WindowStartupLocation.CenterOwner,
                         Content = history
                     };
-                    await dialog.ShowDialog(this);
+                    await dialog.PresentAsync(this);
                 }
             )
         );
@@ -293,7 +294,7 @@ public sealed class LocalResourcesWindow : WorkspaceWindow, IHostWorkspace
                             }
                         };
                         confirm.Click += (_, _) => preview.Close(true);
-                        if (await preview.ShowDialog<bool>(this))
+                        if (await preview.PresentAsync<bool>(this))
                         {
                             var backup = await Call<string>(
                                 "resources.batchApply",
@@ -467,7 +468,7 @@ public sealed class LocalResourcesWindow : WorkspaceWindow, IHostWorkspace
             panel.Children.Add(
                 Button(
                     "后台任务",
-                    () => new PageTasksWindow(operations.Tasks).ShowDialog(this)
+                    () => new PageTasksWindow(operations.Tasks).PresentAsync(this)
                 )
             );
         }
@@ -500,15 +501,6 @@ public sealed class LocalResourcesWindow : WorkspaceWindow, IHostWorkspace
                 await RefreshPacks();
             }
         );
-        Closing += (_, e) =>
-        {
-            if (Busy)
-            {
-                cancellation?.Cancel();
-                e.Cancel = true;
-                status.Text = "正在等待 Host 安全结束任务";
-            }
-        };
     }
 
     private string[] Selected() => files.SelectedItems?.Cast<LocalResourceInfo>()
@@ -558,12 +550,13 @@ public sealed class LocalResourcesWindow : WorkspaceWindow, IHostWorkspace
 
     private async Task Run(Func<Task> action)
     {
-        if (Busy)
+        if (Busy || ViewClosing)
         {
             return;
         }
 
         cancellation = new();
+        using var viewActivity = ViewLifetime.Begin(cancellation.Cancel);
         foreach (var button in buttons)
         {
             button.IsEnabled = false;

@@ -105,12 +105,6 @@ public partial class MainWindow
                 );
             }
         };
-        Closed += (_, _) =>
-        {
-            // [实现] 回调触发时：执行 accentTimer.Stop()；执行 titleBitmap?.Dispose()。
-            accentTimer.Stop();
-            titleBitmap?.Dispose();
-        };
         Opened += async (_, _) =>
         {
             // [实现] 回调触发时：按 appearance.ShowStartupLogo && appearance.AnimationSpeed > 0 分支处理。
@@ -232,6 +226,7 @@ public partial class MainWindow
         {
             return;
         }
+
         var angle = appearance.AccentMode == "aurora"
             ? 155 + 45 * Math.Sin(hue * Math.PI * 2)
             : hue * 360;

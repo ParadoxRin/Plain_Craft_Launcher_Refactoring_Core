@@ -1,0 +1,2291 @@
+{
+  "review": {
+    "date": "2026-10-27",
+    "sourceVersion": "0.40",
+    "reviewKind": "记录、口径和引用核对，不是新增运行验收",
+    "activeFeatures": 131,
+    "statusCounts": {
+      "已验收": 41,
+      "已实现待验收": 36,
+      "部分实现": 47,
+      "未实现": 2,
+      "外部条件阻塞": 4,
+      "平台适配实现": 1
+    },
+    "workKinds": {
+      "已覆盖限定范围": 42,
+      "外部条件验收": 8,
+      "实现缺口": 35,
+      "定向验收": 46
+    },
+    "report": "docs/0.40-功能矩阵核对.md"
+  },
+  "beforeStatusCounts": {
+    "已验收": 41,
+    "已实现待验收": 39,
+    "部分实现": 43,
+    "未实现": 2,
+    "已实现（本轮功能运行）": 1,
+    "外部条件阻塞": 4,
+    "平台适配实现": 1
+  },
+  "statusCorrections": [
+    {
+      "id": "AUTH-013",
+      "before": "已实现（本轮功能运行）",
+      "after": "已实现待验收",
+      "reason": "归一过时的本轮功能运行标签；保留实际证据，不升级完整验收。"
+    },
+    {
+      "id": "NET-012",
+      "before": "已实现待验收",
+      "after": "部分实现",
+      "reason": "文件下载服务支持系统/显式HTTP代理；并非所有第三方元数据请求的统一代理，真实代理链路未测试。"
+    },
+    {
+      "id": "RES-004",
+      "before": "已实现待验收",
+      "after": "部分实现",
+      "reason": "固定词库可能过时；未实现在线自动刷新或用户词库编辑"
+    },
+    {
+      "id": "RES-010",
+      "before": "已实现待验收",
+      "after": "部分实现",
+      "reason": "Iris环境卸载仅限有可信安装前记录且文件未被修改的环境；旧版/手动安装不自动追认。自定义Fabric依赖覆盖暂拒绝卸载。Forge/NeoForge光影后端自动搭建与Oculus环境卸载仍未实现。"
+    },
+    {
+      "id": "UI-014",
+      "before": "已实现待验收",
+      "after": "部分实现",
+      "reason": "0.18 CLI 新增实例复制、备份、恢复并复用产品事务；已完成真实文件操作。并非所有 GUI 动作都有 CLI 等价入口。"
+    }
+  ],
+  "markdownStatusDriftFixed": [
+    "AUTH-006",
+    "AUTH-013",
+    "INST-005",
+    "INST-007",
+    "INST-010",
+    "VER-001",
+    "VER-002",
+    "JAVA-005",
+    "NET-005",
+    "NET-008",
+    "NET-009",
+    "NET-010",
+    "NET-013",
+    "NET-014",
+    "RES-001",
+    "RES-006",
+    "RES-018",
+    "PACK-012",
+    "LINK-002",
+    "LINK-003",
+    "LINK-004",
+    "UI-001"
+  ],
+  "overrideStatusDriftFixed": [
+    "AUTH-006",
+    "AUTH-013",
+    "INST-005",
+    "INST-007",
+    "INST-010",
+    "VER-001",
+    "VER-002",
+    "JAVA-005",
+    "NET-005",
+    "NET-008",
+    "NET-009",
+    "NET-010",
+    "NET-013",
+    "NET-014",
+    "RES-001",
+    "RES-006",
+    "RES-018",
+    "PACK-012",
+    "LINK-002",
+    "LINK-003",
+    "LINK-004",
+    "UI-001"
+  ],
+  "references": {
+    "total": 158,
+    "existing": 111,
+    "missing": 47,
+    "missingPaths": [
+      "artifacts/architecture-0.26/packaged-microsoft-retry.json",
+      "artifacts/architecture-0.26/packaged-session.json",
+      "artifacts/architecture-0.26/pages-live.json",
+      "artifacts/architecture-0.27/final-components/result.json",
+      "artifacts/architecture-0.27/final-download/result.json",
+      "artifacts/architecture-0.28/release-resources.json",
+      "artifacts/architecture-0.28/release-ui.json",
+      "artifacts/architecture-0.28/workspaces2.json",
+      "artifacts/architecture-0.29/release-discovery.json",
+      "artifacts/architecture-0.29/release-ui.json",
+      "artifacts/architecture-0.30/release-final-host.json",
+      "artifacts/architecture-0.30/release-final-ui/report.json",
+      "artifacts/architecture-0.31/release-main.json",
+      "artifacts/architecture-0.31/release-microsoft.json",
+      "artifacts/architecture-0.32/release-browser-ui/report.json",
+      "artifacts/architecture-0.32/release-browser.json",
+      "artifacts/architecture-0.32/release-final-cancel.json",
+      "artifacts/architecture-0.32/release-final-main.json",
+      "artifacts/architecture-0.32/release-final-resume.json",
+      "artifacts/architecture-0.32/release-main-ui/report.json",
+      "artifacts/architecture-0.32/release-microsoft.json",
+      "artifacts/architecture-0.32/release-verified-detached/packaged-detached-verification.json",
+      "artifacts/architecture-0.32/release-verified-managed.json",
+      "artifacts/architecture-0.32/release-verified-shell-ui/report.json",
+      "artifacts/architecture-0.32/release-verified-shell.json",
+      "artifacts/architecture-avalonia-host/legacy-host-live.json",
+      "artifacts/architecture-contract-0.25/legacy-host-live.json",
+      "artifacts/verification-0.33/release-browser.json",
+      "artifacts/verification-0.33/release-microsoft.json",
+      "artifacts/verification-0.33/release-script-ui/standalone.json",
+      "artifacts/verification-0.33/release-script-ui/ui.json",
+      "artifacts/verification-0.33/release-skin-script-tests.json",
+      "artifacts/verification-0.34/final-custom-packs.json",
+      "artifacts/verification-0.34/final-loaders.json",
+      "artifacts/verification-0.34/final-microsoft.json",
+      "artifacts/verification-0.34/focused-integrity/results.json",
+      "artifacts/verification-0.34/release-browser.json",
+      "artifacts/verification-0.34/release-resources.json",
+      "artifacts/verification-0.35/final-copy-guards.json",
+      "artifacts/verification-0.35/final-copy-ui.json",
+      "artifacts/verification-0.35/final-shaders.json",
+      "artifacts/verification-0.35/final-transactions/results.json",
+      "artifacts/verification-0.36/final-environment-tests-v3/results.json",
+      "artifacts/verification-0.36/final-environment-ui.json",
+      "artifacts/verification-0.36/final-exclusive-launch.json",
+      "artifacts/verification-0.36/final-shared-launch.json",
+      "artifacts/verification-0.36/world-session/accepted.json"
+    ],
+    "existingHashedFilesChecked": 0,
+    "hashMismatches": []
+  },
+  "features": [
+    {
+      "id": "AUTH-001",
+      "name": "离线名称与稳定UUID",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "按用户最新要求恢复本地离线身份及启动；原版稳定 UUID 算法、多名称切换/删除和重开恢复已验证。离线身份不提供微软购买证明；第二次游戏退出有已知 OpenAL 音频错误。",
+      "existingEvidencePaths": [
+        "artifacts/microsoft-integration-preflight/ownership-ui/evidence/account-ui-flow.json",
+        "artifacts/microsoft-integration-preflight/release-tests/test-results.json",
+        "artifacts/verification-0.19/offline-data/evidence/offline-ui.json",
+        "artifacts/verification-0.19/offline-world-roundtrip.json",
+        "artifacts/verification-0.19/regression/test-results.json",
+        "docs/0.19离线登录恢复与验收.md"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.30/release-final-host.json",
+        "artifacts/architecture-0.30/release-final-ui/report.json",
+        "artifacts/architecture-0.32/release-browser-ui/report.json",
+        "artifacts/architecture-0.32/release-browser.json",
+        "artifacts/verification-0.33/release-browser.json",
+        "artifacts/verification-0.34/final-microsoft.json"
+      ]
+    },
+    {
+      "id": "AUTH-002",
+      "name": "多离线账户切换和删除",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "按用户最新要求恢复本地离线身份及启动；原版稳定 UUID 算法、多名称切换/删除和重开恢复已验证。离线身份不提供微软购买证明；第二次游戏退出有已知 OpenAL 音频错误。",
+      "existingEvidencePaths": [
+        "artifacts/microsoft-integration-preflight/ownership-ui/evidence/account-ui-flow.json",
+        "artifacts/microsoft-integration-preflight/release-tests/test-results.json",
+        "artifacts/verification-0.19/offline-data/evidence/offline-ui.json",
+        "artifacts/verification-0.19/offline-world-roundtrip.json",
+        "artifacts/verification-0.19/regression/test-results.json",
+        "docs/0.19离线登录恢复与验收.md"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.30/release-final-host.json",
+        "artifacts/architecture-0.32/release-browser-ui/report.json",
+        "artifacts/architecture-0.32/release-browser.json",
+        "artifacts/verification-0.33/release-browser.json",
+        "artifacts/verification-0.34/final-microsoft.json"
+      ]
+    },
+    {
+      "id": "AUTH-003",
+      "name": "微软设备码授权",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "0.16 完成单账户首次授权与世界存档验收；0.17 追加实际退出重登、权益重新校验、钥匙串冷恢复及多版本正版启动。不代表所有账号、网络或双账户人工切换已验收。",
+      "existingEvidencePaths": [
+        "artifacts/microsoft-integration-preflight/release-tests/test-results.json",
+        "artifacts/microsoft-live-0.12-retry/evidence/last-error.json",
+        "artifacts/verification-0.16/desktop-manual-launch.json",
+        "artifacts/verification-0.16/final-tests/test-results.json",
+        "artifacts/verification-0.16/microsoft-cold-refresh-0.16.json",
+        "artifacts/verification-0.16/microsoft-login-result.json",
+        "artifacts/verification-0.16/user-world-acceptance.json",
+        "artifacts/verification-0.17/final-owned-launches/matrix.json",
+        "artifacts/verification-0.17/microsoft-lifecycle-0.17.json",
+        "artifacts/verification-0.17/release-tests/test-results.json",
+        "docs/0.16实现与验收.md",
+        "docs/0.17实现与验收.md"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.32/release-final-main.json"
+      ]
+    },
+    {
+      "id": "AUTH-004",
+      "name": "微软刷新和Keychain",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "0.16 完成单账户首次授权与世界存档验收；0.17 追加实际退出重登、权益重新校验、钥匙串冷恢复及多版本正版启动。不代表所有账号、网络或双账户人工切换已验收。",
+      "existingEvidencePaths": [
+        "artifacts/microsoft-integration-preflight/release-tests/test-results.json",
+        "artifacts/microsoft-live-0.12-retry/evidence/last-error.json",
+        "artifacts/verification-0.16/desktop-manual-launch.json",
+        "artifacts/verification-0.16/final-tests/test-results.json",
+        "artifacts/verification-0.16/microsoft-cold-refresh-0.16.json",
+        "artifacts/verification-0.16/microsoft-login-result.json",
+        "artifacts/verification-0.16/user-world-acceptance.json",
+        "artifacts/verification-0.17/final-owned-launches/matrix.json",
+        "artifacts/verification-0.17/microsoft-lifecycle-0.17.json",
+        "artifacts/verification-0.17/release-tests/test-results.json",
+        "docs/0.16实现与验收.md",
+        "docs/0.17实现与验收.md"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.26/packaged-microsoft-retry.json",
+        "artifacts/architecture-0.31/release-microsoft.json",
+        "artifacts/architecture-0.32/release-microsoft.json",
+        "artifacts/verification-0.33/release-microsoft.json",
+        "artifacts/verification-0.34/release-browser.json"
+      ]
+    },
+    {
+      "id": "AUTH-005",
+      "name": "微软权益与档案",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "0.16 完成单账户首次授权与世界存档验收；0.17 追加实际退出重登、权益重新校验、钥匙串冷恢复及多版本正版启动。不代表所有账号、网络或双账户人工切换已验收。",
+      "existingEvidencePaths": [
+        "artifacts/microsoft-integration-preflight/release-tests/test-results.json",
+        "artifacts/microsoft-live-0.12-retry/evidence/last-error.json",
+        "artifacts/verification-0.16/desktop-manual-launch.json",
+        "artifacts/verification-0.16/final-tests/test-results.json",
+        "artifacts/verification-0.16/microsoft-cold-refresh-0.16.json",
+        "artifacts/verification-0.16/microsoft-login-result.json",
+        "artifacts/verification-0.16/user-world-acceptance.json",
+        "artifacts/verification-0.17/final-owned-launches/matrix.json",
+        "artifacts/verification-0.17/microsoft-lifecycle-0.17.json",
+        "artifacts/verification-0.17/release-tests/test-results.json",
+        "docs/0.16实现与验收.md",
+        "docs/0.17实现与验收.md"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.26/packaged-microsoft-retry.json",
+        "artifacts/architecture-0.31/release-microsoft.json",
+        "artifacts/architecture-0.32/release-microsoft.json",
+        "artifacts/verification-0.33/release-microsoft.json",
+        "artifacts/verification-0.34/release-browser.json"
+      ]
+    },
+    {
+      "id": "AUTH-006",
+      "name": "多微软账户与退出",
+      "status": "已实现待验收",
+      "workKind": "外部条件验收",
+      "remaining": "双账户实现有协议夹具；同一真实微软账户退出重登已有历史证据。缺第二个真人微软账户切换验收，不应写成未实现多账户。",
+      "existingEvidencePaths": [
+        "artifacts/microsoft-integration-preflight/release-tests/test-results.json",
+        "artifacts/microsoft-live-0.12-retry/evidence/last-error.json",
+        "artifacts/verification-0.16/desktop-manual-launch.json",
+        "artifacts/verification-0.16/final-tests/test-results.json",
+        "artifacts/verification-0.16/microsoft-cold-refresh-0.16.json",
+        "artifacts/verification-0.16/microsoft-login-result.json",
+        "artifacts/verification-0.16/user-world-acceptance.json",
+        "artifacts/verification-0.17/final-owned-launches/matrix.json",
+        "artifacts/verification-0.17/microsoft-lifecycle-0.17.json",
+        "artifacts/verification-0.17/release-tests/test-results.json",
+        "docs/0.16实现与验收.md",
+        "docs/0.17实现与验收.md"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "AUTH-007",
+      "name": "外置认证服务器配置",
+      "status": "部分实现",
+      "workKind": "实现缺口",
+      "remaining": "外置服务器配置及挑战失败路径已迁入 Host；尚无真实外置账户完整登录验收，当前游戏执行器明确拒绝外置账户启动。",
+      "existingEvidencePaths": [
+        "artifacts/microsoft-integration-preflight/ownership-ui/evidence/account-ui-flow.json",
+        "artifacts/microsoft-integration-preflight/release-tests/test-results.json"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.32/release-browser.json"
+      ]
+    },
+    {
+      "id": "AUTH-008",
+      "name": "外置角色选择与刷新",
+      "status": "部分实现",
+      "workKind": "实现缺口",
+      "remaining": "角色选择与刷新界面/协议已有实现；真实外置账户成功链路未验收，外置账户游戏启动仍缺。",
+      "existingEvidencePaths": [
+        "artifacts/microsoft-integration-preflight/ownership-ui/evidence/account-ui-flow.json",
+        "artifacts/microsoft-integration-preflight/release-tests/test-results.json"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.32/release-browser.json"
+      ]
+    },
+    {
+      "id": "AUTH-009",
+      "name": "统一通行证预设",
+      "status": "未实现",
+      "workKind": "实现缺口",
+      "remaining": "尚未实现统一通行证专属预设/协议；现有 Yggdrasil 不等于此功能",
+      "existingEvidencePaths": [],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "AUTH-010",
+      "name": "皮肤展示与缓存",
+      "status": "部分实现",
+      "workKind": "实现缺口",
+      "remaining": "微软资料与规范化二维皮肤读取、离线缓存已有真实证据；完整在线皮肤磁盘缓存及3D人物预览仍缺。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression/test-results.json",
+        "tests/Pcl.Tests/AccountAppearanceTests.cs"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.26/packaged-microsoft-retry.json",
+        "artifacts/architecture-0.31/release-microsoft.json",
+        "artifacts/architecture-0.32/release-browser.json",
+        "artifacts/architecture-0.32/release-microsoft.json",
+        "artifacts/verification-0.33/release-microsoft.json",
+        "artifacts/verification-0.34/final-microsoft.json",
+        "artifacts/verification-0.34/release-browser.json"
+      ]
+    },
+    {
+      "id": "AUTH-011",
+      "name": "皮肤更换与清除",
+      "status": "已实现待验收",
+      "workKind": "外部条件验收",
+      "remaining": "模拟 API fixtures 通过；真实微软/外置账户上传与游戏内外观仍待验证",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression/test-results.json",
+        "tests/Pcl.Tests/AccountAppearanceTests.cs"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "AUTH-012",
+      "name": "披风选择",
+      "status": "已实现待验收",
+      "workKind": "外部条件验收",
+      "remaining": "仅操作拥有/授权的披风；模拟 API 通过，无真人账户验收",
+      "existingEvidencePaths": [
+        "tests/Pcl.Tests/AccountAppearanceTests.cs"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "AUTH-013",
+      "name": "离线皮肤",
+      "status": "已实现待验收",
+      "workKind": "定向验收",
+      "remaining": "公开玩家名获取、保存、刷新、导出、预设及重开恢复已实际运行；游戏内皮肤纹理/模型仍待观察。",
+      "existingEvidencePaths": [
+        "artifacts/verification-0.22/final-local-ui/evidence/local-settings-ui.json",
+        "artifacts/verification-0.22/final-tests/test-results.json",
+        "docs/0.22-settings-binding-audit.json",
+        "tests/Pcl.Tests/AccountAppearanceTests.cs"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.30/release-final-host.json",
+        "artifacts/architecture-0.30/release-final-ui/report.json",
+        "artifacts/architecture-0.32/release-browser-ui/report.json",
+        "artifacts/architecture-0.32/release-browser.json",
+        "artifacts/verification-0.33/release-browser.json",
+        "artifacts/verification-0.34/release-browser.json"
+      ]
+    },
+    {
+      "id": "INST-001",
+      "name": "多个游戏目录扫描导入",
+      "status": "部分实现",
+      "workKind": "实现缺口",
+      "remaining": "支持扫描完整原版目录及本启动器格式并复制导入；不支持任意第三方 inheritsFrom 链、多个外部目录原地注册",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/tests-instance-fixes/test-results.json"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.28/workspaces2.json"
+      ]
+    },
+    {
+      "id": "INST-002",
+      "name": "实例搜索与分类",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "通过实际控件保存、分组筛选、重开和清除验收；每实例一个分组，不提供嵌套分组或一次多组选中。",
+      "existingEvidencePaths": [
+        "artifacts/verification-0.18/final-regression2/test-results.json",
+        "artifacts/verification-0.18/group-ui-final/evidence/instance-groups.json",
+        "docs/0.18实现与验收.md",
+        "tests/Pcl.Tests/InstanceManagementTests.cs"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.28/release-ui.json"
+      ]
+    },
+    {
+      "id": "INST-003",
+      "name": "收藏隐藏与恢复",
+      "status": "已实现待验收",
+      "workKind": "定向验收",
+      "remaining": "Host 已验证保存偏好、隐藏后可寻址；仍需完整 GUI 收藏/隐藏/恢复和重开筛选的定向验收。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/tests-instance-fixes/test-results.json"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.28/workspaces2.json"
+      ]
+    },
+    {
+      "id": "INST-004",
+      "name": "名称描述与图标",
+      "status": "已实现待验收",
+      "workKind": "定向验收",
+      "remaining": "真实 Host 图标导出/移除和 GUI 名称/分组保存已有证据；图片选择、更换与重开视觉仍需定向验收。",
+      "existingEvidencePaths": [
+        "tests/Pcl.Tests/InstanceManagementTests.cs"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.28/release-ui.json",
+        "artifacts/architecture-0.28/workspaces2.json"
+      ]
+    },
+    {
+      "id": "INST-005",
+      "name": "复制实例",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "本项限定范围已实测；不外推所有第三方内容或平台。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/tests-instance-fixes/test-results.json",
+        "artifacts/verification-0.18.1/regression/test-results.json",
+        "artifacts/verification-0.18/final-regression2/test-results.json",
+        "artifacts/verification-0.18/worlds/neo1211-fixed-roundtrip.json",
+        "docs/0.18.1实现与验收.md",
+        "docs/0.18实现与验收.md"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.28/workspaces2.json"
+      ]
+    },
+    {
+      "id": "INST-006",
+      "name": "实例备份恢复",
+      "status": "部分实现",
+      "workKind": "实现缺口",
+      "remaining": "0.18 将真实光影实例备份并恢复为新副本，23 个存档文件逐字节相同；恢复的 Fabric 1.21.1 通过世界进入、正常保存退出、独立进程重读和用户标记确认。仍不包含全部共享资产/Java，不保证跨设备离线恢复。 0.18.1 修复复制/恢复后客户端 JAR 排除项错绑；NeoForge 1.21.1 独立副本世界保存和重进通过，两次退出均有 OpenAL 音频错误，保留此已知问题。 26.3 新维度/玩家布局的48个存档文件备份恢复逐字节一致。",
+      "existingEvidencePaths": [
+        "artifacts/verification-0.13/final-tests/test-results.json",
+        "artifacts/verification-0.13/final-zip/evidence/search-backup-result.json",
+        "artifacts/verification-0.13/live/evidence/search-backup-result.json",
+        "artifacts/verification-0.18.1/regression/test-results.json",
+        "artifacts/verification-0.18.1/vanilla263-backup-restore.json",
+        "artifacts/verification-0.18/final-regression2/test-results.json",
+        "artifacts/verification-0.18/world-backup-restore.json",
+        "artifacts/verification-0.18/worlds/fabric1211-roundtrip.json",
+        "artifacts/verification-0.18/worlds/neo1211-fixed-roundtrip.json",
+        "docs/0.13实现与验收.md",
+        "docs/0.18.1实现与验收.md",
+        "docs/0.18实现与验收.md"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.28/workspaces2.json"
+      ]
+    },
+    {
+      "id": "INST-007",
+      "name": "可恢复删除",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "本项限定范围已实测；不外推所有第三方内容或平台。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/tests-instance-fixes/test-results.json",
+        "tests/Pcl.Tests/InstanceManagementTests.cs"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.28/workspaces2.json"
+      ]
+    },
+    {
+      "id": "INST-008",
+      "name": "文件补全和修复",
+      "status": "部分实现",
+      "workKind": "实现缺口",
+      "remaining": "补全官方父版及可验证下载的库；安装器生成的缺失 file:// 文件需用组件管理重新安装，未实现所有安装器自动原地重建",
+      "existingEvidencePaths": [
+        "src/Pcl.Core/InstanceManager.cs"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.28/workspaces2.json"
+      ]
+    },
+    {
+      "id": "INST-009",
+      "name": "已有组件增删改",
+      "status": "部分实现",
+      "workKind": "实现缺口",
+      "remaining": "仍不支持任意组合组件原位修改或模组自动适配。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8-compat/migration-smoke/result.json",
+        "tests/Pcl.Tests/ComponentMigrationTests.cs"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.26/pages-live.json",
+        "artifacts/architecture-0.27/final-components/result.json",
+        "artifacts/verification-0.35/final-copy-guards.json",
+        "artifacts/verification-0.35/final-copy-ui.json",
+        "artifacts/verification-0.35/final-transactions/results.json"
+      ]
+    },
+    {
+      "id": "INST-010",
+      "name": "离线启动脚本",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "本机原版1.21.1实际渲染通过；脚本依赖原实例、Java和缓存位置，不是跨机整合包。自定义前置命令不导出；其他版本和加载器的脚本路径尚未逐一验收。",
+      "existingEvidencePaths": [
+        "artifacts/microsoft-integration-preflight/release-tests/test-results.json"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/verification-0.33/release-script-ui/standalone.json",
+        "artifacts/verification-0.33/release-script-ui/ui.json",
+        "artifacts/verification-0.33/release-skin-script-tests.json"
+      ]
+    },
+    {
+      "id": "INST-011",
+      "name": "目录快捷入口",
+      "status": "已实现待验收",
+      "workKind": "定向验收",
+      "remaining": "使用 macOS open 且 ArgumentList 传参；实际 Finder 打开验收待整合记录",
+      "existingEvidencePaths": [
+        "src/Pcl.Desktop/InstanceWorkspace.cs"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "INST-012",
+      "name": "共享缓存安全复用",
+      "status": "已实现待验收",
+      "workKind": "定向验收",
+      "remaining": "共享客户端与 assets 保留，加载器私有库按 receipt 读取；没有引用计数 GC，不执行可能破坏其他实例的共享清理",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/tests-instance-fixes/test-results.json"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "VER-001",
+      "name": "官方正式版目录",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "本项限定范围已实测；不外推所有第三方内容或平台。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.7/acceptance.json",
+        "artifacts/evidence-0.8/full-regression-7/test-results.json"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.31/release-main.json",
+        "artifacts/architecture-0.32/release-final-main.json"
+      ]
+    },
+    {
+      "id": "VER-002",
+      "name": "快照与历史目录",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "本项限定范围已实测；不外推所有第三方内容或平台。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.7/acceptance.json",
+        "artifacts/evidence-0.8/full-regression-7/test-results.json"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.31/release-main.json",
+        "artifacts/architecture-0.32/release-final-main.json"
+      ]
+    },
+    {
+      "id": "VER-003",
+      "name": "原版安装与启动",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "0.17 正版启动原版 1.12.2、1.16.5、1.18.2、26.3，均观察图形与材质初始化；0.16 的 1.21.1 世界/存档用户验收保留。本轮十组合未进行世界内人工验收。 0.18.1 原版 26.3 测试副本升级、保存和独立重进通过，Java 25 ARM64；未将本次结果外推到所有历史版本。",
+      "existingEvidencePaths": [
+        "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json",
+        "artifacts/gui-install-clean-0.8/evidence/user-world-acceptance.json",
+        "artifacts/verification-0.16/desktop-manual-launch.json",
+        "artifacts/verification-0.16/final-tests/test-results.json",
+        "artifacts/verification-0.16/microsoft-cold-refresh-0.16.json",
+        "artifacts/verification-0.16/microsoft-login-result.json",
+        "artifacts/verification-0.16/user-world-acceptance.json",
+        "artifacts/verification-0.17/final-owned-launches/matrix.json",
+        "artifacts/verification-0.17/owned-launches/matrix.json",
+        "artifacts/verification-0.17/release-tests/test-results.json",
+        "artifacts/verification-0.18/worlds/vanilla263-roundtrip.json",
+        "docs/0.16实现与验收.md",
+        "docs/0.17实现与验收.md",
+        "docs/0.18.1实现与验收.md"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.26/packaged-session.json",
+        "artifacts/architecture-0.32/release-microsoft.json"
+      ]
+    },
+    {
+      "id": "VER-004",
+      "name": "旧minecraftArguments适配",
+      "status": "部分实现",
+      "workKind": "定向验收",
+      "remaining": "0.17 真实正版账户启动 1.12.2，旧 minecraftArguments 路径完成图形初始化；其他远古参数和资源布局仍需逐版验收。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8-compat/compatibility-results.json",
+        "artifacts/verification-0.17/final-owned-launches/matrix.json",
+        "artifacts/verification-0.17/owned-launches/matrix.json",
+        "artifacts/verification-0.17/release-tests/test-results.json",
+        "docs/0.17实现与验收.md",
+        "tests/Pcl.Tests/LegacyCompatibilityTests.cs"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-avalonia-host/legacy-host-live.json"
+      ]
+    },
+    {
+      "id": "VER-005",
+      "name": "LWJGL2 ARM64",
+      "status": "部分实现",
+      "workKind": "定向验收",
+      "remaining": "0.17 原版 1.12.2 使用 ARM64 Java 8 与 LWJGL2 兼容层通过图形初始化；不声明全部 LWJGL2 游戏、旁白或手柄兼容。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8-compat/compatibility-results.json",
+        "artifacts/verification-0.17/final-owned-launches/matrix.json",
+        "artifacts/verification-0.17/owned-launches/matrix.json",
+        "artifacts/verification-0.17/release-tests/test-results.json",
+        "docs/0.17实现与验收.md",
+        "src/Pcl.Core/Compatibility/xmcl-macos-arm64.json"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-avalonia-host/legacy-host-live.json"
+      ]
+    },
+    {
+      "id": "VER-006",
+      "name": "Fabric安装",
+      "status": "部分实现",
+      "workKind": "定向验收",
+      "remaining": "0.18 Fabric 1.21.1 光影备份恢复副本通过世界保存和独立进程重进，用户确认标记与位置正常；本轮 Fabric 1.20.1 手动会话只有标题/退出记录，未核实进世界，不覆盖整个目录。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.7/acceptance.json",
+        "artifacts/evidence-0.8-compat/migration-smoke/result.json",
+        "artifacts/verification-0.17/final-owned-launches/matrix.json",
+        "artifacts/verification-0.17/owned-launches/matrix.json",
+        "artifacts/verification-0.17/release-tests/test-results.json",
+        "artifacts/verification-0.18/final-regression2/test-results.json",
+        "docs/0.17实现与验收.md",
+        "docs/0.18实现与验收.md"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.27/final-components/result.json",
+        "artifacts/architecture-0.32/release-final-main.json"
+      ]
+    },
+    {
+      "id": "VER-007",
+      "name": "Forge现代安装",
+      "status": "部分实现",
+      "workKind": "定向验收",
+      "remaining": "Forge 1.21.1 普通菜单的两进程世界保存重进通过，用户确认标记；两次正常退出且无 ERROR/FATAL。单人 Quick Play 仍禁用，其他 Forge 版本未据此外推。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.7/acceptance.json",
+        "artifacts/verification-0.17/final-owned-launches/matrix.json",
+        "artifacts/verification-0.17/owned-launches/matrix.json",
+        "artifacts/verification-0.17/release-tests/test-results.json",
+        "artifacts/verification-0.18/final-regression2/test-results.json",
+        "artifacts/verification-0.18/worlds/forge1211-first/result.json",
+        "artifacts/verification-0.18/worlds/forge1211-isolated-first/result.json",
+        "artifacts/verification-0.18/worlds/forge1211-menu-retest/result.json",
+        "artifacts/verification-0.18/worlds/forge1211-menu-roundtrip.json",
+        "docs/0.17实现与验收.md",
+        "docs/0.18.1实现与验收.md",
+        "docs/0.18实现与验收.md"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "VER-008",
+      "name": "Forge旧安装器",
+      "status": "部分实现",
+      "workKind": "实现缺口",
+      "remaining": "1.12.2 14.23.5.2864安装器退出0并启动；更早仅versionInfo格式仍明确拒绝。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8-compat/compatibility-results.json"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "VER-009",
+      "name": "NeoForge现代安装",
+      "status": "部分实现",
+      "workKind": "定向验收",
+      "remaining": "0.17 正版启动 NeoForge 1.20.4-20.4.253 与 1.21.1-21.1.264，图形与材质初始化通过；未覆盖全部现代版本。 0.18.1 修复复制/恢复后客户端 JAR 排除项错绑；NeoForge 1.21.1 独立副本世界保存和重进通过，两次退出均有 OpenAL 音频错误，保留此已知问题。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.7/acceptance.json",
+        "artifacts/verification-0.17/final-owned-launches/matrix.json",
+        "artifacts/verification-0.17/owned-launches/matrix.json",
+        "artifacts/verification-0.17/release-tests/test-results.json",
+        "artifacts/verification-0.18.1/regression/test-results.json",
+        "artifacts/verification-0.18/worlds/neo1211-fixed-roundtrip.json",
+        "docs/0.17实现与验收.md",
+        "docs/0.18.1实现与验收.md"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "VER-010",
+      "name": "NeoForge1.20.1坐标",
+      "status": "部分实现",
+      "workKind": "定向验收",
+      "remaining": "1.20.1 47.1.106启动通过；未保证全部旧NeoForge构建。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8-compat/compatibility-results.json"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "VER-011",
+      "name": "OptiFine安装",
+      "status": "部分实现",
+      "workKind": "实现缺口",
+      "remaining": "独立1.12.2 G5/1.20.1 I6与固定1.20.1 OptiFabric组合通过；Forge+OptiFine任意组合尚未适配，二进制不再分发。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8-compat/compatibility-results.json",
+        "src/Pcl.Core/OptiFineService.cs"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.32/release-final-main.json",
+        "artifacts/architecture-avalonia-host/legacy-host-live.json",
+        "artifacts/architecture-contract-0.25/legacy-host-live.json"
+      ]
+    },
+    {
+      "id": "VER-012",
+      "name": "LiteLoader安装",
+      "status": "部分实现",
+      "workKind": "定向验收",
+      "remaining": "1.12.2 LiteLoader 已完成真实 Host 重建恢复、启动及用户文件保留；其他历史构建需逐版验收，不存在本轮已证实的通用代码缺口。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8-compat/compatibility-results.json",
+        "src/Pcl.Core/LiteLoaderService.cs"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-avalonia-host/legacy-host-live.json",
+        "artifacts/architecture-contract-0.25/legacy-host-live.json"
+      ]
+    },
+    {
+      "id": "VER-013",
+      "name": "Fabric API前置",
+      "status": "部分实现",
+      "workKind": "实现缺口",
+      "remaining": "默认浏览器已自动准备 Java/Fabric，Fabric API 下载与依赖安装实际通过；任意版本组合的一步组件安装尚未实现。",
+      "existingEvidencePaths": [
+        "src/Pcl.Core/FabricModPlanner.cs",
+        "src/Pcl.Core/MacSetupService.cs"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.28/release-resources.json",
+        "artifacts/architecture-0.32/release-final-main.json"
+      ]
+    },
+    {
+      "id": "VER-014",
+      "name": "OptiFabric兼容组合",
+      "status": "部分实现",
+      "workKind": "定向验收",
+      "remaining": "产品服务创建1.20.1/Fabric0.16.14/OptiFabric1.14.3/OptiFineI6独立实例并图形初始化45秒；未知版本不启用，未做世界内验收。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8-compat/optifabric/probe-result.json",
+        "artifacts/evidence-0.8-compat/optifabric/service-result.json",
+        "docs/OptiFabric固定组合与文件另存为.md",
+        "tests/Pcl.Tests/OptiFabricTests.cs"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.32/release-final-main.json"
+      ]
+    },
+    {
+      "id": "VER-015",
+      "name": "客户端服务端安装器另存为",
+      "status": "部分实现",
+      "workKind": "定向验收",
+      "remaining": "官方 JAR 下载取消、崩溃续做、分块保存已实测。Quilt 安装器上游元数据哈希冲突仍保留拒绝，其他类型不因单一 JAR 通过而全部升级状态。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8-compat/download-only-smoke/downloads/result.json",
+        "artifacts/evidence-0.8-compat/download-only-smoke/quilt-hash-crosscheck.json",
+        "artifacts/evidence-0.8-compat/download-only-smoke/quilt-official-metadata-check.json",
+        "artifacts/evidence-0.8-compat/download-only-smoke/quilt-preflight-result.json",
+        "src/Pcl.Core/ArtifactDownloadService.cs",
+        "src/Pcl.Desktop/ArtifactDownloadWindow.cs",
+        "tests/Pcl.Tests/ArtifactDownloadTests.cs"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.26/pages-live.json",
+        "artifacts/architecture-0.27/final-download/result.json"
+      ]
+    },
+    {
+      "id": "VER-016",
+      "name": "已有实例修改与回滚",
+      "status": "部分实现",
+      "workKind": "实现缺口",
+      "remaining": "仍为新副本重建组件；不支持任意组合原位修改或模组自动适配。本轮是自动驱动真实UI事件，不是人工逐页验收。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8-compat/migration-smoke/result.json",
+        "tests/Pcl.Tests/ComponentMigrationTests.cs"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.27/final-components/result.json",
+        "artifacts/verification-0.35/final-copy-guards.json",
+        "artifacts/verification-0.35/final-copy-ui.json",
+        "artifacts/verification-0.35/final-transactions/results.json"
+      ]
+    },
+    {
+      "id": "JAVA-001",
+      "name": "元数据Java自动匹配",
+      "status": "已实现待验收",
+      "workKind": "定向验收",
+      "remaining": "0.17 十个正版启动组合覆盖 ARM64 Java 8/17/21/25，核对实际进程版本与架构；不推定所有游戏、快照或模组适配。Java 16 单列保留待测边界。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.7/acceptance.json",
+        "artifacts/evidence-0.8/full-regression-7/test-results.json",
+        "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json",
+        "artifacts/verification-0.17/final-owned-launches/matrix.json",
+        "artifacts/verification-0.17/owned-launches/matrix.json",
+        "artifacts/verification-0.17/release-tests/test-results.json",
+        "docs/0.17实现与验收.md"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "JAVA-002",
+      "name": "Java8ARM64",
+      "status": "部分实现",
+      "workKind": "定向验收",
+      "remaining": "0.17 真实正版启动原版 1.12.2、1.16.5，实际使用 Java 8 aarch64；历史 Forge/LiteLoader/OptiFine 证据保留原范围。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8-compat/compatibility-results.json",
+        "artifacts/verification-0.17/final-owned-launches/matrix.json",
+        "artifacts/verification-0.17/owned-launches/matrix.json",
+        "artifacts/verification-0.17/release-tests/test-results.json",
+        "docs/0.17实现与验收.md"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-avalonia-host/legacy-host-live.json"
+      ]
+    },
+    {
+      "id": "JAVA-003",
+      "name": "Java16ARM64",
+      "status": "部分实现",
+      "workKind": "定向验收",
+      "remaining": "1.17.1原版40秒图形和atlas通过，不代表所有1.17模组兼容。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8-compat/compatibility-results.json"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "JAVA-004",
+      "name": "Java17ARM64",
+      "status": "已实现待验收",
+      "workKind": "定向验收",
+      "remaining": "0.17 十个正版启动组合覆盖 ARM64 Java 8/17/21/25，核对实际进程版本与架构；不推定所有游戏、快照或模组适配。Java 16 单列保留待测边界。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.7/acceptance.json",
+        "artifacts/evidence-0.8/full-regression-7/test-results.json",
+        "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json",
+        "artifacts/verification-0.17/final-owned-launches/matrix.json",
+        "artifacts/verification-0.17/owned-launches/matrix.json",
+        "artifacts/verification-0.17/release-tests/test-results.json",
+        "docs/0.17实现与验收.md"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "JAVA-005",
+      "name": "Java21ARM64",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "本项限定范围已实测；不外推所有第三方内容或平台。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.7/acceptance.json",
+        "artifacts/evidence-0.8/full-regression-7/test-results.json",
+        "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json",
+        "artifacts/verification-0.17/final-owned-launches/matrix.json",
+        "artifacts/verification-0.17/owned-launches/matrix.json",
+        "artifacts/verification-0.17/release-tests/test-results.json",
+        "docs/0.17实现与验收.md"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.32/release-microsoft.json"
+      ]
+    },
+    {
+      "id": "JAVA-006",
+      "name": "Java25ARM64",
+      "status": "已实现待验收",
+      "workKind": "定向验收",
+      "remaining": "0.17 十个正版启动组合覆盖 ARM64 Java 8/17/21/25，核对实际进程版本与架构；不推定所有游戏、快照或模组适配。Java 16 单列保留待测边界。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.7/acceptance.json",
+        "artifacts/evidence-0.8/full-regression-7/test-results.json",
+        "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json",
+        "artifacts/verification-0.17/final-owned-launches/matrix.json",
+        "artifacts/verification-0.17/owned-launches/matrix.json",
+        "artifacts/verification-0.17/release-tests/test-results.json",
+        "docs/0.17实现与验收.md"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "JAVA-007",
+      "name": "手动选择与检查Java",
+      "status": "已实现待验收",
+      "workKind": "定向验收",
+      "remaining": "真实 Java 主版本/架构检查已有回归；手选不同 JDK 并游戏启动的 GUI 全链路待矩阵关联",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/tests-instance-fixes/test-results.json"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "JAVA-008",
+      "name": "系统Java发现排序",
+      "status": "已实现待验收",
+      "workKind": "定向验收",
+      "remaining": "支持启动器 runtime、系统/用户 JDK、Homebrew、JAVA_HOME，跳过安装弹窗 stub；待最终 fixture 和实际发现/选择验收，不承诺遍历所有第三方管理器路径",
+      "existingEvidencePaths": [
+        "tests/Pcl.Tests/AccountAppearanceTests.cs"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "JAVA-009",
+      "name": "全局与实例覆盖",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "已用实际GUI编辑、保存、重开并确认启动参数生效；自定义Java/参数/服务器仍按对应矩阵项分别验收，不推定所有游戏行为。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.9/regression-2/test-results.json",
+        "artifacts/final-optional-0.9/evidence/optional-features-result.json",
+        "artifacts/optional-gui-retry-0.9/evidence/optional-features-result.json"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.28/release-ui.json",
+        "artifacts/architecture-0.28/workspaces2.json",
+        "artifacts/architecture-0.29/release-discovery.json"
+      ]
+    },
+    {
+      "id": "JAVA-010",
+      "name": "内存与GC参数",
+      "status": "已实现待验收",
+      "workKind": "定向验收",
+      "remaining": "G1 调优参数新增；Java 8/21/25 启动与回归通过。各 GC 组合未全部进行长时间世界内稳定性测试。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-7/test-results.json",
+        "artifacts/ui-0.8-final/evidence/workspace-ui-result.json",
+        "artifacts/verification-0.21/minecraft-1.21.1-result.json",
+        "artifacts/verification-0.21/minecraft-26.3-result.json",
+        "artifacts/verification-0.21/regression/test-results.json",
+        "artifacts/verification-0.21/settings-live-4/evidence/settings-reopen.json",
+        "artifacts/verification-0.21/settings-live-4/evidence/settings-ui.json",
+        "artifacts/verification-0.22/final-local-ui/evidence/local-settings-ui.json",
+        "artifacts/verification-0.22/final-tests/test-results.json",
+        "docs/0.22-settings-binding-audit.json"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "JAVA-011",
+      "name": "窗口分辨率全屏",
+      "status": "已实现待验收",
+      "workKind": "定向验收",
+      "remaining": "原生标题、最大化、nice=10 在 Java 8/21/25 上有实际窗口回执；启动器五种可见性策略经 1.21.1 真实进程检查。全屏/尺寸有参数测试，仍无本轮世界内人工验收。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-7/test-results.json",
+        "artifacts/ui-0.8-final/evidence/workspace-ui-result.json",
+        "artifacts/verification-0.21/regression/test-results.json",
+        "artifacts/verification-0.21/settings-live-4/evidence/settings-reopen.json",
+        "artifacts/verification-0.21/settings-live-4/evidence/settings-ui.json",
+        "artifacts/verification-0.22/final-local-ui/evidence/local-settings-ui.json",
+        "artifacts/verification-0.22/final-tests/test-results.json",
+        "docs/0.22-settings-binding-audit.json"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "JAVA-012",
+      "name": "自定义JVM游戏参数",
+      "status": "已实现待验收",
+      "workKind": "定向验收",
+      "remaining": "0.18 增加元数据驱动的 QuickPlayWorld 字段与实例继承、路径/链接/缺失世界检查、多人参数互斥；Fabric 1.21.1 直达实测。Forge 直达已复现生命周期异常，本版禁止并提示使用主菜单；附加参数不能绕入。其余 JVM 参数/版本仍按既有边界。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-7/test-results.json",
+        "artifacts/ui-0.8-final/evidence/workspace-ui-result.json",
+        "artifacts/verification-0.18/final-regression2/test-results.json",
+        "artifacts/verification-0.21/regression/test-results.json",
+        "artifacts/verification-0.21/settings-live-4/evidence/settings-reopen.json",
+        "artifacts/verification-0.21/settings-live-4/evidence/settings-ui.json",
+        "docs/0.18实现与验收.md"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "JAVA-013",
+      "name": "自动进入服务器",
+      "status": "已实现待验收",
+      "workKind": "定向验收",
+      "remaining": "配置持久化和参数合并已验证；尚未逐个游戏内观察窗口/服务器/GC效果。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-7/test-results.json",
+        "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "JAVA-014",
+      "name": "启动前命令等待",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "显式本地程序；字面参数、等待/失败/超时与子进程生命周期已回归。导入内容不得自动设置执行命令。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-7/test-results.json"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "JAVA-015",
+      "name": "启动器可见性策略",
+      "status": "已实现待验收",
+      "workKind": "定向验收",
+      "remaining": "隐藏/游戏退出恢复已实现；关闭/隐藏/Dock全部组合尚待手动验收。",
+      "existingEvidencePaths": [
+        "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json",
+        "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.26/packaged-session.json",
+        "artifacts/architecture-0.32/release-verified-detached/packaged-detached-verification.json",
+        "artifacts/architecture-0.32/release-verified-managed.json"
+      ]
+    },
+    {
+      "id": "JAVA-016",
+      "name": "多平台规则和原生库审核",
+      "status": "已实现待验收",
+      "workKind": "定向验收",
+      "remaining": "ARM64实际Mach-O检查；Intel/Rosetta未验收，无库可用时明确拒绝。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8-compat/compatibility-results.json",
+        "artifacts/evidence-0.8/full-regression-7/test-results.json"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "NET-001",
+      "name": "完整性校验与原子提交",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "HTTP夹具覆盖异常，真实联网校验；极端断电/实际磁盘耗尽尚未注入。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-7/test-results.json",
+        "artifacts/evidence-complete/segmented-live-1/segmented-live-result.json",
+        "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "NET-002",
+      "name": "Range续传",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "HTTP夹具覆盖异常，真实联网校验；极端断电/实际磁盘耗尽尚未注入。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-7/test-results.json",
+        "artifacts/evidence-complete/segmented-live-1/segmented-live-result.json",
+        "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.27/final-download/result.json"
+      ]
+    },
+    {
+      "id": "NET-003",
+      "name": "非Range回退",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "HTTP夹具覆盖异常，真实联网校验；极端断电/实际磁盘耗尽尚未注入。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-7/test-results.json",
+        "artifacts/evidence-complete/segmented-live-1/segmented-live-result.json",
+        "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "NET-004",
+      "name": "并发与目标去重",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "HTTP夹具覆盖异常，真实联网校验；极端断电/实际磁盘耗尽尚未注入。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-7/test-results.json",
+        "artifacts/evidence-complete/segmented-live-1/segmented-live-result.json",
+        "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "NET-005",
+      "name": "源优先级及镜像回退",
+      "status": "部分实现",
+      "workKind": "外部条件验收",
+      "remaining": "来源优先级与回退已有实现，Modrinth 实际链路已有历史验证；剩余是给定 CurseForge 密钥/镜像后的真实回退验收，不能把未实测列为代码缺口。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-7/test-results.json",
+        "artifacts/evidence-complete/segmented-live-1/segmented-live-result.json",
+        "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "NET-006",
+      "name": "HTTP重试与RetryAfter",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "HTTP夹具覆盖异常，真实联网校验；极端断电/实际磁盘耗尽尚未注入。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-7/test-results.json",
+        "artifacts/evidence-complete/segmented-live-1/segmented-live-result.json",
+        "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "NET-007",
+      "name": "总限速",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "HTTP夹具覆盖异常，真实联网校验；极端断电/实际磁盘耗尽尚未注入。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-7/test-results.json",
+        "artifacts/evidence-complete/segmented-live-1/segmented-live-result.json",
+        "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "NET-008",
+      "name": "暂停继续与取消",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "本项限定范围已实测；不外推所有第三方内容或平台。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-7/test-results.json",
+        "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.26/pages-live.json",
+        "artifacts/architecture-0.27/final-download/result.json",
+        "artifacts/architecture-0.32/release-final-cancel.json",
+        "artifacts/architecture-0.32/release-verified-shell-ui/report.json",
+        "artifacts/architecture-0.32/release-verified-shell.json"
+      ]
+    },
+    {
+      "id": "NET-009",
+      "name": "文件任务历史",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "本项限定范围已实测；不外推所有第三方内容或平台。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-7/test-results.json",
+        "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.32/release-verified-shell.json"
+      ]
+    },
+    {
+      "id": "NET-010",
+      "name": "重启中断文件重试",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "文件下载续传已实测；不代表任意安装器都支持断点续做。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-7/test-results.json",
+        "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.27/final-download/result.json",
+        "artifacts/architecture-0.32/release-verified-shell.json"
+      ]
+    },
+    {
+      "id": "NET-011",
+      "name": "完整安装任务重启恢复",
+      "status": "部分实现",
+      "workKind": "实现缺口",
+      "remaining": "原版及支持加载器安装日志可恢复，重新校验并重执行安装器；整合包/资源任务需重新发起，不是任意指令级断点。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-7/test-results.json",
+        "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.27/final-components/result.json",
+        "artifacts/architecture-0.32/release-final-cancel.json",
+        "artifacts/architecture-0.32/release-final-resume.json",
+        "artifacts/architecture-avalonia-host/legacy-host-live.json"
+      ]
+    },
+    {
+      "id": "NET-012",
+      "name": "代理设置",
+      "status": "部分实现",
+      "workKind": "实现缺口",
+      "remaining": "文件下载服务支持系统/显式HTTP代理；并非所有第三方元数据请求的统一代理，真实代理链路未测试。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-7/test-results.json",
+        "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.29/release-discovery.json",
+        "artifacts/architecture-0.32/release-verified-shell-ui/report.json"
+      ]
+    },
+    {
+      "id": "NET-013",
+      "name": "测速",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "本项限定范围已实测；不外推所有第三方内容或平台。",
+      "existingEvidencePaths": [
+        "artifacts/network-probe-0.8/evidence/network-probe.json",
+        "tests/Pcl.Tests/AccountNetworkDiagnosticsTests.cs"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.29/release-discovery.json"
+      ]
+    },
+    {
+      "id": "NET-014",
+      "name": "多分片动态调度",
+      "status": "部分实现",
+      "workKind": "实现缺口",
+      "remaining": "固定并发分段、完整块复用和设置持久化已有实现；不等于 Windows 原版完整动态分片调度，需要明确实现/补测调度行为。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-4/test-results.json",
+        "artifacts/evidence-complete/segmented-live-1/segmented-live-result.json",
+        "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "RES-001",
+      "name": "Modrinth检索筛选分页",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "本项限定范围已实测；不外推所有第三方内容或平台。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-4/test-results.json",
+        "artifacts/evidence-complete/pack-live-3/pack-live-result.json",
+        "tests/Pcl.Tests/PackResourceTests.cs"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.29/release-discovery.json",
+        "artifacts/architecture-0.30/release-final-ui/report.json",
+        "artifacts/architecture-0.32/release-browser-ui/report.json",
+        "artifacts/architecture-0.32/release-browser.json",
+        "artifacts/verification-0.33/release-browser.json",
+        "artifacts/verification-0.34/release-browser.json"
+      ]
+    },
+    {
+      "id": "RES-002",
+      "name": "CurseForge检索",
+      "status": "外部条件阻塞",
+      "workKind": "外部条件验收",
+      "remaining": "真实 API 凭据和网络链路未验收；未内置他人密钥",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-4/test-results.json",
+        "tests/Pcl.Tests/PackResourceTests.cs"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.29/release-discovery.json"
+      ]
+    },
+    {
+      "id": "RES-003",
+      "name": "跨平台结果去重",
+      "status": "部分实现",
+      "workKind": "定向验收",
+      "remaining": "不按同名猜测跨商店映射；CF 在线依赖密钥未实测，百科仍为静态独立索引。",
+      "existingEvidencePaths": [
+        "artifacts/verification-0.13/final-tests/test-results.json",
+        "artifacts/verification-0.13/final-zip/evidence/search-backup-result.json",
+        "artifacts/verification-0.13/live/evidence/search-backup-result.json",
+        "docs/0.13实现与验收.md"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.29/release-discovery.json"
+      ]
+    },
+    {
+      "id": "RES-004",
+      "name": "中文别名词库",
+      "status": "部分实现",
+      "workKind": "实现缺口",
+      "remaining": "固定词库可能过时；未实现在线自动刷新或用户词库编辑",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-4/test-results.json",
+        "tests/Pcl.Tests/PackResourceTests.cs"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.29/release-discovery.json"
+      ]
+    },
+    {
+      "id": "RES-005",
+      "name": "百科关联",
+      "status": "已实现待验收",
+      "workKind": "定向验收",
+      "remaining": "本地百科索引和关联查询已实际运行；mcmod.cn 浏览器跳转及站点实时下载不能从本地索引测试推定。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-4/test-results.json",
+        "tests/Pcl.Tests/PackResourceTests.cs"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.29/release-discovery.json"
+      ]
+    },
+    {
+      "id": "RES-006",
+      "name": "项目详情版本与另存为",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "已回填限定范围实测；适用范围见 audit033.acceptanceScope。Modrinth 详情、版本、文件选择和官方哈希导出已实测；CurseForge 详情仍以网页和密钥条件为界。",
+      "existingEvidencePaths": [],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.28/release-resources.json",
+        "artifacts/architecture-0.30/release-final-ui/report.json",
+        "artifacts/architecture-0.32/release-browser-ui/report.json",
+        "artifacts/architecture-0.32/release-browser.json",
+        "artifacts/verification-0.33/release-browser.json",
+        "artifacts/verification-0.34/release-browser.json"
+      ]
+    },
+    {
+      "id": "RES-007",
+      "name": "模组必需前置",
+      "status": "部分实现",
+      "workKind": "实现缺口",
+      "remaining": "仍缺自定义Quilt插件/虚拟组合路径、任意多父嵌套路径身份及官方软偏好最优化；无序规则不收敛或超出预算会明确拒绝。未知远程前置不猜测补齐，受控包不代表任意第三方包。",
+      "existingEvidencePaths": [
+        "artifacts/release-verification-0.14.json",
+        "artifacts/release-verification-0.15.json",
+        "artifacts/verification-0.14/live/dependency-acceptance.json",
+        "artifacts/verification-0.14/live/evidence/dependency-pack-ui-result.json",
+        "artifacts/verification-0.14/release-tests/test-results.json",
+        "artifacts/verification-0.15/live/evidence/quilt-overrides-ui-result.json",
+        "artifacts/verification-0.15/oracle/official-results.json",
+        "artifacts/verification-0.15/release-tests/test-results.json",
+        "artifacts/verification-0.37/final/focused.json",
+        "artifacts/verification-0.37/final/real-installs.json",
+        "artifacts/verification-0.38/final/game-reopen.json",
+        "artifacts/verification-0.38/final/nested.json",
+        "artifacts/verification-0.39/final/game-first.json",
+        "artifacts/verification-0.39/final/game-reopen.json",
+        "artifacts/verification-0.39/final/official-0271.json",
+        "artifacts/verification-0.39/final/official-0301.json",
+        "artifacts/verification-0.39/final/real-installs.json",
+        "artifacts/verification-0.39/final/world-roundtrip.json",
+        "docs/0.14实现与验收.md",
+        "docs/0.15实现与验收.md",
+        "docs/0.37-依赖规划与验收.md",
+        "docs/0.38-嵌套依赖与验收.md",
+        "docs/0.39-Quilt依赖覆盖与验收.md"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.28/release-resources.json",
+        "artifacts/architecture-0.30/release-final-ui/report.json",
+        "artifacts/verification-0.34/focused-integrity/results.json",
+        "artifacts/verification-0.34/release-resources.json"
+      ]
+    },
+    {
+      "id": "RES-008",
+      "name": "Fabric语义版本与冲突",
+      "status": "已实现待验收",
+      "workKind": "定向验收",
+      "remaining": "依赖声明不能覆盖动态代码及模组自行下载的原生库",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-4/test-results.json",
+        "artifacts/verification-0.37/final/focused.json",
+        "artifacts/verification-0.37/final/real-installs.json",
+        "docs/0.37-依赖规划与验收.md",
+        "tests/Pcl.Tests/PackResourceTests.cs"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "RES-009",
+      "name": "ForgeNeoForge完整TOML约束",
+      "status": "部分实现",
+      "workKind": "实现缺口",
+      "remaining": "仍缺语言插件、NeoForge provides等全部TOML语义及历史加载器取舍；当前模块读取不是完整JVM class校验器。",
+      "existingEvidencePaths": [
+        "artifacts/release-verification-0.14.json",
+        "artifacts/release-verification-0.15.json",
+        "artifacts/verification-0.14/live/dependency-acceptance.json",
+        "artifacts/verification-0.14/live/evidence/dependency-pack-ui-result.json",
+        "artifacts/verification-0.14/release-tests/test-results.json",
+        "artifacts/verification-0.15/live/evidence/quilt-overrides-ui-result.json",
+        "artifacts/verification-0.15/oracle/official-results.json",
+        "artifacts/verification-0.15/release-tests/test-results.json",
+        "docs/0.14实现与验收.md",
+        "docs/0.15实现与验收.md"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/verification-0.34/final-loaders.json",
+        "artifacts/verification-0.34/focused-integrity/results.json"
+      ]
+    },
+    {
+      "id": "RES-010",
+      "name": "光影下载应用撤销",
+      "status": "部分实现",
+      "workKind": "实现缺口",
+      "remaining": "Iris环境卸载仅限有可信安装前记录且文件未被修改的环境；旧版/手动安装不自动追认。自定义Fabric依赖覆盖暂拒绝卸载。Forge/NeoForge光影后端自动搭建与Oculus环境卸载仍未实现。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-4/test-results.json",
+        "tests/Pcl.Tests/PackResourceTests.cs"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/verification-0.35/final-shaders.json",
+        "artifacts/verification-0.35/final-transactions/results.json",
+        "artifacts/verification-0.36/final-environment-tests-v3/results.json",
+        "artifacts/verification-0.36/final-environment-ui.json",
+        "artifacts/verification-0.36/final-exclusive-launch.json",
+        "artifacts/verification-0.36/final-shared-launch.json",
+        "artifacts/verification-0.36/world-session/accepted.json"
+      ]
+    },
+    {
+      "id": "RES-011",
+      "name": "Mac光影兼容说明",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "验收仅覆盖指定组合与本机，不推广至任意光影、加载器或所有Mac；保留新生物群系/uniform日志警告及长期稳定性待验收。",
+      "existingEvidencePaths": [
+        "docs/Mac依赖与光影适配.md"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/verification-0.35/final-shaders.json",
+        "artifacts/verification-0.35/final-transactions/results.json",
+        "artifacts/verification-0.36/final-environment-tests-v3/results.json",
+        "artifacts/verification-0.36/final-environment-ui.json",
+        "artifacts/verification-0.36/final-exclusive-launch.json",
+        "artifacts/verification-0.36/final-shared-launch.json",
+        "artifacts/verification-0.36/world-session/accepted.json"
+      ]
+    },
+    {
+      "id": "RES-012",
+      "name": "资源包下载应用",
+      "status": "已实现待验收",
+      "workKind": "定向验收",
+      "remaining": "游戏内材质显示需实际验收",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-4/test-results.json",
+        "tests/Pcl.Tests/PackResourceTests.cs"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.28/release-resources.json"
+      ]
+    },
+    {
+      "id": "RES-013",
+      "name": "数据包按世界安装",
+      "status": "已实现待验收",
+      "workKind": "定向验收",
+      "remaining": "真实下载与 staging 存档目录安装已过；尚未在游戏世界内观察数据包行为",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-4/test-results.json",
+        "artifacts/evidence-complete/pack-live-3/pack-live-result.json",
+        "tests/Pcl.Tests/PackResourceTests.cs"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.28/workspaces2.json"
+      ]
+    },
+    {
+      "id": "RES-014",
+      "name": "本地外部资源扫描",
+      "status": "已实现待验收",
+      "workKind": "定向验收",
+      "remaining": "各加载器的身份扫描不代表其所有依赖已被分析",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-4/test-results.json",
+        "tests/Pcl.Tests/PackResourceTests.cs"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.28/workspaces2.json"
+      ]
+    },
+    {
+      "id": "RES-015",
+      "name": "批量启停与依赖保护",
+      "status": "部分实现",
+      "workKind": "实现缺口",
+      "remaining": "仍缺自定义Quilt插件/虚拟组合路径、任意多父嵌套路径身份及官方软偏好最优化；无序规则不收敛或超出预算会明确拒绝。未知远程前置不猜测补齐，受控包不代表任意第三方包。",
+      "existingEvidencePaths": [
+        "artifacts/release-verification-0.14.json",
+        "artifacts/release-verification-0.15.json",
+        "artifacts/verification-0.14/live/dependency-acceptance.json",
+        "artifacts/verification-0.14/live/evidence/dependency-pack-ui-result.json",
+        "artifacts/verification-0.14/release-tests/test-results.json",
+        "artifacts/verification-0.15/live/evidence/quilt-overrides-ui-result.json",
+        "artifacts/verification-0.15/oracle/official-results.json",
+        "artifacts/verification-0.15/release-tests/test-results.json",
+        "artifacts/verification-0.37/final/focused.json",
+        "artifacts/verification-0.37/final/real-installs.json",
+        "artifacts/verification-0.38/final/game-reopen.json",
+        "artifacts/verification-0.38/final/nested.json",
+        "artifacts/verification-0.39/final/game-first.json",
+        "artifacts/verification-0.39/final/game-reopen.json",
+        "artifacts/verification-0.39/final/official-0271.json",
+        "artifacts/verification-0.39/final/official-0301.json",
+        "artifacts/verification-0.39/final/real-installs.json",
+        "artifacts/verification-0.39/final/world-roundtrip.json",
+        "docs/0.14实现与验收.md",
+        "docs/0.15实现与验收.md",
+        "docs/0.37-依赖规划与验收.md",
+        "docs/0.38-嵌套依赖与验收.md",
+        "docs/0.39-Quilt依赖覆盖与验收.md"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.28/release-ui.json",
+        "artifacts/architecture-0.28/workspaces2.json",
+        "artifacts/verification-0.34/focused-integrity/results.json",
+        "artifacts/verification-0.34/release-resources.json"
+      ]
+    },
+    {
+      "id": "RES-016",
+      "name": "模组检查更新与更新",
+      "status": "部分实现",
+      "workKind": "实现缺口",
+      "remaining": "仍缺自定义Quilt插件/虚拟组合路径、任意多父嵌套路径身份及官方软偏好最优化；无序规则不收敛或超出预算会明确拒绝。未知远程前置不猜测补齐，受控包不代表任意第三方包。",
+      "existingEvidencePaths": [
+        "artifacts/release-verification-0.14.json",
+        "artifacts/release-verification-0.15.json",
+        "artifacts/verification-0.14/live/dependency-acceptance.json",
+        "artifacts/verification-0.14/live/evidence/dependency-pack-ui-result.json",
+        "artifacts/verification-0.14/release-tests/test-results.json",
+        "artifacts/verification-0.15/live/evidence/quilt-overrides-ui-result.json",
+        "artifacts/verification-0.15/oracle/official-results.json",
+        "artifacts/verification-0.15/release-tests/test-results.json",
+        "artifacts/verification-0.37/final/focused.json",
+        "artifacts/verification-0.37/final/real-installs.json",
+        "artifacts/verification-0.38/final/game-reopen.json",
+        "artifacts/verification-0.38/final/nested.json",
+        "artifacts/verification-0.39/final/game-first.json",
+        "artifacts/verification-0.39/final/game-reopen.json",
+        "artifacts/verification-0.39/final/official-0271.json",
+        "artifacts/verification-0.39/final/official-0301.json",
+        "artifacts/verification-0.39/final/real-installs.json",
+        "artifacts/verification-0.39/final/world-roundtrip.json",
+        "docs/0.14实现与验收.md",
+        "docs/0.15实现与验收.md",
+        "docs/0.37-依赖规划与验收.md",
+        "docs/0.38-嵌套依赖与验收.md",
+        "docs/0.39-Quilt依赖覆盖与验收.md"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.28/release-resources.json",
+        "artifacts/verification-0.34/focused-integrity/results.json",
+        "artifacts/verification-0.34/release-resources.json"
+      ]
+    },
+    {
+      "id": "RES-017",
+      "name": "忽略特定更新",
+      "status": "已实现待验收",
+      "workKind": "定向验收",
+      "remaining": "需 GUI 保存/重开验证",
+      "existingEvidencePaths": [],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "RES-018",
+      "name": "本地文件导入",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "本项限定范围已实测；不外推所有第三方内容或平台。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-4/test-results.json",
+        "tests/Pcl.Tests/PackResourceTests.cs"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.28/workspaces2.json",
+        "artifacts/architecture-0.32/release-verified-shell.json"
+      ]
+    },
+    {
+      "id": "PACK-001",
+      "name": "Modrinth搜索下载",
+      "status": "已实现待验收",
+      "workKind": "定向验收",
+      "remaining": "Modrinth 整合包目录查询已实测；仍缺本轮最终 GUI 直接下载公开整合包的专门记录，不能用模组下载安装代替。",
+      "existingEvidencePaths": [
+        "docs/Forge-NeoForge与整合包适配.md"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.32/release-browser.json"
+      ]
+    },
+    {
+      "id": "PACK-002",
+      "name": "mrpack安装",
+      "status": "部分实现",
+      "workKind": "实现缺口",
+      "remaining": "仍缺自定义Quilt插件/虚拟组合路径、任意多父嵌套路径身份及官方软偏好最优化；无序规则不收敛或超出预算会明确拒绝。未知远程前置不猜测补齐，受控包不代表任意第三方包。",
+      "existingEvidencePaths": [
+        "artifacts/release-verification-0.14.json",
+        "artifacts/release-verification-0.15.json",
+        "artifacts/verification-0.14/live/dependency-acceptance.json",
+        "artifacts/verification-0.14/live/evidence/dependency-pack-ui-result.json",
+        "artifacts/verification-0.14/release-tests/test-results.json",
+        "artifacts/verification-0.15/live/evidence/quilt-overrides-ui-result.json",
+        "artifacts/verification-0.15/oracle/official-results.json",
+        "artifacts/verification-0.15/release-tests/test-results.json",
+        "artifacts/verification-0.37/final/focused.json",
+        "artifacts/verification-0.37/final/real-installs.json",
+        "artifacts/verification-0.38/final/game-reopen.json",
+        "artifacts/verification-0.38/final/nested.json",
+        "artifacts/verification-0.39/final/game-first.json",
+        "artifacts/verification-0.39/final/game-reopen.json",
+        "artifacts/verification-0.39/final/official-0271.json",
+        "artifacts/verification-0.39/final/official-0301.json",
+        "artifacts/verification-0.39/final/real-installs.json",
+        "artifacts/verification-0.39/final/world-roundtrip.json",
+        "docs/0.14实现与验收.md",
+        "docs/0.15实现与验收.md",
+        "docs/0.37-依赖规划与验收.md",
+        "docs/0.38-嵌套依赖与验收.md",
+        "docs/0.39-Quilt依赖覆盖与验收.md"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.28/workspaces2.json",
+        "artifacts/verification-0.34/final-custom-packs.json",
+        "artifacts/verification-0.34/focused-integrity/results.json"
+      ]
+    },
+    {
+      "id": "PACK-003",
+      "name": "CurseForge包安装",
+      "status": "外部条件阻塞",
+      "workKind": "外部条件验收",
+      "remaining": "真实 CF API 端到端未验收；无 API 时手动匹配只记录本地哈希，不能称远程项目身份已认证",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-4/test-results.json",
+        "tests/Pcl.Tests/PackResourceTests.cs"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "PACK-004",
+      "name": "HMCL包安装",
+      "status": "部分实现",
+      "workKind": "实现缺口",
+      "remaining": "自定义客户端、jarmods、外部安装器、任意继承链仍不支持；仅1.21.1构造包做本轮游戏启动，未广泛验证第三方真实整合包。",
+      "existingEvidencePaths": [
+        "artifacts/release-verification-0.14.json",
+        "artifacts/verification-0.14/live/dependency-acceptance.json",
+        "artifacts/verification-0.14/live/evidence/dependency-pack-ui-result.json",
+        "artifacts/verification-0.14/release-tests/test-results.json",
+        "docs/0.14实现与验收.md"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/verification-0.34/final-custom-packs.json",
+        "artifacts/verification-0.34/focused-integrity/results.json"
+      ]
+    },
+    {
+      "id": "PACK-005",
+      "name": "MultiMC包安装",
+      "status": "部分实现",
+      "workKind": "实现缺口",
+      "remaining": "自定义客户端、jarmods、外部安装器、未覆盖patch字段仍缺；+tweakers正向LaunchWrapper游戏未实测；order>=100、校验库等受限语义继续明确拒绝不支持输入。",
+      "existingEvidencePaths": [
+        "artifacts/release-verification-0.14.json",
+        "artifacts/verification-0.14/live/dependency-acceptance.json",
+        "artifacts/verification-0.14/live/evidence/dependency-pack-ui-result.json",
+        "artifacts/verification-0.14/release-tests/test-results.json",
+        "docs/0.14实现与验收.md"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/verification-0.34/final-custom-packs.json",
+        "artifacts/verification-0.34/focused-integrity/results.json"
+      ]
+    },
+    {
+      "id": "PACK-006",
+      "name": "MCBBS包安装",
+      "status": "部分实现",
+      "workKind": "实现缺口",
+      "remaining": "旧 OptiFine/LiteLoader 作为包组件尚不支持；不是所有发行版包格式保证",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-4/test-results.json",
+        "tests/Pcl.Tests/PackResourceTests.cs"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "PACK-007",
+      "name": "普通ZIP安装",
+      "status": "已实现待验收",
+      "workKind": "定向验收",
+      "remaining": "缺少元数据无法自动推断所有组件；需用真实外部包做 GUI/启动验证",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-4/test-results.json",
+        "tests/Pcl.Tests/PackResourceTests.cs"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.28/release-ui.json",
+        "artifacts/architecture-0.28/workspaces2.json"
+      ]
+    },
+    {
+      "id": "PACK-008",
+      "name": "含启动器包识别",
+      "status": "部分实现",
+      "workKind": "实现缺口",
+      "remaining": "不运行包内启动脚本，未实现任意第三方启动器配置的完整迁移",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-4/test-results.json",
+        "tests/Pcl.Tests/PackResourceTests.cs"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "PACK-009",
+      "name": "可选文件选择",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "真实网络测试为本地组合验收包；CF逐文件过滤有本地JAR夹具，未做有密钥在线安装，不代表任意整合包兼容。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.9/regression-2/test-results.json",
+        "artifacts/final-optional-0.9/evidence/optional-features-result.json",
+        "artifacts/optional-gui-retry-0.9/evidence/optional-features-result.json"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "PACK-010",
+      "name": "mrpack导出",
+      "status": "部分实现",
+      "workKind": "定向验收",
+      "remaining": "合法 mrpack 导出、哈希记录和重导入已有真实证据；当前采用 overrides 打包本地文件，带自定义组件依赖 PCL 扩展。需补其他启动器导入兼容验收，不把模组依赖求解缺口复制到导出项。",
+      "existingEvidencePaths": [
+        "artifacts/release-verification-0.14.json",
+        "artifacts/release-verification-0.15.json",
+        "artifacts/verification-0.14/live/dependency-acceptance.json",
+        "artifacts/verification-0.14/live/evidence/dependency-pack-ui-result.json",
+        "artifacts/verification-0.14/release-tests/test-results.json",
+        "artifacts/verification-0.15/live/evidence/quilt-overrides-ui-result.json",
+        "artifacts/verification-0.15/oracle/official-results.json",
+        "artifacts/verification-0.15/release-tests/test-results.json",
+        "docs/0.14实现与验收.md",
+        "docs/0.15实现与验收.md"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.28/workspaces2.json"
+      ]
+    },
+    {
+      "id": "PACK-011",
+      "name": "导出包含项与隐私",
+      "status": "已实现待验收",
+      "workKind": "定向验收",
+      "remaining": "任意自定义 config 内容里的秘密无法自动识别，发布前需自行检查",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-4/test-results.json",
+        "artifacts/evidence-complete/pack-live-3/pack-live-result.json",
+        "tests/Pcl.Tests/PackResourceTests.cs"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "PACK-012",
+      "name": "导出配置保存读取",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "本项限定范围已实测；不外推所有第三方内容或平台。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-4/test-results.json",
+        "tests/Pcl.Tests/PackResourceTests.cs"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.28/release-ui.json",
+        "artifacts/architecture-0.28/workspaces2.json"
+      ]
+    },
+    {
+      "id": "PACK-013",
+      "name": "整合包升级合并用户改动",
+      "status": "部分实现",
+      "workKind": "实现缺口",
+      "remaining": "已有升级为新副本、保留用户修改/删除及源实例回滚；尚无针对用户与新包同时修改同一配置的语义三方合并，自定义入口限制仍适用。",
+      "existingEvidencePaths": [
+        "artifacts/release-verification-0.14.json",
+        "artifacts/verification-0.14/live/dependency-acceptance.json",
+        "artifacts/verification-0.14/live/evidence/dependency-pack-ui-result.json",
+        "artifacts/verification-0.14/release-tests/test-results.json",
+        "docs/0.14实现与验收.md"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.28/workspaces2.json"
+      ]
+    },
+    {
+      "id": "PACK-014",
+      "name": "缺失受限资源手动匹配",
+      "status": "部分实现",
+      "workKind": "实现缺口",
+      "remaining": "无 Key 无法证明手动文件属于所列 project/file；真实受限发布文件需要用户材料",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-4/test-results.json",
+        "tests/Pcl.Tests/PackResourceTests.cs"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.29/release-discovery.json"
+      ]
+    },
+    {
+      "id": "DIAG-001",
+      "name": "实时启动输出",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "自然退出、崩溃、用户停止分别显示；测试主动停止的137不作为正常退出。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.7/acceptance.json",
+        "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.32/release-verified-managed.json"
+      ]
+    },
+    {
+      "id": "DIAG-002",
+      "name": "进程退出与崩溃区分",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "新增诊断来自本机实际日志和回归；第三方根因与所有模组组合仍需对照，不自动删除世界或用户模组。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.7/acceptance.json",
+        "artifacts/gui-install-clean-0.8/evidence/gui-install-launch.json",
+        "artifacts/verification-0.18/final-regression2/test-results.json",
+        "docs/0.18实现与验收.md"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.32/release-verified-managed.json"
+      ]
+    },
+    {
+      "id": "DIAG-003",
+      "name": "错误报告导入",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "夹具验证错误导入/分析/脱敏；诊断是建议，不自动删除存档/配置。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-7/test-results.json"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.32/release-verified-shell.json"
+      ]
+    },
+    {
+      "id": "DIAG-004",
+      "name": "Java内存原生库诊断",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "夹具验证错误导入/分析/脱敏；诊断是建议，不自动删除存档/配置。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-7/test-results.json"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.32/release-verified-shell.json"
+      ]
+    },
+    {
+      "id": "DIAG-005",
+      "name": "模组依赖图形网络诊断",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "新增诊断来自本机实际日志和回归；第三方根因与所有模组组合仍需对照，不自动删除世界或用户模组。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-7/test-results.json",
+        "artifacts/verification-0.18/final-regression2/test-results.json",
+        "docs/0.18实现与验收.md"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "DIAG-006",
+      "name": "脱敏诊断包",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "夹具验证错误导入/分析/脱敏；诊断是建议，不自动删除存档/配置。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-7/test-results.json"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.32/release-verified-shell-ui/report.json",
+        "artifacts/architecture-0.32/release-verified-shell.json"
+      ]
+    },
+    {
+      "id": "DIAG-007",
+      "name": "原版完整崩溃规则集",
+      "status": "部分实现",
+      "workKind": "实现缺口",
+      "remaining": "逐项映射公开46个CrashReason；保留13类通用规则和Mac等效规则。未逐字复刻原优先级及所有日志格式，堆栈猜测标低置信度；未逐规则取得真实崩溃。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-7/test-results.json",
+        "docs/crash-rule-source-map.json"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "LINK-001",
+      "name": "EasyTierMac模块安装",
+      "status": "已实现待验收",
+      "workKind": "定向验收",
+      "remaining": "官方ARM64模块、无root/TUN本地双进程TCP转发通过；房间/节点/状态入口有GUI，跨网NAT与真实游戏双端待验收。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/link-live-data/evidence/easytier-smoke.json",
+        "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.32/release-final-main.json"
+      ]
+    },
+    {
+      "id": "LINK-002",
+      "name": "房间创建加入",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "本机房间、邀请码与连接链路已实测；跨互联网 NAT 和双玩家游戏未验收。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/link-live-data/evidence/easytier-smoke.json",
+        "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.31/release-main.json",
+        "artifacts/architecture-0.32/release-final-main.json",
+        "artifacts/architecture-0.32/release-main-ui/report.json"
+      ]
+    },
+    {
+      "id": "LINK-003",
+      "name": "邀请码与自定义节点",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "本机房间、邀请码与连接链路已实测；跨互联网 NAT 和双玩家游戏未验收。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/link-live-data/evidence/easytier-smoke.json",
+        "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.31/release-main.json",
+        "artifacts/architecture-0.32/release-final-main.json"
+      ]
+    },
+    {
+      "id": "LINK-004",
+      "name": "本地端口转发",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "本机房间、邀请码与连接链路已实测；跨互联网 NAT 和双玩家游戏未验收。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/link-live-data/evidence/easytier-smoke.json",
+        "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.31/release-main.json",
+        "artifacts/architecture-0.32/release-final-main.json"
+      ]
+    },
+    {
+      "id": "LINK-005",
+      "name": "连接状态延迟与人数",
+      "status": "已实现待验收",
+      "workKind": "定向验收",
+      "remaining": "官方ARM64模块、无root/TUN本地双进程TCP转发通过；房间/节点/状态入口有GUI，跨网NAT与真实游戏双端待验收。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/link-live-data/evidence/easytier-smoke.json",
+        "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.31/release-main.json",
+        "artifacts/architecture-0.32/release-final-main.json",
+        "artifacts/architecture-0.32/release-main-ui/report.json"
+      ]
+    },
+    {
+      "id": "LINK-006",
+      "name": "双端Minecraft联机",
+      "status": "外部条件阻塞",
+      "workKind": "外部条件验收",
+      "remaining": "尚无双端Minecraft玩家连接实测；TCP echo不是多人游戏。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/link-live-data/evidence/easytier-smoke.json"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "LINK-007",
+      "name": "PCL原版节点和邀请码互通",
+      "status": "外部条件阻塞",
+      "workKind": "外部条件验收",
+      "remaining": "现使用独立PCLMAC1邀请码；原私有服务/节点协议未获得，不能声称互通。",
+      "existingEvidencePaths": [],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "UI-001",
+      "name": "深浅主题配色",
+      "status": "平台适配实现",
+      "workKind": "已覆盖限定范围",
+      "remaining": "动态主色/选择色/背景与标题渐变，矢量启动标志及统一自有动画速度已运行；原版私有主题算法未公开。",
+      "existingEvidencePaths": [
+        "artifacts/ui-0.8-final/evidence/workspace-ui-result.json",
+        "artifacts/verification-0.22/final-local-ui/evidence/local-settings-ui.json",
+        "artifacts/verification-0.22/final-tests/test-results.json",
+        "docs/0.22-settings-binding-audit.json"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "UI-002",
+      "name": "背景图片",
+      "status": "已实现待验收",
+      "workKind": "定向验收",
+      "remaining": "新增随机背景目录、平铺、9 方位、自动小图平铺和彩色叠加；发布包控件、渲染属性与截图测试。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-7/test-results.json",
+        "artifacts/ui-0.8-final/evidence/workspace-ui-result.json",
+        "artifacts/verification-0.21/regression/test-results.json",
+        "artifacts/verification-0.21/settings-live-4/evidence/settings-reopen.json",
+        "artifacts/verification-0.21/settings-live-4/evidence/settings-ui.json",
+        "artifacts/verification-0.22/final-local-ui/evidence/local-settings-ui.json",
+        "artifacts/verification-0.22/final-tests/test-results.json",
+        "docs/0.22-settings-binding-audit.json"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.29/release-ui.json"
+      ]
+    },
+    {
+      "id": "UI-003",
+      "name": "背景音乐与游戏跟随",
+      "status": "已实现待验收",
+      "workKind": "定向验收",
+      "remaining": "本地播放列表真实 afplay 切歌/随机/停止测试通过；游戏内播放时机策略已绑定。未声明听觉验收或所有音频编码验证。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-7/test-results.json",
+        "artifacts/ui-0.8-final/evidence/workspace-ui-result.json",
+        "artifacts/verification-0.22/final-local-ui/evidence/local-settings-ui.json",
+        "artifacts/verification-0.22/final-tests/test-results.json",
+        "docs/0.22-settings-binding-audit.json"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "UI-004",
+      "name": "自定义主页",
+      "status": "部分实现",
+      "workKind": "实现缺口",
+      "remaining": "新增常用 XAML/片段渲染、真实事件、内容快照预设保存读取删除；仍不支持任意 WPF 代码及所有第三方预设。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-7/test-results.json",
+        "artifacts/verification-0.21/regression/test-results.json",
+        "artifacts/verification-0.21/settings-live-4/evidence/settings-reopen.json",
+        "artifacts/verification-0.21/settings-live-4/evidence/settings-ui.json",
+        "artifacts/verification-0.22/final-local-ui/evidence/local-settings-ui.json",
+        "artifacts/verification-0.22/final-tests/test-results.json",
+        "docs/0.22-settings-binding-audit.json"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.29/release-discovery.json",
+        "artifacts/architecture-0.29/release-ui.json"
+      ]
+    },
+    {
+      "id": "UI-005",
+      "name": "功能隐藏恢复",
+      "status": "已实现待验收",
+      "workKind": "定向验收",
+      "remaining": "设置/启动/细粒度管理项可隐藏；发布包逐项勾选保存及恢复成功。邮箱不保存/显示，原版联机服务位置仍有平台差异。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-7/test-results.json",
+        "artifacts/ui-0.8-final/evidence/workspace-ui-result.json",
+        "artifacts/verification-0.21/regression/test-results.json",
+        "artifacts/verification-0.21/settings-live-4/evidence/settings-reopen.json",
+        "artifacts/verification-0.21/settings-live-4/evidence/settings-ui.json",
+        "artifacts/verification-0.22/final-local-ui/evidence/local-settings-ui.json",
+        "artifacts/verification-0.22/final-tests/test-results.json",
+        "docs/0.22-settings-binding-audit.json"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "UI-006",
+      "name": "帮助检索",
+      "status": "已实现待验收",
+      "workKind": "定向验收",
+      "remaining": "导航隐藏恢复、帮助检索、设置备份/净化导入导出实现；设置不携带凭据或执行项。重置当前外观，不删除用户世界。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-7/test-results.json",
+        "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.29/release-ui.json"
+      ]
+    },
+    {
+      "id": "UI-007",
+      "name": "设置导入导出重置",
+      "status": "已实现待验收",
+      "workKind": "定向验收",
+      "remaining": "新增媒体目录与标题图片在导出中移除机器路径；辅助网络保存不会丢失来源、命名与调试项。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-7/test-results.json",
+        "artifacts/ui-0.8-final/evidence/workspace-ui-result.json",
+        "artifacts/verification-0.22/final-local-ui/evidence/local-settings-ui.json",
+        "artifacts/verification-0.22/final-tests/test-results.json",
+        "docs/0.22-settings-binding-audit.json"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.29/release-discovery.json",
+        "artifacts/architecture-0.29/release-ui.json"
+      ]
+    },
+    {
+      "id": "UI-008",
+      "name": "启动器自动更新",
+      "status": "未实现",
+      "workKind": "实现缺口",
+      "remaining": "本地交付，无线上版本源/更新包签名验证或应用替换器；仅公开开发说明，不伪装自动更新成功。",
+      "existingEvidencePaths": [],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "UI-009",
+      "name": "公告",
+      "status": "部分实现",
+      "workKind": "实现缺口",
+      "remaining": "关于/本地更新说明存在；原远程公告服务及活动页面未复刻。",
+      "existingEvidencePaths": [
+        "artifacts/ui-0.8-final/evidence/workspace-ui-result.json"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "UI-010",
+      "name": "首次游戏中文与界面语言基线",
+      "status": "已验收",
+      "workKind": "已覆盖限定范围",
+      "remaining": "原PCL2系统设置实际可用项为首次游戏中文；尊重已有lang，1.10及以前使用zh_CN。原多语言UI选择代码已注释，不计为已启用功能。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-7/test-results.json"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "UI-011",
+      "name": "缓存清理",
+      "status": "部分实现",
+      "workKind": "实现缺口",
+      "remaining": "仅清理超过24小时的cache与实例.pcl-downloads临时下载；预览、逐文件重检/独占/活动任务排除、可恢复移动。已验证缓存、共享Java/libraries/assets不清理；完整引用计数清理未实现。",
+      "existingEvidencePaths": [
+        "tests/Pcl.Tests/AccountNetworkDiagnosticsTests.cs"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.29/release-discovery.json",
+        "artifacts/architecture-0.29/release-ui.json"
+      ]
+    },
+    {
+      "id": "UI-012",
+      "name": "自定义事件",
+      "status": "部分实现",
+      "workKind": "实现缺口",
+      "remaining": "安全JSON主页支持文字、网页、复制、消息、导航、启动、刷新和加入房间；不兼容原XAML布局或全部变量/事件。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-7/test-results.json"
+      ],
+      "missingEvidencePaths": []
+    },
+    {
+      "id": "UI-013",
+      "name": "拖入安装",
+      "status": "已实现待验收",
+      "workKind": "定向验收",
+      "remaining": "真实 ZIP 分类、导入确认按钮和安装处理器已通过；尚未手动测试 macOS 系统拖放事件。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8/full-regression-7/test-results.json"
+      ],
+      "missingEvidencePaths": [
+        "artifacts/architecture-0.32/release-verified-shell-ui/report.json",
+        "artifacts/architecture-0.32/release-verified-shell.json"
+      ]
+    },
+    {
+      "id": "UI-014",
+      "name": "命令行入口",
+      "status": "部分实现",
+      "workKind": "实现缺口",
+      "remaining": "0.18 CLI 新增实例复制、备份、恢复并复用产品事务；已完成真实文件操作。并非所有 GUI 动作都有 CLI 等价入口。",
+      "existingEvidencePaths": [
+        "artifacts/evidence-0.8-compat/compatibility-results.json",
+        "artifacts/evidence-0.8/full-regression-7/test-results.json",
+        "artifacts/verification-0.18/final-regression2/test-results.json",
+        "docs/0.18实现与验收.md"
+      ],
+      "missingEvidencePaths": []
+    }
+  ]
+}

@@ -67,7 +67,7 @@ public sealed class MultiplayerWindow : WorkspaceWindow, IHostWorkspace
     private CancellationTokenSource? operation;
     private Task work = Task.CompletedTask;
     private string? id;
-    private bool closing, approved;
+    private bool closing;
     public bool Busy => operation is not null;
     internal string? SessionId => id;
 
@@ -193,41 +193,20 @@ public sealed class MultiplayerWindow : WorkspaceWindow, IHostWorkspace
                 }
             }
         );
+        ViewLifetime.OnStop(
+            async () =>
+            {
+                closing = true;
+                await Disconnect(CancellationToken.None);
+                invite.Text = "";
+            }
+        );
         cancel.Click += (_, _) => operation?.Cancel();
         copy.Click += async (_, _) =>
         {
             if (Clipboard is not null && !string.IsNullOrEmpty(invite.Text))
             {
                 await Clipboard.SetTextAsync(invite.Text);
-            }
-        };
-        Closing += async (_, e) =>
-        {
-            if (approved)
-            {
-                return;
-            }
-
-            e.Cancel = true;
-            if (closing)
-            {
-                return;
-            }
-
-            closing = true;
-            operation?.Cancel();
-            await work;
-            try
-            {
-                await Disconnect(CancellationToken.None);
-                invite.Text = "";
-                approved = true;
-                Close();
-            }
-            catch (Exception ex)
-            {
-                status.Text = WorkspaceErrors.Describe(ex);
-                closing = false;
             }
         };
     }
@@ -249,6 +228,7 @@ public sealed class MultiplayerWindow : WorkspaceWindow, IHostWorkspace
     private async Task Run(Func<CancellationToken, Task> action)
     {
         operation = new();
+        using var viewActivity = ViewLifetime.Begin(operation.Cancel);
         start.IsEnabled = stop.IsEnabled = refresh.IsEnabled = false;
         try
         {

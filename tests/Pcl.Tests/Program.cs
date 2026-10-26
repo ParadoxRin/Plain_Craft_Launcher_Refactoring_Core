@@ -48,7 +48,7 @@ if (args.FirstOrDefault() == "--license0361")
 if (args.FirstOrDefault() == "--auth-privacy")
 {
     return await AuthPrivacyTests.Run(
-        args.ElementAtOrDefault(1) ?? "empty"
+        args.ElementAtOrDefault(1) ?? (MicrosoftApplication.BuiltIn.IsConfigured ? "configured" : "empty")
     );
 }
 
@@ -4109,7 +4109,7 @@ JsonFiles.Write(
             ? "passed"
             : "failed",
         timestamp = DateTimeOffset.UtcNow,
-        platform = TargetPlatform.Current,
+        platform = Pcl.Core.Adapters.Platform.HostPlatform.Detect(),
         tests = rows
     }
 );

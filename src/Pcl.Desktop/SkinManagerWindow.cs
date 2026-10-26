@@ -99,25 +99,24 @@ public sealed class SkinManagerWindow : WorkspaceWindow, IHostWorkspace
                 await ShowAccount(ct);
             }
         );
-        Closing += (_, e) =>
-        {
-            if (operation is not null)
+        ViewLifetime.OnStop(
+            () =>
             {
-                operation.Cancel();
-                e.Cancel = true;
+                bitmap?.Dispose();
+                return Task.CompletedTask;
             }
-        };
-        Closed += (_, _) => bitmap?.Dispose();
+        );
     }
 
     private async Task Run(Func<CancellationToken, Task> work)
     {
-        if (Busy)
+        if (Busy || ViewClosing)
         {
             return;
         }
 
         operation = new();
+        using var viewActivity = ViewLifetime.Begin(operation.Cancel);
         panel.IsEnabled = list.IsEnabled = false;
         try
         {
@@ -560,7 +559,7 @@ public sealed class SkinManagerWindow : WorkspaceWindow, IHostWorkspace
             choice = true;
             dialog.Close();
         };
-        await dialog.ShowDialog(this);
+        await dialog.PresentAsync(this);
         return choice;
     }
 }

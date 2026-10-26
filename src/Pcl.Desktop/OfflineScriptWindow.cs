@@ -7,12 +7,11 @@ using Pcl.Client;
 
 namespace Pcl.Desktop;
 /// <summary>离线脚本导出视图：只提交名称与实例 ID，Host 准备启动计划，Client 校验并保存文件。</summary>
-public sealed class OfflineScriptWindow : WorkspaceWindow
+public sealed class OfflineScriptWindow : WorkspaceWindow, IHostWorkspace
 {
     private readonly WorkspaceApi api;
     private readonly string instanceId;
     private CancellationTokenSource? pending;
-    private bool closeAfterCancel;
     public bool Busy => pending is not null;
     internal string? ExportedPath { get; private set; }
 
@@ -47,6 +46,7 @@ public sealed class OfflineScriptWindow : WorkspaceWindow
     {
         this.api = api;
         this.instanceId = instanceId;
+        NavigationContext = instanceId;
         Title = "导出离线启动脚本";
         Width = 620;
         Height = 420;
@@ -114,25 +114,17 @@ public sealed class OfflineScriptWindow : WorkspaceWindow
         export.Click += async (_, _) => await ExportAsync();
         cancel.Click += (_, _) => pending?.Cancel();
         // 关闭只请求取消；异步处理器持有 CTS 并负责唯一释放，收尾完成后才真正关窗。
-        Closing += (_, e) =>
-        {
-            if (pending is not null)
-            {
-                e.Cancel = true;
-                closeAfterCancel = true;
-                pending.Cancel();
-            }
-        };
     }
 
     private async Task ExportAsync()
     {
-        if (pending is not null)
+        if (pending is not null || ViewClosing)
         {
             return;
         }
 
         pending = new CancellationTokenSource();
+        using var viewActivity = ViewLifetime.Begin(pending.Cancel);
         export.IsEnabled = browse.IsEnabled = player.IsEnabled = destination.IsEnabled = false;
         cancel.IsVisible = true;
         ExportedPath = null;
@@ -184,10 +176,6 @@ public sealed class OfflineScriptWindow : WorkspaceWindow
             pending = null;
             export.IsEnabled = browse.IsEnabled = player.IsEnabled = destination.IsEnabled = true;
             cancel.IsVisible = false;
-            if (closeAfterCancel)
-            {
-                Close();
-            }
         }
     }
 }

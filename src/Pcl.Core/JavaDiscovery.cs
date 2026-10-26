@@ -122,7 +122,7 @@ public static class JavaDiscovery
             .ToArray();
     }
 
-    // [实现] InspectAsync 的实现：准备 var result = new List<DiscoveredJava>()；遍历 Candidates(paths, extraExecutables) 处理 path；返回 result.OrderByDescending( x => x.Runtime?.Architecture == TargetPlatform.Current.Architecture )…。
+    // [实现] InspectAsync 的实现：准备 var result = new List<DiscoveredJava>()；遍历 Candidates(paths, extraExecutables) 处理 path；返回 result.OrderByDescending( x => x.Runtime?.Architecture == Pcl.Core.Adapters.Platform.HostPlatform.Detect().Architecture )…。
     public static async Task<IReadOnlyList<DiscoveredJava>> InspectAsync(
         AppPaths paths,
         IEnumerable<string>? extraExecutables = null,
@@ -155,7 +155,8 @@ public static class JavaDiscovery
         }
 
         return result.OrderByDescending(
-            x => x.Runtime?.Architecture == TargetPlatform.Current.Architecture
+            x => x.Runtime?.Architecture == Pcl.Core.Adapters.Platform.HostPlatform.Detect()
+                .Architecture
         )
             .ThenByDescending(
                 x => x.Runtime?.MajorVersion ?? 0

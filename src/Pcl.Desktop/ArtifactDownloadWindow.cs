@@ -47,6 +47,7 @@ public sealed class ArtifactDownloadWindow : WorkspaceWindow, IHostWorkspace
     // 只注入页面契约；读取列表、校验下载和取消由适配器执行，窗口持有展示生命周期。
     public ArtifactDownloadWindow(IArtifactPageService service, string gameVersion)
     {
+        NavigationContext = gameVersion;
         Title = "下载文件";
         Width = 720;
         Height = 680;
@@ -130,7 +131,7 @@ public sealed class ArtifactDownloadWindow : WorkspaceWindow, IHostWorkspace
             {
                 Content = "后台任务"
             };
-            tasksButton.Click += async (_, _) => await new PageTasksWindow(taskSource.Tasks).ShowDialog(this);
+            tasksButton.Click += async (_, _) => await new PageTasksWindow(taskSource.Tasks).PresentAsync(this);
             panel.Children.Add(tasksButton);
         }
 
@@ -142,9 +143,10 @@ public sealed class ArtifactDownloadWindow : WorkspaceWindow, IHostWorkspace
         kind.SelectionChanged += (_, _) => files.ItemsSource = null;
         async Task Run(Func<CancellationToken, Task> work)
         {
-            if (operation is not null)
+            if (operation is not null || ViewClosing)
                 return;
             operation = new();
+            using var viewActivity = ViewLifetime.Begin(operation.Cancel);
             cancel.IsVisible = true;
             version.IsEnabled = kind.IsEnabled = refresh.IsEnabled = save.IsEnabled = changelog.IsEnabled = false;
             try
@@ -255,15 +257,7 @@ public sealed class ArtifactDownloadWindow : WorkspaceWindow, IHostWorkspace
         );
         cancel.Click += (_, _) => operation?.Cancel();
         // 活动任务必须先完成或显式取消，避免释放窗口后仍回写控件。
-        Closing += (_, e) =>
-        {
-            if (operation is not null)
-            {
-                e.Cancel = true;
-                status.Text = "请先取消或等待当前任务。";
-            }
-        };
     }
 
-    public static Task OpenAsync(Window owner, IArtifactPageService service, string gameVersion) => new ArtifactDownloadWindow(service, gameVersion).ShowDialog(owner);
+    public static Task OpenAsync(Window owner, IArtifactPageService service, string gameVersion) => new ArtifactDownloadWindow(service, gameVersion).PresentAsync(owner);
 }

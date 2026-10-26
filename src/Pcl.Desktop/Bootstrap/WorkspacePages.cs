@@ -82,7 +82,7 @@ internal static class WorkspacePages
         string? selectedId = null,
         Action<string?>? changed = null
     ) => Instances(owner, session, selectedId, changed)
-        .ShowDialog(owner);
+        .PresentAsync(owner);
     internal static async Task<string[]> SelectPackAsync(Window owner, LauncherSession session, string path, bool includeAll, CancellationToken ct)
     {
         var preview = await new WorkspaceApi(session.Workspaces).CallAsync<PackInspection>(

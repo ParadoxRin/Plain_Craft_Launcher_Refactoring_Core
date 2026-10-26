@@ -21,6 +21,15 @@ internal static class UiMotion
         Active.Clear();
     }
 
+    // 动画取消只影响控件自身；取消源由 FadeIn 的 finally 单一释放。
+    internal static void Stop(Control control)
+    {
+        if (Active.TryGetValue(control, out var active))
+        {
+            active.Cancel();
+        }
+    }
+
     internal static async Task FadeIn(Control control, double milliseconds = 180)
     {
         if (Active.TryGetValue(control, out var previous))

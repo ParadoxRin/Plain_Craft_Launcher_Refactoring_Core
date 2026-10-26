@@ -1,27 +1,8 @@
-using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Pcl.Core;
 // [实现] 数据约定：TargetPlatform 汇集 Os、Architecture、OsVersion，供该模块传递状态。
-public sealed record TargetPlatform(string Os, string Architecture, string OsVersion)
-{
-    public static TargetPlatform Current => new(
-        OperatingSystem.IsMacOS()
-            ? "osx"
-            : OperatingSystem.IsWindows()
-                ? "windows"
-                : "linux",
-        RuntimeInformation.ProcessArchitecture == System.Runtime.InteropServices.Architecture.Arm64
-            ? "aarch64"
-            : "amd64",
-        Environment.OSVersion.Version.ToString()
-    );
-    public string Separator => Os == "windows"
-        ? ";"
-        : ":";
-}
-
 // 共享数据模型：定义实例、下载、平台和路径的数据约定，供核心服务与界面交换状态。
 public sealed class AppPaths
 {

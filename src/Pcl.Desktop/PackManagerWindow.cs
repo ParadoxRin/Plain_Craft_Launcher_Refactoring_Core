@@ -77,12 +77,13 @@ public sealed class PackManagerWindow : WorkspaceWindow, IHostWorkspace
         optionalChoices.Clear();
         inspectedDigest = null;
         inspectedHandle = null;
-        if (Busy)
+        if (Busy || ViewClosing)
         {
             throw new InvalidOperationException("当前任务尚未结束。");
         }
 
         cancellation = new();
+        using var viewActivity = ViewLifetime.Begin(cancellation.Cancel);
         foreach (var button in actions)
         {
             button.IsEnabled = false;
@@ -108,6 +109,7 @@ public sealed class PackManagerWindow : WorkspaceWindow, IHostWorkspace
         api = new WorkspaceApi(operations);
         this.profile = profile;
         this.installed = installed;
+        NavigationContext = profile.Id;
         Title = "整合包 · 导入与导出";
         Width = 620;
         Height = 720;
@@ -306,7 +308,7 @@ public sealed class PackManagerWindow : WorkspaceWindow, IHostWorkspace
                         }
                     };
                     confirm.Click += (_, _) => dialog.Close(preserve.IsChecked == true);
-                    var choice = await dialog.ShowDialog<bool?>(this);
+                    var choice = await dialog.PresentAsync<bool?>(this);
                     if (choice is null)
                         return;
                     var secret = string.IsNullOrWhiteSpace(apiKey.Text)
@@ -495,7 +497,7 @@ public sealed class PackManagerWindow : WorkspaceWindow, IHostWorkspace
             panel.Children.Add(
                 Button(
                     "后台任务",
-                    () => new PageTasksWindow(operations.Tasks).ShowDialog(this)
+                    () => new PageTasksWindow(operations.Tasks).PresentAsync(this)
                 )
             );
         }
@@ -504,15 +506,6 @@ public sealed class PackManagerWindow : WorkspaceWindow, IHostWorkspace
         Content = new ScrollViewer
         {
             Content = panel
-        };
-        Closing += (_, e) =>
-        {
-            if (cancellation is not null)
-            {
-                cancellation.Cancel();
-                e.Cancel = true;
-                status.Text = "正在取消，请等待安全结束后关闭。";
-            }
         };
     }
 
@@ -620,9 +613,10 @@ public sealed class PackManagerWindow : WorkspaceWindow, IHostWorkspace
         actions.Add(button);
         button.Click += async (_, _) =>
         {
-            if (cancellation is not null)
+            if (cancellation is not null || ViewClosing)
                 return;
             cancellation = new();
+            using var viewActivity = ViewLifetime.Begin(cancellation.Cancel);
             foreach (var b in actions)
                 b.IsEnabled = false;
             try

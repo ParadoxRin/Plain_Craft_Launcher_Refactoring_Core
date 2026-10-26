@@ -15,7 +15,6 @@ public static class AppearanceFeatures
         "setup-system",
         "help",
         "about",
-        "toolbox",
         "feedback",
         "vote",
         "mod",

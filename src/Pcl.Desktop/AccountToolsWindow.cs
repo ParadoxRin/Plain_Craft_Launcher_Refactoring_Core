@@ -135,7 +135,7 @@ public sealed class AccountToolsWindow : WorkspaceWindow, IHostWorkspace
             Button(
                 "微软与离线皮肤",
                 _ => skins()
-                    .ShowDialog(this)
+                    .PresentAsync(this)
             )
         );
         controls.Children.Add(identifier);
@@ -326,20 +326,14 @@ public sealed class AccountToolsWindow : WorkspaceWindow, IHostWorkspace
                 preview.Source = null;
             }
         };
-        Closing += (_, e) =>
-        {
-            if (operation is not null)
+        ViewLifetime.OnStop(
+            () =>
             {
-                operation.Cancel();
-                e.Cancel = true;
-                status.Text = "正在取消，请稍后关闭。";
+                password.Text = "";
+                bitmap?.Dispose();
+                return Task.CompletedTask;
             }
-        };
-        Closed += (_, _) =>
-        {
-            password.Text = "";
-            bitmap?.Dispose();
-        };
+        );
         Opened += async (_, _) => await Run(
             ct => Refresh(ct: ct)
         );
@@ -371,9 +365,10 @@ public sealed class AccountToolsWindow : WorkspaceWindow, IHostWorkspace
 
     private async Task Run(Func<CancellationToken, Task> action)
     {
-        if (operation is not null)
+        if (operation is not null || ViewClosing)
             return;
         operation = new();
+        using var viewActivity = ViewLifetime.Begin(operation.Cancel);
         controls.IsEnabled = list.IsEnabled = false;
         status.Text = "正在处理…";
         try
@@ -454,7 +449,7 @@ public sealed class AccountToolsWindow : WorkspaceWindow, IHostWorkspace
                 selected = choices.SelectedItem as ExternalProfile;
                 dialog.Close();
             };
-            await dialog.ShowDialog(this);
+            await dialog.PresentAsync(this);
             ct.ThrowIfCancellationRequested();
             if (selected is null)
             {
@@ -599,7 +594,7 @@ public sealed class AccountToolsWindow : WorkspaceWindow, IHostWorkspace
             selected = true;
             dialog.Close();
         };
-        await dialog.ShowDialog(this);
+        await dialog.PresentAsync(this);
         return selected;
     }
 
@@ -648,7 +643,7 @@ public sealed class AccountToolsWindow : WorkspaceWindow, IHostWorkspace
             dialog.Close();
         };
         no.Click += (_, _) => dialog.Close();
-        await dialog.ShowDialog(this);
+        await dialog.PresentAsync(this);
         return result;
     }
 }

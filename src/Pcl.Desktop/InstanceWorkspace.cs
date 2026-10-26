@@ -101,6 +101,7 @@ public sealed class InstanceWorkspace : WorkspaceWindow, IHostWorkspace
         api = new(operations);
         this.components = components;
         this.changed = changed;
+        NavigationContext = selectedId ?? "";
         Title = "实例管理";
         Width = 1000;
         Height = 740;
@@ -133,7 +134,7 @@ public sealed class InstanceWorkspace : WorkspaceWindow, IHostWorkspace
             header.Children.Add(
                 Button(
                     "后台任务",
-                    () => new PageTasksWindow(operations.Tasks).ShowDialog(this)
+                    () => new PageTasksWindow(operations.Tasks).PresentAsync(this)
                 )
             );
         }
@@ -209,16 +210,13 @@ public sealed class InstanceWorkspace : WorkspaceWindow, IHostWorkspace
             }
         };
         list.SelectionChanged += (_, _) => ShowInstance();
-        Closed += (_, _) => instanceIcon?.Dispose();
-        Closing += (_, e) =>
-        {
-            if (operation is not null)
+        ViewLifetime.OnStop(
+            () =>
             {
-                operation.Cancel();
-                e.Cancel = true;
-                status.Text = "正在等待 Host 安全结束任务。";
+                instanceIcon?.Dispose();
+                return Task.CompletedTask;
             }
-        };
+        );
         Opened += async (_, _) => await Run(
             ct => ReloadAsync(selectedId, ct)
         );
@@ -232,7 +230,7 @@ public sealed class InstanceWorkspace : WorkspaceWindow, IHostWorkspace
         };
         button.Click += async (_, _) =>
         {
-            if (operation is not null)
+            if (operation is not null || ViewClosing)
                 return;
             try
             {
@@ -474,7 +472,7 @@ public sealed class InstanceWorkspace : WorkspaceWindow, IHostWorkspace
                 async () =>
                 {
                     var window = new OfflineScriptWindow(api, profile.Id);
-                    await window.ShowDialog(this);
+                    await window.PresentAsync(this);
                 }
             )
         );
@@ -926,7 +924,7 @@ public sealed class InstanceWorkspace : WorkspaceWindow, IHostWorkspace
                             picker.Close();
                         }
                     };
-                    await picker.ShowDialog(this);
+                    await picker.PresentAsync(this);
                 }
             )
         );
@@ -1099,7 +1097,7 @@ public sealed class InstanceWorkspace : WorkspaceWindow, IHostWorkspace
         };
         if (candidates.Length == 0)
             status.Text = "目录中没有识别到版本；请选择含 versions 的游戏目录或含 profile.json 的本启动器实例。";
-        await dialog.ShowDialog(this);
+        await dialog.PresentAsync(this);
         if (selected is not null)
             await Run(
                 async ct =>
@@ -1258,9 +1256,10 @@ public sealed class InstanceWorkspace : WorkspaceWindow, IHostWorkspace
     );
     private async Task Run(Func<CancellationToken, Task> task)
     {
-        if (operation is not null)
+        if (operation is not null || ViewClosing)
             return;
         operation = new();
+        using var viewActivity = ViewLifetime.Begin(operation.Cancel);
         cancel.IsVisible = true;
         list.IsEnabled = details.IsEnabled = false;
         status.Text = "正在处理…";
@@ -1346,7 +1345,7 @@ public sealed class InstanceWorkspace : WorkspaceWindow, IHostWorkspace
             window.Close();
         };
         no.Click += (_, _) => window.Close();
-        await window.ShowDialog(this);
+        await window.PresentAsync(this);
         return accepted;
     }
 

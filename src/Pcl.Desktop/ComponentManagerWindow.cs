@@ -86,6 +86,7 @@ public sealed class ComponentManagerWindow : WorkspaceWindow, IHostWorkspace
         components = service;
         this.profile = profile;
         this.changed = changed;
+        NavigationContext = profile.Id;
         Title = "调整加载器 · 新副本";
         Width = 670;
         Height = 650;
@@ -150,7 +151,7 @@ public sealed class ComponentManagerWindow : WorkspaceWindow, IHostWorkspace
             {
                 Content = "后台任务"
             };
-            tasksButton.Click += async (_, _) => await new PageTasksWindow(taskSource.Tasks).ShowDialog(this);
+            tasksButton.Click += async (_, _) => await new PageTasksWindow(taskSource.Tasks).PresentAsync(this);
             panel.Children.Add(tasksButton);
         }
 
@@ -222,7 +223,7 @@ public sealed class ComponentManagerWindow : WorkspaceWindow, IHostWorkspace
             apply.IsEnabled = false;
             if (!selectedPlan.SuppressConfirmation)
             {
-                var confirmation = await new ComponentCopyConfirmation(selectedPlan).ShowDialog<CopyConfirmation?>(this);
+                var confirmation = await new ComponentCopyConfirmation(selectedPlan).PresentAsync<CopyConfirmation?>(this);
                 if (confirmation?.Accepted != true)
                 {
                     apply.IsEnabled = operation is null && plan?.CanApply == true && closedGame.IsChecked == true;
@@ -282,14 +283,6 @@ public sealed class ComponentManagerWindow : WorkspaceWindow, IHostWorkspace
         };
         cancel.Click += (_, _) => operation?.Cancel();
         // 活动任务必须先完成或显式取消，避免释放窗口后仍回写控件。
-        Closing += (_, e) =>
-        {
-            if (operation is not null)
-            {
-                e.Cancel = true;
-                status.Text = "请先取消或等待当前任务。";
-            }
-        };
     }
 
     public static Task OpenAsync(
@@ -297,7 +290,7 @@ public sealed class ComponentManagerWindow : WorkspaceWindow, IHostWorkspace
         IComponentPageService service,
         ComponentSource profile,
         Action<string>? changed = null
-    ) => new ComponentManagerWindow(service, profile, changed).ShowDialog(owner);
+    ) => new ComponentManagerWindow(service, profile, changed).PresentAsync(owner);
     private void Invalidate()
     {
         plan = null;
@@ -307,9 +300,10 @@ public sealed class ComponentManagerWindow : WorkspaceWindow, IHostWorkspace
 
     private async Task Run(Func<CancellationToken, Task> action)
     {
-        if (operation is not null)
+        if (operation is not null || ViewClosing)
             return;
         operation = new();
+        using var viewActivity = ViewLifetime.Begin(operation.Cancel);
         cancel.IsVisible = true;
         loader.IsEnabled = version.IsEnabled = disable.IsEnabled = preview.IsEnabled = refresh.IsEnabled = closedGame.IsEnabled = false;
         apply.IsEnabled = false;

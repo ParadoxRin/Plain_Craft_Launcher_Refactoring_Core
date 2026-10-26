@@ -96,6 +96,7 @@ public sealed class CacheNetworkWindow : WorkspaceWindow, IHostWorkspace
         Opened += async (_, _) =>
         {
             operation = new();
+            using var viewActivity = ViewLifetime.Begin(operation.Cancel);
             tabs.IsEnabled = false;
             try
             {
@@ -310,15 +311,6 @@ public sealed class CacheNetworkWindow : WorkspaceWindow, IHostWorkspace
                 }
             }
         };
-        Closing += (_, e) =>
-        {
-            if (operation is not null)
-            {
-                operation.Cancel();
-                e.Cancel = true;
-                status.Text = "正在取消，已移动的文件仍可在回收目录恢复。";
-            }
-        };
     }
 
     private static Control Top(Control control)
@@ -343,9 +335,10 @@ public sealed class CacheNetworkWindow : WorkspaceWindow, IHostWorkspace
         };
         button.Click += async (_, _) =>
         {
-            if (operation is not null)
+            if (operation is not null || ViewClosing)
                 return;
             operation = new();
+            using var viewActivity = ViewLifetime.Begin(operation.Cancel);
             tabs.IsEnabled = false;
             status.Text = "正在处理…";
             try

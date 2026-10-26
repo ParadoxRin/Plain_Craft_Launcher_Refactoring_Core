@@ -10,7 +10,7 @@ public static class SkinPixels
     // 解码 PNG 扫描行过滤器，转换为 RGBA 后补齐或裁剪旧皮肤布局。
     private static byte[] Convert(byte[] png, bool legacy)
     {
-        ExternalAuthentication.ValidatePng(png, "skin");
+        Pcl.Domain.SkinImagePolicy.ValidatePng(png, "skin");
         int w = (int)BinaryPrimitives.ReadUInt32BigEndian(
             png.AsSpan(16, 4)
         );

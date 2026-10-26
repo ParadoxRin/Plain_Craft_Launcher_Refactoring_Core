@@ -95,7 +95,10 @@ try
         );
         var account = accounts.SaveSession(login);
         using var store = new Pcl.Core.Adapters.Operations.FileOperationStore(root, "account-operations-v1");
-        var service = new Pcl.Core.Application.Accounts.HostAccountService(accounts, store);
+        var service = new Pcl.Core.Application.Accounts.HostAccountService(
+            new Pcl.Core.Adapters.Accounts.AccountBackend(accounts),
+            store
+        );
         service.Restore();
         Check(
             service.Snapshot()

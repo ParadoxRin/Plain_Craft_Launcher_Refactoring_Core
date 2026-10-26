@@ -93,7 +93,7 @@ evidence('artifacts/architecture-0.31/release-main.json','easytier|real-tcp|room
 evidence('artifacts/architecture-0.31/release-microsoft.json','profile|refresh-entitlement|renderer','AUTH-004 AUTH-005 AUTH-010','0.31 现有微软账户刷新、皮肤读取及正版图形初始化。')
 # Explicit per-row gap decisions; a historical limitation is not automatically a missing implementation.
 code=set('AUTH-007 AUTH-008 AUTH-009 AUTH-010 INST-001 INST-006 INST-008 INST-009 INST-010 VER-008 VER-011 VER-013 VER-016 NET-005 NET-011 NET-012 NET-014 RES-004 RES-007 RES-009 RES-010 RES-015 RES-016 PACK-002 PACK-004 PACK-005 PACK-006 PACK-008 PACK-010 PACK-013 PACK-014 DIAG-007 UI-004 UI-008 UI-009 UI-011 UI-012 UI-014'.split())
-external=set('NET-005 AUTH-006 AUTH-007 AUTH-008 AUTH-011 AUTH-012 RES-002 PACK-003 PACK-014 LINK-006 LINK-007 UI-015'.split())
+external=set('NET-005 AUTH-006 AUTH-007 AUTH-008 AUTH-011 AUTH-012 RES-002 PACK-003 PACK-014 LINK-006 LINK-007'.split())
 code.discard('NET-005')
 code.discard('PACK-010')
 promote=set('INST-005 INST-007 VER-001 VER-002 JAVA-005 NET-008 NET-009 NET-010 NET-013 RES-001 RES-006 RES-018 PACK-012 LINK-002 LINK-003 LINK-004'.split())

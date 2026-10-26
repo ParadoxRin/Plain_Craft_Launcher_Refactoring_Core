@@ -62,43 +62,17 @@ try
         : null;
     using var owner = new SessionOwner();
     var broker = new OperationEventBroker();
-    MeloongCore.ConfigProviders.Default = new MeloongCore.JsonConfigProvider(
-        Path.Combine(paths.Root, "settings.json")
-    );
-    using var games = new SystemGameProcessHost();
-    using var source = new MinecraftService(
-        paths,
-        commands: new SystemShellCommandRunner(),
-        gameProcesses: games
-    );
-    using var installStore = new FileOperationStore(paths.Root);
-    using var accountStore = new FileOperationStore(paths.Root, "account-operations-v1");
-    using var launchStore = new FileOperationStore(paths.Root, "launch-operations-v1");
-    var accounts = new AccountManager(
-        paths,
-        new KeychainAccountSecrets(paths.Root)
-    );
-    var accountService = new HostAccountService(accounts, accountStore);
-    accountService.Restore();
-    using var executor = new ExistingGameLaunchExecutor(source, accounts);
-    using var lane = new SemaphoreSlim(1, 1);
-    var target = new InstallationTarget(source.Platform.Os, source.Platform.Architecture, source.Platform.OsVersion);
-    var journal = new Pcl.Core.Adapters.Diagnostics.BoundedOperationJournal(paths.Root);
-    var installs = new InstallOperationService(
-        installStore,
-        new ExistingVersionInstaller(source),
-        target,
-        lane,
-        () => executor.HasRunning,
-        journal,
-        broker
-    );
-    using var pageStore = new FileOperationStore(paths.Root, "page-operations-v1");
-    using var pagePrivateStore = new FileOperationStore(paths.Root, "page-execution-v1");
-    using var pageExecutor = new PageExecutionAdapter(source, pagePrivateStore, accounts);
-    var pages = new PageOperationService(pageStore, pageExecutor, lane, broker);
-    var launches = new GameLaunchOperationService(launchStore, executor, lane, journal, observer: broker);
-    new InstallOperations(paths).MarkInterrupted();
+    await using var runtime = new HostRuntime(paths, broker);
+    var source = runtime.Source;
+    var accounts = runtime.Accounts;
+    var accountService = runtime.AccountService;
+    var executor = runtime.Executor;
+    var target = runtime.Target;
+    var installs = runtime.Installs;
+    var pages = runtime.Pages;
+    var pageExecutor = runtime.PageExecutor;
+    var launches = runtime.Launches;
+    var journal = runtime.Journal;
     try
     {
         do
@@ -375,8 +349,10 @@ try
                                 parameters.Deserialize<InstallCommand>(json)!
                             ),
                             "game.guidance" => executor.GetGuidance(
-                                parameters.GetProperty("accountId").GetString()!,
-                                parameters.GetProperty("culture").GetString()!
+                                parameters.GetProperty("accountId")
+                                    .GetString()!,
+                                parameters.GetProperty("culture")
+                                    .GetString()!
                             ),
                             "game.launch" => await launches.AcceptAsync(
                                 parameters.Deserialize<GameLaunchCommand>(json)!
@@ -475,25 +451,7 @@ try
     finally
     {
         resources.Clear();
-        await accountService.StopAsync();
-        // EOF 是连接消失，不是取消命令；有界请求会被处理完，已受理安装继续到真实终态。
-        if (requestedShutdown)
-        {
-            await Task.WhenAll(
-                installs.StopAsync(),
-                launches.StopAsync(),
-                pages.StopAsync()
-            );
-        }
-        else
-        {
-            await Task.WhenAll(
-                installs.DrainAsync(),
-                launches.DrainAsync(),
-                pages.DrainAsync()
-            );
-            await executor.WaitForManagedGamesAsync();
-        }
+        await runtime.ShutdownAsync(requestedShutdown);
     }
 
     async Task<JsonElement> Snapshot(string kind, string id)

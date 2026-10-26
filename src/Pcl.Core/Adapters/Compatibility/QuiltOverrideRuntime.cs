@@ -45,7 +45,8 @@ public sealed class QuiltOverrideRuntime(string java, string? loaderJar = null, 
                     continue;
                 }
 
-                if (runtime.MajorVersion != major || runtime.Architecture != TargetPlatform.Current.Architecture)
+                if (runtime.MajorVersion != major || runtime.Architecture != Pcl.Core.Adapters.Platform.HostPlatform.Detect()
+                    .Architecture)
                     continue;
                 var loader = candidates.FirstOrDefault(
                     x => x.Id == "quilt_loader" && File.Exists(x.Source)

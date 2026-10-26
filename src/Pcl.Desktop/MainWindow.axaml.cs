@@ -204,6 +204,12 @@ public partial class MainWindow : Window
                 return;
             }
 
+            if (Program.Arguments.Contains("--navigation040-smoke"))
+            {
+                await Navigation040SmokeAsync();
+                return;
+            }
+
             if (Program.Arguments.Contains("--offline-script-smoke"))
             {
                 await OfflineScriptSmokeAsync();
@@ -293,15 +299,16 @@ public partial class MainWindow : Window
     }
 
     // 系统终止只能尽力取消并保留原安装记录；此方法不伪造已取消或已中断终态。
-    internal Task PrepareForExit()
+    private readonly ViewLifetime navigationLifetime = new();
+    internal async Task PrepareForExit()
     {
         operation?.Cancel();
-        foreach (var ownedWindow in OwnedWindows.ToArray())
-        {
-            ownedWindow.Close();
-        }
-
-        return PendingUiAction;
+        await Task.WhenAll(
+            PendingUiAction,
+            navigationLifetime.StopAsync(true),
+            WindowNavigation.For(this)
+                .StopAsync(this)
+        );
     }
 
     // 只释放窗口自己拥有的资源；共享 MinecraftService 与数据锁由组合根单独拥有。
@@ -313,7 +320,8 @@ public partial class MainWindow : Window
         }
 
         viewReleased = true;
-        multiplayer?.Close();
+        accentTimer.Stop();
+        titleBitmap?.Dispose();
         musicPlayer.Dispose();
         backgroundBitmap?.Dispose();
         instanceArtwork?.Dispose();
@@ -697,13 +705,13 @@ public partial class MainWindow : Window
                 return;
             if (AccountTypeBox.SelectedIndex == 2)
             {
-                // [实现] 条件成立（AccountTypeBox.SelectedIndex == 2）时：执行 await Bootstrap.WorkspacePages.Accounts(this, accounts, id => RefreshAccounts(id) ).ShowDialog(this)；结束当前过程。
+                // [实现] 条件成立（AccountTypeBox.SelectedIndex == 2）时：执行 await Bootstrap.WorkspacePages.Accounts(this, accounts, id => RefreshAccounts(id) ).PresentAsync(this)；结束当前过程。
                 await Bootstrap.WorkspacePages.Accounts(
                     this,
                     accounts,
                     id => RefreshAccounts(id)
                 )
-                    .ShowDialog(this);
+                    .PresentAsync(this);
                 return;
             }
 
@@ -1010,7 +1018,7 @@ public partial class MainWindow : Window
     {
         if (accounts is not null)
             await Bootstrap.WorkspacePages.Skins(this, accounts)
-                .ShowDialog(this);
+                .PresentAsync(this);
     }
 
     // [实现] StopGameClick 的实现：按 game is null 分支处理；准备 var dialog = new WorkspaceWindow { Title = "结束游戏", Width = 420, SizeToContent = SizeToContent.H…；准备 var panel = new StackPanel { Margin = new Thickness(24), Spacing = 16 }。
@@ -1050,9 +1058,9 @@ public partial class MainWindow : Window
         cancel.Click += (_, _) => dialog.Close(false);
         panel.Children.Add(cancel);
         dialog.Content = panel;
-        if (await dialog.ShowDialog<bool>(this) && game is not null)
+        if (await dialog.PresentAsync<bool>(this) && game is not null)
         {
-            // [实现] 条件成立（await dialog.ShowDialog<bool>(this) && game is not null）时：执行 gameStoppedByUser = true；执行 game.Stop()。
+            // [实现] 条件成立（await dialog.PresentAsync<bool>(this) && game is not null）时：执行 gameStoppedByUser = true；执行 game.Stop()。
             gameStoppedByUser = true;
             await game.StopAsync();
         }
@@ -1197,7 +1205,7 @@ public partial class MainWindow : Window
         confirm.Click += (_, _) => dialog.Close(types.SelectedIndex);
         content.Children.Add(confirm);
         dialog.Content = content;
-        var choice = await dialog.ShowDialog<int?>(this);
+        var choice = await dialog.PresentAsync<int?>(this);
         if (choice is null)
             return;
         await RunAsync(
@@ -1257,7 +1265,7 @@ public partial class MainWindow : Window
                 };
                 panel.Children.Add(install);
                 picker.Content = panel;
-                var selected = await picker.ShowDialog<string?>(this);
+                var selected = await picker.PresentAsync<string?>(this);
                 if (selected is null)
                     return;
                 var profile = await DesktopApi.CallAsync<Pcl.Core.Contracts.Workspaces.GameProfile>(
@@ -1327,7 +1335,7 @@ public partial class MainWindow : Window
         opti.Click += (_, _) => dialog.Close("optifabric");
         content.Children.Add(opti);
         dialog.Content = content;
-        var choice = await dialog.ShowDialog<string?>(this);
+        var choice = await dialog.PresentAsync<string?>(this);
         if (choice is null)
             return;
         if (choice == "optifabric")
@@ -1338,7 +1346,7 @@ public partial class MainWindow : Window
                 service,
                 p => RefreshProfiles(p.Id)
             )
-                .ShowDialog(this);
+                .PresentAsync(this);
             return;
         }
 
@@ -1460,7 +1468,7 @@ public partial class MainWindow : Window
                 selected,
                 p => RefreshProfiles(p.Id)
             )
-                .ShowDialog(this);
+                .PresentAsync(this);
     }
 
     // [实现] LocalResourcesClick 的实现：按 ProfileBox.SelectedItem is GameProfile selected 分支处理。
@@ -1468,7 +1476,7 @@ public partial class MainWindow : Window
     {
         if (ProfileBox.SelectedItem is GameProfile selected)
             await Bootstrap.WorkspacePages.Local(this, service, selected)
-                .ShowDialog(this);
+                .PresentAsync(this);
     }
 
     // [实现] DownloadFilesClick 的实现：执行 await ArtifactDownloadWindow.OpenAsync(this, Bootstrap.PageComposition.Artifacts(service,remote), SelectedGameVersion)。
@@ -1477,14 +1485,14 @@ public partial class MainWindow : Window
         Bootstrap.PageComposition.Artifacts(service, remote),
         SelectedGameVersion
     );
-    // [实现] TaskCenterClick 的实现：执行 await new TaskCenterWindow( service, RunAsync, Open, () => operation?.Cancel() ).ShowDialog(this)。
+    // [实现] TaskCenterClick 的实现：执行 await new TaskCenterWindow( service, RunAsync, Open, () => operation?.Cancel() ).PresentAsync(this)。
     private async void TaskCenterClick(object? sender, RoutedEventArgs e) => await new TaskCenterWindow(
         service,
         RunAsync,
         Open,
         () => operation?.Cancel(),
         installation.Operations
-    ).ShowDialog(this);
+    ).PresentAsync(this);
     // [实现] McmodSearchClick 的实现：按 ProfileBox.SelectedItem is GameProfile profile 分支处理。
     private async void McmodSearchClick(object? sender, RoutedEventArgs e)
     {
@@ -1497,7 +1505,7 @@ public partial class MainWindow : Window
                 Open,
                 mcmodOnly: true
             )
-                .ShowDialog(this);
+                .PresentAsync(this);
     }
 
     // [实现] UnifiedSearchClick 的实现：按 ProfileBox.SelectedItem is GameProfile profile 分支处理。
@@ -1511,7 +1519,7 @@ public partial class MainWindow : Window
                 p => RefreshProfiles(p.Id),
                 Open
             )
-                .ShowDialog(this);
+                .PresentAsync(this);
     }
 
     // [实现] CurseForgeClick 的实现：按 ProfileBox.SelectedItem is GameProfile profile 分支处理。
@@ -1525,27 +1533,15 @@ public partial class MainWindow : Window
                 p => RefreshProfiles(p.Id),
                 Open
             )
-                .ShowDialog(this);
+                .PresentAsync(this);
     }
 
-    // [实现] SettingsClick 的实现：执行 await Bootstrap.WorkspacePages.Settings(this, service, ApplyAppearance, Open).ShowDialog(this)。
+    // [实现] SettingsClick 的实现：执行 await Bootstrap.WorkspacePages.Settings(this, service, ApplyAppearance, Open).PresentAsync(this)。
     private async void SettingsClick(object? sender, RoutedEventArgs e) => await Bootstrap.WorkspacePages.Settings(this, service, ApplyAppearance, Open)
-        .ShowDialog(this);
-    private MultiplayerWindow? multiplayer;
-    // [实现] MultiplayerClick 的实现：按 multiplayer is null 分支处理。
-    private void MultiplayerClick(object? sender, RoutedEventArgs e)
-    {
-        if (multiplayer is null)
-        {
-            // [实现] 条件成立（multiplayer is null）时：执行 multiplayer = new(service)；执行 multiplayer.Closed += (_, _) => multiplayer = null；执行 multiplayer.Show(this)。
-            multiplayer = Bootstrap.WorkspacePages.Multiplayer(this, service);
-            multiplayer.Closed += (_, _) => multiplayer = null;
-            multiplayer.Show(this);
-        }
-        else
-            multiplayer.Activate();
-    }
-
+        .PresentAsync(this);
+    // 联机页与其他管理页共用导航及关闭登记；关闭时释放房间，游戏生命周期保持独立。
+    private async void MultiplayerClick(object? sender, RoutedEventArgs e) => await Bootstrap.WorkspacePages.Multiplayer(this, service)
+        .PresentAsync(this);
     // Both the classic page and this dialog use the same attribution-first view.
     private async void AboutClick(object? sender, RoutedEventArgs e)
     {
@@ -1559,7 +1555,7 @@ public partial class MainWindow : Window
             {
                 Content = BuildAboutContent()
             }
-        }.ShowDialog(this);
+        }.PresentAsync(this);
     }
 
     // [实现] Open 的实现：按 OperatingSystem.IsMacOS() 分支处理。

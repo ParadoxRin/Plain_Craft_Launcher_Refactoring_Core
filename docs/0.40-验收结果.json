@@ -1,0 +1,234 @@
+{
+  "version": "0.40",
+  "date": "2026-10-27",
+  "platform": "macOS arm64",
+  "status": "passed-with-explicit-scope",
+  "build": {
+    "desktop": "passed",
+    "host": "passed",
+    "cli": "passed",
+    "existingWarnings": 3
+  },
+  "runtime": {
+    "packagedUiExitCode": 0,
+    "packagedHostTestExitCode": 0,
+    "nativeLibraryId": "@rpath/libpclwindow.dylib"
+  },
+  "notExecuted": [
+    "real Microsoft login and keychain",
+    "Minecraft world/render/save acceptance",
+    "SwiftUI and Windows/Linux native clients"
+  ],
+  "checks": {
+    "application_and_skin": {
+      "status": "passed",
+      "checks": [
+        "close-waits-without-implicit-cancel",
+        "exit-upgrades-existing-close",
+        "repeat-exit-does-not-repeat-cancellation",
+        "closing-rejects-new-activities",
+        "activity-and-cleanup-single-owner",
+        "cleanup-failure-does-not-skip-other-resources",
+        "account-challenge-visible-in-memory",
+        "account-receipts-redact-challenge",
+        "account-idempotent-acceptance",
+        "account-idempotency-conflict",
+        "account-stop-observes-terminal-state",
+        "account-index-contract-mapping",
+        "skin-contract-mapping-preserved",
+        "account-remove-delegated-once",
+        "guidance-before-physical-start",
+        "detached-start-and-commit-boundary-preserved",
+        "launch-backend-single-release",
+        "application-compiled-without-core",
+        "target-platform-is-domain-value",
+        "target-platform-does-not-detect-host",
+        "memory-policy-bounded",
+        "java-version-gc-policy-preserved",
+        "legacy-argument-pure-parser",
+        "skin-pixels-have-no-account-dependency",
+        "microsoft_skin_profile_upload_selection_reset_and_owned_cape",
+        "microsoft_skin_rejects_offline_wrong_identity_and_expired_token",
+        "offline_skin_pack_uses_client_metadata_preserves_uuid_and_options",
+        "offline_skin_legacy_and_new_major_minor_pack_formats",
+        "offline_skin_corruption_and_filename_collision_preserve_user_files",
+        "java_discovery_rejects_escaping_receipts_and_macos_stub"
+      ]
+    },
+    "process_and_root": {
+      "failures": 0,
+      "results": [
+        {
+          "name": "short-command-dual-stream-exit-and-argv",
+          "status": "passed"
+        },
+        {
+          "name": "short-command-large-dual-stream-and-redaction",
+          "status": "passed"
+        },
+        {
+          "name": "short-command-cancel-cleans-owned-process-tree",
+          "status": "passed"
+        },
+        {
+          "name": "java-inspection-through-short-port-real-java21",
+          "status": "passed"
+        },
+        {
+          "name": "forge-installer-uses-injected-short-port",
+          "status": "passed"
+        },
+        {
+          "name": "launch-hook-wait-success-failure-and-timeout",
+          "status": "passed"
+        },
+        {
+          "name": "peer-query-uses-injected-short-port",
+          "status": "passed"
+        },
+        {
+          "name": "oversized-output-is-bounded-and-marked",
+          "status": "passed"
+        },
+        {
+          "name": "long-start-wait-log-drain-and-release",
+          "status": "passed"
+        },
+        {
+          "name": "cancel-wait-does-not-kill-game-and-stop-is-explicit",
+          "status": "passed"
+        },
+        {
+          "name": "soft-terminate-observes-natural-handler-exit",
+          "status": "passed"
+        },
+        {
+          "name": "forged-handle-cannot-control-owned-process",
+          "status": "passed"
+        },
+        {
+          "name": "host-dispose-does-not-kill-active-game",
+          "status": "passed"
+        },
+        {
+          "name": "detached-survives-parent-and-host-disposal",
+          "status": "passed"
+        },
+        {
+          "name": "launch-service-preserves-authorization-and-uses-host",
+          "status": "passed"
+        },
+        {
+          "name": "credential-port-remember-reload-and-logout",
+          "status": "passed"
+        },
+        {
+          "name": "real-keychain-compatible-scope-update-and-delete",
+          "status": "not-run",
+          "reason": "explicit-without-keychain"
+        },
+        {
+          "name": "borrowed-host-and-root-single-release",
+          "status": "passed"
+        }
+      ]
+    },
+    "packaged_navigation": {
+      "status": "passed",
+      "checks": [
+        "same-page-reuses-live-state",
+        "different-context-pages-nonmodal",
+        "close-waits-without-cancelling-host-work",
+        "close-finishes-automatically-after-work",
+        "parent-exit-drains-child-before-own-release",
+        "repeated-close-releases-once",
+        "parent-ordinary-close-preserves-child-work",
+        "application-exit-escalates-pending-child-close",
+        "typed-confirmation-result-preserved",
+        "real-instance-page-preserves-search",
+        "real-skin-page-load-and-close-without-account",
+        "real-task-center-stops-refresh-before-release",
+        "removed-toolbox-not-restored"
+      ]
+    },
+    "packaged_host": {
+      "status": "passed",
+      "checks": [
+        "client-assembly-has-no-core-reference",
+        "host-supplies-profile-account-and-appearance-snapshot",
+        "legacy-writer-grant-removed",
+        "host-checks-installed-profile",
+        "selected-profile-snapshot-refreshed-after-command",
+        "window-size-written-by-host",
+        "account-write-refreshes-display-snapshot",
+        "settings-write-refreshes-appearance-snapshot",
+        "download-and-network-snapshots-from-host",
+        "paused-real-download-remains-queryable",
+        "install-admission-waits-for-active-workspace-instead-of-host-busy-rejection",
+        "resume-and-retry-real-download-with-hash-verification",
+        "queued-install-accepted-and-explicitly-cancelled-without-full-download",
+        "host-diagnostic-analysis-redacts-secret",
+        "diagnostic-export-stream-is-redacted",
+        "host-classifies-dropped-archive",
+        "host-imports-real-resource-archive",
+        "disabled-release-notification-suppresses-query",
+        "automatic-reconnect-refreshes-public-snapshot-without-manual-refresh",
+        "session-reconnect-restores-public-state-without-writer-grant",
+        "host-restart-restores-profile-settings-and-account"
+      ]
+    },
+    "architecture_guard": {
+      "tests": [
+        {
+          "case": "positive",
+          "status": "passed",
+          "guardExitCode": 0
+        },
+        {
+          "case": "negative-symbols",
+          "status": "passed",
+          "guardExitCode": 1
+        },
+        {
+          "case": "negative-project-reference",
+          "status": "passed",
+          "guardExitCode": 1
+        },
+        {
+          "case": "negative-manual-reference",
+          "status": "passed",
+          "guardExitCode": 1
+        },
+        {
+          "case": "negative-desktop-project-reference",
+          "status": "passed",
+          "guardExitCode": 1
+        },
+        {
+          "case": "negative-desktop-manual-reference",
+          "status": "passed",
+          "guardExitCode": 1
+        },
+        {
+          "case": "negative-domain-io",
+          "status": "passed",
+          "guardExitCode": 1
+        }
+      ]
+    },
+    "release_privacy": {
+      "filesScanned": 490,
+      "findings": [],
+      "scope": "current developer home, cloud project IDs, debug symbols, runtime state, credential patterns; not exhaustive"
+    },
+    "release_archive": {
+      "status": "passed",
+      "extractedSignatureVerified": true,
+      "appFilesVerified": 490,
+      "appleDoubleMetadataFiles": 543,
+      "utf8NamesCorrected": 2,
+      "sha256": "11326dabb36e16b45c15a2c5d72c01afacf0b1e39662c7461b69b6191d11c318",
+      "extraction": "macOS ditto / Archive Utility with AppleDouble metadata"
+    }
+  }
+}

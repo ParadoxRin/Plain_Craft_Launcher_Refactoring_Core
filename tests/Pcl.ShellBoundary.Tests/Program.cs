@@ -10,6 +10,53 @@ using Pcl.Core.Contracts.Operations;
 var root = Path.GetFullPath(args[0]);
 var report = Path.GetFullPath(args[1]);
 Directory.CreateDirectory(root);
+// 无游戏运行的边界测试自备最小安装元数据，不依赖开发者个人实例或下载缓存。
+if (args.Contains("--fixture"))
+{
+    var versionRoot = Path.Combine(root, "minecraft", "versions", "1.21.1");
+    Directory.CreateDirectory(versionRoot);
+    var jar = System.Text.Encoding.UTF8.GetBytes("shell-boundary-fixture-not-a-game");
+    File.WriteAllBytes(
+        Path.Combine(versionRoot, "1.21.1.jar"),
+        jar
+    );
+    File.WriteAllText(
+        Path.Combine(versionRoot, "pcl-mac-install.json"),
+        "{}"
+    );
+    File.WriteAllText(
+        Path.Combine(versionRoot, "1.21.1.json"),
+        JsonSerializer.Serialize(
+            new
+            {
+                id = "1.21.1",
+                type = "release",
+                libraries = Array.Empty<object>(),
+                assetIndex = new
+                {
+                    id = "fixture"
+                },
+                javaVersion = new
+                {
+                    majorVersion = 21
+                },
+                downloads = new
+                {
+                    client = new
+                    {
+                        url = "https://example.invalid/fixture",
+                        size = jar.Length,
+                        sha1 = Convert.ToHexString(
+                            SHA1.HashData(jar)
+                        )
+                            .ToLowerInvariant()
+                    }
+                }
+            }
+        )
+    );
+}
+
 var checks = new List<string>();
 void Check(bool value, string name)
 {
@@ -270,11 +317,27 @@ try
     var acceptedInstall = await queuedInstall.WaitAsync(
         TimeSpan.FromSeconds(30)
     );
-    var installResult = await session.Installation.Operations.WaitAsync(acceptedInstall.OperationId);
-    Check(
-        installResult.State == "succeeded",
-        "queued-install-accepted-once-and-completes-after-workspace"
-    );
+    if (args.Contains("--fixture"))
+    {
+        await session.Installation.Operations.CancelAsync(acceptedInstall.OperationId);
+        var cancelled = await session.Installation.Operations.WaitAsync(acceptedInstall.OperationId)
+            .WaitAsync(
+                TimeSpan.FromSeconds(30)
+            );
+        Check(
+            cancelled.State == "cancelled",
+            "queued-install-accepted-and-explicitly-cancelled-without-full-download"
+        );
+    }
+    else
+    {
+        var installResult = await session.Installation.Operations.WaitAsync(acceptedInstall.OperationId);
+        Check(
+            installResult.State == "succeeded",
+            "queued-install-accepted-once-and-completes-after-workspace"
+        );
+    }
+
     var log = Path.Combine(root, "evidence", "diagnostic-fixture.log");
     await File.WriteAllTextAsync(log, "java.lang.OutOfMemoryError\naccess_token=synthetic-secret\n");
     var diagnostic = await api.CallAsync<string>(
