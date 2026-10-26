@@ -145,7 +145,7 @@ for f in fs.values():
   f['remaining']='已回填限定范围实测；适用范围见 audit033.acceptanceScope。'+f['remaining'] if i in ('RES-006',) else ('本项限定范围已实测；不外推所有第三方内容或平台。' if i not in ('NET-010','LINK-002','LINK-003','LINK-004') else ('文件下载续传已实测；不代表任意安装器都支持断点续做。' if i=='NET-010' else '本机房间、邀请码与连接链路已实测；跨互联网 NAT 和双玩家游戏未验收。'))
 count=collections.Counter(f['audit033']['workKind'] for f in fs.values())
 m['evidenceReconciliation']={'version':'0.33','reviewedFeatures':len(fs),'mappedFeatures':len([x for x in mapped.values() if x]),'workKinds':dict(count),'statusCounts':dict(collections.Counter(f['status'] for f in fs.values())),'note':'逐项范围审查；基于真实记录引用，不用测试文件通过推定其中未覆盖的功能。'}
-(root/'docs/PCL2完整功能矩阵.json').write_text(json.dumps(m,ensure_ascii=False,indent=2)+'\n')
+(root/'docs/data/PCL2完整功能矩阵.json').write_text(json.dumps(m,ensure_ascii=False,indent=2)+'\n')
 (root/'artifacts/verification-0.33/matrix-reconciled-before-implementation.json').write_text(json.dumps(m,ensure_ascii=False,indent=2)+'\n')
 lines=['# 0.33 功能矩阵逐项证据与剩余清单','',f'审查 {len(fs)} 项；0.24–0.32 的直接新增证据覆盖 {m["evidenceReconciliation"]["mappedFeatures"]} 项。以下分类互斥；外部条件另有独立标记，不将部分实现与待验收混为一谈。','',str(dict(count)),'','这份文件先于本轮功能实现生成；本轮新增证据由最终报告及矩阵 audit033.newEvidence 记录。历史证据不代表0.33重新测试。','']
 for kind in ('实现缺口','外部条件验收','定向验收','已覆盖限定范围'):

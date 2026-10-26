@@ -34,7 +34,7 @@ for title, name, state in records:
         assert status == 'passed', (name, status)
     results.append(dict(title=title, path=name, state=state, assertions=len(value.get('checks', value.get('Checks', value.get('rows', [])))), sha256=sha(path)))
 
-matrix = json.loads((root / 'docs/PCL2完整功能矩阵.json').read_text())
+matrix = json.loads((root / 'docs/data/PCL2完整功能矩阵.json').read_text())
 assert len(matrix['features']) == 132
 assert sum(x['audit033']['workKind'] == '实现缺口' for x in matrix['features']) == 35
 for feature in matrix['features']:
@@ -108,7 +108,7 @@ for f in matrix['features']:
 <section><strong>35项宽口径实现缺口仍保留；本轮没有新增矩阵子进度或通过分类关闭缺口。</strong><p>38项文件/进程定向检查；真实Iris流程26项；原生副本UI13项与Host重开/新副本启动5项。未作人工世界视觉验收；Iris环境卸载仍未实现。</p><img src="../copy-confirmation.png" alt="真实副本确认弹窗"></section>
 <section><h2>本轮证据</h2><table><tr><th>项目</th><th>层级与限制</th><th>证据</th></tr>''' + proofs + '</table></section><section><h2>132项准确清单</h2><table><tr><th>ID</th><th>功能</th><th>原分类</th><th>剩余与本轮证据</th></tr>' + features + '</table></section></html>')
 
-for p in [doc, root / 'docs/【已弃用】0.35-剩余清单.md', root / 'docs/支持范围.md', root / 'docs/PCL2完整功能矩阵.json', out / 'verification-summary.json']:
+for p in [doc, root / 'docs/【已弃用】0.35-剩余清单.md', root / 'docs/支持范围.md', root / 'docs/data/PCL2完整功能矩阵.json', out / 'verification-summary.json']:
     shutil.copy2(p, app / 'Contents/Resources' / p.name)
 # Attach docs, then sign. Only apphost signing bytes may change; all managed/native payloads remain tested bytes.
 tested = {str(p.relative_to(macos)): sha(p) for p in macos.rglob('*') if p.is_file()}

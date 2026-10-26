@@ -38,7 +38,7 @@ for title, name, state in records:
     results.append(dict(title=title, path=name, state=state, sha256=sha(path)))
 
 # 所有矩阵证据都必须仍可读取且哈希不变；历史与本轮断言不会因重复次数提升为新功能。
-matrix = json.loads((root / 'docs/PCL2完整功能矩阵.json').read_text())
+matrix = json.loads((root / 'docs/data/PCL2完整功能矩阵.json').read_text())
 assert len(matrix['features']) == 132
 references = set()
 for feature in matrix['features']:
@@ -124,7 +124,7 @@ record_rows = ''.join('<tr><td>' + html.escape(x['title']) + '</td><td>' + x['st
 (review / 'index.html').write_text('''<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>PCL Mac 0.33：证据与剩余清单</title><style>body{font:16px system-ui;background:#eff4fa;color:#20364b;max-width:1250px;margin:40px auto;padding:20px}section{background:white;padding:24px;border-radius:12px;margin:20px 0}table{width:100%;border-collapse:collapse;font-size:14px}td,th{text-align:left;padding:12px;border-bottom:1px solid #dde5ed;vertical-align:top}a{color:#156bb2;overflow-wrap:anywhere}details{margin-top:10px;font-size:12px}input,select{padding:10px;margin:10px}img{max-width:100%}</style><h1>PCL Mac 0.33</h1><section><h2>132项逐项审查，77项补入历史直接证据</h2><p>42项已覆盖限定范围 · 35项实现缺口 · 46项定向验收 · 9项外部条件验收。</p><p>本轮实际补齐：离线启动脚本。UI/Host退出后直接运行Minecraft1.21.1；保留现有登录、皮肤和独立运行行为。未声称全部PCL2功能完成。</p><img src="../delivery-script-ui/ui.png" alt="实际导出窗口截图"></section><section><h2>本轮验证</h2><table>''' + record_rows + '''</table><p><a href="../delivery.json">ZIP与签名校验</a> · <a href="../matrix-final.json">完整矩阵JSON</a></p></section><section><h2>全部功能与剩余项</h2><input id="query" placeholder="搜索编号、功能、限制"><select id="kind"><option value="">全部类别</option><option>实现缺口</option><option>定向验收</option><option>外部条件验收</option><option>已覆盖限定范围</option></select><table id="features"><thead><tr><th>ID</th><th>功能</th><th>类别</th><th>限制与证据</th></tr></thead><tbody>''' + ''.join(feature_rows) + '''</tbody></table></section><script>const q=document.querySelector('#query'),k=document.querySelector('#kind');function filter(){for(const r of document.querySelectorAll('#features tbody tr')){r.hidden=!!((k.value&&r.dataset.kind!==k.value)||!r.textContent.toLowerCase().includes(q.value.toLowerCase()));}}q.addEventListener('input',filter);k.addEventListener('change',filter);</script></html>''')
 
 # 只更新包内说明和外层签名；已测代码除主apphost的外层签名外必须逐文件不变。
-for path in [doc, root / 'docs/0.33-证据回填与剩余清单.md', root / 'docs/PCL2完整功能矩阵.json', output / 'verification-summary.json']:
+for path in [doc, root / 'docs/0.33-证据回填与剩余清单.md', root / 'docs/data/PCL2完整功能矩阵.json', output / 'verification-summary.json']:
     shutil.copy2(path, app / 'Contents/Resources' / path.name)
 tested = json.loads((output / 'final-tested-code.json').read_text())
 for name, expected in tested.items():

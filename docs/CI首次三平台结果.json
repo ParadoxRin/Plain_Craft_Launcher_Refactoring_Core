@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-27",
+  "scope": "Hosted-runner core harness; platform-conditional early returns are not separate native acceptance. No user authentication, UI or game world execution.",
+  "runUrl": "https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core/actions/runs/40375648827",
+  "sourceCommit": "4dbf74f2ab30923fa731f833003bb9d3353c316b",
+  "runners": [
+    {
+      "runner": "macos-latest",
+      "status": "passed",
+      "reportedPassed": 231,
+      "reportedTotal": 231,
+      "failures": [],
+      "rawReportSha256": "dccfd58cb1393645d9104aabef4a5ebf0a15612cf79e924c8eaa0cd9a3639ff7"
+    },
+    {
+      "runner": "ubuntu-latest",
+      "status": "passed",
+      "reportedPassed": 231,
+      "reportedTotal": 231,
+      "failures": [],
+      "rawReportSha256": "7d975b749b85c1e78b7a92ba8b6b7cd78ad537b3354d95491f34dc6ccffb2e31"
+    },
+    {
+      "runner": "windows-latest",
+      "status": "failed",
+      "reportedPassed": 225,
+      "reportedTotal": 231,
+      "failures": [
+        "settings_appearance_persistence_and_recovery",
+        "unix_absolute_path_and_root",
+        "directory_move_and_symlink_unlink",
+        "multi_version_metadata_java_and_arm_native_adapters",
+        "temporary_cache_excludes_active_recent_shared_and_symlink_files",
+        "temporary_cache_rechecks_preview_and_restores_without_overwrite"
+      ],
+      "rawReportSha256": "73e1bad8558c5102e07f331b829120b1651213bebdfc02e1eb6d5e951f50965b"
+    }
+  ],
+  "buildFix": "Resource Include uses tracked OptifineHashes.json casing; LogicalName unchanged.",
+  "overallStatus": "failed-windows-follow-up-required"
+}

@@ -3,7 +3,7 @@
 from pathlib import Path
 import json, hashlib, collections
 root = Path(__file__).resolve().parents[1]
-path = root / 'docs/PCL2完整功能矩阵.json'
+path = root / 'docs/data/PCL2完整功能矩阵.json'
 matrix = json.loads(path.read_text())
 before = [(f['id'], f['status'], f['audit033']['workKind']) for f in matrix['features']]
 def proof(name, scope):

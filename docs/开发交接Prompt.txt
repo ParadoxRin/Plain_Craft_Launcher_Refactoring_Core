@@ -1,35 +1,61 @@
-你接手的是 Plain Craft Launcher Refactoring Core 0.41.0 Preview。仓库为 https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core ，现已公开。应用显示名仍为 Plain Craft Launcher Refactoring，Git/隐私基线仍从 v0.36.1 开始。
+你接手的是 Plain Craft Launcher Refactoring Core。当前发布为 0.41.0 Preview；main 含发布后的文档、CI 和维护改动。公开仓库：https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core 。应用显示名为 Plain Craft Launcher Refactoring，Git/隐私基线从 v0.36.1 开始。复现发布包检出 v0.41.0；继续开发使用 main，并记录实际提交。不要把 main 的后续改动写成已包含在既有安装包中。
 
-任务目标：继续维护可供 macOS、Windows、Linux 共享的启动器核心，并让开发者使用各自喜欢的 UI 组件库与布局制作客户端。当前交付只有 Apple Silicon Mac 的 Avalonia 参考客户端和独立 .NET Host；SwiftUI 是原生 Mac 接入方向，Windows/Linux 客户端和平台 Adapter 尚未完成验收。不要把“通用核心目标”描述为“三平台已经可运行”，不要未经要求重写全部 UI。
+一、目标和现状
+目标是供 macOS、Windows、Linux 复用的启动器核心，让开发者自行选择 UI 组件库、布局和语言制作客户端。已交付 Apple Silicon Mac 的 Avalonia 参考客户端及独立 .NET Host。SwiftUI 是 Mac 原生参考方向，尚未实现；Windows/Linux 客户端尚未实现，对应平台适配仍待补齐与验收。无需先完成三套 UI 才能交接核心，也不因目标变化删除既有功能缺口。不要未经要求重写全部 UI。
 
-先读 README.md、docs/0.41-核心平台定位与发布.md、docs/架构与设计取舍.md、docs/客户端接入指南.md、docs/architecture/PCL-Mac架构规范.md（v1.5）、docs/功能实现导览.md、docs/剩余清单.md，以及本轮涉及用例的源码和验收记录。旧版本报告保留历史语境，不是当前状态。
+先读 README.md、docs/architecture/PCL-Mac架构规范.md（现行 v1.5.1）、docs/架构与设计取舍.md、docs/客户端接入指南.md、docs/功能实现导览.md、docs/剩余清单.md、docs/architecture/技术债.md，以及本轮用例的源码和证据。docs/0.41-核心平台定位与发布.md 是固定发布记录；docs/CI与文档一致性核对.md 记录其后的核对与云端结果。规范约束、源码现状、运行证据是三件事。
 
-获取：优先 git clone 当前公开仓库，运行 git status、git log --all --oneline、git fsck --full。Git 从清理后的0.36.1起正常追加；禁止合并旧 PCL_Mac、旧 bundle 或旧交接包历史。Release 源码 ZIP 不含 .git；需要历史就克隆仓库，不假定 ZIP 自带 Git。游戏、Java、账户、钥匙串、SDK、个人世界及原始测试运行目录不随源码交付。
+二、获取与来源
+优先 git clone，检查 git status、git log --all --oneline、git fsck --full。禁止合并旧 PCL_Mac、旧 bundle 或旧交接包历史。Release 源码 ZIP 是 git archive，不含 .git；游戏、Java、账户、钥匙串、SDK、个人世界及原始测试运行目录不随源码交付。
 
-架构：Shell/Client仅引用Contract，Desktop已经移除Core/Application业务引用，Bootstrap也没有业务例外。Host负责组合根、数据根OS独占锁、执行和关闭。Application编排，Domain纯规则且不引用Ports；Core/Adapters实现外部能力。复用InstallOperations -> VersionInstaller与ResourceDependencyPlanner，不在UI另写下载、求解或安装。沿用IAccountSecrets；密钥不进Shell、receipt、设置导出或普通RPC。命名空间Pcl.Core.Contracts可以属于独立Contract程序集，以项目和符号归属为准。
+三个追踪 JSON 位于 docs/data/，普通构建不重新生成。feature-status-overrides.json 是人工审核输入，不能当缓存删除；功能矩阵还以 feature-matrix.json 嵌入 Desktop。生成器需要外部固定 PCL 参考树；缺失时保留快照，不运行历史批次脚本重置状态。详见 docs/data/README.md。
 
-客户端：当前是PCL自定义RPC v1 / NDJSON，不声明JSON-RPC 2.0兼容。先host.hello，核对能力和帧上限。请求ID、operationId、幂等键分别管理；先订阅缓冲后取快照，断连查询权威状态，不因超时重复副作用。会话恢复与Host重启后任务安全续做不同。Swift等语言需实现传输与一致性测试，不能直接引用.NET对象，也不能声称已存在通用SDK或插件系统。
+三、实际架构
+Desktop -> Client + Contract；Client -> Contract；Host -> Application + Core + Contract；Application -> Domain + Ports + Contract；Ports -> Domain；Core -> Domain + Ports + Contract + 上游库。Domain/Contract 不引用其他项目。Adapters 仍在 Core 中，Core 不引用 Application。Desktop 的 Host/ArchitectureGuard 引用仅为构建依赖，不是运行时业务引用；Bootstrap 没有业务例外。
 
-平台：当前Host仍绑定Mac Keychain，原生桥接和打包脚本也针对macOS。Windows/Linux需实现凭据、进程/独立运行、文件锁/路径/权限、系统集成以及Java/natives，逐平台实际测试。不要只替换OperatingSystem判断或交叉编译就写“已支持”。宿主平台探测不进入Domain，目标平台由显式上下文传入。
+CLI 仍有 Core/Application/Client 直接引用，是遗留技术债，不是新 Shell 的模板。六种职责不等于六个同名程序集；Pcl.Core.Contracts 命名空间可能属于独立 Contract DLL。当前真实图见架构文档，规范的目标图不能当作全部已实现。
 
-当前证据：131项能力中68项已覆盖限定范围、35项实现缺口、20项定向验收、8项外部条件验收。详见docs/收尾第五批验收.md与JSON；标签统计是另一口径。既有Core测试最终231/231、规划24/24，五种窗口策略、共享缓存、本地双节点TCP及多个Java版本实际运行；不是全部平台或世界验收。原34项定向验收引用中发现21个不同历史证据路径缺失，不能按不存在文件追认结果。0.41最终包测试另见发布报告。
+Host 持有组合根、数据根 OS 独占锁和执行/关闭责任。Application 编排，Domain 纯规则且不引用 Ports；外部数据经应用层取得后显式传入。继续复用 InstallOperations -> VersionInstaller 与 ResourceDependencyPlanner，不在 UI 另写安装、下载、求解或 Java 匹配。Core 内部按用例进一步整理，不恢复已移除的 Desktop 业务引用。
 
-重要修复：LaunchService按所选实例profile.gameVersion做依赖预检，不再误用默认1.21.1；Apple Silicon LWJGL2加入-XstartOnFirstThread且去重，非ARM64策略保留。1.12.2与OptiFabric在隔离副本菜单复测通过；本轮菜单停止不是正常世界保存。不要把前述测试改为容忍故障来“通过”。
+四、协议接入
+当前是 PCL 自定义 RPC v1 / UTF-8 NDJSON，不声明 JSON-RPC 2.0 兼容。Desktop 默认使用当前用户私有命名管道：先 session.attach（客户端 GUID、PID 与创建时间），再 host.hello；stdio 直接 hello，仅为直接进程/测试路径。照 HostClient、PrivatePipeServer、SessionOwner 与 SharedProtocol 实现身份及权限，不能直接开放 TCP。
 
-保留行为：免登录下载；微软与离线登录各自身份语义；账户/皮肤持久化；数据根、bundle与钥匙串标识；游戏独立运行；窗口与任务取消分离、单一释放责任；文件归属/哈希/依赖/事务检查；授权与劝导不能在新客户端绕过。Forge单人Quick Play的已有拒绝、Iris未知归属及自定义覆盖卸载的拒绝等限制不能删掉充当支持。
+请求 ID 使用每连接随机 GUID 前缀 + 冒号 + 从 1 连续递增序号，在发送锁内分配；重连换前缀。hello 返回能力、帧上限、Host 身份和安装目标。version.install 的 params 是 InstallCommand，含 idempotencyKey 和嵌套 installation（gameVersion/loader/target）；不要照旧文档扁平参数发送。安装操作契约 v3 不等于 RPC 版本 3。
 
-OAuth：0.40.1已按所有者授权恢复公开client ID，0.41继续使用。普通用户登录自己的微软账号，不提供密码给开发者。公开client ID不是秘密；不得添加client secret、密码、刷新令牌或租户身份。派生产品可以配置自身获准应用ID，见docs/微软登录开发配置.md；不要沿用旧Prompt中“默认ID为空”的过时说法。
+事件使用 event.changed + HostEvent（subscriptionId/hostId/kind/subjectId/sequence/snapshot）。先注册本地缓冲再 event.subscribe，随后取快照并按水位合并。请求 ID、operationId、幂等键分别管理。网络超时不代表操作已停；先查询原操作，不能换键重复副作用。
 
-许可：阅读LICENSE.md。其余有权授权的原创内容采用MIT，PCL/PCLCS衍生与各第三方内容保留原许可/NOTICE；AI生成不自动证明独立原创。PCL-LICENCE.txt原文不得删改。关于页首位保留龙腾猫跃署名与官方赞助链接，继续第三方声明、源码入口、购买/赞助劝导、Windows蓝色与无赞助解锁。源码已公开，但不因此宣称所有其他分发义务自动满足。
+统一幂等受理适用于 version.install/game.launch/page.begin；account.login.begin 使用 key/remember，有独立 LoginSnapshot，重启中断为 LOGIN_INTERRUPTED。外观修改等入口不承诺通用持久化重放，先查询而非自动重发。当前 RPC 错误仅 error.code，不能依赖尚未实现的通用 detail/retry 字段。
 
-开发方式：大量使用AI辅助编码。架构决策、功能取舍、边界判定与验收由人工负责；代码由AI生成并经人工审查。记录实际人工审查和验收范围，不补造“所有历史代码逐行审查”或未经发生的用户确认。
+会话恢复是连接同一 Host 查状态；安全续做是新 Host 校验 receipt/文件/提交后建立新尝试。支持的加载器安装已有恢复路径，资源/整合包不支持任意位置续做。未知提交拒绝盲重放。当前没有稳定 Swift SDK、通用 C ABI 或任意插件系统。
 
-构建：Apple Silicon macOS14+、Xcode CLI、Python3、curl、global.json指定.NET10.0.402。bash scripts/build-handoff.sh，版本入口release.json，并与Desktop项目版本一致。当前产物artifacts/Plain Craft Launcher Refactoring 0.41.0.app，ad-hoc签名、未公证。尚无远程CI通过记录，不因增加README而声明CI或Windows/Linux测试成功。
+五、必须保持的行为
+免登录下载；微软和离线身份分开；账户/皮肤持久化；数据根、bundle 与钥匙串标识；托管/独立游戏生命周期；窗口取消与后台操作取消分离；单一释放；文件归属、哈希、依赖与事务保护。Forge 单人 Quick Play 拒绝、Iris 未知归属及自定义覆盖卸载拒绝等现有限制不能删掉冒充支持。
 
-测试：docs/开发与验证.md列出控制台入口，不能只运行dotnet test。选择与本次修改相称的测试，不无故全项目反复回归。实际发布包需要解压签名/权限/哈希、dylib install_name、隐私模式扫描、真实Host/UI及适用游戏启动检查。使用全新隔离目录，不打开重要存档，不读取完整含令牌进程命令行，只清理本次拥有的进程。编译/替身/真实安装/菜单/世界/人工确认分别记录。
+IAccountSecrets 沿用。微软 access/refresh token 与轮询 DeviceCode 留在 Host，不返回 UI，不进入 receipt、设置导出或日志。用户可主动在 UI 输入第三方 API Key/外置认证密码，经专用私有 workspace.secret 交给 Host 短时内存，后续只传句柄；这不授予读取系统凭据或回传微软令牌的能力。普通模组配置可能自带秘密，导出检查不能保证识别全部未知字段。
 
-优先级：先完成20项待验收中不需要额外条件的场景；35项实现缺口保持明确，不因更改目标删掉。复杂Quilt插件/虚拟多父路径/软偏好、完整TOML、更多包兼容、Oculus卸载、外置账户启动、3D皮肤、自动更新等仍有缺口。百宝箱已取消；不新增矩阵子进度，不靠改状态关闭缺口。修改需求范围需要人工决定并登记。
+OAuth 自 0.40.1 起内置应用所有者授权的公开 client ID，普通用户登录自己的微软账号。公开 ID 不是 secret；不上传密码、刷新令牌、client secret 或个人租户资料。独立发行者可配置自身有权使用且获准的应用 ID，见微软登录开发配置.md。不要采用旧“默认空 ID”说明。
 
-提交发布：检查暂存清单、审查差异、扫描秘密/个人路径，使用GitHub noreply身份。不强制加入artifacts、.local、SDK、缓存或账户文件。内置公开OAuth ID按授权白名单处理，不把它误删为密钥。发布只上传明确的源码/应用/脱敏证据和校验文件；保留包哈希与来源提交。原始日志、玩家文件标识和房间秘密不上传。不要修改历史证据来掩盖失败。
+六、待办和证据口径
+功能排期仍为 131 项：68 限定覆盖、35 实现缺口、20 定向验收、8 外部条件验收；标签统计是另一口径。这不是完成率，也不是三平台/SDK工作的完整估算。优先补不需额外账户/密钥的定向验收；复杂 Quilt 插件/多父路径/软偏好、完整 TOML、任意包兼容、Oculus 卸载、外置账户启动、3D 皮肤、自动更新等仍缺。百宝箱已取消，不新增矩阵子进度，不靠改状态关闭缺口。
 
-文档版本识别：文件名带【已弃用】的指南和状态快照只供历史追溯，不作为当前指令；现行入口及替代关系见 docs/文档状态与弃用索引.md。历史验收报告保留原名和当时范围，不自动证明当前版本通过。
+平台待办另读技术债：Windows/Linux 组合根与凭据、路径/权限、进程脱离、Java/natives、打包和实机验证；跨语言一致性与 SDK。当前 HostRuntime 直接组装 KeychainAccountSecrets，不因 .NET 可编译就宣布三平台 Host 已可用。
+
+0.41 核心套件 231/231；规划24/24属此前独立测试。已有五种窗口策略、共享缓存、本地双节点 TCP 和历史世界验收，均有范围边界。21个缺失的历史证据路径已登记，不补造文件。0.41 最终包的 1.12.2/OptiFabric 仅隔离副本菜单测试，不算世界保存；微软真人登录/皮肤本轮没有重测。
+
+重要修复：LaunchService 用所选 profile.gameVersion 预检，不误用默认1.21.1；Apple Silicon LWJGL2 使用 -XstartOnFirstThread 且去重，非ARM64策略保留。main 新增 Linux 构建资源大小写修正，未覆盖已发布安装包。
+
+七、开发与测试
+使用 global.json 固定 SDK。Mac 应用打包需要 Apple Silicon/macOS14+、Xcode CLI、Python3、curl，运行 bash scripts/build-handoff.sh。release.json 与 Desktop Version 必须一致；ad-hoc 签名、未公证。Windows/Linux CI 不使用 Mac 打包脚本。
+
+.github/workflows/core-ci.yml 在 macOS/Windows/Ubuntu 构建并实际运行 Pcl.Tests 控制台套件，失败保留，不用 continue-on-error 掩盖。不能用 dotnet test 未报错当作执行。逐次云端结果见 Actions；2026-10-27 首轮修复后 macOS/Ubuntu 报告231/231，Windows225/231、6项失败，整体 CI 未通过。后续先按 CI与文档一致性核对.md 区分并修正 Windows 实现和平台专用测试预期，不能直接跳过或放松断言。平台条件分支不能算每系统实际原生验收；CI通过不证明完整Host、登录、UI或游戏世界可用。
+
+本地入口见 docs/开发与验证.md。只执行与本次改动相称的测试，使用全新隔离目录。发布包另查解压签名/权限/哈希、dylib install_name、隐私模式、真实Host/UI和适用游戏行为。不打开重要存档、不读完整带令牌命令行，只清理本次拥有的进程。编译/替身/真实安装/菜单/世界/人工确认分别记录，未执行不称通过。
+
+八、许可、责任和发布
+LICENSE 为标准 MIT 文本，LICENSE-MIT.txt 是兼容副本，LICENSE.md 界定适用范围。有权授权的原创内容 MIT；PCL/PCLCS衍生和第三方保留原许可/NOTICE；AI生成不自动证明原创。PCL-LICENCE.txt不得删改。保留原作者首位署名、赞助链接、第三方声明、源码入口、购买/赞助劝导、Windows蓝色与无赞助解锁；自定义UI不豁免这些限制。
+
+大量使用AI辅助编码。架构决策、功能取舍、边界判定与验收由人工负责；代码由AI生成并经人工审查。记录真实审查/验收范围，不补造历史逐行审核或用户确认。
+
+提交前审查暂存差异、秘密与个人路径，使用GitHub noreply身份。不强制加入artifacts/.local/SDK/缓存/账户文件；公开OAuth ID按授权白名单处理。发布只上传明确源码、应用、脱敏证据和校验文件，保留来源提交与哈希。更新main不自动更新Release；不得覆盖旧包或修改历史证据掩盖失败。
+
+文件名【已弃用】只供历史追溯。现行入口与替代关系见docs/文档状态与弃用索引.md；历史验收报告保留原名和当时范围，不自动证明当前版本通过。

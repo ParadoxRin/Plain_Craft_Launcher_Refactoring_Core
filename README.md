@@ -4,11 +4,13 @@ PCL 原作者：**龙腾猫跃（LTCatt）** · [支持原作者](https://meloon
 
 项目目标是建立 **macOS、Windows、Linux 通用的 Minecraft 启动器核心**，让开发者复用安装、账户、依赖求解、资源管理和游戏进程能力，自由选择 UI 组件库、组织页面并制作自己的客户端。核心不决定控件、导航或视觉风格，客户端不复制业务规则。
 
-当前版本 **0.41.0 Preview**：已交付的是 **Apple Silicon macOS 14+ 的 Avalonia 参考客户端 + 独立 .NET Host**。SwiftUI 是 Mac 原生客户端接入方向，Windows/Linux 的原生 UI 或其他工具包也可通过契约接入，但这些客户端和对应平台适配 **尚未完成验收**。共用代码、可编译与跨平台实际可用是三件不同的事。
+当前版本 **0.41.0 Preview**：已交付的是 **Apple Silicon macOS 14+ 的 Avalonia 参考客户端 + 独立 .NET Host**。SwiftUI 是 Mac 原生客户端接入方向，Windows/Linux 的原生 UI 或其他工具包也可通过契约接入，但 SwiftUI/Windows/Linux 客户端 **尚未实现**，Windows/Linux 平台适配仍需补齐并实际验收。共用代码、可编译与跨平台实际可用是三件不同的事。
+
+文档现行规范为 **v1.5.1**；`v0.41.0` 标签和 Release 附件是固定发布快照，`main` 可包含后续文档、CI 和维护改动。复现发布包请检出标签，继续开发请使用 `main`。
 
 源码仓库现为公开的 [Plain_Craft_Launcher_Refactoring_Core](https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core)。Git/隐私基线从 0.36.1 开始，旧历史不重新导入。
 
-## 本版更新
+## 0.41.0 发布更新（固定快照）
 
 - 打包此前收尾验收与修复：Apple Silicon LWJGL2 首线程崩溃、非默认实例依赖预检误用 1.21.1。
 - 核心测试 231/231、依赖规划 24/24；真实 UI 的五种窗口策略、背景/音乐跟随、共享缓存和本地双节点 TCP 已留证。测试发生时间与最终包复测在发布报告中分列。
@@ -23,10 +25,10 @@ PCL 原作者：**龙腾猫跃（LTCatt）** · [支持原作者](https://meloon
 |---|---|
 | 理解实现与设计理由 | [详细架构图和设计取舍](docs/架构与设计取舍.md) |
 | 替换 UI / 开发自己的客户端 | [客户端接入指南](docs/客户端接入指南.md) |
-| 查看不能破坏的边界 | [架构规范 v1.5](docs/architecture/PCL-Mac架构规范.md) |
+| 查看不能破坏的边界 | [架构规范 v1.5.1](docs/architecture/PCL-Mac架构规范.md) |
 | 找到功能执行入口 | [功能实现导览](docs/功能实现导览.md) |
 | 构建、测试与发布 | [开发与验证](docs/开发与验证.md)、[0.41.0 发布记录](docs/0.41-核心平台定位与发布.md) |
-| 确认完成和未完成范围 | [剩余清单](docs/剩余清单.md)、[功能矩阵](docs/PCL2完整功能矩阵.json)、[支持范围](docs/支持范围.md) |
+| 确认完成和未完成范围 | [剩余清单](docs/剩余清单.md)、[功能矩阵](docs/data/PCL2完整功能矩阵.json)、[支持范围](docs/支持范围.md) |
 | 接手项目 | [开发交接 Prompt](docs/开发交接Prompt.txt)、[Git 与交接](docs/Git历史与交接.md) |
 | 理解开发责任与许可 | [AI 辅助开发方式](docs/开发方式与责任.md)、[许可范围](LICENSE.md)、[第三方声明](docs/THIRD-PARTY-NOTICES.md) |
 
@@ -52,6 +54,12 @@ flowchart TB
 ```
 
 Desktop 只依赖 Contract/Client；Host 执行安装、登录和进程操作，应用服务持有任务真相。`Domain` 不引用 `Ports`，外部数据先由应用层取得再传入纯规则。非 .NET 客户端共享协议语义，不需要也不能直接引用 C# 对象。更换控件库不应更换安装事务、凭据存储或依赖规则。
+
+## 三平台核心还需完成
+
+Desktop→Core 的展示依赖拆除与现有 Avalonia 导航/生命周期整理已在既定范围完成。接下来仍需 Windows/Linux 的凭据、路径权限、进程/独立运行、Java/natives 和平台组合根，以及跨语言契约一致性测试与稳定 SDK；这不等于重开已完成的 Shell 分层。SwiftUI 和其他客户端是后续接入工作，不要求三套 UI 同时完成才交接核心。既有 CLI 仍有直接 Core/Application 调用，不能当成新客户端的架构范例。
+
+功能矩阵的 35/20/8 是既有功能排期口径，**不包含三平台工作量的完整估算**。核心平台待办见[技术债](docs/architecture/技术债.md)，产品功能待办见[剩余清单](docs/剩余清单.md)。
 
 ## 已有能力与边界
 
@@ -84,14 +92,22 @@ export DOTNET_CLI_HOME="$PWD/.cache/dotnet-home"
 
 使用全新隔离目录；测试是控制台程序，不能以 `dotnet test` 未报错代替运行。详见[开发与验证](docs/开发与验证.md)。
 
+## 自动化与追踪数据
+
+[Core CI](https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core/actions/workflows/core-ci.yml) 使用 macOS、Windows、Ubuntu runner 构建并实际执行 `Pcl.Tests` 控制台套件；逐次结果以 Actions 对应提交为准。它检查已覆盖的规则、文件和受控进程场景，不证明完整 Host/UI、系统凭据库、游戏世界或三平台产品已可用。部分既有用例有平台条件分支，不能将套件总行数当成每个平台实际执行的原生场景数。
+
+2026-10-27 首轮修复后结果：macOS/Ubuntu 套件报告231/231，Windows225/231、6项失败，**整体 CI 尚未通过**。Linux资源文件大小写阻断已修复；Windows失败保持门禁，详见[实际结果与下一步](docs/CI与文档一致性核对.md)。
+
+三个较大的追踪 JSON 放在 [`docs/data/`](docs/data/README.md)，保留 Git 版本管理。其中状态覆盖文件是人工维护的审核输入，并非可删除的缓存；矩阵还作为应用嵌入资源使用。普通构建不需要重新生成。
+
 ## 开发方式
 
 本项目**大量使用 AI 辅助编码**。**架构决策、功能取舍、边界判定与验收由人工负责；代码由 AI 生成并经人工审查。** AI 也用于分析、测试探针和文档整理。该声明描述开发责任与工作方式；具体人工审查和验收范围以记录为准，不表示每条历史路径均已人工执行或逐行复核。参见[开发方式与责任](docs/开发方式与责任.md)。
 
 ## 数据、兼容与许可
 
-凭据沿用 `IAccountSecrets` 留在 Host/系统凭据库，不进入 Shell、receipt、设置导出或普通事件。内置的是应用所有者授权的**公开 OAuth client ID**，不是 client secret；用户使用自己的微软账号。派生产品可配置自身获准 ID，见[微软登录开发配置](docs/微软登录开发配置.md)。
+微软访问/刷新令牌沿用 `IAccountSecrets` 和 Host 管理，不返回 Shell，也不进入 receipt、设置导出或事件。用户主动输入的第三方密钥/外置认证密码可经专用私有 `workspace.secret` 请求进入 Host 短时内存；后续操作只传不透明句柄，不把这条受控输入路径误写成所有秘密都从不经过 UI。内置的是应用所有者授权的**公开 OAuth client ID**，不是 client secret；用户使用自己的微软账号。派生产品可配置自身获准 ID，见[微软登录开发配置](docs/微软登录开发配置.md)。
 
 保留数据根、bundle/钥匙串身份，微软/离线登录、皮肤和游戏独立运行行为。保留 PCL 作者署名、赞助与正版购买劝导；赞助不解锁功能，Windows 蓝色限制不因自定义客户端取消。
 
-**原创部分 MIT + 上游/第三方各自许可**，不是全仓统一 MIT。详见 [LICENSE.md](LICENSE.md)、[MIT 文本](LICENSE-MIT.txt)、[PCL 原文](PCL-LICENCE.txt)。不上传个人账户、令牌、世界存档、Minecraft 客户端、私有 SDK 缓存或原始敏感日志。
+**原创部分 MIT + 上游/第三方各自许可**，不是全仓统一 MIT。详见 [LICENSE.md](LICENSE.md)、[MIT 标准文本](LICENSE)、[PCL 原文](PCL-LICENCE.txt)。不上传个人账户、令牌、世界存档、Minecraft 客户端、私有 SDK 缓存或原始敏感日志。

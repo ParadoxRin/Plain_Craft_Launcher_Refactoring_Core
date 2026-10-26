@@ -18,7 +18,7 @@ for (title, file, state) in records:
     status = d.get('status', d.get('Status', 'passed' if d.get('failed') == 0 else None))
     assert status == 'passed', (file, status)
     results.append(dict(title=title, path=file, state=state, sha256=sha(p), assertionCount=len(d.get('checks', d.get('Checks', d.get('rows', []))))))
-m = json.loads((root / 'docs/PCL2完整功能矩阵.json').read_text())
+m = json.loads((root / 'docs/data/PCL2完整功能矩阵.json').read_text())
 refs = set()
 for f in m['features']:
     for e in f['audit033']['evidence'] + f['audit033'].get('newEvidence', []) + f.get('audit034', {}).get('evidence', []):
@@ -55,7 +55,7 @@ for f in m['features']:
     trs.append('<tr data-kind="' + audit['workKind'] + '"><td>' + f['id'] + '</td><td>' + html.escape(f['name']) + '</td><td>' + audit['workKind'] + '</td><td>' + html.escape(f['remaining']) + '<details><summary>证据与范围</summary>' + links + '</details></td></tr>')
 tests = ''.join(('<tr><td>' + x['title'] + '</td><td>' + x['state'] + '</td><td><a href="../' + x['path'] + '">' + x['path'] + '</a></td></tr>' for x in results))
 (review / 'index.html').write_text('<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>PCL Mac 0.34</title><style>body{font:16px system-ui;max-width:1300px;margin:35px auto;padding:22px;background:#eef3f8;color:#25364b}section{background:white;border-radius:16px;padding:25px;margin:20px 0}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:12px;border-bottom:1px solid #dce3ec;text-align:left;vertical-align:top}a{color:#1662ad;overflow-wrap:anywhere}details{font-size:12px;margin-top:10px}input,select{padding:10px;margin:8px}</style><h1>PCL Mac 0.34</h1><section><h2>本轮新增三组实际能力</h2><p>批量更新多根联合回溯 · JarJar模块身份 · 经校验的自定义整合包入口及往返</p><p>63项定向检查；真实Host完成MultiMC/HMCL/mrpack启动、Forge/NeoForge和Sodium、微软正版/皮肤及窗口退出流程。</p><p><strong>35个实现缺口大项未全部清零</strong>：本轮补强7个部分实现条目。图形初始化不冒充世界保存验收，构造包不冒充所有公开整合包。</p><p><a href="../delivery.json">下载包与签名校验</a> · <a href="../matrix-final.json">完整矩阵JSON</a></p></section><section><h2>逐项实际证据</h2><table>' + tests + '</table></section><section><h2>132项矩阵与准确剩余范围</h2><p>42项已覆盖限定范围 · 35项实现缺口 · 46项定向验收 · 9项外部条件验收</p><input id="q" placeholder="搜索编号、功能、限制"><select id="k"><option value="">全部类别</option><option>实现缺口</option><option>定向验收</option><option>外部条件验收</option><option>已覆盖限定范围</option></select><table id="matrix"><thead><tr><th>ID</th><th>功能</th><th>类别</th><th>仍需完成及证据</th></tr></thead><tbody>' + ''.join(trs) + "</tbody></table></section><script>const q=document.querySelector('#q'),k=document.querySelector('#k');function filter(){for(const r of document.querySelectorAll('#matrix tbody tr'))r.hidden=!!((k.value&&r.dataset.kind!==k.value)||!r.textContent.toLowerCase().includes(q.value.toLowerCase()));}q.addEventListener('input',filter);k.addEventListener('change',filter);</script></html>")
-for p in [doc, root / 'docs/【已弃用】0.34-剩余清单.md', root / 'docs/PCL2完整功能矩阵.json', out / 'verification-summary.json']:
+for p in [doc, root / 'docs/【已弃用】0.34-剩余清单.md', root / 'docs/data/PCL2完整功能矩阵.json', out / 'verification-summary.json']:
     shutil.copy2(p, app / 'Contents/Resources' / p.name)
 tested = json.loads((out / 'final-tested-code.json').read_text())
 for (name, expected) in tested.items():

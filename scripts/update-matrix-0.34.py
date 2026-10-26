@@ -4,7 +4,7 @@ from pathlib import Path
 import json, hashlib, collections
 root = Path(__file__).resolve().parents[1]
 out = root / 'artifacts/verification-0.34'
-path = root / 'docs/PCL2完整功能矩阵.json'
+path = root / 'docs/data/PCL2完整功能矩阵.json'
 baseline = out / 'matrix-before-0.34.json'
 if not baseline.exists():
     baseline.write_bytes(path.read_bytes())

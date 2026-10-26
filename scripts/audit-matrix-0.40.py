@@ -8,14 +8,14 @@ import re
 
 root = Path(__file__).resolve().parent.parent
 docs = root / 'docs'
-path = docs / 'PCL2完整功能矩阵.json'
+path = docs / 'data' / 'PCL2完整功能矩阵.json'
 matrix = json.loads(path.read_text())
 features = matrix['features']
 md_path = docs / 'PCL2完整功能矩阵.md'
 old_md = md_path.read_text()
 md_states = {p[1].strip(): p[3].strip() for line in old_md.splitlines()
              if re.match(r'\| [A-Z]+-\d+', line) for p in [line.split('|')]}
-overrides_path = docs / 'feature-status-overrides.json'
+overrides_path = docs / 'data' / 'feature-status-overrides.json'
 overrides = json.loads(overrides_path.read_text())
 before = dict(collections.Counter(f['status'] for f in features))
 md_drift = [f['id'] for f in features if md_states.get(f['id']) != f['status']]

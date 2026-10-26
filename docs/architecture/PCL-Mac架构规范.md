@@ -1,15 +1,15 @@
 # Plain Craft Launcher Refactoring Core 架构规范
 
-版本：1.5\
+版本：1.5.1\
 日期：2026-10-27（Australia/Sydney）\
 性质：后续增量重构的实施规范  
-依据：已落盘的《分层架构实施规范 v2》、本轮评审共识、当前仓库实际调用链。
+依据：历史《分层架构实施规范 v2》讨论、已确认的产品目标与当前仓库调用链；外部讨论稿不随当前仓库交付，也不是构建或接手前置条件。
 
-本规范替代 v2 中仍有歧义的实施表述。v2 原文件保留为讨论记录；本规范不表示现有代码已经完成分层，也不追认历史功能或测试状态。
+本规范取代历史讨论稿中的实施约定。§13 描述当前落地范围，§14 的阶段一至三仅保存迁移历史；其余“必须／不得”是维护约束，不表示全部规则已由代码守卫覆盖或全部平台已经实现。本版修订为文档校正，不更改 v0.41.0 发布标签。
 
 ## 1. 目标与适用范围
 
-目标是让 macOS、Windows 和 Linux 各自使用平台原生 UI，共享安装、资源管理、账户、依赖求解和游戏启动核心。macOS 使用 SwiftUI；Windows 和 Linux 分别使用适合各自平台的原生 UI 库，具体库尚未选定。Desktop 与 Core 分离的首要目的，是让三个原生客户端复用同一套业务能力，而不复制业务实现。CLI 也可复用这些能力。
+目标是为 macOS、Windows 和 Linux 提供共享的安装、资源管理、账户、依赖求解和游戏启动核心，让不同开发者选择合适的 UI 库与布局。SwiftUI 保留为 Mac 原生参考方向，Windows/Linux 原生库尚未选型；原生 UI 不是所有派生客户端的强制要求。Desktop 与 Core 分离服务于业务复用，CLI 也可逐步接入统一契约。
 
 0.41 起产品目标明确为可供不同开发者定制启动器的三平台核心。原生 UI 是参考接入方向，客户端可以选择其他合适的组件库与布局；本轮不要求把三套 UI 全部完成作为核心收尾条件。可替换 UI 不等于已实现插件系统或任意语言 SDK，跨平台可用须逐平台实际测试。开发责任与许可分别见[开发方式](../开发方式与责任.md)和[许可范围](../../LICENSE.md)。
 
@@ -21,7 +21,7 @@
 - **建议**：默认做法，有具体理由时可选其他实现。
 - **后续阶段**：尚未实现的目标，不得据此宣称现有功能已具备。
 
-当前0.41.0实现仍是 Apple Silicon Mac 上的 Avalonia + 独立 Host。Avalonia 是渐进迁移期间的可用入口和功能对照，不是三平台最终统一 UI；SwiftUI 是 Mac 端明确的目标，不再表述为可选设想。Windows/Linux 原生界面和各平台 Adapter 必须分别实施及验收，不能从 Mac 运行证据推导三平台可用。
+当前 0.41.0 交付为 Apple Silicon Mac 的 Avalonia 参考客户端 + 独立 Host。SwiftUI/Windows/Linux 客户端尚未实现；Windows/Linux Adapter 与平台组合根尚未补齐。保留可用 Avalonia 作为接入参考，不要求先替换它才能交接核心，也不把编译通过当作平台可用。
 
 当前实现追踪：[0.41.0 发布记录](../0.41-核心平台定位与发布.md)、[收尾第五批](../收尾第五批验收.md)及[0.40 生命周期记录](../0.40-Core职责与页面生命周期验收.md)。规范不作为运行证据。
 
@@ -29,9 +29,9 @@
 
 | 平台 | 目标 Shell | 当前范围 |
 |---|---|---|
-| macOS | SwiftUI | 当前包仍为 Avalonia；SwiftUI 完整客户端待迁移和验收 |
-| Windows | Windows 原生 UI 库，具体选型待定 | 不将上游 Windows PCL2 视作已接入本项目 Host 的客户端 |
-| Linux | Linux 桌面原生 UI 库，具体选型待定 | 桌面环境、工具包及支持范围需后续决策和实测 |
+| macOS | SwiftUI 为原生参考方向；允许其他 UI 库 | 当前交付 Avalonia；SwiftUI 客户端尚未实现 |
+| Windows | 原生或其他 UI 库，具体选型待定 | 客户端及平台适配待实施；上游 Windows PCL2 不是本 Host 的客户端 |
+| Linux | 原生或其他 UI 库，具体选型待定 | 客户端及平台适配待实施；桌面环境、工具包和发行版需分别实测 |
 
 这里的 Desktop 是展示职责，不等同于现有 `Pcl.Desktop` Avalonia 项目。三个客户端可以使用不同语言、窗口导航和系统交互；业务规则、任务真相和持久化仍由共享应用核心及各平台 Host/Adapters 负责。共享核心指同一套实现按目标平台构建部署，不是三个系统共用同一个可执行文件。
 
@@ -54,14 +54,16 @@ Domain            -> 标准库
 Contract          -> 标准库
 ```
 
-上表描述 .NET 组件拆分后的依赖目标；Swift 等非 .NET Shell 对 Contract 的依赖是协议语义依赖，不是 CLR 程序集引用。阶段一同进程且没有 Client 时，展示代码直接调用 **Contract 中定义的应用接口**，不需要经过传输层；`VersionInstallService` 在 Application 中实现该接口，由 Bootstrap 构造后以接口类型注入 Shell。以下两种路径的区别是传输方式，不是允许 Shell 组装实现：
+上表是职责依赖目标，不是当前 csproj 的逐项清单。当前 Desktop→Client+Contract，Client→Contract，Host→Application+Core+Contract，Application→Domain+Ports+Contract，Core→Domain+Ports+Contract+上游库；Ports→Domain，Domain/Contract 不引用其他项目。Adapters 尚在 Core 中，并非独立的 Pcl.Adapters 程序集；Core 引用 Contract 的兼容执行与映射代码仍需按用例整理，不能把目标表当作全部已落地。CLI 仍直接引用 Core/Application/Client，不是新 Shell 的例外。详见[当前引用图](../架构与设计取舍.md)。
+
+下述阶段一为历史说明；Swift 等非 .NET Shell 对 Contract 的依赖是协议语义依赖，不是 CLR 程序集引用。阶段一同进程且没有 Client 时，展示代码直接调用 **Contract 中定义的应用接口**，不需要经过传输层；`VersionInstallService` 在 Application 中实现该接口，由 Bootstrap 构造后以接口类型注入 Shell。以下两种路径的区别是传输方式，不是允许 Shell 组装实现：
 
 | 阶段 | Shell 调用路径 | Application 实现的组装位置 |
 |---|---|---|
 | 一：同进程、无 Client | Shell -> Contract 应用接口 -> 注入的实现 | 当前可执行项目的 `Bootstrap/Composition.cs` |
 | 三：进程外 | Shell -> Client -> RPC -> Host 中的应用接口实现 | 独立 Host 的组合根 |
 
-因此“同进程调用应用入口”不等于“展示代码引用 Application 实现类型”。阶段一无需新增 `Shell -> Application` 实现依赖例外；组合根的实现引用例外仍限于规则 6。Contracts 与 Application 暂处同一 Core 程序集时，也按命名空间／符号约束此边界。
+历史阶段一的“同进程调用应用入口”不等于展示代码引用 Application 实现类型；当时的组合根例外现已按规则 6 撤销。当前 Contract 和 Application 已独立，不得按过渡目录示例重新合回 Core 或恢复 Desktop 的业务引用。
 
 补充规则：
 
@@ -180,11 +182,11 @@ Application 不得成为单个万能服务。版本安装、账户管理、游�
 
 ### 6.3 错误
 
-错误包含稳定 `code`、可选安全说明、结构化 `detail` 和重试建议。Shell 不解析说明文字。
+当前 RPC 失败响应为 `error: { code }`；操作快照另有 `errorCode`，部分页面快照有结构化依赖诊断。尚无所有 RPC 通用的 `detail` / retry 建议字段。若新增安全说明、结构化 detail 或重试建议，按 §6.2 演进并测试；不能让客户端依赖文档中尚未实现的字段。Shell 不解析说明文字。
 
 至少区分：无效参数、策略不允许、能力不支持、依赖冲突、实例忙、认证过期、权限拒绝、网络故障、磁盘不足、校验失败、取消和内部错误。
 
-`IOException` 等语言异常不能单独决定错误语义；错误映射需结合操作阶段和具体原因。超时不自动等于可安全重试，重试建议应区分：
+`IOException` 等语言异常不能单独决定错误语义；错误映射需结合操作阶段和具体原因。超时不自动等于可安全重试，未来若提供统一重试建议，其语义应区分（以下不是当前可读取的 RPC 字段）：
 
 - `none`：当前请求不应自动重试。
 - `sameOperation`：用原幂等键重查／重试受理，避免重复副作用。
@@ -196,7 +198,7 @@ Application 不得成为单个万能服务。版本安装、账户管理、游�
 
 ### 7.1 协议选择
 
-第一阶段使用同进程应用接口，不为接线提前部署 Host 子进程。
+历史第一阶段使用同进程应用接口；当前 Desktop 已接独立 Host，不退回同进程业务接线。
 
 进入进程外阶段后，默认采用 **PCL 自定义 RPC v1**：借用 JSON-RPC 结构，使用 UTF-8 NDJSON 传输；不声明兼容 JSON-RPC 2.0。未来如使用标准 JSON-RPC，必须明确实现和兼容范围。
 
@@ -204,35 +206,39 @@ Application 不得成为单个万能服务。版本安装、账户管理、游�
 
 ### 7.2 消息示例
 
-命令按“名词.动词”命名。示例中的对象必须序列化为单行发送：
+命令按“名词.动词”命名。示例以当前 `InstallCommand` / `VersionInstallRequest` 为准，字段不能从旧讨论稿推导。每个 JSON 对象单行发送；下列 ID 是演示值，实际须使用 Host 返回的身份。完整 DTO 见 `src/Pcl.Contract`，分发见 `src/Pcl.Host/Program.cs`。
+
+传输建立后先 `host.hello`（私有管道还须先完成 §7.3 的 attach）：
 
 ```json
-{"protocolVersion":1,"id":"req-7","method":"version.install","params":{"idempotencyKey":"attempt-9b31","gameVersion":"1.21.1","loader":"fabric","targetPlatform":{"os":"osx","architecture":"aarch64"}}}
+{"protocolVersion":1,"id":"0123456789abcdef0123456789abcdef:1","method":"host.hello","params":{"minimumVersion":1,"maximumVersion":1}}
 ```
 
-受理结果：
+读取 hello 的 `installationTarget` 后构造安装请求；不能将 OS 版本占位值用于真实安装。目标须与 Host 支持的目标一致：
 
 ```json
-{"id":"req-7","result":{"operationId":"op-42","state":"queued"}}
+{"protocolVersion":1,"id":"0123456789abcdef0123456789abcdef:2","method":"version.install","params":{"idempotencyKey":"attempt-9b31","installation":{"gameVersion":"1.21.1","loader":"fabric","target":{"os":"osx","architecture":"aarch64","osVersion":"<hello.installationTarget.osVersion>"}}}}
 ```
 
-事件：
+受理结果示意：
 
 ```json
-{"event":"operation.progress","operationId":"op-42","seq":12,"data":{"stage":"download","completedBytes":1240,"totalBytes":9000}}
+{"protocolVersion":1,"id":"0123456789abcdef0123456789abcdef:2","result":{"operationId":"op-0123456789abcdef0123456789abcdef","state":"queued","replayed":false}}
 ```
 
-失败结果使用 `error`，与 `result` 二选一。v2 中的 `cmd/args/ok/data` 为讨论示例，本规范统一为 `method/params/result/error`，避免实现两套信封。
+客户端先登记本地缓冲，再以 `event.subscribe` 传入 `subscriptionId/kind/subjectId/afterSequence`，最后查询 `operation.get` 并合并快照。事件是 `method: "event.changed"`，`params` 为 `HostEvent`：`subscriptionId/hostId/kind/subjectId/sequence/snapshot`。其中 `snapshot` 是对应操作或游戏的完整公开快照；不存在旧示例的 `event: "operation.progress"` 信封。当前安装进度字段是 `stage/completed/total/bytes/totalBytes`，不是 `completedBytes`。
+
+失败响应使用 `error: {code}`，与 `result` 二选一。`version.install.v3` / `game.launch.v2` 是能力标识，实际方法仍为 `version.install` / `game.launch`。协议版本 1、安装操作契约版本 3、产品版本 0.41.0 是独立概念。
 
 ### 7.3 消息与连接规则
 
 - 握手协商协议范围、Host 实例 ID 和功能能力；不兼容时给出明确错误。
-- 每个请求 ID 在客户端会话内唯一；不会在仍可能收到迟到响应时重用。
+- 当前 `request.ordered-ids.v1` 使用每连接随机 32 位 GUID 前缀、冒号和从 1 连续递增的序号；按发送锁内顺序分配，重连换前缀。旧任意字符串 ID 仅保留有界兼容，不能和新格式混用。具体校验见 RequestIdentityTracker；不要仅凭“ID 唯一”假定任意乱序 ID 可接受。
 - 响应可以乱序，但必须准确匹配请求；未知／过期请求响应不得派给新请求。
 - stdout 只输出协议，stderr 输出脱敏诊断；底层库的普通日志不得污染协议流。
 - 初始帧上限为 1 MiB，超限明确拒绝。大日志、图片和文件使用受控资源引用与分块／分页能力。
 - 单写队列确保消息不交错，解析不得依赖一次读取恰好等于一条消息。
-- 父进程直接启动私有 stdio Host；若以后支持 socket，另行定义身份验证、权限和端点访问控制，不能默认开放网络端口。
+- 当前 Desktop 默认连接当前用户私有命名管道；Unix 上是受权限保护的本地 socket，使用 CurrentUserOnly、私有父目录和 socket 权限，不监听 TCP。首帧必须 `session.attach`，参数为 `clientId/processId/startedUtcTicks`，然后才发 `host.hello`。Host 验证客户端进程创建身份及会话所有权。stdio 保留为直接进程/测试入口，直接 hello，不能把新建 stdio Host 当作会话重连。路径算法见 SharedProtocol/PrivatePipePath.cs；权限与身份由各平台实测。
 - RPC 只提供明确命令，不提供任意命令执行、任意 Java 参数注入或无约束文件读取。
 
 ### 7.4 事件、背压与快照
@@ -265,6 +271,8 @@ queued / running -> cancelling -> cancelled / succeeded / failed
 Host 异常退出时的非终态 -> interrupted
 ```
 
+上图对应安装、页面与启动操作，不是所有账户用例的统一状态机。`account.login.begin` 使用 `key/remember` 并返回 LoginSnapshot；Host 重启后未完成登录为 `failed + LOGIN_INTERRUPTED`，不会自动重新授权。`account.appearance.*` 有自己的内存任务/取消语义，不能套用安装续做。
+
 `stage` 单独记录规划、下载、校验、解压、提交等阶段。受理不等于安装成功；一次 `game.launch` 操作成功只表示游戏进程已创建，其后退出由独立游戏进程状态跟踪。
 
 ### 8.2 取消与提交
@@ -277,7 +285,7 @@ Host 异常退出时的非终态 -> interrupted
 
 ### 8.3 幂等键
 
-所有可能产生副作用的受理命令必须明确重复请求策略，包括安装、复制、登录和游戏启动：
+所有副作用入口必须明确重复请求策略；下面是 operation 受理接口的幂等约束，不表示所有方法都有同名幂等参数。当前 version.install、game.launch、page.begin 使用 idempotencyKey；account.login.begin 使用 key。外观修改等其他入口不具备统一重放保证，断线后先查询，不自动重发：
 
 - 同键、同规范化参数：返回同一 operationId 或已保存结果，不重复执行。
 - 同键、不同参数：返回 `IDEMPOTENCY_CONFLICT`。
@@ -294,7 +302,7 @@ Host 异常退出时的非终态 -> interrupted
 
 同一数据目录只有一个管理 Host 拥有写入权。可并行的操作也必须保护共享缓存、索引和凭据刷新，不能只依靠 UI 禁用按钮。
 
-跨进程锁的具体实现列为 §17 的 DEC-003，进入阶段三前必须完成。阶段一继续由现有入口持有 `.launcher.lock` 的独占句柄，组合根接线不得提前释放它，也不得让第二个窗口或工厂获取另一套写入权。锁文件存在与否不代表锁是否被持有。
+当前独立 Host 持有 `.launcher.lock` 的 FileShare.None 句柄，Desktop 不再取得另一套写入授权。DEC-003 保留进一步的平台/共享实例范围要求；不得提前释放锁，也不能用锁文件存在与否判断锁是否被持有。
 
 ### 8.5 退出路径与关闭责任
 
@@ -316,7 +324,7 @@ Host 异常退出时的非终态 -> interrupted
 6. 已运行游戏与安装任务分开处理。遵守现有保留游戏、隐藏启动器和独立启动策略；`Dispose` 不无条件终止游戏。普通关闭窗口当前可能只隐藏窗口，这种行为不是“用户明确退出应用”。
 7. 系统终止通知不等于可用的保存保证。receipt 和提交日志必须在运行时按必要边界持久化；系统终止路径也不得强行把尚未验证的中间状态记录为安全 checkpoint。
 
-阶段一的协调者可以位于当前可执行项目的 Bootstrap 内，持有已迁移的安装 Task 和取消源，不要求先建立完整 operation runner。旧窗口的重复 `Closed` 释放需随接线移交所有权，避免两处关闭同一共享服务。
+历史阶段一协调者位于 Desktop Bootstrap；当前 HostRuntime 持有业务服务与 runner 关闭责任，Shell 只管理客户端/视图生命周期，不得重新让旧窗口 Closed 释放 Host 业务服务。
 
 ## 9. 会话恢复与任务续做
 
@@ -423,7 +431,8 @@ MeloongCore、PCLCS、Pcl.Legacy 当前是 Core 的直接依赖。迁移时逐�
 - 保持下载、安装与账号认证的现有产品分离；架构重构不顺带改变离线登录或微软登录策略。
 - 保留既有原作者赞助与正版购买劝导；不新增支付或赞助/主题解锁流程，保留上游署名、源码和许可证要求。
 - 公共 OAuth client ID 可作为应用配置；client secret、refresh token、access token 不进入公开配置、receipt、日志或普通 RPC DTO。
-- Shell 通过 accountId 请求登录或启动，由 Host 内部管理敏感凭据。需要给用户展示的短时授权提示另设最小数据契约。
+- 首次微软登录经 account.login.begin 的 key/remember 发起；已有账户操作与游戏启动使用 accountId。Host 管理 OAuth 令牌；只返回用户可见的 UserCode/VerificationUri 等短时提示，不返回用于轮询的 DeviceCode。
+- 第三方 API Key/外置认证密码由用户在 UI 输入时，可经专用私有 workspace.secret 请求送入 Host 短时内存，后续 PageCommand 只传不透明 handle，不能写原始秘密到 receipt 或日志。此入口不等于可以向 UI 返回微软访问/刷新令牌；区分受控秘密输入与普通公开 DTO。
 - 进程参数可能包含敏感值，内部 `ProcessSpec` 与可记录／可公开的命令摘要必须分开；不因“统一 DTO”将完整参数暴露给 UI。
 - 架构迁移不得放松文件哈希、归档路径、加载器依赖、Java 匹配或原生库适配的既有保护。
 
@@ -431,7 +440,7 @@ MeloongCore、PCLCS、Pcl.Legacy 当前是 Core 的直接依赖。迁移时逐�
 
 | 当前模块 | 已落地边界 | 尚未完成 |
 |---|---|---|
-| Desktop / Bootstrap | 全部生产展示通过 Contract/Client；不再有 Core/Application 业务引用 | SwiftUI 与 Windows/Linux 自定义客户端 |
+| Desktop / Bootstrap | 全部生产展示通过 Contract/Client；不再有 Core/Application 业务引用 | SwiftUI 与 Windows/Linux 自定义客户端尚未实现 |
 | Client | 私有 RPC、订阅/快照、请求关联、会话重连 | 非 .NET SDK 与跨语言一致性验收 |
 | Host / Application | 独立组合根、账户与进程用例、持久化受理与关闭协调 | 所有操作类型完整安全续做；各平台组合根 |
 | Domain / Ports | 独立程序集、纯规则与外部能力边界 | 剩余规则整理以具体用例决定，不按文件数强拆 |
@@ -440,11 +449,13 @@ MeloongCore、PCLCS、Pcl.Legacy 当前是 Core 的直接依赖。迁移时逐�
 
 安装继续复用 InstallOperations → VersionInstaller；凭据继续沿用 IAccountSecrets。当前 HostRuntime 仍直接选择 Mac Keychain Adapter，不能声称全部平台可运行。0.41 修复实例版本依赖预检及 ARM64 LWJGL2 首线程行为，见发布与收尾记录。
 
+功能排期仍为 131 项：68 限定覆盖、35 实现缺口、20 定向验收、8 外部条件验收；该口径不覆盖全部三平台迁移工作量。平台 Adapter、客户端与稳定 SDK 待办另见[技术债](技术债.md)。Core CI 的三系统编译/套件结果不代替平台 Host、凭据库和游戏验收；2026-10-27 首轮 Windows 仍有6项失败，见[核对记录](../CI与文档一致性核对.md)。
+
 阶段一至0.31报告描述当时的过渡状态，不是当前允许恢复 Desktop→Core 的例外。历史报告保留不改写，原始证据缺失时登记缺失，不自动追认结果。当前图见[详细架构](../架构与设计取舍.md)，接入步骤见[客户端指南](../客户端接入指南.md)。
 
 ## 14. 迁移阶段与完成条件
 
-阶段一至三保留原实施顺序和验收定义，描述历史推进过程；当前落地情况以§13为准，不重开已关闭的迁移项。后续平台和客户端按目标分别实施。
+阶段一至三保留原实施顺序和验收定义，描述历史推进过程；当前落地情况以§13为准，不重开已关闭的迁移项。以下“建议初始目录”“预计二次修改”等均是历史设计说明，不是接手者应重新执行的步骤。阶段四、五是后续方向，允许按明确用例推进平台 Adapter，不要求先完成整套 SwiftUI。
 
 ### 阶段一：应用入口与最小组合根
 
@@ -516,7 +527,7 @@ SwiftUI 通过 Swift 客户端适配接入现有 Host 契约，先跑通安装 �
 
 ### 阶段五：拆程序集与扩平台
 
-依据实际边界和迁移成本继续整理程序集；已经完成的拆分不重复实施。使用项目引用、传递依赖与符号约束验证边界。分别选定 Windows 和 Linux 原生 UI 库，复用同一 Host 协议及业务实现，补齐各平台凭据、文件系统、进程和系统集成 Adapter。逐平台验证安装/取消/恢复/启动、登录/皮肤及关窗后游戏生命周期，不能把共用代码当作平台实际运行证据。没有固定“三周”或“一小时完成全部收口”的承诺。
+依据实际边界和迁移成本继续整理程序集；已经完成的拆分不重复实施。使用项目引用、传递依赖与符号约束验证边界。Windows/Linux 客户端按需求选择原生或其他合适 UI 库，复用同一 Host 协议及业务实现，补齐各平台凭据、文件系统、进程和系统集成 Adapter。逐平台验证安装/取消/恢复/启动、登录/皮肤及关窗后游戏生命周期，不能把共用代码当作平台实际运行证据。没有固定“三周”或“一小时完成全部收口”的承诺。
 
 ## 15. 完成证据、用例追踪与变更控制
 
@@ -564,7 +575,7 @@ Domain 不引用 Ports/Contract/Application/Host；Application 不引用 Core/Ad
 
 ## 17. 决策与修订记录
 
-以下“已采纳”表示规范选择已明确，不表示相关代码已经实现或运行。
+以下“已采纳”表示规范选择已明确，不表示相关代码已经实现或运行。DEC-003～005 的“初版”指[阶段三独立 Host 记录](阶段三加载器恢复与独立Host.md)；当前登录、事件和平台实现还须结合 §7、§13 与源码，不从历史状态推导全部实现。
 
 | 编号 | 决策／议题 | 状态 | 内容与实施时点 |
 |---|---|---|---|
@@ -572,9 +583,10 @@ Domain 不引用 Ports/Contract/Application/Host；Application 不引用 Core/Ad
 | DEC-002 | 关闭视图、主动退出、系统终止与异常退出分开 | 已采纳 | 按 §8.5 管理取消、写入、等待和释放。阶段一落实已迁移 Task 的关闭责任，阶段三扩展到 runner／独立 Host |
 | DEC-003 | 进程内与跨进程锁模型 | 私有 Host 初版已实施，范围见第二批记录 | 进程内按实例身份序列化；跨进程数据目录所有权使用 OS 维护的独占锁／锁文件句柄，lease 表达持有期与所有者。需决定共享实例／缓存的锁范围、获取顺序、冲突返回和崩溃恢复。锁文件残留不等于锁被持有：通过受控尝试获取同一锁对象的独占权判断，成功后持续持有，不采用“检查后立即释放再写入”的竞争窗口；冲突、权限拒绝及不支持的锁能力分别处理。不得删除重建正在使用的锁文件来绕过已有锁，也不可仅凭 PID、心跳或 TTL 过期夺取写入权；原生锁语义依支持平台及文件系统验证 |
 | DEC-004 | `operation.log` 与诊断日志契约 | 私有 Host 初版已实施，范围见第二批记录 | 明确 level 枚举、单条及单次操作上限、截断／丢弃通知、排序与关联；在事件发布和持久化之前统一脱敏。明确 URL 查询参数、认证头、凭据、敏感参数及路径隐私策略。日志正文与恢复 receipt 分开，receipt 只存必要诊断引用／结构化失败信息，不作为无限日志容器 |
-| DEC-005 | 受控资源引用、分块及分页协议 | 私有 Host 初版已实施，范围见第二批记录 | 明确 `resource.open`／`resource.read(offset,length)`／`resource.close` 或等价接口的对象含义，避免与现有 `resource.search`／`resource.install` 混淆。定义不透明句柄、来源授权、大小／MIME／版本／哈希、分块编码与上限、越界／EOF、读取一致性、过期与断线回收；所有响应仍须满足帧上限。文件不得通过任意宿主绝对路径公开，分页与二进制分块分别定义 |
+| DEC-005 | 受控资源引用、分块及分页协议 | 私有 Host 初版已实施，范围见第二批记录 | 当前采用 `blob.open/read/page/close`；分块参数与句柄以 Contract/Resources.cs 为准，不使用旧讨论稿的 resource.* 名称。明确其对象含义，避免与现有 `resource.search`／`resource.install` 混淆。定义不透明句柄、来源授权、大小／MIME／版本／哈希、分块编码与上限、越界／EOF、读取一致性、过期与断线回收；所有响应仍须满足帧上限。文件不得通过任意宿主绝对路径公开，分页与二进制分块分别定义 |
 | DEC-006 | 阶段一保留等待完成的 Task | 已采纳 | 接受 §14 所列二次修改；不提前用薄句柄掩盖 operation 生命周期、受理失败及恢复语义的差别 |
-| DEC-007 | 三平台原生 Shell，共享业务核心 | 已采纳，原生客户端待实施验收 | macOS确定使用SwiftUI；Windows/Linux各用本平台原生UI库，具体选型待定。Avalonia仅作过渡和对照；跨语言Client共享协议语义，Host按平台部署。不得复制核心业务或把目标写成已完成 |
+| DEC-007 | 三平台原生 Shell，共享业务核心 | 历史目标；UI 选择约束由 DEC-008 修订 | 保留 SwiftUI 原生参考方向和协议复用目标，不再强制所有派生客户端使用原生库，也不要求先替换 Avalonia |
+| DEC-008 | 三平台核心与可自定义客户端 | 现行目标，平台与新客户端待实施 | 允许任意合适 UI 组件库；Host 按平台部署，业务不复制。核心收尾不以三套 UI 全部完成为条件；范围变化和未完成能力仍如实记录 |
 
 1.1 修订（2026-10-25）：明确 Domain 禁止引用 Ports、值类型归属和暂不新增 Kernel；补齐退出路径、同进程过渡责任、预期二次修改清单；登记锁、日志与分块协议的阶段三前置决策。本轮只更新规范，没有修改运行代码、执行编译或测试。
 
@@ -590,3 +602,10 @@ Domain 不引用 Ports/Contract/Application/Host；Application 不引用 Core/Ad
 - 修正 §13/§15 中过时的同进程、旧 Desktop→Core 与 Bootstrap 例外表述，保留历史报告作为历史。
 - 新客户端必须遵守版本协商、能力、事件/快照、幂等、取消、凭据与退出语义；当前不承诺稳定跨语言 SDK、C ABI 或插件系统。
 - 大量 AI 辅助编码，人工负责架构、取舍、边界及验收；不能补造人工审查记录。原创 MIT 与上游/第三方许可并存。
+
+### v1.5.1 文档校正（2026-10-27）
+
+- 统一 README/交接目标：共享核心、可替换 UI；DEC-008 修订原生 UI 强制约束，区分尚未实现与已实现未验收。
+- 明确当前 csproj 与职责目标图的差异、CLI 历史直连、阶段一至三的历史性质。
+- 校正现有私有管道 attach→hello、ordered IDs、安装嵌套参数、event.changed 信封、错误字段、账户状态与秘密输入路径。
+- 明确功能矩阵与平台/SDK 待办是不同清单，云端套件通过不等于三平台产品验收。本次不改变业务、凭据或游戏生命周期策略。

@@ -72,5 +72,5 @@ if (docs/'status-0.17.json').exists(): merged.update(json.loads((docs/'status-0.
 if (docs/'status-0.18.json').exists(): merged.update(json.loads((docs/'status-0.18.json').read_text()))
 if (docs/'status-0.18.1.json').exists(): merged.update(json.loads((docs/'status-0.18.1.json').read_text()))
 if (docs/'status-0.19.json').exists(): merged.update(json.loads((docs/'status-0.19.json').read_text()))
-(docs/'feature-status-overrides.json').write_text(json.dumps(merged,ensure_ascii=False,indent=2)+'\n')
+(docs / 'data' / 'feature-status-overrides.json').write_text(json.dumps(merged,ensure_ascii=False,indent=2)+'\n')
 print(json.dumps(dict(collections.Counter(x['status'] for x in merged.values())),ensure_ascii=False))

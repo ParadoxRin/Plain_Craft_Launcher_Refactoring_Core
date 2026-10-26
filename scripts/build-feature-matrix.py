@@ -4,6 +4,9 @@ root=Path(__file__).resolve().parent.parent
 ref=root.parent/'pcl-download-fix/PCL-2.99.0.0'
 source=ref/'Plain Craft Launcher 2'
 docs=root/'docs'
+if not source.is_dir() or not (source/'Pages').is_dir():
+    raise SystemExit('PCL reference tree missing; retain docs/data snapshots. See docs/data/README.md.')
+(docs/'data').mkdir(exist_ok=True)
 # Each row is a user-visible capability; status is deliberately separate from evidence.
 groups=[
 ('AUTH','账户','Pages/PageLaunch','Accounts.cs','首页账户','离线名称与稳定UUID;多离线账户切换和删除;微软设备码授权;微软刷新和Keychain;微软权益与档案;多微软账户与退出;外置认证服务器配置;外置角色选择与刷新;统一通行证预设;皮肤展示与缓存;皮肤更换与清除;披风选择;离线皮肤'),
@@ -21,7 +24,7 @@ for prefix,domain,src,mac,ui,names in groups:
     for i,name in enumerate(names.split(';'),1):
         features.append(dict(id=f'{prefix}-{i:03}',domain=domain,name=name,sourceRoot=str(source.relative_to(root.parent)),sourceEntry=src,sourceEvidence='公开源码入口；细节见source-ui-inventory.json，删节功能单列',macImplementation=f'src/Pcl.Core/{mac}',ui=ui,status='部分实现' if (root/'src/Pcl.Core'/mac).exists() else '未实现',testEvidence=[],remaining='逐项接入、回归与真实GUI验收；不从同域功能推定本项完成',externalConditions=[]))
 # Read evidence overrides after implementation, never derive runtime success from file existence.
-overrides=docs/'feature-status-overrides.json'
+overrides=docs / 'data' / 'feature-status-overrides.json'
 if overrides.exists():
     updates=json.loads(overrides.read_text())
     for f in features:f.update(updates.get(f['id'],{}))
@@ -35,9 +38,9 @@ for p in sorted(source.rglob('*')):
         if labels or settings or handlers: inventory.append(dict(path=str(p.relative_to(ref)),line=number,labels=labels,settings=settings,symbols=handlers))
 archive=Path.home() / 'Downloads' / 'PCL-2.99.0.0.zip'
 provenance=dict(baseline='PCL 2.99.0.0',upstreamCommit='6b9a50df911c9d68b69b24c979efba477fb14b67',upstreamHeadVerified='2026-10-23',upstreamDelta='当前API默认分支最新提交与基线一致',sourceIsPatched=True,originalZipSha256=hashlib.sha256(archive.read_bytes()).hexdigest() if archive.exists() else None)
-(docs/'source-ui-inventory.json').write_text(json.dumps(inventory,ensure_ascii=False,indent=2))
+(docs / 'data' / 'source-ui-inventory.json').write_text(json.dumps(inventory,ensure_ascii=False,indent=2))
 # 重建条目时保留历史核对和当前统计，不能删除已审查的版本依据。
-matrix_path=docs/'PCL2完整功能矩阵.json'
+matrix_path=docs / 'data' / 'PCL2完整功能矩阵.json'
 previous=json.loads(matrix_path.read_text()) if matrix_path.exists() else {}
 previous.update(provenance=provenance,features=features)
 if 'currentMatrixReview' in previous:
@@ -46,6 +49,6 @@ if 'currentMatrixReview' in previous:
 matrix_path.write_text(json.dumps(previous,ensure_ascii=False,indent=2)+'\n')
 lines=['# PCL2 完整功能矩阵','', '固定基线：PCL 2.99.0.0 / `6b9a50df911c9d68b69b24c979efba477fb14b67`。2026-10-23 查询上游默认分支，最新提交仍为此基线。参考树含本地下载修复，原档哈希另存 JSON。','',f'本表登记 {len(features)} 项用户能力；源码入口清单包含 {len(inventory)} 条页面、设置和过程记录。此为追踪范围，不是已实现数量，也不代表发行版未公开代码已获得。','', '公开删节能力不能算成已复用。按用户要求取消百宝箱（原UI-015），不纳入当前功能计划，也不计为已完成；历史资料保留原始范围。','', '| ID | 功能 | 状态 | Mac 实现 / 界面 | 验收 / 剩余 |','|---|---|---|---|---|']
 for f in features:lines.append(f"| {f['id']} | {f['domain']} · {f['name']} | {f['status']} | `{f['macImplementation']}` / {f['ui']} | {'; '.join(f['testEvidence'])} {f['remaining']} |")
-lines+=['','机器可读记录：PCL2完整功能矩阵.json；页面/设置/事件符号：source-ui-inventory.json。状态修改保存在feature-status-overrides.json，由scripts/build-feature-matrix.py复现。']
+lines+=['','机器可读记录：data/PCL2完整功能矩阵.json；页面/设置/事件符号：data/source-ui-inventory.json。状态修改保存在data/feature-status-overrides.json，由scripts/build-feature-matrix.py复现。']
 (docs/'PCL2完整功能矩阵.md').write_text('\n'.join(lines)+'\n')
 print(json.dumps({'features':len(features),'sourceEntries':len(inventory)},ensure_ascii=False))

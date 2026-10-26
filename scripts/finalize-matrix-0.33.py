@@ -23,7 +23,7 @@ m['evidenceReconciliation']['statusCounts']=dict(collections.Counter(x['status']
 m['evidenceReconciliation']['completedImplementationThisRelease']=['INST-010']
 m['evidenceReconciliation']['historicalEvidenceVersionCoverage']=['0.24','0.25','0.26','0.27','0.28','0.29','0.30','0.31','0.32']
 m['evidenceReconciliation']['currentReleaseTestedFeatures']=[x['id'] for x in features.values() if x['audit033'].get('newEvidence')]
-(root/'docs/PCL2完整功能矩阵.json').write_text(json.dumps(m,ensure_ascii=False,indent=2)+'\n')
+(root/'docs/data/PCL2完整功能矩阵.json').write_text(json.dumps(m,ensure_ascii=False,indent=2)+'\n')
 (root/'artifacts/verification-0.33/matrix-final.json').write_text(json.dumps(m,ensure_ascii=False,indent=2)+'\n')
 lines=['# 0.33 功能矩阵逐项证据与剩余清单','','已审查132项；77项直接关联0.24–0.32的具体测试断言、文件和SHA-256。其余保留既有证据和适用范围，不以缺少新记录推定没有实现。','','本轮实际补齐 **INST-010 离线启动脚本**，不是状态调整。新增测试范围见 `audit033.newEvidence` 以及 `0.33-架构实现与验收.md`。','','| 类别（互斥） | 项数 | 含义 |','|---|---:|---|',f'| 已覆盖限定范围 | {counts["已覆盖限定范围"]} | 已有证据覆盖声明范围，不代表任意组合等价 |',f'| 实现缺口 | {counts["实现缺口"]} | 有明确缺失或未完成的行为 |',f'| 定向验收 | {counts["定向验收"]} | 已有实现，仍缺指定场景的直接验证 |',f'| 外部条件验收 | {counts["外部条件验收"]} | 需要额外账户、密钥、双端环境或不可得信息 |','','外部条件还可能与代码缺口交叉；完整标记在 requiresExternalCondition。没有把46项待验收都算成缺少功能，也没有把一个报告中的断言数量算成已完成功能数量。','','优先顺序：不需要密钥的明确实现缺口 → 同类用例的定向验收 → 具备外部条件后补测。UI和远程服务未覆盖范围在逐项表中保留。','']
 for kind in ('实现缺口','定向验收','外部条件验收','已覆盖限定范围'):
