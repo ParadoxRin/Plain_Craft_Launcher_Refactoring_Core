@@ -1,0 +1,66 @@
+name: Core CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'vendor/**'
+      - 'tests/**'
+      - 'Directory.Build.props'
+      - 'global.json'
+      - '.github/workflows/core-ci.yml'
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'vendor/**'
+      - 'tests/**'
+      - 'Directory.Build.props'
+      - 'global.json'
+      - '.github/workflows/core-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  core:
+    name: Core / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+    defaults:
+      run:
+        shell: bash
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+      DOTNET_NOLOGO: '1'
+      DOTNET_CLI_HOME: ${{ runner.temp }}/pcl-dotnet-home
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
+        with:
+          global-json-file: global.json
+      - name: Record runtime and source
+        run: |
+          git rev-parse HEAD
+          dotnet --info
+      - name: Restore and build core harness
+        run: dotnet build tests/Pcl.Tests/Pcl.Tests.csproj --configuration Release -m:1 -nr:false
+      # Pcl.Tests is a console executable, not a VSTest project. A successful
+      # dotnet test invocation would not prove that its assertions ran.
+      - name: Run core assertions
+        run: dotnet tests/Pcl.Tests/bin/Release/net10.0/Pcl.Tests.dll artifacts/ci-core
+      - name: Upload bounded test report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: core-results-${{ matrix.os }}
+          path: artifacts/ci-core/test-results.json
+          if-no-files-found: warn
+          retention-days: 14
