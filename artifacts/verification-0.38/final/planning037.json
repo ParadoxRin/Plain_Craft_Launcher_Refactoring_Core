@@ -1,0 +1,32 @@
+{
+  "status": "passed",
+  "checks": [
+    "official-loader-oracle-legacy",
+    "official-loader-oracle-append",
+    "official-loader-oracle-replace-wins",
+    "official-loader-oracle-remove-before-add",
+    "official-loader-oracle-all-kinds",
+    "official-loader-oracle-legacy-override",
+    "malformed-override-6",
+    "malformed-override-7",
+    "malformed-override-8",
+    "malformed-override-9",
+    "malformed-override-10",
+    "unknown-schema-rejected",
+    "hash-lookup-preserves-non-primary-file",
+    "single-joint-backtracks-with-override",
+    "planning-does-not-install-live-files",
+    "single-batch-pack-identical-final-jars",
+    "shared-dependency-disable-rejected",
+    "disable-rejection-restores-original-files",
+    "complete-locked-pack-needs-no-network",
+    "context-change-invalidates-planning",
+    "context-change-leaves-live-mods",
+    "cancelled-plan-no-write",
+    "integrity-failure-not-a-compatible-fallback",
+    "failed-download-preserves-live-mods"
+  ],
+  "oracleLoader": "0.19.5",
+  "network": "HTTP fixture",
+  "realGame": false
+}

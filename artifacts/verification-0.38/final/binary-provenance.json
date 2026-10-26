@@ -1,0 +1,30 @@
+{
+  "gameAssembliesUnchanged": true,
+  "files": [
+    {
+      "file": "Contents/MacOS/host/Pcl.Core.dll",
+      "sameAsGameTest": true,
+      "sha256": "f3492c6bdbbf38eb8f1d3efc091916e19ab202539b3f6c9b413306325975f32c"
+    },
+    {
+      "file": "Contents/MacOS/host/Pcl.Domain.dll",
+      "sameAsGameTest": true,
+      "sha256": "a52fdc7f771433cb01238e43e99c91ab0fcbc75a2585354d296de876955098c3"
+    },
+    {
+      "file": "Contents/MacOS/host/Pcl.Application.dll",
+      "sameAsGameTest": true,
+      "sha256": "ff5fcbcf0d3aedeb337bc5196720821d64e045f39f4558b7671d575cb00ed0dd"
+    },
+    {
+      "file": "Contents/MacOS/host/Pcl.Contract.dll",
+      "sameAsGameTest": true,
+      "sha256": "e017e923c6822ac6a6d316dcb82731f67b551786c93ac9c3caecc0026408aa84"
+    },
+    {
+      "file": "Contents/MacOS/host/Pcl.Host.dll",
+      "sameAsGameTest": true,
+      "sha256": "82afd9e45b1519a0974fbd767d324f6f71c8644a2034a9a78863c1a9d9e5fc21"
+    }
+  ]
+}

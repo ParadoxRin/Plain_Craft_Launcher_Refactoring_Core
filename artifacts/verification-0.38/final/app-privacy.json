@@ -1,0 +1,5 @@
+{
+  "filesScanned": 490,
+  "findings": [],
+  "scope": "current developer home, cloud project IDs, debug symbols, runtime state, credential patterns; not exhaustive"
+}

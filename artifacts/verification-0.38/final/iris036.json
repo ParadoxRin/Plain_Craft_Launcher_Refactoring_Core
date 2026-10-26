@@ -1,0 +1,93 @@
+{
+  "failed": 0,
+  "rows": [
+    {
+      "name": "exclusive-environment-removes-only-owned-components",
+      "status": "passed"
+    },
+    {
+      "name": "actual-jar-dependency-transitive-closure-preserves-shared",
+      "status": "passed"
+    },
+    {
+      "name": "explicit-install-purpose-preserves-dependency-without-dependent-mod",
+      "status": "passed"
+    },
+    {
+      "name": "preexisting-components-are-never-adopted",
+      "status": "passed"
+    },
+    {
+      "name": "manual-iris-and-legacy-environment-have-no-implicit-ownership",
+      "status": "passed"
+    },
+    {
+      "name": "mod-requiring-iris-refuses-entire-uninstall",
+      "status": "passed"
+    },
+    {
+      "name": "nested-alias-and-disabled-dependents-protect-shared-component",
+      "status": "passed"
+    },
+    {
+      "name": "edited-owned-file-refuses-before-any-removal",
+      "status": "passed"
+    },
+    {
+      "name": "new-user-mod-after-preview-refuses-stale-plan",
+      "status": "passed"
+    },
+    {
+      "name": "precommit-cancel-leaves-files-and-no-journal",
+      "status": "passed"
+    },
+    {
+      "name": "process-crash-recovery-prepared",
+      "status": "passed"
+    },
+    {
+      "name": "process-crash-recovery-component-removed",
+      "status": "passed"
+    },
+    {
+      "name": "process-crash-recovery-manifest-written",
+      "status": "passed"
+    },
+    {
+      "name": "process-crash-recovery-environment-written",
+      "status": "passed"
+    },
+    {
+      "name": "new-dependent-during-interruption-blocks-recovery-and-launch",
+      "status": "passed"
+    },
+    {
+      "name": "backup-corruption-blocks-recovery",
+      "status": "passed"
+    },
+    {
+      "name": "dependency-override-refuses-initial-and-interrupted-removal",
+      "status": "passed"
+    },
+    {
+      "name": "mod-directory-symlink-refused-without-recursive-loop",
+      "status": "passed"
+    },
+    {
+      "name": "uninstalled-vanilla-directory-needs-no-resource-lock",
+      "status": "passed"
+    },
+    {
+      "name": "download-failure-before-mutations-does-not-block-existing-game",
+      "status": "passed"
+    },
+    {
+      "name": "reinstall-does-not-turn-old-environment-purpose-into-shared-use",
+      "status": "passed"
+    },
+    {
+      "name": "independent-api-provider-allows-iris-nested-provider-removal",
+      "status": "passed"
+    }
+  ]
+}

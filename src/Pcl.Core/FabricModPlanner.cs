@@ -1,4 +1,5 @@
 using System.IO.Compression;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json.Linq;
 
@@ -28,7 +29,12 @@ public sealed record FabricModInfo(
     IReadOnlyList<string> Provides,
     bool IsNested = false,
     string Environment = "*",
-    IReadOnlyList<Pcl.Domain.FabricDependency>? EffectiveDependencies = null
+    IReadOnlyList<Pcl.Domain.FabricDependency>? EffectiveDependencies = null,
+    string CandidateKey = "",
+    IReadOnlyList<string>? ParentKeys = null,
+    string Origin = "",
+    int Schema = 1,
+    int NestingDepth = 0
 )
 {
     // Legacy constructors remain supported; actual archives carry all five dependency kinds.
@@ -61,26 +67,52 @@ public sealed record FabricModInfo(
 // 模组依赖分析：读取归档中的声明和版本范围，选择兼容候选，报告缺失前置或冲突。
 public static class FabricModReader
 {
-    // [实现] Read 的实现：准备 var stream = File.OpenRead(file)；返回 ReadArchive(stream, 0)。
+    // 以顶层文件名和嵌套内容哈希标记候选；配置覆盖在读取完整图后统一应用。
     public static IReadOnlyList<FabricModInfo> Read(string file, string? gameDirectory = null)
     {
         using var stream = File.OpenRead(file);
-        var mods = ReadArchive(stream, 0);
+        var name = Path.GetFileName(file);
+        var mods = ReadArchive(
+            stream,
+            0,
+            "root:" + name,
+            null,
+            name,
+            new ReadBudget()
+        );
         return gameDirectory is null
             ? mods
             : FabricDependencyOverrides.Read(gameDirectory)
                 .Apply(mods);
     }
 
-    // [实现] ReadArchive 的实现：按 depth > 8 分支处理；准备 var archive = new ZipArchive(stream, ZipArchiveMode.Read, true)；准备 var entry = archive.GetEntry("fabric.mod.json")。
-    private static IReadOnlyList<FabricModInfo> ReadArchive(Stream stream, int depth)
+    // 每个根包共享展开预算，避免递归压缩包耗尽内存或阻塞界面。
+    private sealed class ReadBudget
     {
-        if (depth > 8)
-            throw new InvalidDataException("嵌套模组过深。");
+        public int Archives;
+        public long ExpandedBytes;
+    }
+
+    // Retain archive identity and parent edges. Equal nested bytes may be supplied by several enclosing mods.
+    private static IReadOnlyList<FabricModInfo> ReadArchive(Stream stream, int depth, string key, string? parent, string origin, ReadBudget budget)
+    {
+        if (depth > 8 || ++budget.Archives > 2048)
+        {
+            throw new NotSupportedException("嵌套模组发现超过深度8或2048个归档；尚未判定兼容性。");
+        }
+
         using var archive = new ZipArchive(stream, ZipArchiveMode.Read, true);
         var entry = archive.GetEntry("fabric.mod.json");
         if (entry is null)
+        {
+            if (parent is not null)
+            {
+                return[]; // Nested ordinary libraries are not mod candidates.
+            }
+
             throw new InvalidDataException("文件不是 Fabric 模组。");
+        }
+
         if (entry.Length > 2 * 1024 * 1024)
             throw new InvalidDataException("模组元数据过大。");
         using var reader = new StreamReader(
@@ -111,27 +143,50 @@ public static class FabricModReader
                 Map("breaks"),
                 metadata.Provides,
                 Environment: metadata.Environment,
-                EffectiveDependencies: metadata.Dependencies
+                EffectiveDependencies: metadata.Dependencies,
+                CandidateKey: key,
+                ParentKeys: parent is null
+                    ? []
+                    : [
+                        parent
+                    ],
+                Origin: origin,
+                Schema: metadata.Schema,
+                NestingDepth: depth,
+                IsNested: parent is not null
             )
         };
-        foreach (var path in metadata.Jars)
+        if (metadata.Environment == "server")
         {
-            // [实现] 对 json["jars"] ?? new JArray() 中的每一项：准备 var path = (string)nested["file"]!；准备 var jar = archive.GetEntry(path) ?? throw new InvalidDataException("缺少嵌套模组：" + path)；按 jar.Length > 64 * 1024 * 1024 分支处理。
-            var jar = archive.GetEntry(path) ?? throw new InvalidDataException("缺少嵌套模组：" + path);
+            return result; // The Loader does not discover descendants of an environment-disabled parent.
+        }
+
+        foreach (var path in metadata.Jars.Distinct(StringComparer.Ordinal))
+        {
+            var jar = archive.GetEntry(path);
+            if (jar is null)
+            {
+                continue; // Production Loader ignores declared nested files that do not exist.
+            }
+
             if (jar.Length > 64 * 1024 * 1024)
                 throw new InvalidDataException("嵌套模组过大。");
+            budget.ExpandedBytes = checked(budget.ExpandedBytes + jar.Length);
+            if (budget.ExpandedBytes > 256L * 1024 * 1024)
+            {
+                throw new NotSupportedException("单个模组的嵌套展开超过256 MiB；尚未判定兼容性。");
+            }
+
             using var data = new MemoryStream();
             using (var source = jar.Open())
                 source.CopyTo(data);
             data.Position = 0;
+            var nestedKey = "nested:" + Convert.ToHexString(
+                SHA256.HashData(data)
+            );
+            data.Position = 0;
             result.AddRange(
-                ReadArchive(data, depth + 1)
-                    .Select(
-                        x => x with
-                        {
-                            IsNested = true
-                        }
-                    )
+                ReadArchive(data, depth + 1, nestedKey, key, origin + "!" + path, budget)
             );
         }
 

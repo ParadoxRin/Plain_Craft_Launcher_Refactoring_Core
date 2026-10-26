@@ -1,0 +1,257 @@
+{
+  "failed": 0,
+  "rows": [
+    {
+      "name": "joint_batch_backtracks_two_transitives_preserves_roots_cycle_and_commits",
+      "status": "passed"
+    },
+    {
+      "name": "joint_unsatisfiable_rolls_back_every_candidate_without_live_changes",
+      "status": "passed"
+    },
+    {
+      "name": "joint_pinned_root_conflict_is_not_silently_downgraded",
+      "status": "passed"
+    },
+    {
+      "name": "joint_cancellation_propagates_without_validation",
+      "status": "passed"
+    },
+    {
+      "name": "joint_corrupt_download_aborts_without_trying_alternative_versions",
+      "status": "passed"
+    },
+    {
+      "name": "jdk_module_oracle_explicit.jar_17",
+      "status": "passed"
+    },
+    {
+      "name": "jdk_module_oracle_multi.jar_9",
+      "status": "passed"
+    },
+    {
+      "name": "jdk_module_oracle_multi.jar_17",
+      "status": "passed"
+    },
+    {
+      "name": "jdk_module_oracle_nonmulti.jar_17",
+      "status": "passed"
+    },
+    {
+      "name": "jdk_module_oracle_automatic.jar_17",
+      "status": "passed"
+    },
+    {
+      "name": "jdk_module_oracle_nice-library-1.2.3.jar_17",
+      "status": "passed"
+    },
+    {
+      "name": "jdk_module_oracle_unicode.jar_17",
+      "status": "passed"
+    },
+    {
+      "name": "module_descriptor_truncation_and_duplicates_rejected",
+      "status": "passed"
+    },
+    {
+      "name": "forge_and_neoforge_jarjar_explicit_module_deduplicates_distinct_coordinates",
+      "status": "passed"
+    },
+    {
+      "name": "custom_verified_compiled_entrypoint_applied_and_receipt_roundtrips",
+      "status": "passed"
+    },
+    {
+      "name": "custom_missing_class_rejects_before_version_publish",
+      "status": "passed"
+    },
+    {
+      "name": "custom_duplicate_class_rejects_before_version_publish",
+      "status": "passed"
+    },
+    {
+      "name": "custom_windows_only_library_cannot_supply_mac_entrypoint",
+      "status": "passed"
+    },
+    {
+      "name": "custom_tweaker_requires_launchwrapper_and_old_schema_rejects_entrypoint",
+      "status": "passed"
+    },
+    {
+      "name": "quilt_1140_official_loader_version_oracle",
+      "status": "passed"
+    },
+    {
+      "name": "quilt_version_bare_caret_zero_major_tilde_and_any_all",
+      "status": "passed"
+    },
+    {
+      "name": "quilt_invalid_empty_universal_and_contradictory_ranges_rejected",
+      "status": "passed"
+    },
+    {
+      "name": "quilt_solver_backtracks_to_older_nested_candidate_and_cycles",
+      "status": "passed"
+    },
+    {
+      "name": "quilt_any_optional_unless_alias_group_and_conflict",
+      "status": "passed"
+    },
+    {
+      "name": "quilt_load_types_environment_and_alias_exclusivity",
+      "status": "passed"
+    },
+    {
+      "name": "quilt_solver_scales_to_large_independent_nested_set",
+      "status": "passed"
+    },
+    {
+      "name": "quilt_reads_nested_archives_and_rejects_missing_or_unsafe_path",
+      "status": "passed"
+    },
+    {
+      "name": "quilt_dependency_disable_and_remove_roll_back",
+      "status": "passed"
+    },
+    {
+      "name": "jarjar_intersects_all_ranges_and_excludes_unselected_mod_constraints",
+      "status": "passed"
+    },
+    {
+      "name": "jarjar_library_wrapper_toml_is_not_a_duplicate_mod",
+      "status": "passed"
+    },
+    {
+      "name": "jarjar_unselected_invalid_toml_does_not_poison_selected_mod",
+      "status": "passed"
+    },
+    {
+      "name": "jarjar_conflicting_ranges_and_identical_version_different_bytes_rejected",
+      "status": "passed"
+    },
+    {
+      "name": "jarjar_nested_library_transitives_and_top_level_override",
+      "status": "passed"
+    },
+    {
+      "name": "custom_pack_preserves_additive_libraries_properties_and_verified_entrypoint",
+      "status": "passed"
+    },
+    {
+      "name": "multimc_custom_component_requires_order_and_conversion_retains_metadata",
+      "status": "passed"
+    },
+    {
+      "name": "quilt_remote_backtracks_project_versions_and_preserves_exact_pins",
+      "status": "passed"
+    },
+    {
+      "name": "custom_metadata_normalization_roundtrip_and_export_retains_extension",
+      "status": "passed"
+    },
+    {
+      "name": "pack_import_all_declared_formats",
+      "status": "passed"
+    },
+    {
+      "name": "pack_rejects_traversal_symlink_case_collision_and_custom_patch",
+      "status": "passed"
+    },
+    {
+      "name": "pack_export_privacy_hashes_and_roundtrip",
+      "status": "passed"
+    },
+    {
+      "name": "curse_api_metadata_and_publisher_disabled_download",
+      "status": "passed"
+    },
+    {
+      "name": "pack_update_baseline_distinguishes_modified_added_deleted_and_private",
+      "status": "passed"
+    },
+    {
+      "name": "curse_missing_credentials_blocks_before_instance_install",
+      "status": "passed"
+    },
+    {
+      "name": "curse_catalog_filters_dependencies_and_file_restrictions",
+      "status": "passed"
+    },
+    {
+      "name": "modrinth_datapack_filters_need_no_fabric_loader",
+      "status": "passed"
+    },
+    {
+      "name": "local_scan_toggle_and_dependency_rollback",
+      "status": "passed"
+    },
+    {
+      "name": "resource_metadata_legacy_forge_neoforge_quilt_liteloader",
+      "status": "passed"
+    },
+    {
+      "name": "resource_alias_embedded_database_and_explicit_cross_platform_identity",
+      "status": "passed"
+    },
+    {
+      "name": "forge_toml_dependencies_versions_side_and_neoforge_legacy_alias",
+      "status": "passed"
+    },
+    {
+      "name": "pack_export_recipe_selection_and_exact_payload_hash",
+      "status": "passed"
+    },
+    {
+      "name": "resource_activation_undo_history_and_external_change_protection",
+      "status": "passed"
+    },
+    {
+      "name": "resource_batch_update_projects_whole_dependency_set_and_preserves_external_edits",
+      "status": "passed"
+    },
+    {
+      "name": "world_datapack_install_toggle_backup_and_target_validation",
+      "status": "passed"
+    },
+    {
+      "name": "quilt_overrides_official_eight_case_fixtures",
+      "status": "passed"
+    },
+    {
+      "name": "quilt_override_add_remove_replace_and_original_immutable",
+      "status": "passed"
+    },
+    {
+      "name": "quilt_override_semantic_range_equality_reason_optional_and_unless",
+      "status": "passed"
+    },
+    {
+      "name": "quilt_override_arrays_flatten_but_keep_order_and_breaks",
+      "status": "passed"
+    },
+    {
+      "name": "quilt_override_replacement_removal_addition_order_and_deduplication",
+      "status": "passed"
+    },
+    {
+      "name": "quilt_override_unmatched_selector_and_missing_old_condition_warn",
+      "status": "passed"
+    },
+    {
+      "name": "quilt_override_unsupported_selectors_versions_and_fabric_are_explicit",
+      "status": "passed"
+    },
+    {
+      "name": "quilt_override_invalid_unmatched_rules_fail_closed",
+      "status": "passed"
+    },
+    {
+      "name": "quilt_override_strict_json_size_and_symlink_boundary",
+      "status": "passed"
+    },
+    {
+      "name": "quilt_override_local_disable_rollback_and_json5_production_rejection",
+      "status": "passed"
+    }
+  ]
+}

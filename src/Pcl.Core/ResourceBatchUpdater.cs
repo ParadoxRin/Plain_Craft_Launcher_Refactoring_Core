@@ -270,7 +270,7 @@ public sealed class ResourceBatchUpdater(string gameDirectory, string loader, st
                 await new ResourceInstaller(staging, downloads, loader, gameVersion, root).InstallAsync(plan, progress, ct);
             }
 
-            var warnings = new LocalResourceService(staging, loader, gameVersion, root).ValidateEnabledResources();
+            var warnings = new LocalResourceService(staging, loader, gameVersion, root).ValidateEnabledResources(ct);
             if (loader is not ("fabric" or "quilt" or "forge" or "neoforge") && selected.Any(
                 x => x.Current.Kind == ResourceKind.Mod
             ))

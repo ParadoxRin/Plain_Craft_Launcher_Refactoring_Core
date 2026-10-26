@@ -355,7 +355,7 @@ public sealed class ResourceInstaller(
         var next = existing.Except(replaced)
             .Concat(incoming)
             .ToArray();
-        Commit(replaced, incoming, next, cache);
+        Commit(replaced, incoming, next, cache, ct);
         progress?.Report(
             new("安装完成", incoming.Count, incoming.Count, plan.Bytes, plan.Bytes)
         );
@@ -382,7 +382,8 @@ public sealed class ResourceInstaller(
         IReadOnlyList<ManagedResource> removed,
         IReadOnlyList<ManagedResource> incoming,
         IReadOnlyList<ManagedResource> next,
-        string cache
+        string cache,
+        CancellationToken ct = default
     )
     {
         var backup = SafeTarget(
@@ -430,7 +431,7 @@ public sealed class ResourceInstaller(
             ) || incoming.Any(
                 x => x.Kind == ResourceKind.Mod
             ))
-                new LocalResourceService(GameDirectory, loader, gameVersion, libraryContextDirectory).ValidateEnabledResources();
+                new LocalResourceService(GameDirectory, loader, gameVersion, libraryContextDirectory).ValidateEnabledResources(ct);
             JsonFiles.Write(
                 Path.Combine(backup, "rollback.json"),
                 moved.Select(

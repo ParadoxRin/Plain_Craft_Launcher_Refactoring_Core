@@ -1,0 +1,38 @@
+{
+  "Id": "kSPJ4hQv",
+  "Number": "3.0.0+1.21",
+  "Sha1": "c7f09b53512604c2ba6803b1247bc70e4d0f8f8c",
+  "previous": "NksUpFjf",
+  "profiles": [
+    "PCL038-Single-fabric-loader-0.19.5-1.21.1",
+    "PCL038-Pack"
+  ],
+  "files": [
+    {
+      "name": "continuity-3.0.0+1.21.jar",
+      "Sha1": "c7f09b53512604c2ba6803b1247bc70e4d0f8f8c",
+      "Size": 1014044
+    },
+    {
+      "name": "fabric-api-0.116.17+1.21.1.jar",
+      "Sha1": "810b2b0195371a012906241d8b85a32a1d6de53c",
+      "Size": 2452735
+    },
+    {
+      "name": "pcl038_bundle.jar",
+      "Sha1": "b593d6687badd3e383e0058b63598267bb832c21",
+      "Size": 814
+    },
+    {
+      "name": "pcl038_consumer.jar",
+      "Sha1": "f63d0a55740f449ea070a787b83561bc52eaed9c",
+      "Size": 236
+    },
+    {
+      "name": "pcl038_legacy.jar",
+      "Sha1": "626cfba9e73ac35029bd576be1d1e15250809ab4",
+      "Size": 277
+    }
+  ],
+  "fixturePack": "controlled pack, public Continuity and Fabric API plus schema-0 and nested multi-version metadata fixtures"
+}

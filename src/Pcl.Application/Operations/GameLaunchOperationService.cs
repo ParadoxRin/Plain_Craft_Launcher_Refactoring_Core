@@ -293,7 +293,15 @@ public sealed class GameLaunchOperationService : IGameLaunchOperations
                 }
 
                 var result = await executor.StartAsync(
-                    new(command.AccountId, command.InstanceId, command.Detached, command.Guidance?.Culture ?? "zh-CN", command.Guidance?.SponsorRead ?? false, command.Guidance?.PurchaseRead ?? false, command.Guidance?.Demo ?? false),
+                    new(
+                        command.AccountId,
+                        command.InstanceId,
+                        command.Detached,
+                        command.Guidance?.Culture ?? "zh-CN",
+                        command.Guidance?.SponsorRead ?? false,
+                        command.Guidance?.PurchaseRead ?? false,
+                        command.Guidance?.Demo ?? false
+                    ),
                     () =>
                     {
                         lock (gate)
@@ -331,7 +339,8 @@ public sealed class GameLaunchOperationService : IGameLaunchOperations
             }
             catch (Exception ex)
             {
-                var code = ex switch
+                var dependency = Pcl.Core.Application.Diagnostics.DependencyFailureMapper.From(ex);
+                var code = dependency?.Code ?? (ex switch
                 {
                     OperationCanceledException when ct.IsCancellationRequested => "CANCELLED",
                     LoginRequiredException => "LOGIN_REQUIRED",
@@ -340,7 +349,7 @@ public sealed class GameLaunchOperationService : IGameLaunchOperations
                     HttpRequestException => "NETWORK_ERROR",
                     InvalidDataException => "INVALID_DATA",
                     _ => "LAUNCH_FAILED"
-                };
+                });
                 lock (gate)
                 {
                     if (Find(id)
@@ -358,7 +367,8 @@ public sealed class GameLaunchOperationService : IGameLaunchOperations
                                 : "failed",
                             Find(id)
                                 .Snapshot.Stage,
-                            code
+                            code,
+                            dependency
                         );
                     }
                     catch (Exception)
@@ -417,7 +427,13 @@ public sealed class GameLaunchOperationService : IGameLaunchOperations
     }
 
     private StoredLaunch Find(string id) => rows.GetValueOrDefault(id) ?? throw new OperationRejectedException("OPERATION_NOT_FOUND");
-    private void Set(string id, string state, string stage, string? error = null)
+    private void Set(
+        string id,
+        string state,
+        string stage,
+        string? error = null,
+        Pcl.Core.Contracts.Diagnostics.DependencyDiagnostic? dependency = null
+    )
     {
         var row = Find(id);
         Save(
@@ -428,6 +444,7 @@ public sealed class GameLaunchOperationService : IGameLaunchOperations
                     State = state,
                     Stage = stage,
                     ErrorCode = error,
+                    DependencyFailure = dependency,
                     Updated = DateTimeOffset.UtcNow,
                     Sequence = row.Snapshot.Sequence + 1
                 }
@@ -514,8 +531,13 @@ public sealed class GameLaunchOperationService : IGameLaunchOperations
         // Preserve old receipt fingerprints when no new guidance fields exist.
         if (command.Guidance is not null)
         {
-            normalized = new { launch = normalized, guidance = command.Guidance };
+            normalized = new
+            {
+                launch = normalized,
+                guidance = command.Guidance
+            };
         }
+
         return Convert.ToHexString(
             SHA256.HashData(
                 JsonSerializer.SerializeToUtf8Bytes(normalized)

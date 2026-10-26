@@ -4940,7 +4940,10 @@
         "artifacts/verification-0.34/release-resources.json",
         "docs/0.37-依赖规划与验收.md",
         "artifacts/verification-0.37/final/focused.json",
-        "artifacts/verification-0.37/final/real-installs.json"
+        "artifacts/verification-0.37/final/real-installs.json",
+        "docs/0.38-嵌套依赖与验收.md",
+        "artifacts/verification-0.38/final/nested.json",
+        "artifacts/verification-0.38/final/game-reopen.json"
       ],
       "remaining": "0.37已统一Modrinth单项/批量及支持包格式的规划入口，支持Fabric schema0/1与version 1依赖覆盖。仍缺完整Quilt path/pattern/version覆盖、任意嵌套JAR全局选择和自定义插件；未在远程目录声明的缺失前置不能自动猜测。",
       "externalConditions": [],
@@ -5558,7 +5561,10 @@
         "artifacts/verification-0.34/release-resources.json",
         "docs/0.37-依赖规划与验收.md",
         "artifacts/verification-0.37/final/focused.json",
-        "artifacts/verification-0.37/final/real-installs.json"
+        "artifacts/verification-0.37/final/real-installs.json",
+        "docs/0.38-嵌套依赖与验收.md",
+        "artifacts/verification-0.38/final/nested.json",
+        "artifacts/verification-0.38/final/game-reopen.json"
       ],
       "remaining": "Fabric启停保护已使用覆盖后的有效约束；仍受完整Quilt覆盖、任意嵌套候选选择、语言插件等未实现语义限制。",
       "externalConditions": [],
@@ -5682,7 +5688,10 @@
         "artifacts/verification-0.34/release-resources.json",
         "docs/0.37-依赖规划与验收.md",
         "artifacts/verification-0.37/final/focused.json",
-        "artifacts/verification-0.37/final/real-installs.json"
+        "artifacts/verification-0.37/final/real-installs.json",
+        "docs/0.38-嵌套依赖与验收.md",
+        "artifacts/verification-0.38/final/nested.json",
+        "artifacts/verification-0.38/final/game-reopen.json"
       ],
       "remaining": "0.37批量更新已共用规划并解释Fabric覆盖。仍缺完整Quilt覆盖及自定义语言插件语义；候选上限256组/每项目64版/待检查16384组，超限明确未判定，不称无解。",
       "externalConditions": [],
@@ -5952,7 +5961,10 @@
         "artifacts/verification-0.34/final-custom-packs.json",
         "docs/0.37-依赖规划与验收.md",
         "artifacts/verification-0.37/final/focused.json",
-        "artifacts/verification-0.37/final/real-installs.json"
+        "artifacts/verification-0.37/final/real-installs.json",
+        "docs/0.38-嵌套依赖与验收.md",
+        "artifacts/verification-0.38/final/nested.json",
+        "artifacts/verification-0.38/final/game-reopen.json"
       ],
       "remaining": "0.37包内锁定文件接入统一规划；完整集合先离线验证，缺失前置通过Modrinth哈希身份和声明补齐。未知本地前置、完整Quilt覆盖、语言插件、自定义客户端及任意嵌套求解仍有缺口；受控真实资源包实测不能代表任意第三方包。schema2仍为PCL扩展。",
       "externalConditions": [],

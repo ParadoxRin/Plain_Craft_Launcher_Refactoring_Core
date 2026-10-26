@@ -33,7 +33,7 @@ public sealed class LaunchService(MinecraftService service)
                 // [实现] 条件成立（File.Exists(profilePath)）时：准备 var receipt = JsonFiles.Read(profilePath)；准备 var loader = (string? )receipt["loader"] ?? "vanilla"；执行 new LocalResourceService(gameDirectory, loader, service.GameVersion).ValidateEnabledResources()。
                 var receipt = JsonFiles.Read(profilePath);
                 var loader = (string? )receipt["loader"] ?? "vanilla";
-                new LocalResourceService(gameDirectory, loader, service.GameVersion).ValidateEnabledResources();
+                new LocalResourceService(gameDirectory, loader, service.GameVersion).ValidateEnabledResources(ct);
             }
 
             var configuredJava = new LauncherSettingsStore(service.Paths).Effective(gameDirectory)

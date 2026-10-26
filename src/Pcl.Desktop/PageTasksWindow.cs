@@ -65,7 +65,10 @@ public sealed class PageTasksWindow : WorkspaceWindow, IHostWorkspace
                 status
             }
         };
-        Content = panel;
+        Content = new ScrollViewer
+        {
+            Content = panel
+        };
         bool busy = false;
         CancellationTokenSource? resumeCancellation = null;
         async Task RefreshAsync()
@@ -109,6 +112,13 @@ public sealed class PageTasksWindow : WorkspaceWindow, IHostWorkspace
             }
         }
 
+        list.SelectionChanged += (_, _) =>
+        {
+            if (list.SelectedItem is TaskRow { Snapshot.DependencyFailure: { } failure })
+            {
+                status.Text = failure.DisplayText;
+            }
+        };
         Opened += async (_, _) => await Run(RefreshAsync);
         refresh.Click += async (_, _) => await Run(RefreshAsync);
         cancel.Click += async (_, _) =>
@@ -151,9 +161,11 @@ public sealed class PageTasksWindow : WorkspaceWindow, IHostWorkspace
                 try
                 {
                     var result = await tasks.ResumeAsync(row.OperationId, resumeCancellation.Token);
-                    status.Text = StateText(result.State) + (result.ErrorCode is { } code
-                        ? " · " + code
-                        : "");
+                    status.Text = StateText(result.State) + (result.DependencyFailure is { } dependency
+                        ? "\n" + dependency.DisplayText
+                        : result.ErrorCode is { } code
+                            ? " · " + code
+                            : "");
                 }
                 finally
                 {

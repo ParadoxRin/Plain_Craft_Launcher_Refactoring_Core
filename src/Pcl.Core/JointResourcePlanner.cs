@@ -24,6 +24,7 @@ public static class JointResourcePlanner
         );
         var seen = new HashSet<string>(StringComparer.Ordinal);
         var failures = "";
+        Exception? lastFailure = null;
         var attempts = 0;
         while (pending.TryPop(out var choices))
         {
@@ -62,6 +63,7 @@ public static class JointResourcePlanner
             {
                 // 仅兼容性失败允许换未锁定的前置；取消、网络和文件访问异常仍向调用者传播。
                 failures = ex.Message;
+                lastFailure = ex;
             }
 
             var projects = visited.SelectMany(
@@ -117,6 +119,6 @@ public static class JointResourcePlanner
             }
         }
 
-        throw new InvalidDataException("已声明的前置候选中没有同时满足全部根版本的组合：" + failures);
+        throw new InvalidDataException("已声明的前置候选中没有同时满足全部根版本的组合：" + failures, lastFailure);
     }
 }

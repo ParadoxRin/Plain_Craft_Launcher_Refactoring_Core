@@ -192,11 +192,18 @@ public partial class MainWindow : Window
                 return;
             }
 
+            if (Program.Arguments.Contains("--nested038-smoke"))
+            {
+                await Nested038SmokeAsync();
+                return;
+            }
+
             if (Program.Arguments.Contains("--license0361-smoke"))
             {
                 await License0361SmokeAsync();
                 return;
             }
+
             if (Program.Arguments.Contains("--offline-script-smoke"))
             {
                 await OfflineScriptSmokeAsync();
@@ -834,6 +841,7 @@ public partial class MainWindow : Window
         {
             return;
         }
+
         var accepted = await gameLaunch.AcceptAsync(
             new(
                 Guid.NewGuid()
@@ -869,7 +877,7 @@ public partial class MainWindow : Window
                 throw new OperationCanceledException(c);
             }
 
-            throw new InvalidOperationException(launched.ErrorCode ?? "LAUNCH_FAILED");
+            throw new InvalidOperationException(launched.DependencyFailure?.DisplayText ?? launched.ErrorCode ?? "LAUNCH_FAILED");
         }
 
         if (accountId != "trial")
@@ -1547,7 +1555,10 @@ public partial class MainWindow : Window
             Width = 720,
             Height = 660,
             WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            Content = new ScrollViewer { Content = BuildAboutContent() }
+            Content = new ScrollViewer
+            {
+                Content = BuildAboutContent()
+            }
         }.ShowDialog(this);
     }
 

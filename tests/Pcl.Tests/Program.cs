@@ -10,6 +10,16 @@ using Pcl.Legacy;
 
 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 MeloongCore.Main.Init("PCLMacPortTests");
+if (args.FirstOrDefault() == "--live038")
+{
+    return await Live038Tests.Run(args[1]);
+}
+
+if (args.FirstOrDefault() == "--nested038")
+{
+    return await Nested038Tests.Run(args[1], args[2], args[3]);
+}
+
 if (args.FirstOrDefault() == "--live037")
 {
     return await Live037Tests.Run(args[1]);

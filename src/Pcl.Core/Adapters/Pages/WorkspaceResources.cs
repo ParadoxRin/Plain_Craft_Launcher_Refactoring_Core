@@ -85,7 +85,7 @@ public sealed partial class PageExecutionAdapter
                     id
                 );
             case "workspace.resources.validate":
-                return local.ValidateEnabledResources();
+                return local.ValidateEnabledResources(ct);
             case "workspace.resources.history":
                 return ResourceHistory.Read(profile.GameDirectory)
                     .Select(

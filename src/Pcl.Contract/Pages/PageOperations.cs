@@ -25,7 +25,8 @@ public sealed record PageSnapshot(
     PageCommand Command,
     OperationProgress? Progress = null,
     JsonElement? Result = null,
-    string? ErrorCode = null
+    string? ErrorCode = null,
+    Pcl.Core.Contracts.Diagnostics.DependencyDiagnostic? DependencyFailure = null
 )
 {
     public bool Terminal => State is "succeeded" or "failed" or "cancelled" or "interrupted";

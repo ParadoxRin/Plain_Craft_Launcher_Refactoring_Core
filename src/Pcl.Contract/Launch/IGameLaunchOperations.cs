@@ -2,7 +2,13 @@ using Pcl.Core.Contracts.Operations;
 
 namespace Pcl.Core.Contracts.Launch;
 // 跨 Shell/Host 只传稳定账户和实例 ID；不允许客户端提交 Java 路径、完整参数或任何令牌。
-public sealed record GameLaunchCommand(string IdempotencyKey, string AccountId, string InstanceId, bool Detached = false, LaunchGuidanceConsent? Guidance = null);
+public sealed record GameLaunchCommand(
+    string IdempotencyKey,
+    string AccountId,
+    string InstanceId,
+    bool Detached = false,
+    LaunchGuidanceConsent? Guidance = null
+);
 public sealed record StartedGame(string GameProcessId, int Pid, bool Detached);
 public sealed record GameLaunchSnapshot(
     string OperationId,
@@ -12,7 +18,8 @@ public sealed record GameLaunchSnapshot(
     DateTimeOffset Updated,
     GameLaunchCommand Command,
     StartedGame? Result = null,
-    string? ErrorCode = null
+    string? ErrorCode = null,
+    Pcl.Core.Contracts.Diagnostics.DependencyDiagnostic? DependencyFailure = null
 )
 {
     public bool Terminal => State is "succeeded" or "failed" or "cancelled" or "interrupted";

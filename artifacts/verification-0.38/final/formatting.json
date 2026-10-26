@@ -1,0 +1,252 @@
+[
+  {
+    "file": "src/Pcl.Application/Diagnostics/DependencyFailureMapper.cs",
+    "changed": false,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "75552fe3218087302aa0d5b98f56e0a4fc181b394af0ce98e275e569498cf34d",
+    "afterSha256": "75552fe3218087302aa0d5b98f56e0a4fc181b394af0ce98e275e569498cf34d"
+  },
+  {
+    "file": "src/Pcl.Application/Operations/GameLaunchOperationService.cs",
+    "changed": false,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "13ad91c55676ba3b8ec9291db2036c8ff65728841f685df424779844c32a6b1d",
+    "afterSha256": "13ad91c55676ba3b8ec9291db2036c8ff65728841f685df424779844c32a6b1d"
+  },
+  {
+    "file": "src/Pcl.Application/Pages/PageOperationService.cs",
+    "changed": false,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "3fa5eb79e7d812e4179a6aa4f82fc82f9b78338aff95990000d895de64f61ede",
+    "afterSha256": "3fa5eb79e7d812e4179a6aa4f82fc82f9b78338aff95990000d895de64f61ede"
+  },
+  {
+    "file": "src/Pcl.Client/LauncherPages.cs",
+    "changed": false,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "55f0adff3be52456faf5658371c23cc7b0e43616aa130871a97f9401115d5756",
+    "afterSha256": "55f0adff3be52456faf5658371c23cc7b0e43616aa130871a97f9401115d5756"
+  },
+  {
+    "file": "src/Pcl.Contract/Diagnostics/DependencyDiagnostic.cs",
+    "changed": false,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "49123f25a18fdc116e5288fc56d6bb8027a6aaf15912b9c62be23ba0473a219b",
+    "afterSha256": "49123f25a18fdc116e5288fc56d6bb8027a6aaf15912b9c62be23ba0473a219b"
+  },
+  {
+    "file": "src/Pcl.Contract/Launch/IGameLaunchOperations.cs",
+    "changed": false,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "f1c3bdc1d36bd01459e19528a4a0bca6b31187229fa0b17aa47b2294d81fc9d4",
+    "afterSha256": "f1c3bdc1d36bd01459e19528a4a0bca6b31187229fa0b17aa47b2294d81fc9d4"
+  },
+  {
+    "file": "src/Pcl.Contract/Pages/PageOperations.cs",
+    "changed": false,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "36e12849cf371ade53db01bdcb69d123149e8d67b0dfb270cc0d25412ee2a7ff",
+    "afterSha256": "36e12849cf371ade53db01bdcb69d123149e8d67b0dfb270cc0d25412ee2a7ff"
+  },
+  {
+    "file": "src/Pcl.Core/Adapters/Pages/WorkspaceResources.cs",
+    "changed": false,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "9f95bc6543f2ea0a7009f4beb74a7b3a69e539178f1e6b474b7d4508caba5fa6",
+    "afterSha256": "9f95bc6543f2ea0a7009f4beb74a7b3a69e539178f1e6b474b7d4508caba5fa6"
+  },
+  {
+    "file": "src/Pcl.Core/FabricDependencySet.cs",
+    "changed": false,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "565db80efbd80a6abe338e5043129ea3155ecd0c3799caf87be6972000952168",
+    "afterSha256": "565db80efbd80a6abe338e5043129ea3155ecd0c3799caf87be6972000952168"
+  },
+  {
+    "file": "src/Pcl.Core/FabricModPlanner.cs",
+    "changed": false,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "50a45a3d57d9b3be533d5f023f0b8bcd75d19392ee7fd0a26cc8f1eb469eb0c6",
+    "afterSha256": "50a45a3d57d9b3be533d5f023f0b8bcd75d19392ee7fd0a26cc8f1eb469eb0c6"
+  },
+  {
+    "file": "src/Pcl.Core/JointResourcePlanner.cs",
+    "changed": false,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "d5d1006b427e05ed89f0c9dbb0b4a7aa2cb3dbb53bfde3ae86c9554ab328a662",
+    "afterSha256": "d5d1006b427e05ed89f0c9dbb0b4a7aa2cb3dbb53bfde3ae86c9554ab328a662"
+  },
+  {
+    "file": "src/Pcl.Core/LaunchService.cs",
+    "changed": false,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "bfba7d48708a79b4801b668466c3a7069275e6f889aac8f409038550d35a9451",
+    "afterSha256": "bfba7d48708a79b4801b668466c3a7069275e6f889aac8f409038550d35a9451"
+  },
+  {
+    "file": "src/Pcl.Core/LocalResourceService.cs",
+    "changed": false,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "0244867dc49258c6da7661d87233276b74d5c4e284685be2d03e06bc39a171b0",
+    "afterSha256": "0244867dc49258c6da7661d87233276b74d5c4e284685be2d03e06bc39a171b0"
+  },
+  {
+    "file": "src/Pcl.Core/ResourceBatchUpdater.cs",
+    "changed": false,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "47e6f0c8d105a2e1ee5dd05fccbe12c6c5d87f995858e980d92ad67f16cd1930",
+    "afterSha256": "47e6f0c8d105a2e1ee5dd05fccbe12c6c5d87f995858e980d92ad67f16cd1930"
+  },
+  {
+    "file": "src/Pcl.Core/ResourceDependencyPlanner.cs",
+    "changed": false,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "7ca40a3457e5ea9d52dbc7866a72b57d32f398b61b18348da491eed886615e34",
+    "afterSha256": "7ca40a3457e5ea9d52dbc7866a72b57d32f398b61b18348da491eed886615e34"
+  },
+  {
+    "file": "src/Pcl.Core/ResourceInstaller.cs",
+    "changed": false,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "5dcf37724e6f8802c1d83930c33ab9f7041cb850e2a58b162dfce6d619fabb85",
+    "afterSha256": "5dcf37724e6f8802c1d83930c33ab9f7041cb850e2a58b162dfce6d619fabb85"
+  },
+  {
+    "file": "src/Pcl.Desktop/License0361Smoke.cs",
+    "changed": false,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "bf10c36c31bb13bf9685ed8d33684654181bcd1ad7b9e7908a614cb20d9d660f",
+    "afterSha256": "bf10c36c31bb13bf9685ed8d33684654181bcd1ad7b9e7908a614cb20d9d660f"
+  },
+  {
+    "file": "src/Pcl.Desktop/MainWindow.axaml.cs",
+    "changed": false,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "eeb361c6cbf23824e306c67a63ed512193171808f65049bfefd30193ba304986",
+    "afterSha256": "eeb361c6cbf23824e306c67a63ed512193171808f65049bfefd30193ba304986"
+  },
+  {
+    "file": "src/Pcl.Desktop/Nested038Smoke.cs",
+    "changed": true,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "8e07410805ea1e4fea68465c9cf2927d21852a6ddab0686907a20ef842450493",
+    "afterSha256": "ab09b0fc55e5df91160f88a62f8bea4cad3f3e20212a4a14827621c2047c616a"
+  },
+  {
+    "file": "src/Pcl.Desktop/PageTasksWindow.cs",
+    "changed": false,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "2ee2c4c8af89297785fa1386a444206594fe21ee446ec64287ff14dbc4a8e7a5",
+    "afterSha256": "2ee2c4c8af89297785fa1386a444206594fe21ee446ec64287ff14dbc4a8e7a5"
+  },
+  {
+    "file": "src/Pcl.Desktop/ProductInfo.cs",
+    "changed": false,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "92a61e045c7bc98bb16fb14eac6a1a95f300964b8c0cc4c63bfd7fcc71d214dd",
+    "afterSha256": "92a61e045c7bc98bb16fb14eac6a1a95f300964b8c0cc4c63bfd7fcc71d214dd"
+  },
+  {
+    "file": "src/Pcl.Domain/FabricCandidateSolver.cs",
+    "changed": false,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "3230420e0e63ba63e2e9e2d900eb79b7eb15d403af56d92340bf7335462cbb91",
+    "afterSha256": "3230420e0e63ba63e2e9e2d900eb79b7eb15d403af56d92340bf7335462cbb91"
+  },
+  {
+    "file": "tests/Pcl.Tests/Live038Tests.cs",
+    "changed": false,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "3826d6d3ed56fc684b526061ca537945b5aac99707760841407dfff1ae971f06",
+    "afterSha256": "3826d6d3ed56fc684b526061ca537945b5aac99707760841407dfff1ae971f06"
+  },
+  {
+    "file": "tests/Pcl.Tests/Nested038Tests.cs",
+    "changed": false,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "38e698006add7589d0ea58c0155dbbe70aeb9f084bd36274e8b61ccbb160e0c9",
+    "afterSha256": "38e698006add7589d0ea58c0155dbbe70aeb9f084bd36274e8b61ccbb160e0c9"
+  },
+  {
+    "file": "tests/Pcl.Tests/Program.cs",
+    "changed": false,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "86dac9b784733a53900c2d755bc8f7a9815bc1fc322fe959f6a1159cfe31c535",
+    "afterSha256": "86dac9b784733a53900c2d755bc8f7a9815bc1fc322fe959f6a1159cfe31c535"
+  }
+]

@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "checks": [
+    "packaged-host-reloads-structured-receipts",
+    "second-host-retains-identical-diagnostics",
+    "no-host-root-in-public-diagnostics",
+    "both-hosts-exit-zero"
+  ],
+  "failureCount": 1
+}

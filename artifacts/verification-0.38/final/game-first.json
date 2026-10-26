@@ -1,0 +1,15 @@
+{
+  "detached": false,
+  "state": "completed",
+  "checks": [
+    "packaged-host-retains-launch-guidance",
+    "launch-retry-reuses-operation",
+    "actual-game-joined-test-world",
+    "actual-loader-loaded-public-mods-legacy-and-selected-nested-version",
+    "actual-world-save-recorded",
+    "actual-world-save-completed",
+    "managed-game-exit-zero",
+    "test-world-files-updated"
+  ],
+  "exitCode": 0
+}

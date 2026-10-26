@@ -1,0 +1,12 @@
+{
+  "checks": [
+    "empty embedded default",
+    "actionable configuration error",
+    "unconfigured login makes no network request",
+    "reject invalid or secret-bearing config",
+    "reject invalid or secret-bearing config",
+    "reject invalid or secret-bearing config",
+    "offline identity remains available"
+  ],
+  "status": "passed"
+}

@@ -136,7 +136,7 @@ public static class ResourceDependencyPlanner
     {
         if (profile.Loader is not ("fabric" or "quilt" or "forge" or "neoforge"))
         {
-            new LocalResourceService(profile.GameDirectory, profile.Loader, profile.GameVersion).ValidateEnabledResources();
+            new LocalResourceService(profile.GameDirectory, profile.Loader, profile.GameVersion).ValidateEnabledResources(ct);
             return;
         }
 
@@ -187,7 +187,7 @@ public static class ResourceDependencyPlanner
 
         if (localRoots.Count == 0)
         {
-            new LocalResourceService(profile.GameDirectory, profile.Loader, profile.GameVersion).ValidateEnabledResources();
+            new LocalResourceService(profile.GameDirectory, profile.Loader, profile.GameVersion).ValidateEnabledResources(ct);
             return;
         }
 
@@ -254,7 +254,7 @@ public static class ResourceDependencyPlanner
             await installer.InstallAsync(plan, progress, ct, "pack:" + profile.Id);
         }
 
-        new LocalResourceService(profile.GameDirectory, profile.Loader, profile.GameVersion).ValidateEnabledResources();
+        new LocalResourceService(profile.GameDirectory, profile.Loader, profile.GameVersion).ValidateEnabledResources(ct);
     }
 
     private static Dictionary<string, string> Snapshot(string directory)

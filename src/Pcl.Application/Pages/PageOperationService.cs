@@ -344,7 +344,8 @@ public sealed class PageOperationService : IPageOperations
             }
             catch (Exception ex)
             {
-                var code = ex switch
+                var dependency = Pcl.Core.Application.Diagnostics.DependencyFailureMapper.From(ex);
+                var code = dependency?.Code ?? (ex switch
                 {
                     OperationCanceledException when ct.IsCancellationRequested => "CANCELLED",
                     OperationInstallException failure => failure.Code,
@@ -352,7 +353,7 @@ public sealed class PageOperationService : IPageOperations
                     HttpRequestException => "NETWORK_ERROR",
                     InvalidDataException => "INVALID_DATA",
                     _ => "PAGE_EXECUTION_FAILED"
-                };
+                });
                 lock (gate)
                 {
                     var latest = Find(id);
@@ -365,6 +366,7 @@ public sealed class PageOperationService : IPageOperations
                                 : "failed",
                             Stage = "finished",
                             ErrorCode = code,
+                            DependencyFailure = dependency,
                             Sequence = latest.Snapshot.Sequence + 1,
                             Updated = DateTimeOffset.UtcNow
                         }

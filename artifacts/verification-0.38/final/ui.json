@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "checks": [
+    "real-host-client-conflict-explanation",
+    "no-host-root-in-client-message",
+    "structured-page-failure",
+    "task-history-renders-constraint-details",
+    "launch-rejected-before-game-with-structured-evidence"
+  ],
+  "operationId": "op-90d29c739f8346d4a047b59b3861a5b1"
+}

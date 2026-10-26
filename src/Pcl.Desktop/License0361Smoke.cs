@@ -42,12 +42,12 @@ public partial class MainWindow
 
         try
         {
-            if (!(paths.Root.Contains("verification-0.36.1") || paths.Root.Contains("verification-0.37")) || !paths.Root.EndsWith("license-ui-data"))
+            if (!(paths.Root.Contains("verification-0.36.1") || paths.Root.Contains("verification-0.38")) || !paths.Root.EndsWith("license-ui-data"))
             {
                 throw new InvalidOperationException("ISOLATED_LICENSE_TEST_ROOT_REQUIRED");
             }
 
-            Check(ProductInfo.Version == "0.37.0", "three-component-version");
+            Check(ProductInfo.Version == "0.38.0", "three-component-version");
             Check(Title == ProductIdentity.Name, "product-name-in-window");
             var about = BuildAboutContent();
             Check(

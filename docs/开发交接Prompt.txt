@@ -1,6 +1,6 @@
-你接手的是 Plain Craft Launcher Refactoring 0.37 私有开发版本，Git与隐私基线仍为0.36.1。
+你接手的是 Plain Craft Launcher Refactoring 0.38 私有开发版本，Git与隐私基线仍为0.36.1。
 
-先阅读 README.md、docs/0.37-依赖规划与验收.md、docs/0.36.1-内部基线与验收.md、docs/architecture/PCL-Mac架构规范.md、docs/架构与设计取舍.md、docs/功能实现导览.md 和 docs/0.37-剩余清单.md。
+先阅读 README.md、docs/0.38-嵌套依赖与验收.md、docs/0.36.1-内部基线与验收.md、docs/architecture/PCL-Mac架构规范.md、docs/架构与设计取舍.md、docs/功能实现导览.md 和 docs/0.38-剩余清单.md。
 
 获取与历史：克隆 ParadoxRin/Plain-Craft-Launcher-Refactoring 或解压本版带Git包。运行 git status、git log --all --oneline、git fsck --full；基线为一个提交与v0.36.1标签。禁止从旧PCL_Mac、旧bundle或旧交接包合并历史，不能重新带入已清理的个人信息。后续提交可以正常追加。旧版本技术文档是参考，不等于本版实测，旧产物路径可能不再存在。
 
@@ -14,10 +14,12 @@
 
 保留行为：数据根、bundle和钥匙串标识不因改名而变；登录、皮肤、离线身份、窗口退出及独立游戏行为保留。不得读取/上传个人令牌、密码、钥匙串、存档或完整游戏进程命令行。默认OAuth client ID为空：验证微软功能需要你自己的获准应用ID以及自己的微软账号，仅有账号不能替代应用ID。
 
-构建：Apple Silicon macOS14+，Xcode CLI、Python3、curl，global.json固定.NET10.0.402。执行bash scripts/build-handoff.sh，输出artifacts/Plain Craft Launcher Refactoring 0.37.app。支持DOTNET指定SDK。当前ad-hoc签名、未公证；未配置云端CI。
+构建：Apple Silicon macOS14+，Xcode CLI、Python3、curl，global.json固定.NET10.0.402。执行bash scripts/build-handoff.sh，输出artifacts/Plain Craft Launcher Refactoring 0.38.app。支持DOTNET指定SDK。当前ad-hoc签名、未公证；未配置云端CI。
 
 测试：见docs/开发与验证.md。--license0361运行策略、执行边界和幂等/恢复定向测试；--license0361-smoke运行真实Avalonia/Host关于页和启动提示交互。另有--iris036、--txn035等套件；使用全新隔离目录。HTTP替身、编译、标题渲染、进世界与人工确认分别报告，不混称平台验收。旧启动探针未提供Guidance时会拒绝，这是契约变化，不应关闭生产检查来迁就测试。
 
 隐私：提交前执行scripts/audit-repository-privacy.py，检查暂存清单，禁止整体强制加入artifacts。脚本仅为模式扫描，不保证未知秘密不存在。不得恢复旧OAuth标识或Git个人邮箱。PCL-LICENCE.txt及第三方许可原文必须保留。
 
-0.37：先读 ResourceDependencyPlanner、Domain/FabricMetadata、FabricVersions。三类入口共用规划和原事务安装器，覆盖文件由Core适配器读取，Domain保持纯规则。不要重新引入单独贪心规划器或跳过锁定文件哈希。未完成范围包含完整Quilt覆盖、任意嵌套JAR全局选择、未声明远程前置与语言插件。Iris卸载仍拒绝覆盖文件，不把本轮安装支持误扩大成卸载安全性。
+0.37：先读 ResourceDependencyPlanner、Domain/FabricMetadata、FabricVersions。三类入口共用规划和原事务安装器，覆盖文件由Core适配器读取，Domain保持纯规则。不要重新引入单独贪心规划器或跳过锁定文件哈希。未完成范围包含完整Quilt覆盖、官方可选候选软权重偏好、未声明远程前置与语言插件。Iris卸载仍拒绝覆盖文件，不把本轮安装支持误扩大成卸载安全性。
+
+0.38：FabricCandidateSolver是Domain纯有界硬约束求解，FabricDependencySet负责真实文件输入。所有根包锁定，嵌套候选依父包激活，内容哈希标记候选。冲突沿DependencyDiagnostic契约进入任务receipt/客户端，不能退回仅显示INVALID_DATA。不要声称与官方软权重最优结果完全等价。复现--nested038、--live038及两个test-nested-038脚本，证据见final目录；真实世界与用户画面确认已完成。

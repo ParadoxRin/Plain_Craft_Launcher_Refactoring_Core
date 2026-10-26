@@ -136,6 +136,11 @@ public sealed partial class LauncherSession
                 throw new InvalidOperationException("批量更新预览已失效，请重新检查更新并准备预览。");
             }
 
+            if (row.DependencyFailure is { } dependency)
+            {
+                throw new InvalidOperationException(dependency.DisplayText);
+            }
+
             throw new OperationRejectedException(row.ErrorCode ?? "PAGE_EXECUTION_FAILED");
         }
 

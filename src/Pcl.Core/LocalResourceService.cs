@@ -429,22 +429,19 @@ public sealed class LocalResourceService(
     }
 
     // [实现] ValidateFabricSet 的实现：按 loader != "fabric" 分支处理；准备 var optifabricPreset = OptiFabricService.IsPreset(GameDirectory)；按 optifabricPreset 分支处理。
-    private IReadOnlyList<string> ValidateFabricSet()
+    private IReadOnlyList<string> ValidateFabricSet(CancellationToken ct)
     {
         if (loader != "fabric")
             return[];
         var optifabricPreset = OptiFabricService.IsPreset(GameDirectory);
         if (optifabricPreset)
             OptiFabricService.ValidatePreset(GameDirectory);
-        var mods = Scan()
+        var files = Scan()
             .Where(
                 x => x.Kind == ResourceKind.Mod && x.Enabled && (!optifabricPreset || Path.GetFileName(x.Path) != OptiFabricService.OptiFineFile)
             )
-            .SelectMany(
-                x => FabricModReader.Read(x.Path, GameDirectory)
-            )
-            .Where(
-                x => x.Environment != "server"
+            .Select(
+                x => x.Path
             )
             .ToArray();
         var available = new Dictionary<string, string>
@@ -468,74 +465,17 @@ public sealed class LocalResourceService(
                 )["loaderVersion"] ?? "0"
                 : "0"
         };
-        var topLevel = new HashSet<string>(StringComparer.Ordinal);
-        foreach (var mod in mods)
-            foreach (var id in new[]
-            {
-                mod.Id
-            }.Concat(mod.Provides))
-            {
-                // [实现] 对 new[] { mod.Id }.Concat(mod.Provides) 中的每一项：按 !mod.IsNested && id == mod.Id && !topLevel.Add(id) 分支处理；按 !available.TryGetValue(id, out var existing) || FabricVersionPredicate.Compare(mod.Version, exi… 分支处理。
-                if (!mod.IsNested && id == mod.Id && !topLevel.Add(id))
-                    throw new InvalidDataException("重复模组 ID：" + id);
-                if (!available.TryGetValue(id, out var existing) || FabricVersionPredicate.Compare(mod.Version, existing) > 0)
-                    available[id] = mod.Version;
-            }
-
-        var warnings = new List<string>();
-        foreach (var mod in mods)
-        {
-            // Every declaration must hold; +depends can add a second constraint for the same ID.
-            foreach (var requirement in mod.Dependencies("depends"))
-            {
-                if (!available.TryGetValue(requirement.Id, out var version) || !requirement.Matchers.Any(
-                    x => FabricVersionPredicate.Matches(version, x)
-                ))
-                {
-                    throw new InvalidDataException(
-                        $"{mod.Id} 需要 {requirement.Id} {string.Join(" OR ", requirement.Matchers)}；操作已撤回。"
-                    );
-                }
-            }
-
-            foreach (var conflict in mod.Dependencies("breaks"))
-            {
-                if (available.TryGetValue(conflict.Id, out var version) && conflict.Matchers.Any(
-                    x => FabricVersionPredicate.Matches(version, x)
-                ))
-                {
-                    throw new InvalidDataException($"{mod.Id} 与 {conflict.Id} 冲突；操作已撤回。");
-                }
-            }
-
-            foreach (var optional in mod.Dependencies("recommends")
-                .Concat(
-                    mod.Dependencies("conflicts")
-                ))
-            {
-                var present = available.TryGetValue(optional.Id, out var version) && optional.Matchers.Any(
-                    x => FabricVersionPredicate.Matches(version!, x)
-                );
-                if (optional.Kind == "conflicts"
-                    ? present
-                    : !present)
-                {
-                    warnings.Add(
-                        $"{mod.Id}: {optional.Kind} {optional.Id} {string.Join(" OR ", optional.Matchers)}"
-                    );
-                }
-            }
-        }
-
-        return warnings;
+        return FabricDependencySet.Require(
+            FabricDependencySet.Resolve(files, GameDirectory, available, ct)
+        );
     }
 
     // [实现] 功能：统一执行本地依赖预检。实现：根据加载器分派到 Fabric、Quilt 或 Forge/NeoForge 分析器，使用实例游戏、Java 和加载器版本返回诊断。
-    public IReadOnlyList<string> ValidateEnabledResources()
+    public IReadOnlyList<string> ValidateEnabledResources(CancellationToken ct = default)
     {
         if (loader == "fabric")
         {
-            return ValidateFabricSet();
+            return ValidateFabricSet(ct);
         }
 
         if (loader == "quilt")
