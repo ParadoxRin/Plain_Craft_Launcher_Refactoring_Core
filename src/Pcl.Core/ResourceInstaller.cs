@@ -721,90 +721,15 @@ public sealed class ResourceInstaller(
         var dependencies = new List<ResourceDependency>();
         if (kind == ResourceKind.Mod && loader == "fabric")
         {
-            // [实现] 条件成立（kind == ResourceKind.Mod && loader == "fabric"）时：准备 var imported = FabricModReader.Read( SafeTarget(cache, hash) )；准备 var main = imported[0]；执行 projectId = "local-" + main.Id。
+            // Use the same final-set validator as remote installs. Do not duplicate raw metadata checks here.
             var imported = FabricModReader.Read(
-                SafeTarget(cache, hash)
+                SafeTarget(cache, hash),
+                GameDirectory
             );
             var main = imported[0];
             projectId = "local-" + main.Id;
             displayName = main.Id;
             displayVersion = main.Version;
-            var available = new Dictionary<string, (string Version, string Project)>
-            {
-                ["minecraft"] = (gameVersion, "builtin"),
-                ["java"] = ((File.Exists(
-                    Path.Combine(GameDirectory, "version.json")
-                )
-                    ? VersionCatalog.JavaMajor(
-                        JsonFiles.Read(
-                            Path.Combine(GameDirectory, "version.json")
-                        )
-                    )
-                    : 21).ToString(), "builtin"),
-                ["fabricloader"] = (File.Exists(
-                    Path.Combine(GameDirectory, "profile.json")
-                )
-                    ? (string)JsonFiles.Read(
-                        Path.Combine(GameDirectory, "profile.json")
-                    )["loaderVersion"]!
-                    : "0.19.5", "builtin")
-            };
-            var allInfo = new List<FabricModInfo>();
-            foreach (var old in List()
-                .Where(
-                    x => x.Enabled && x.Kind == ResourceKind.Mod && x.ProjectId != projectId
-                ))
-            {
-                // [实现] 对 List() .Where( x => x.Enabled && x.Kind == ResourceKind.Mod && x.ProjectId != projectId ) 中的每一项：遍历 FabricModReader.Read( FilePath(old) ) 处理 mod。
-                foreach (var mod in FabricModReader.Read(
-                    FilePath(old)
-                ))
-                {
-                    // [实现] 对 FabricModReader.Read( FilePath(old) ) 中的每一项：遍历 new[] { mod.Id }.Concat(mod.Provides) 处理 id；执行 allInfo.Add(mod)。
-                    foreach (var id in new[]
-                    {
-                        mod.Id
-                    }.Concat(mod.Provides))
-                        available[id] = (mod.Version, old.ProjectId);
-                    allInfo.Add(mod);
-                }
-            }
-
-            foreach (var mod in imported)
-            {
-                // [实现] 对 imported 中的每一项：遍历 new[] { mod.Id }.Concat(mod.Provides) 处理 id；执行 allInfo.Add(mod)。
-                foreach (var id in new[]
-                {
-                    mod.Id
-                }.Concat(mod.Provides))
-                {
-                    // [实现] 对 new[] { mod.Id }.Concat(mod.Provides) 中的每一项：按 available.ContainsKey(id) 分支处理；执行 available[id] = (mod.Version, projectId)。
-                    if (available.ContainsKey(id))
-                        throw new InvalidDataException("重复模组 ID：" + id);
-                    available[id] = (mod.Version, projectId);
-                }
-
-                allInfo.Add(mod);
-            }
-
-            foreach (var mod in allInfo)
-            {
-                // [实现] 对 allInfo 中的每一项：遍历 mod.Depends.Properties() 处理 requirement；遍历 mod.Breaks.Properties() 处理 conflict。
-                foreach (var requirement in mod.Depends.Properties())
-                {
-                    // [实现] 对 mod.Depends.Properties() 中的每一项：按 !available.TryGetValue(requirement.Name, out var dependency) || !FabricVersionPredicate.Matches… 分支处理；按 imported.Contains(mod) && dependency.Project is not "builtin" && dependency.Project != projectI… 分支处理。
-                    if (!available.TryGetValue(requirement.Name, out var dependency) || !FabricVersionPredicate.Matches(dependency.Version, requirement.Value))
-                        throw new InvalidDataException($"{mod.Id} 缺少适用前置：{requirement.Name} {requirement.Value}");
-                    if (imported.Contains(mod) && dependency.Project is not "builtin" && dependency.Project != projectId)
-                        dependencies.Add(
-                            new(dependency.Project, null, "required")
-                        );
-                }
-
-                foreach (var conflict in mod.Breaks.Properties())
-                    if (available.TryGetValue(conflict.Name, out var found) && FabricVersionPredicate.Matches(found.Version, conflict.Value))
-                        throw new InvalidDataException("模组冲突：" + mod.Id + " / " + conflict.Name);
-            }
         }
 
         var release = new ResourceRelease(

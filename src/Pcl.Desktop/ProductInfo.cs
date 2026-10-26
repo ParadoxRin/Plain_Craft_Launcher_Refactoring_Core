@@ -3,5 +3,6 @@ namespace Pcl.Desktop;
 internal static class ProductInfo
 {
     internal const string Name = Pcl.Core.Contracts.ProductIdentity.Name;
-    internal static string Version => typeof(App).Assembly.GetName().Version?.ToString(3) ?? "0.36.1";
+    internal static string Version => typeof(App).Assembly.GetName()
+        .Version?.ToString(3) ?? "0.37.0";
 }

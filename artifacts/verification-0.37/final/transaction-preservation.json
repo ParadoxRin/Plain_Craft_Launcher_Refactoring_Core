@@ -1,0 +1,157 @@
+{
+  "failed": 0,
+  "rows": [
+    {
+      "name": "apply-process-exit-prepared",
+      "status": "passed"
+    },
+    {
+      "name": "undo-process-exit-prepared",
+      "status": "passed"
+    },
+    {
+      "name": "apply-process-exit-target-written",
+      "status": "passed"
+    },
+    {
+      "name": "undo-process-exit-target-written",
+      "status": "passed"
+    },
+    {
+      "name": "apply-process-exit-receipt-written",
+      "status": "passed"
+    },
+    {
+      "name": "undo-process-exit-receipt-written",
+      "status": "passed"
+    },
+    {
+      "name": "cancel-before-commit-and-no-original-config",
+      "status": "passed"
+    },
+    {
+      "name": "external-config-and-backup-corruption-refused",
+      "status": "passed"
+    },
+    {
+      "name": "unresolved-config-recovery-blocks-launch",
+      "status": "passed"
+    },
+    {
+      "name": "shader-batch-remove-process-exit-prepared",
+      "status": "passed"
+    },
+    {
+      "name": "shader-batch-remove-process-exit-package-removed",
+      "status": "passed"
+    },
+    {
+      "name": "shader-batch-remove-process-exit-manifest-written",
+      "status": "passed"
+    },
+    {
+      "name": "batch-conflict-refuses-all-files-before-mutation",
+      "status": "passed"
+    },
+    {
+      "name": "batch-cancel-and-unmanaged-refusal",
+      "status": "passed"
+    },
+    {
+      "name": "removal-recovery-validates-all-conflicts-first",
+      "status": "passed"
+    },
+    {
+      "name": "backend-absent-no-guessed-warning",
+      "status": "passed"
+    },
+    {
+      "name": "pack_import_all_declared_formats",
+      "status": "passed"
+    },
+    {
+      "name": "pack_rejects_traversal_symlink_case_collision_and_custom_patch",
+      "status": "passed"
+    },
+    {
+      "name": "pack_export_privacy_hashes_and_roundtrip",
+      "status": "passed"
+    },
+    {
+      "name": "curse_api_metadata_and_publisher_disabled_download",
+      "status": "passed"
+    },
+    {
+      "name": "pack_update_baseline_distinguishes_modified_added_deleted_and_private",
+      "status": "passed"
+    },
+    {
+      "name": "curse_missing_credentials_blocks_before_instance_install",
+      "status": "passed"
+    },
+    {
+      "name": "curse_catalog_filters_dependencies_and_file_restrictions",
+      "status": "passed"
+    },
+    {
+      "name": "modrinth_datapack_filters_need_no_fabric_loader",
+      "status": "passed"
+    },
+    {
+      "name": "local_scan_toggle_and_dependency_rollback",
+      "status": "passed"
+    },
+    {
+      "name": "resource_metadata_legacy_forge_neoforge_quilt_liteloader",
+      "status": "passed"
+    },
+    {
+      "name": "resource_alias_embedded_database_and_explicit_cross_platform_identity",
+      "status": "passed"
+    },
+    {
+      "name": "forge_toml_dependencies_versions_side_and_neoforge_legacy_alias",
+      "status": "passed"
+    },
+    {
+      "name": "pack_export_recipe_selection_and_exact_payload_hash",
+      "status": "passed"
+    },
+    {
+      "name": "resource_activation_undo_history_and_external_change_protection",
+      "status": "passed"
+    },
+    {
+      "name": "resource_batch_update_projects_whole_dependency_set_and_preserves_external_edits",
+      "status": "passed"
+    },
+    {
+      "name": "world_datapack_install_toggle_backup_and_target_validation",
+      "status": "passed"
+    },
+    {
+      "name": "component_preview_requires_explicit_mod_disable",
+      "status": "passed"
+    },
+    {
+      "name": "component_copy_removes_loader_preserves_source_and_world",
+      "status": "passed"
+    },
+    {
+      "name": "component_install_failure_rolls_back_pending_copy",
+      "status": "passed"
+    },
+    {
+      "name": "component_source_changes_rejected_before_install",
+      "status": "passed"
+    },
+    {
+      "name": "component_symlink_data_rejected",
+      "status": "passed"
+    },
+    {
+      "name": "component_source_changes_during_copy_roll_back",
+      "status": "passed"
+    }
+  ]
+}

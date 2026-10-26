@@ -1,0 +1,42 @@
+{
+  "status": "passed",
+  "runtimeProjectReferences": {
+    "Pcl.Contract": [],
+    "Pcl.Domain": [],
+    "Pcl.Ports": [
+      "Pcl.Domain"
+    ],
+    "Pcl.Application": [
+      "Pcl.Contract",
+      "Pcl.Domain",
+      "Pcl.Ports"
+    ],
+    "Pcl.Core": [
+      "MeloongCore",
+      "Pcl.Contract",
+      "Pcl.Domain",
+      "Pcl.Legacy",
+      "Pcl.Ports",
+      "PCLCS"
+    ],
+    "Pcl.Client": [
+      "Pcl.Contract"
+    ],
+    "Pcl.Desktop": [
+      "Pcl.Client",
+      "Pcl.Contract"
+    ],
+    "Pcl.Host": [
+      "Pcl.Application",
+      "Pcl.Contract",
+      "Pcl.Core"
+    ]
+  },
+  "checkedMethods": 2784,
+  "checkedMemberUses": 43773,
+  "knownTransitionExceptions": [
+    "Desktop -\u003E Core (legacy pages and Bootstrap)",
+    "Bootstrap may wire migrated implementations"
+  ],
+  "violations": []
+}

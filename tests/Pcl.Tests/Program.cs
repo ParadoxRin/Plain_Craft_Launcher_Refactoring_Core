@@ -10,6 +10,16 @@ using Pcl.Legacy;
 
 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 MeloongCore.Main.Init("PCLMacPortTests");
+if (args.FirstOrDefault() == "--live037")
+{
+    return await Live037Tests.Run(args[1]);
+}
+
+if (args.FirstOrDefault() == "--planning037")
+{
+    return await Planning037Tests.Run(args[1], args[2], args[3]);
+}
+
 if (args.FirstOrDefault() == "--license0361")
 {
     return await License0361Tests.Run(args[1]);
@@ -17,17 +27,23 @@ if (args.FirstOrDefault() == "--license0361")
 
 if (args.FirstOrDefault() == "--auth-privacy")
 {
-    return await AuthPrivacyTests.Run(args.ElementAtOrDefault(1) ?? "empty");
+    return await AuthPrivacyTests.Run(
+        args.ElementAtOrDefault(1) ?? "empty"
+    );
 }
 
 if (args.FirstOrDefault() == "--iris036-child")
 {
     return Iris036Tests.Child(args[1], args[2]);
 }
+
 if (args.FirstOrDefault() == "--iris036")
 {
-    return await Iris036Tests.Run(Path.GetFullPath(args[1]));
+    return await Iris036Tests.Run(
+        Path.GetFullPath(args[1])
+    );
 }
+
 if (args.FirstOrDefault() == "--txn035-child")
 {
     return Transaction035Tests.Child(args[1], args[2], args[3]);

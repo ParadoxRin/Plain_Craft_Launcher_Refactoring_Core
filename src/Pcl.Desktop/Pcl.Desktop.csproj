@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup><OutputType>WinExe</OutputType><TargetFramework>net10.0</TargetFramework><AssemblyName>PCL-MacPort</AssemblyName><Version>0.36.1</Version></PropertyGroup>
+  <PropertyGroup><OutputType>WinExe</OutputType><TargetFramework>net10.0</TargetFramework><AssemblyName>PCL-MacPort</AssemblyName><Version>0.37.0</Version></PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="../../docs/windows-layout-baseline.json" LogicalName="windows-layout.json" />
     <EmbeddedResource Include="../../docs/PCL2完整功能矩阵.json" LogicalName="feature-matrix.json" />
@@ -18,11 +18,11 @@
     <None Include="../../artifacts/native/lwjgl-unsafe-agent-2.0.jar" Link="lwjgl-unsafe-agent-2.0.jar" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Condition="Exists('../../artifacts/native/lwjgl-unsafe-agent-2.0.jar')" />
   </ItemGroup>
   <Target Name="CopyHost" AfterTargets="Build">
-    <ItemGroup><HostFiles Include="../Pcl.Host/bin/$(Configuration)/$(TargetFramework)/$(RuntimeIdentifier)/**/*" /></ItemGroup>
+    <ItemGroup><HostFiles Include="../Pcl.Host/bin/$(Configuration)/$(TargetFramework)/$(RuntimeIdentifier)/**/*" Exclude="../Pcl.Host/bin/$(Configuration)/$(TargetFramework)/$(RuntimeIdentifier)/**/*.pdb" /></ItemGroup>
     <Copy SourceFiles="@(HostFiles)" DestinationFiles="@(HostFiles->'$(OutDir)host/%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
   </Target>
   <Target Name="PublishHost" AfterTargets="Publish">
-    <ItemGroup><PublishedHostFiles Include="../Pcl.Host/bin/$(Configuration)/$(TargetFramework)/$(RuntimeIdentifier)/**/*" /></ItemGroup>
+    <ItemGroup><PublishedHostFiles Include="../Pcl.Host/bin/$(Configuration)/$(TargetFramework)/$(RuntimeIdentifier)/**/*" Exclude="../Pcl.Host/bin/$(Configuration)/$(TargetFramework)/$(RuntimeIdentifier)/**/*.pdb" /></ItemGroup>
     <Copy SourceFiles="@(PublishedHostFiles)" DestinationFiles="@(PublishedHostFiles->'$(PublishDir)host/%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
   </Target>
   <Target Name="EnforceArchitecture" AfterTargets="Build">

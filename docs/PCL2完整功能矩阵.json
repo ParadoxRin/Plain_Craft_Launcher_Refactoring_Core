@@ -4920,7 +4920,7 @@
       "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
       "sourceEntry": "Modules/Resource",
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
-      "macImplementation": "src/Pcl.Core/QuiltDependencies.cs; src/Pcl.Core/QuiltModPlanner.cs; src/Pcl.Core/JarJarResolver.cs; src/Pcl.Core/ResourceDependencyPlanner.cs; src/Pcl.Core/LocalResourceService.cs; src/Pcl.Core/QuiltDependencyOverrides.cs; src/Pcl.Core/JointResourcePlanner.cs; src/Pcl.Core/JarModuleIdentity.cs; src/Pcl.Domain/JavaModuleDescriptor.cs",
+      "macImplementation": "src/Pcl.Core/QuiltDependencies.cs; src/Pcl.Core/QuiltModPlanner.cs; src/Pcl.Core/JarJarResolver.cs; src/Pcl.Core/ResourceDependencyPlanner.cs; src/Pcl.Core/LocalResourceService.cs; src/Pcl.Core/QuiltDependencyOverrides.cs; src/Pcl.Core/JointResourcePlanner.cs; src/Pcl.Core/JarModuleIdentity.cs; src/Pcl.Domain/JavaModuleDescriptor.cs; src/Pcl.Domain/FabricMetadata.cs; src/Pcl.Domain/FabricVersions.cs; src/Pcl.Core/FabricDependencyOverrides.cs",
       "ui": "资源版本 → 安装",
       "status": "部分实现",
       "testEvidence": [
@@ -4937,9 +4937,12 @@
         "artifacts/architecture-0.28/release-resources.json#host-downloads-real-fabric-api-and-dependencies",
         "artifacts/architecture-0.30/release-final-ui/report.json#ui-default-resource-search-and-host-icons,ui-default-resource-detail-and-release-list,ui-resource-file-row-selection,ui-return-to-resource-search,ui-default-shader-browser-live-query,ui-default-browser-installs-real-fabric-api-through-host",
         "artifacts/verification-0.34/focused-integrity/results.json",
-        "artifacts/verification-0.34/release-resources.json"
+        "artifacts/verification-0.34/release-resources.json",
+        "docs/0.37-依赖规划与验收.md",
+        "artifacts/verification-0.37/final/focused.json",
+        "artifacts/verification-0.37/final/real-installs.json"
       ],
-      "remaining": "仍缺Quilt完整path/pattern/version覆盖、Fabric schema0/依赖覆盖/自定义插件；单项安装入口仍沿用既有规划器，不等于所有入口全局最优求解。",
+      "remaining": "0.37已统一Modrinth单项/批量及支持包格式的规划入口，支持Fabric schema0/1与version 1依赖覆盖。仍缺完整Quilt path/pattern/version覆盖、任意嵌套JAR全局选择和自定义插件；未在远程目录声明的缺失前置不能自动猜测。",
       "externalConditions": [],
       "implementationScope": "按版本/加载器递归解析必需前置并排序；冲突和发布限制明确失败",
       "evidenceLevels": {
@@ -5038,12 +5041,15 @@
       "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
       "sourceEntry": "Modules/Resource",
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
-      "macImplementation": "src/Pcl.Core/FabricModPlanner.cs; src/Pcl.Core/LocalResourceService.cs",
+      "macImplementation": "src/Pcl.Core/FabricModPlanner.cs; src/Pcl.Core/LocalResourceService.cs; src/Pcl.Domain/FabricMetadata.cs; src/Pcl.Domain/FabricVersions.cs; src/Pcl.Core/FabricDependencyOverrides.cs",
       "ui": "模组安装 / 本地资源 → 检查依赖关系",
       "status": "已实现待验收",
       "testEvidence": [
         "tests/Pcl.Tests/PackResourceTests.cs（HTTP 模拟/临时文件夹具；最新汇总以最终整合测试为准）: local_scan_toggle_and_dependency_rollback；既有 Fabric 语义版本测试",
-        "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API"
+        "artifacts/evidence-0.8/full-regression-4/test-results.json：本轮新增资源/包测试通过；HTTP fixture不代表真实外部API",
+        "docs/0.37-依赖规划与验收.md",
+        "artifacts/verification-0.37/final/focused.json",
+        "artifacts/verification-0.37/final/real-installs.json"
       ],
       "remaining": "依赖声明不能覆盖动态代码及模组自行下载的原生库",
       "externalConditions": [],
@@ -5532,7 +5538,7 @@
       "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
       "sourceEntry": "Modules/Resource",
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
-      "macImplementation": "src/Pcl.Core/QuiltDependencies.cs; src/Pcl.Core/QuiltModPlanner.cs; src/Pcl.Core/JarJarResolver.cs; src/Pcl.Core/ResourceDependencyPlanner.cs; src/Pcl.Core/LocalResourceService.cs; src/Pcl.Core/QuiltDependencyOverrides.cs; src/Pcl.Core/JointResourcePlanner.cs; src/Pcl.Core/JarModuleIdentity.cs; src/Pcl.Domain/JavaModuleDescriptor.cs",
+      "macImplementation": "src/Pcl.Core/QuiltDependencies.cs; src/Pcl.Core/QuiltModPlanner.cs; src/Pcl.Core/JarJarResolver.cs; src/Pcl.Core/ResourceDependencyPlanner.cs; src/Pcl.Core/LocalResourceService.cs; src/Pcl.Core/QuiltDependencyOverrides.cs; src/Pcl.Core/JointResourcePlanner.cs; src/Pcl.Core/JarModuleIdentity.cs; src/Pcl.Domain/JavaModuleDescriptor.cs; src/Pcl.Domain/FabricMetadata.cs; src/Pcl.Domain/FabricVersions.cs; src/Pcl.Core/FabricDependencyOverrides.cs",
       "ui": "本地资源 → 多选 → 启用/停用/移除",
       "status": "部分实现",
       "testEvidence": [
@@ -5549,9 +5555,12 @@
         "artifacts/architecture-0.28/workspaces2.json#host-parses-local-mod-jar,host-disables-local-mod,host-reenables-local-mod,host-backs-up-removed-resource",
         "artifacts/architecture-0.28/release-ui.json#local-resources-disable-button-uses-host,local-resources-enable-button-uses-host,dependency-button-returns-host-analysis",
         "artifacts/verification-0.34/focused-integrity/results.json",
-        "artifacts/verification-0.34/release-resources.json"
+        "artifacts/verification-0.34/release-resources.json",
+        "docs/0.37-依赖规划与验收.md",
+        "artifacts/verification-0.37/final/focused.json",
+        "artifacts/verification-0.37/final/real-installs.json"
       ],
-      "remaining": "仍受Quilt完整覆盖、Fabric覆盖、语言插件等未实现语义限制。",
+      "remaining": "Fabric启停保护已使用覆盖后的有效约束；仍受完整Quilt覆盖、任意嵌套候选选择、语言插件等未实现语义限制。",
       "externalConditions": [],
       "implementationScope": "批量事务、错误回滚、备份移除；Fabric 与现代 Forge/NeoForge 声明依赖保护",
       "evidenceLevels": {
@@ -5654,7 +5663,7 @@
       "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
       "sourceEntry": "Modules/Resource",
       "sourceEvidence": "公开源入口与符号清单；逐行为链路仍有未核实项，见来源与缺口说明",
-      "macImplementation": "src/Pcl.Core/QuiltDependencies.cs; src/Pcl.Core/QuiltModPlanner.cs; src/Pcl.Core/JarJarResolver.cs; src/Pcl.Core/ResourceDependencyPlanner.cs; src/Pcl.Core/LocalResourceService.cs; src/Pcl.Core/QuiltDependencyOverrides.cs; src/Pcl.Core/JointResourcePlanner.cs; src/Pcl.Core/JarModuleIdentity.cs; src/Pcl.Domain/JavaModuleDescriptor.cs",
+      "macImplementation": "src/Pcl.Core/QuiltDependencies.cs; src/Pcl.Core/QuiltModPlanner.cs; src/Pcl.Core/JarJarResolver.cs; src/Pcl.Core/ResourceDependencyPlanner.cs; src/Pcl.Core/LocalResourceService.cs; src/Pcl.Core/QuiltDependencyOverrides.cs; src/Pcl.Core/JointResourcePlanner.cs; src/Pcl.Core/JarModuleIdentity.cs; src/Pcl.Domain/JavaModuleDescriptor.cs; src/Pcl.Domain/FabricMetadata.cs; src/Pcl.Domain/FabricVersions.cs; src/Pcl.Core/FabricDependencyOverrides.cs",
       "ui": "本地资源 → 检查更新 → 多选 → 批量更新所选 → 预览 → 提交整批更新",
       "status": "部分实现",
       "testEvidence": [
@@ -5670,9 +5679,12 @@
         "docs/0.15实现与验收.md",
         "artifacts/architecture-0.28/release-resources.json#host-resolves-compatible-local-mod-updates,host-prepares-real-batch-download-and-dependency-plan,discarded-batch-keeps-current-mod-version,host-commits-batch-update-and-preserves-old-files",
         "artifacts/verification-0.34/focused-integrity/results.json",
-        "artifacts/verification-0.34/release-resources.json"
+        "artifacts/verification-0.34/release-resources.json",
+        "docs/0.37-依赖规划与验收.md",
+        "artifacts/verification-0.37/final/focused.json",
+        "artifacts/verification-0.37/final/real-installs.json"
       ],
-      "remaining": "仍缺未实现的Quilt/Fabric覆盖及自定义语言插件语义；候选上限256组/每项目64版/待检查16384组，超限明确未判定，不称无解。",
+      "remaining": "0.37批量更新已共用规划并解释Fabric覆盖。仍缺完整Quilt覆盖及自定义语言插件语义；候选上限256组/每项目64版/待检查16384组，超限明确未判定，不称无解。",
       "externalConditions": [],
       "implementationScope": "按现有文件 SHA1 向 Modrinth 识别身份，匹配当前版本/加载器；更新前计划与备份；批量暂存全部文件后核验合并依赖，预览版本及文件，目录提交备份，提交前检查外部修改并保护",
       "evidenceLevels": {
@@ -5921,7 +5933,7 @@
       "sourceRoot": "pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2",
       "sourceEntry": "Modules/Minecraft",
       "sourceEvidence": "公开源码入口；细节见source-ui-inventory.json，删节功能单列",
-      "macImplementation": "src/Pcl.Core/CustomPackMetadata.cs; src/Pcl.Core/PackMetadataCompatibility.cs; src/Pcl.Core/PortableModpackService.cs; src/Pcl.Core/ModpackService.cs; src/Pcl.Core/QuiltDependencyOverrides.cs",
+      "macImplementation": "src/Pcl.Core/CustomPackMetadata.cs; src/Pcl.Core/PackMetadataCompatibility.cs; src/Pcl.Core/PortableModpackService.cs; src/Pcl.Core/ModpackService.cs; src/Pcl.Core/QuiltDependencyOverrides.cs; src/Pcl.Domain/FabricMetadata.cs; src/Pcl.Domain/FabricVersions.cs; src/Pcl.Core/FabricDependencyOverrides.cs",
       "ui": "整合包下载/导入",
       "status": "部分实现",
       "testEvidence": [
@@ -5937,9 +5949,12 @@
         "docs/0.15实现与验收.md",
         "artifacts/architecture-0.28/workspaces2.json#host-exports-valid-mrpack,host-reimports-exported-mrpack",
         "artifacts/verification-0.34/focused-integrity/results.json",
-        "artifacts/verification-0.34/final-custom-packs.json"
+        "artifacts/verification-0.34/final-custom-packs.json",
+        "docs/0.37-依赖规划与验收.md",
+        "artifacts/verification-0.37/final/focused.json",
+        "artifacts/verification-0.37/final/real-installs.json"
       ],
-      "remaining": "整合包锁定清单未接入全根远程补全；Quilt/Fabric覆盖、语言插件和自定义客户端仍有缺口。schema2需0.34+，不声称其他启动器识别PCL扩展。",
+      "remaining": "0.37包内锁定文件接入统一规划；完整集合先离线验证，缺失前置通过Modrinth哈希身份和声明补齐。未知本地前置、完整Quilt覆盖、语言插件、自定义客户端及任意嵌套求解仍有缺口；受控真实资源包实测不能代表任意第三方包。schema2仍为PCL扩展。",
       "externalConditions": [],
       "implementationSummary": "0.15 支持 Quilt 精确 id 依赖覆盖、配置变更保护和原实例库上下文；真实 QFAPI 下载、GUI检查、批量提交及mrpack往返通过。保留0.14能力。 0.34：PCL扩展schema2保存自定义入口与tweaker声明；mrpack导出重导后真实1.21.1启动通过。",
       "evidenceLevels": {

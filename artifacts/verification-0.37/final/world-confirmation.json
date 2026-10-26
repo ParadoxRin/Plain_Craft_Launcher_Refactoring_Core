@@ -1,0 +1,11 @@
+{
+  "savedFilesCompared": 33,
+  "allHashesEqualBeforeIndependentReopen": true,
+  "firstUserConfirmation": "picture normal; marker placed; saved and exited entire game",
+  "secondUserConfirmation": "marker, position and picture normal; exited entire game",
+  "managedExitCode": 0,
+  "detachedExitCode": null,
+  "detachedExitEvidence": "game process exited and log recorded completed world save; parent Host had already exited",
+  "profile": "Minecraft 1.21.1 / Fabric 0.19.5 / Continuity 3.0.0+1.21 / Fabric API 0.116.17+1.21.1 / schema-0 metadata fixture",
+  "scope": "offline synthetic test account; disposable world copy; no Microsoft account test"
+}

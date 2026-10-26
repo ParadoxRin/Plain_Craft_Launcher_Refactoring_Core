@@ -1,0 +1,34 @@
+{
+  "version": "0.37",
+  "sourceBaseline": "0.36.1",
+  "platform": "macOS arm64",
+  "build": "Release Desktop/Host and targeted test project passed",
+  "targeted": {
+    "planningAndOfficialOracle": 24,
+    "affectedCompatibility": 63,
+    "irisPreservation": 22,
+    "transactionPreservation": 38,
+    "launchGuidance": 20,
+    "emptyOAuth": 7,
+    "actualUi": 15
+  },
+  "realInstall": "Continuity beta to stable batch update; Fabric API dependency download; controlled mrpack missing API; same final hashes",
+  "game": "two independent game processes entered, saved and exited a disposable world copy; user confirmed marker, position and visuals",
+  "managedExitCode": 0,
+  "detachedExitCode": null,
+  "detachedGameSurvivesHostExit": true,
+  "realMicrosoftAccountRetested": false,
+  "skinNetworkRetested": false,
+  "matrixRows": 132,
+  "matrixStatusesChanged": false,
+  "matrixSubprogressAdded": false,
+  "limits": [
+    "not arbitrary SAT or all nested jar selection",
+    "no guessing undeclared remote dependency identities",
+    "complete Quilt overrides and custom loader plugins remain incomplete",
+    "no additional account or API key tests",
+    "ad-hoc signed, not notarized",
+    "source remains private"
+  ],
+  "privacy": "empty default OAuth; no PDB; current developer path and credential-pattern gate passed; game and account data excluded"
+}

@@ -54,7 +54,8 @@ public sealed class ResourceBatchUpdater(string gameDirectory, string loader, st
     private static readonly string[] ContextFiles = [
         "profile.json",
         "version.json",
-        QuiltDependencyOverrides.RelativePath
+        QuiltDependencyOverrides.RelativePath,
+        FabricDependencyOverrides.RelativePath
     ];
     private const string Manifest = ".pcl-resources.json";
     // [实现] IsResource 的实现：计算并返回 relative == Manifest || ResourceDirectories.Any( x => relative.StartsWith(x + "/", StringCompar…。
@@ -245,22 +246,28 @@ public sealed class ResourceBatchUpdater(string gameDirectory, string loader, st
             {
                 // 候选试装仅发生在隔离副本；安装器失败会回滚该副本，在线目录直到Apply才改变。
                 // 使用统一表锁定全部用户选择的根版本，避免A先选最新版前置后误报B无解。
-                await JointResourcePlanner.ResolveAsync(
+                var profile = new GameProfile(
+                    "batch",
+                    "batch",
+                    gameVersion,
+                    loader,
+                    staging,
+                    Path.Combine(staging, "version.json")
+                );
+                var plan = await ResourceDependencyPlanner.ResolveManyAsync(
                     catalog,
+                    downloads,
                     group.Select(
                         x => x.Available
                     )
                         .ToArray(),
                     group.Key,
-                    gameVersion,
-                    loader,
-                    async (plan, cancellation) =>
-                    {
-                        await new ResourceInstaller(staging, downloads, loader, gameVersion, root).InstallAsync(plan, progress, cancellation);
-                    },
+                    profile,
                     progress,
-                    ct
+                    ct,
+                    root
                 );
+                await new ResourceInstaller(staging, downloads, loader, gameVersion, root).InstallAsync(plan, progress, ct);
             }
 
             var warnings = new LocalResourceService(staging, loader, gameVersion, root).ValidateEnabledResources();

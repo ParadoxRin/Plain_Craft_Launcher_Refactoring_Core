@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "checks": [
+    "reject-old-pdb",
+    "reject-current-developer-home",
+    "reject-runtime-account-file",
+    "clean-app-passes"
+  ]
+}

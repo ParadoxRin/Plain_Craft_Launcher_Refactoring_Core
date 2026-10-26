@@ -1,0 +1,11 @@
+{
+  "checks": [
+    "public-single-download-installs-required-fabric-api",
+    "batch-prepare-keeps-installed-release",
+    "public-batch-update-installs-selected-release",
+    "batch-removes-replaced-release",
+    "real-modpack-download-provisions-omitted-required-api",
+    "pack-preserves-exact-pinned-root",
+    "real-single-batch-pack-final-hashes-identical"
+  ]
+}

@@ -1,0 +1,152 @@
+[
+  {
+    "file": "src/Pcl.Core/FabricDependencyOverrides.cs",
+    "changed": true,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "1ba4a81a347d11a1e843ff532ff2e5d2fcd6719067359b6d1454fa612dd88c94",
+    "afterSha256": "831934538733463bee6d048436833cbda1244728673e4e59eb7ea417162abb04"
+  },
+  {
+    "file": "src/Pcl.Core/FabricModPlanner.cs",
+    "changed": true,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "a6bb942f494979405eb70f21ea6ef905fe9d1d4049881befc369af84848357bc",
+    "afterSha256": "15c303ab509f1d7c2fb02f4aba8d28333ae4f09ca2d65b76d7f72303ce7eb784"
+  },
+  {
+    "file": "src/Pcl.Core/LocalResourceService.cs",
+    "changed": true,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "118f8bf2ebc88361d5576239aa4d02f400eed01aa4f78059c2a25ed9f9294224",
+    "afterSha256": "5859fcd419de0b84baf762c318deacfe335463db2e789e91b6dbdbe8126ff45d"
+  },
+  {
+    "file": "src/Pcl.Core/ModpackService.cs",
+    "changed": true,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "4ffb81c819d0ed2fe0adcf392fa271a000f3218ae003fda8ac7f8135792962cd",
+    "afterSha256": "2a355c38fb321b354ad6e80a2854a9e258dc976745223161142f06c4df760137"
+  },
+  {
+    "file": "src/Pcl.Core/ResourceBatchUpdater.cs",
+    "changed": true,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "68340d74ecfbe4ff96a2d79354d88973ed2bdb766e10a9c5974ee46b6a7cd68b",
+    "afterSha256": "16ae92d658fe98acddacf1d9b0eb3dd872fb30a1dee6d063f6bb6d124078b0da"
+  },
+  {
+    "file": "src/Pcl.Core/ResourceCatalog.cs",
+    "changed": true,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "5846ecaf7065c56fd40261f4d4bd491e6ceab91bbe776ef6239cc2df697110c8",
+    "afterSha256": "8bae159adedf3070092ad03ca5f94f2f219c8d0724bd8e1e9835660d5865ac2c"
+  },
+  {
+    "file": "src/Pcl.Core/ResourceDependencyPlanner.cs",
+    "changed": true,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "76886b208495e51aceb6200de864a7a7edf65ddafc6f51e66f8ecafe0d78acce",
+    "afterSha256": "7ea465b5b49d16fb551da43fc79c264225b66a5a352b24a3260ddf1721a056ea"
+  },
+  {
+    "file": "src/Pcl.Core/ResourceInstaller.cs",
+    "changed": true,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "2a467de16d42d02847a724f63cd1f3870f13ec2c17499f00df7f5875a6b886ec",
+    "afterSha256": "9d1c9b94760c7f55dfb5d08d2167c49bb83914eb2ba50a4b7df17570b91462df"
+  },
+  {
+    "file": "src/Pcl.Desktop/License0361Smoke.cs",
+    "changed": true,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "1032b278080844e225db0fb531460224e90cbc95ec91767b6fd138fd678dc449",
+    "afterSha256": "c3d727cc2d9b08e333c79375a6e5f2650b0e5db183c0633b1b5bf18dc69766b5"
+  },
+  {
+    "file": "src/Pcl.Desktop/ProductInfo.cs",
+    "changed": true,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "6a3d9bfd6132db07b4ce7341d6f5d905f8f10c5fa4d7992aac038df3fae708d7",
+    "afterSha256": "80eccd3bd93a8a0772994eb8b48a993429560e015addf84574f3b3c883a109e8"
+  },
+  {
+    "file": "src/Pcl.Domain/FabricMetadata.cs",
+    "changed": true,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "afcb451160c92e5a6e4c532bea113610c9f58c111489f18ac385fc7fe8b93098",
+    "afterSha256": "e9554c69d261f9fadf1bc7c84b4b6142eeb0fd74a483ce00af3b6456fb82516c"
+  },
+  {
+    "file": "src/Pcl.Domain/FabricVersions.cs",
+    "changed": true,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "14dde4640940f6a1140546c025dfc5d371345d22b22959f0c75320607922e704",
+    "afterSha256": "b484bad60bb43297e9f63e0d978fb7e4506489b1782e66a9297ff7767ac5429e"
+  },
+  {
+    "file": "tests/Pcl.Tests/Live037Tests.cs",
+    "changed": true,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "82fdef4f8985e96518e428d91252a1f255a3c2690abfdded8676fb614437e27e",
+    "afterSha256": "0a9f72da54c5775025f93a731e7e1d983d7e2001ca4890ecdb9fbfc2cd429578"
+  },
+  {
+    "file": "tests/Pcl.Tests/Planning037Tests.cs",
+    "changed": true,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "b369d87dd6785c4f38bcfad372d575f950dfb4961e1b564d4005275c6c915207",
+    "afterSha256": "71c9fd1040b6bd480737c3a3f2f529fdcc1b945f59fa77dcf66a489ba490a0c5"
+  },
+  {
+    "file": "tests/Pcl.Tests/Program.cs",
+    "changed": true,
+    "tokenEquivalent": true,
+    "releaseBaselineEquivalent": null,
+    "commentsAndDirectivesEquivalent": true,
+    "idempotent": true,
+    "beforeSha256": "938753751e15c7a4a5100afc9d8c40f2f16eb63dd2075c6f3130387364066e7c",
+    "afterSha256": "a3f6f46b5d1444a5209228205f05be70444064e58875abfc7eaffbcf8194a709"
+  }
+]

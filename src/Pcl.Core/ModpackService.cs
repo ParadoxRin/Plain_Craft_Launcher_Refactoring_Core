@@ -571,8 +571,25 @@ public sealed class ModpackService(MinecraftService service)
             );
             await ExtractOverridesAsync(pack, pending, ct);
             await CustomPackMetadata.ApplyAsync(service, pending, customChanges, ct);
-            new LocalResourceService(pending, plan.Loader, plan.Minecraft).ValidateEnabledResources();
             RegisterFiles(pending);
+            using (var catalog = new ResourceCatalog(paths: service.Paths))
+            {
+                await ResourceDependencyPlanner.ResolvePackAsync(
+                    catalog,
+                    service.Downloads,
+                    new GameProfile(
+                        pendingName,
+                        plan.Name,
+                        plan.Minecraft,
+                        plan.Loader,
+                        pending,
+                        Path.Combine(pending, "version.json")
+                    ),
+                    progress,
+                    ct
+                );
+            }
+
             var receipt = JsonFiles.Read(
                 Path.Combine(pending, "profile.json")
             );

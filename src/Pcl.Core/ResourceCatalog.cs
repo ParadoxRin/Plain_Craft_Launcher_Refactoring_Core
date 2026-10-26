@@ -298,7 +298,8 @@ public sealed class ResourceCatalog : IDisposable
                     await Get(
                         "version_file/" + sha1.ToLowerInvariant() + "?algorithm=sha1",
                         ct
-                    )
+                    ),
+                    sha1
                 ),
                 ct
             );
@@ -334,12 +335,22 @@ public sealed class ResourceCatalog : IDisposable
     }
 
     // [实现] ParseRelease 的实现：准备 var files = json["files"]!.ToArray()；准备 var f = files.FirstOrDefault( x => (bool? )x["primary"] == true ) ?? files.FirstOrDefault() ?? …；准备 var name = (string)f["filename"]!。
-    public static ResourceRelease ParseRelease(JToken json)
+    public static ResourceRelease ParseRelease(JToken json, string? expectedSha1 = null)
     {
         var files = json["files"]!.ToArray();
-        var f = files.FirstOrDefault(
-            x => (bool? )x["primary"] == true
-        ) ?? files.FirstOrDefault() ?? throw new InvalidDataException("项目没有可下载文件。");
+        // Hash lookup must keep the exact pack file, including non-primary files in a multi-file release.
+        var f = expectedSha1 is null
+            ? files.FirstOrDefault(
+                x => (bool? )x["primary"] == true
+            ) ?? files.FirstOrDefault()
+            : files.FirstOrDefault(
+                x => string.Equals((string? )x["hashes"]?["sha1"], expectedSha1, StringComparison.OrdinalIgnoreCase)
+            );
+        if (f is null)
+        {
+            throw new InvalidDataException("项目没有匹配的可下载文件。");
+        }
+
         var name = (string)f["filename"]!;
         ResourceInstaller.ValidateFileName(name);
         var hash = (string? )f["hashes"]?["sha1"] ?? throw new InvalidDataException("下载缺少 SHA-1。");
@@ -407,7 +418,7 @@ public sealed class ResourceCatalog : IDisposable
         Action<ResourceRelease>? discovered = null
     )
     {
-        if (roots.Count is 0 or > 150 || roots.GroupBy(
+        if (roots.Count is 0 or > 512 || roots.GroupBy(
             x => x.ProjectId
         )
             .Any(
@@ -447,7 +458,7 @@ public sealed class ResourceCatalog : IDisposable
             }
 
             byProject.Add(current.ProjectId, current);
-            if (byProject.Count > 150)
+            if (byProject.Count > 1024)
                 throw new InvalidDataException("前置关系超过限制。");
             foreach (var dependency in current.Dependencies.Where(
                 x => x.Type == "required"

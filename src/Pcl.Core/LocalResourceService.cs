@@ -429,10 +429,10 @@ public sealed class LocalResourceService(
     }
 
     // [实现] ValidateFabricSet 的实现：按 loader != "fabric" 分支处理；准备 var optifabricPreset = OptiFabricService.IsPreset(GameDirectory)；按 optifabricPreset 分支处理。
-    private void ValidateFabricSet()
+    private IReadOnlyList<string> ValidateFabricSet()
     {
         if (loader != "fabric")
-            return;
+            return[];
         var optifabricPreset = OptiFabricService.IsPreset(GameDirectory);
         if (optifabricPreset)
             OptiFabricService.ValidatePreset(GameDirectory);
@@ -441,7 +441,10 @@ public sealed class LocalResourceService(
                 x => x.Kind == ResourceKind.Mod && x.Enabled && (!optifabricPreset || Path.GetFileName(x.Path) != OptiFabricService.OptiFineFile)
             )
             .SelectMany(
-                x => FabricModReader.Read(x.Path)
+                x => FabricModReader.Read(x.Path, GameDirectory)
+            )
+            .Where(
+                x => x.Environment != "server"
             )
             .ToArray();
         var available = new Dictionary<string, string>
@@ -479,22 +482,62 @@ public sealed class LocalResourceService(
                     available[id] = mod.Version;
             }
 
+        var warnings = new List<string>();
         foreach (var mod in mods)
         {
-            // [实现] 对 mods 中的每一项：遍历 mod.Depends.Properties() 处理 requirement；遍历 mod.Breaks.Properties() 处理 conflict。
-            foreach (var requirement in mod.Depends.Properties())
-                if (!available.TryGetValue(requirement.Name, out var version) || !FabricVersionPredicate.Matches(version, requirement.Value))
-                    throw new InvalidDataException($"{mod.Id} 需要 {requirement.Name} {requirement.Value}；操作已撤回。");
-            foreach (var conflict in mod.Breaks.Properties())
-                if (available.TryGetValue(conflict.Name, out var version) && FabricVersionPredicate.Matches(version, conflict.Value))
-                    throw new InvalidDataException($"{mod.Id} 与 {conflict.Name} 冲突；操作已撤回。");
+            // Every declaration must hold; +depends can add a second constraint for the same ID.
+            foreach (var requirement in mod.Dependencies("depends"))
+            {
+                if (!available.TryGetValue(requirement.Id, out var version) || !requirement.Matchers.Any(
+                    x => FabricVersionPredicate.Matches(version, x)
+                ))
+                {
+                    throw new InvalidDataException(
+                        $"{mod.Id} 需要 {requirement.Id} {string.Join(" OR ", requirement.Matchers)}；操作已撤回。"
+                    );
+                }
+            }
+
+            foreach (var conflict in mod.Dependencies("breaks"))
+            {
+                if (available.TryGetValue(conflict.Id, out var version) && conflict.Matchers.Any(
+                    x => FabricVersionPredicate.Matches(version, x)
+                ))
+                {
+                    throw new InvalidDataException($"{mod.Id} 与 {conflict.Id} 冲突；操作已撤回。");
+                }
+            }
+
+            foreach (var optional in mod.Dependencies("recommends")
+                .Concat(
+                    mod.Dependencies("conflicts")
+                ))
+            {
+                var present = available.TryGetValue(optional.Id, out var version) && optional.Matchers.Any(
+                    x => FabricVersionPredicate.Matches(version!, x)
+                );
+                if (optional.Kind == "conflicts"
+                    ? present
+                    : !present)
+                {
+                    warnings.Add(
+                        $"{mod.Id}: {optional.Kind} {optional.Id} {string.Join(" OR ", optional.Matchers)}"
+                    );
+                }
+            }
         }
+
+        return warnings;
     }
 
     // [实现] 功能：统一执行本地依赖预检。实现：根据加载器分派到 Fabric、Quilt 或 Forge/NeoForge 分析器，使用实例游戏、Java 和加载器版本返回诊断。
     public IReadOnlyList<string> ValidateEnabledResources()
     {
-        ValidateFabricSet();
+        if (loader == "fabric")
+        {
+            return ValidateFabricSet();
+        }
+
         if (loader == "quilt")
         {
             // [实现] 条件成立（loader == "quilt"）时：准备 var profile = JsonFiles.Read( ResourceInstaller.SafeTarget(GameDirectory, "profile.json") )；准备 var quiltMetadata = JsonFiles.Read( ResourceInstaller.SafeTarget(GameDirectory, "version.json")…；返回 QuiltDependencies.Validate( GameDirectory, gameVersion, (string? )profile["loaderVersion"] ?? t…。
