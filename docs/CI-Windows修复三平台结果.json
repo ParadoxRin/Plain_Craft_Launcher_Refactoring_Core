@@ -1,0 +1,188 @@
+{
+  "date": "2026-10-27",
+  "scope": "Hosted-runner core harness; 10 focused tests execute on all three runners. Other historical platform-conditional rows are not separate native acceptance. No live user authentication, UI or game-world acceptance.",
+  "runUrl": "https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core/actions/runs/40444961793",
+  "sourceCommit": "497cdd16959fa680f752666eb53e26d67e426734",
+  "overallStatus": "passed",
+  "runners": [
+    {
+      "runner": "macos-latest",
+      "jobUrl": "https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core/actions/runs/40444961793/job/121993920649",
+      "status": "success",
+      "reportedPassed": 235,
+      "reportedTotal": 235,
+      "failures": [],
+      "rawReportSha256": "48818a6aafd9eb51650ecf8d21277372028baa75bd38a174dfdc5c62d2e9a382",
+      "platform": {
+        "Os": "osx",
+        "Architecture": "aarch64",
+        "OsVersion": "26.6.2",
+        "Separator": ":"
+      },
+      "focusedResults": [
+        {
+          "name": "settings_appearance_persistence_and_recovery",
+          "status": "passed"
+        },
+        {
+          "name": "host_paths_roots_and_platform_separators",
+          "status": "passed"
+        },
+        {
+          "name": "directory_move_and_symlink_unlink",
+          "status": "passed"
+        },
+        {
+          "name": "multi_version_metadata_java_and_arm_native_adapters",
+          "status": "passed"
+        },
+        {
+          "name": "temporary_cache_excludes_active_recent_shared_and_symlink_files",
+          "status": "passed"
+        },
+        {
+          "name": "temporary_cache_rechecks_preview_and_restores_without_overwrite",
+          "status": "passed"
+        },
+        {
+          "name": "directory_delete_rejects_symlink_parent",
+          "status": "passed"
+        },
+        {
+          "name": "directory_delete_preserves_nested_symlink_target",
+          "status": "passed"
+        },
+        {
+          "name": "temporary_cache_occupied_move_and_restore_retain_bytes_and_receipt",
+          "status": "passed"
+        },
+        {
+          "name": "temporary_cache_rechecks_download_queued_after_preview",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "runner": "windows-latest",
+      "jobUrl": "https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core/actions/runs/40444961793/job/121993920864",
+      "status": "success",
+      "reportedPassed": 235,
+      "reportedTotal": 235,
+      "failures": [],
+      "rawReportSha256": "47a0c13235b2bc8773e65508efa582aa12c5ac5922f81890207d51183782b9e3",
+      "platform": {
+        "Os": "windows",
+        "Architecture": "amd64",
+        "OsVersion": "10.0.26100.0",
+        "Separator": ";"
+      },
+      "focusedResults": [
+        {
+          "name": "settings_appearance_persistence_and_recovery",
+          "status": "passed"
+        },
+        {
+          "name": "host_paths_roots_and_platform_separators",
+          "status": "passed"
+        },
+        {
+          "name": "directory_move_and_symlink_unlink",
+          "status": "passed"
+        },
+        {
+          "name": "multi_version_metadata_java_and_arm_native_adapters",
+          "status": "passed"
+        },
+        {
+          "name": "temporary_cache_excludes_active_recent_shared_and_symlink_files",
+          "status": "passed"
+        },
+        {
+          "name": "temporary_cache_rechecks_preview_and_restores_without_overwrite",
+          "status": "passed"
+        },
+        {
+          "name": "directory_delete_rejects_symlink_parent",
+          "status": "passed"
+        },
+        {
+          "name": "directory_delete_preserves_nested_symlink_target",
+          "status": "passed"
+        },
+        {
+          "name": "temporary_cache_occupied_move_and_restore_retain_bytes_and_receipt",
+          "status": "passed"
+        },
+        {
+          "name": "temporary_cache_rechecks_download_queued_after_preview",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "runner": "ubuntu-latest",
+      "jobUrl": "https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core/actions/runs/40444961793/job/121993921104",
+      "status": "success",
+      "reportedPassed": 235,
+      "reportedTotal": 235,
+      "failures": [],
+      "rawReportSha256": "5114e7d94e297f25d4821ac5af6acd2412aec1fc090c4f9b079d5f68a72b50e6",
+      "platform": {
+        "Os": "linux",
+        "Architecture": "amd64",
+        "OsVersion": "6.17.0.1022",
+        "Separator": ":"
+      },
+      "focusedResults": [
+        {
+          "name": "settings_appearance_persistence_and_recovery",
+          "status": "passed"
+        },
+        {
+          "name": "host_paths_roots_and_platform_separators",
+          "status": "passed"
+        },
+        {
+          "name": "directory_move_and_symlink_unlink",
+          "status": "passed"
+        },
+        {
+          "name": "multi_version_metadata_java_and_arm_native_adapters",
+          "status": "passed"
+        },
+        {
+          "name": "temporary_cache_excludes_active_recent_shared_and_symlink_files",
+          "status": "passed"
+        },
+        {
+          "name": "temporary_cache_rechecks_preview_and_restores_without_overwrite",
+          "status": "passed"
+        },
+        {
+          "name": "directory_delete_rejects_symlink_parent",
+          "status": "passed"
+        },
+        {
+          "name": "directory_delete_preserves_nested_symlink_target",
+          "status": "passed"
+        },
+        {
+          "name": "temporary_cache_occupied_move_and_restore_retain_bytes_and_receipt",
+          "status": "passed"
+        },
+        {
+          "name": "temporary_cache_rechecks_download_queued_after_preview",
+          "status": "passed"
+        }
+      ]
+    }
+  ],
+  "localMac": {
+    "reportedPassed": 235,
+    "reportedTotal": 235,
+    "rawReportSha256": "54c28fa5a2aca00c1b56d1ededf576e4d1f994fa987a59b8430fc88ddbcfec35",
+    "desktopAndHostBuild": "passed-with-existing-warnings"
+  },
+  "previousFailedRun": "https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core/actions/runs/40376782412",
+  "releaseUnchanged": "v0.41.0"
+}

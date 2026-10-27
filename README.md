@@ -96,7 +96,7 @@ export DOTNET_CLI_HOME="$PWD/.cache/dotnet-home"
 
 [Core CI](https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core/actions/workflows/core-ci.yml) 使用 macOS、Windows、Ubuntu runner 构建并实际执行 `Pcl.Tests` 控制台套件；逐次结果以 Actions 对应提交为准。它检查已覆盖的规则、文件和受控进程场景，不证明完整 Host/UI、系统凭据库、游戏世界或三平台产品已可用。部分既有用例有平台条件分支，不能将套件总行数当成每个平台实际执行的原生场景数。
 
-2026-10-27 首轮修复后结果：macOS/Ubuntu 套件报告231/231，Windows225/231、6项失败，**整体 CI 尚未通过**。Linux资源文件大小写阻断已修复；Windows失败保持门禁，详见[实际结果与下一步](docs/CI与文档一致性核对.md)。
+2026-10-27 最终修复提交 `497cdd1`：[三平台 CI](https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core/actions/runs/40444961793) 均通过，macOS、Windows、Ubuntu 各报告 **235/235**。Windows 原6项失败中，2项为目录链接删除/缓存重命名实现缺陷，4项为平台测试预期；保留保护断言并新增4项文件安全测试。逐项归因与证据见[Windows CI 修复验收](docs/Windows-CI六项修复与验收.md)，首轮失败仍保留在[历史核对记录](docs/CI与文档一致性核对.md)。这些维护改动尚未进入固定的 v0.41.0 安装包。
 
 三个较大的追踪 JSON 放在 [`docs/data/`](docs/data/README.md)，保留 Git 版本管理。其中状态覆盖文件是人工维护的审核输入，并非可删除的缓存；矩阵还作为应用嵌入资源使用。普通构建不需要重新生成。
 
