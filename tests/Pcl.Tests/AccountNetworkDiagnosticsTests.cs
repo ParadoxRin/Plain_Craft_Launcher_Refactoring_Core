@@ -283,12 +283,14 @@ public static class AccountNetworkDiagnosticsTests
                 File.WriteAllText(original, "locked bytes");
                 File.SetLastWriteTimeUtc(original, DateTime.UtcNow.AddDays(-3));
                 var selected = isolatedCache.Preview().Single();
-                using (var writer = new FileStream(original, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
+                foreach (var share in new[] { FileShare.None, FileShare.ReadWrite | FileShare.Delete })
                 {
+                    // 即便既有写入者允许其他读写，本服务仍须拒绝与它并发回收。
+                    using var writer = new FileStream(original, FileMode.Open, FileAccess.ReadWrite, share);
                     var blocked = isolatedCache.MoveToTrash([selected]);
                     Check(blocked.Batch is null && blocked.Skipped.Count == 1
                         && File.Exists(original) && isolatedCache.ListTrash().Count == 0,
-                        "occupied source stays outside trash");
+                        "occupied source stays outside trash: " + share);
                 }
                 Check(File.ReadAllText(original) == "locked bytes", "blocked move preserves bytes");
                 var moved = isolatedCache.MoveToTrash([selected]);
@@ -296,13 +298,14 @@ public static class AccountNetworkDiagnosticsTests
                     && !File.Exists(original), "released source moves with validation handle open");
                 var batch = moved.Batch!;
                 var stored = Path.Combine(isolated.Root, "cache-trash", batch.Id, batch.Files.Single().StoredName);
-                using (var writer = new FileStream(stored, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
+                foreach (var share in new[] { FileShare.None, FileShare.ReadWrite | FileShare.Delete })
                 {
+                    using var writer = new FileStream(stored, FileMode.Open, FileAccess.ReadWrite, share);
                     var blocked = isolatedCache.Restore(batch.Id);
                     Check(blocked.Batch?.Files.Count == 1 && blocked.Skipped.Count == 1
                         && File.Exists(stored) && !File.Exists(original)
                         && isolatedCache.ListTrash().Single().Id == batch.Id,
-                        "occupied trash retains receipt and does not create destination");
+                        "occupied trash retains receipt and does not create destination: " + share);
                 }
                 Check(File.ReadAllText(stored) == "locked bytes", "blocked restore preserves bytes");
                 var restored = isolatedCache.Restore(batch.Id);
