@@ -138,14 +138,14 @@ public static class DirectoryUtils {
     public static bool? Delete(string folder, bool toRecycleBin = false) {
         if (toRecycleBin && !PathUtils.IsWindows) throw new PlatformNotSupportedException("请通过平台回收站服务删除文件夹。");
         if (!DirectoryUtils.Exists(folder)) return null;
-        if (!PathUtils.IsWindows && (File.GetAttributes(folder) & FileAttributes.ReparsePoint) != 0) {
-            Directory.Delete(folder); // Unlink the selected symlink, never enumerate its target.
+        if (!toRecycleBin && (File.GetAttributes(folder) & FileAttributes.ReparsePoint) != 0) {
+            Directory.Delete(PathUtils.ForApi(folder)); // 所有平台均只移除所选链接，不遍历目标。
             return false;
         }
-        if (!PathUtils.IsWindows) {
-            for (var parent = Path.GetDirectoryName(Path.GetFullPath(folder)); !string.IsNullOrEmpty(parent); parent = Path.GetDirectoryName(parent)) {
-                if (Directory.Exists(parent) && (File.GetAttributes(parent) & FileAttributes.ReparsePoint) != 0)
-                    throw new IOException("不通过符号链接父目录执行递归删除。");
+        // Windows 的目录链接与 Unix 链接都可能让递归删除越过调用方选定的目录。
+        for (var parent = Path.GetDirectoryName(Path.GetFullPath(folder)); !string.IsNullOrEmpty(parent); parent = Path.GetDirectoryName(parent)) {
+            if (Directory.Exists(parent) && (File.GetAttributes(parent) & FileAttributes.ReparsePoint) != 0) {
+                throw new IOException("不通过符号链接父目录执行递归删除。");
             }
         }
         Logger.Trace($"{(toRecycleBin ? "将文件夹删除到回收站" : "删除文件夹")}：{folder}");
@@ -164,6 +164,11 @@ public static class DirectoryUtils {
         static void DeleteInternal(string folder) {
             try {
                 folder = PathUtils.ForApi(folder);
+                // 回收站失败后同样只移除链接；必须在枚举任何文件之前处理。
+                if ((File.GetAttributes(folder) & FileAttributes.ReparsePoint) != 0) {
+                    Directory.Delete(folder);
+                    return;
+                }
                 foreach (string filePath in DirectoryUtils.EnumerateFiles(folder)) FileUtils.Delete(filePath); // 删除文件
                 foreach (string str in DirectoryUtils.EnumerateDirectories(folder)) {
                     if ((File.GetAttributes(str) & FileAttributes.ReparsePoint) != 0) Directory.Delete(str);

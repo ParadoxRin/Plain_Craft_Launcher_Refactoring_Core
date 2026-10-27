@@ -205,7 +205,7 @@ public static class AccountNetworkDiagnosticsTests
                 var rows = cache.Preview();
                 Check(
                     rows.Count == 1 && rows.Single()
-                        .RelativePath == "cache/a.jar.part",
+                        .RelativePath == Path.Combine("cache", "a.jar.part"),
                     "only old idle explicit cache selected"
                 );
                 Check(
@@ -269,6 +269,67 @@ public static class AccountNetworkDiagnosticsTests
                         )
                     )
                 );
+            }
+        );
+        // 使用真实句柄验证占用保护；释放后同一批文件必须能完成回收和恢复。
+        await test(
+            "temporary_cache_occupied_move_and_restore_retain_bytes_and_receipt",
+            () =>
+            {
+                var isolated = new AppPaths(Path.Combine(root, "cache-handle-protection"));
+                var isolatedCache = new TemporaryDownloadCache(isolated);
+                var original = Path.Combine(isolated.Root, "cache", "locked.part");
+                Directory.CreateDirectory(Path.GetDirectoryName(original)!);
+                File.WriteAllText(original, "locked bytes");
+                File.SetLastWriteTimeUtc(original, DateTime.UtcNow.AddDays(-3));
+                var selected = isolatedCache.Preview().Single();
+                using (var writer = new FileStream(original, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
+                {
+                    var blocked = isolatedCache.MoveToTrash([selected]);
+                    Check(blocked.Batch is null && blocked.Skipped.Count == 1
+                        && File.Exists(original) && isolatedCache.ListTrash().Count == 0,
+                        "occupied source stays outside trash");
+                }
+                Check(File.ReadAllText(original) == "locked bytes", "blocked move preserves bytes");
+                var moved = isolatedCache.MoveToTrash([selected]);
+                Check(moved.Batch?.Files.Count == 1 && moved.Skipped.Count == 0
+                    && !File.Exists(original), "released source moves with validation handle open");
+                var batch = moved.Batch!;
+                var stored = Path.Combine(isolated.Root, "cache-trash", batch.Id, batch.Files.Single().StoredName);
+                using (var writer = new FileStream(stored, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
+                {
+                    var blocked = isolatedCache.Restore(batch.Id);
+                    Check(blocked.Batch?.Files.Count == 1 && blocked.Skipped.Count == 1
+                        && File.Exists(stored) && !File.Exists(original)
+                        && isolatedCache.ListTrash().Single().Id == batch.Id,
+                        "occupied trash retains receipt and does not create destination");
+                }
+                Check(File.ReadAllText(stored) == "locked bytes", "blocked restore preserves bytes");
+                var restored = isolatedCache.Restore(batch.Id);
+                Check(restored.Skipped.Count == 0 && File.ReadAllText(original) == "locked bytes"
+                    && !File.Exists(stored) && isolatedCache.ListTrash().Count == 0,
+                    "released trash restores exact bytes and removes receipt");
+                return Task.CompletedTask;
+            }
+        );
+        // 预览之后才排队的下载仍受保护，不能依赖预览时的空闲状态。
+        await test(
+            "temporary_cache_rechecks_download_queued_after_preview",
+            () =>
+            {
+                var isolated = new AppPaths(Path.Combine(root, "cache-late-download"));
+                var isolatedCache = new TemporaryDownloadCache(isolated);
+                var original = Path.Combine(isolated.Root, "cache", "active.part");
+                Directory.CreateDirectory(Path.GetDirectoryName(original)!);
+                File.WriteAllText(original, "active bytes");
+                File.SetLastWriteTimeUtc(original, DateTime.UtcNow.AddDays(-3));
+                var selected = isolatedCache.Preview().Single();
+                DownloadTasks.For(isolated).Queue(new(new("https://example.test/late"), original[..^5], 12, null));
+                var result = isolatedCache.MoveToTrash([selected]);
+                Check(result.Batch is null && result.Skipped.Count == 1
+                    && File.ReadAllText(original) == "active bytes" && isolatedCache.ListTrash().Count == 0,
+                    "newly queued download cannot be moved using stale preview");
+                return Task.CompletedTask;
             }
         );
     }

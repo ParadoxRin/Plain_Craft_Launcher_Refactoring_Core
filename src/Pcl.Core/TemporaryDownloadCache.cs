@@ -146,8 +146,14 @@ public sealed class TemporaryDownloadCache(AppPaths paths)
 
             try
             {
-                // [实现] 在异常保护范围内：准备 var exclusive = new FileStream(source, FileMode.Open, FileAccess.ReadWrite, FileShare.None)；准备 var info = new FileInfo(source)；按 info.Length != item.Size || info.LastWriteTimeUtc != item.LastWriteUtc.UtcDateTime || info.Last… 分支处理。
-                using var exclusive = new FileStream(source, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+                // Windows 重命名要求现有句柄共享 Delete；仍不共享读写，并持有句柄直到移动完成。
+                // Unix 保持原来的 FileShare.None，避免改变现有文件占用保护。
+                using var exclusive = new FileStream(
+                    source,
+                    FileMode.Open,
+                    FileAccess.ReadWrite,
+                    OperatingSystem.IsWindows() ? FileShare.Delete : FileShare.None
+                );
                 var info = new FileInfo(source);
                 if (info.Length != item.Size || info.LastWriteTimeUtc != item.LastWriteUtc.UtcDateTime || info.LastWriteTimeUtc > DateTime.UtcNow.AddHours(-24) || ActivePaths()
                     .Contains(source))
@@ -269,8 +275,14 @@ public sealed class TemporaryDownloadCache(AppPaths paths)
 
             try
             {
-                // [实现] 在异常保护范围内：准备 var exclusive = new FileStream(stored, FileMode.Open, FileAccess.ReadWrite, FileShare.None)；按 exclusive.Length != item.Size 分支处理；执行 Directory.CreateDirectory( Path.GetDirectoryName(target)! )。
-                using var exclusive = new FileStream(stored, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+                // Windows 重命名要求现有句柄共享 Delete；仍不共享读写，并持有句柄直到移动完成。
+                // Unix 保持原来的 FileShare.None，避免改变现有文件占用保护。
+                using var exclusive = new FileStream(
+                    stored,
+                    FileMode.Open,
+                    FileAccess.ReadWrite,
+                    OperatingSystem.IsWindows() ? FileShare.Delete : FileShare.None
+                );
                 if (exclusive.Length != item.Size)
                     throw new InvalidDataException("回收文件大小已变化，停止恢复。");
                 Directory.CreateDirectory(

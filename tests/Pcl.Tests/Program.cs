@@ -457,6 +457,8 @@ await Test(
                     BackgroundBlur = 4,
                     BackgroundFit = "fit",
                     TitleMode = "text",
+                    Accent = "#123456",
+                    AccentMode = "rainbow",
                     MusicAutoPlay = false,
                     HiddenRoutes = [
                         "mod",
@@ -465,6 +467,22 @@ await Test(
                 }
             );
             var value = new AppearanceService(paths).Load();
+            // Windows 保留许可要求的蓝色静态标题；其他宿主必须保留用户的选择。
+            void CheckPlatformAppearance(AppearanceSettings settings)
+            {
+                Check(settings.BackgroundFit == "fit");
+                if (OperatingSystem.IsWindows())
+                {
+                    Check(settings.TitleMode == "default" && settings.Accent == "#0875D1"
+                        && settings.AccentMode == "static" && settings.TitleImage == "");
+                }
+                else
+                {
+                    Check(settings.TitleMode == "text" && settings.Accent == "#123456"
+                        && settings.AccentMode == "rainbow");
+                }
+            }
+            CheckPlatformAppearance(value);
             Check(
                 value.WindowOpacity == .9 && !value.MusicAutoPlay && value.HiddenRoutes.Contains("mod")
             );
@@ -489,47 +507,35 @@ await Test(
             var file = Path.Combine(paths.Root, "portable.json");
             service.Export(file);
             service.Import(file);
-            Check(
-                service.Load()
-                    .BackgroundFit == "fit" && service.Load()
-                    .TitleMode == "text"
-            );
+            CheckPlatformAppearance(service.Load());
         }
     )
 );
 await Test(
-    "unix_absolute_path_and_root",
+    "host_paths_roots_and_platform_separators",
     () => Sync(
         () =>
         {
-            Check(
-                PathUtils.ForCompare(scratch) == scratch
-            );
-            Check(
-                PathUtils.ForApi("/") == "/"
-            );
-            Check(
-                PathUtils.IsParentOf("/", scratch)
-            );
-            Check(
-                !PathUtils.IsParentOf(scratch, scratch + "-other")
-            );
-            Check(
-                !PathUtils.IsSame(
-                    Path.Combine(scratch, "A"),
-                    Path.Combine(scratch, "a")
-                )
-            );
-            Check(
-                PathUtils.GetLastPart(
-                    Path.Combine(scratch, @"literal\name:")
-                ) == @"literal\name:"
-            );
-            Check(
-                PathUtils.ForApi(
-                    Path.Combine(scratch, "colon:")
-                ) == Path.Combine(scratch, "colon:")
-            );
+            Check(PathUtils.ForCompare(scratch) == scratch);
+            var root = Path.GetPathRoot(scratch)!;
+            Check(PathUtils.IsParentOf(root, scratch));
+            Check(!PathUtils.IsParentOf(scratch, scratch + "-other"));
+            // 比较契约按宿主定义；这不等同于推断磁盘卷的大小写敏感能力。
+            if (OperatingSystem.IsWindows())
+            {
+                Check(PathUtils.IsSame(Path.Combine(scratch, "A"), Path.Combine(scratch, "a")));
+                Check(PathUtils.ForApi(root) == @"\\?\" + root);
+                Check(PathUtils.RemoveExtendedPrefix(PathUtils.ForApi(scratch)) == scratch);
+                Check(PathUtils.ForCompare(scratch.Replace(Path.DirectorySeparatorChar, '/')) == scratch);
+                Check(PathUtils.GetLastPart(Path.Combine(scratch, @"literal\name")) == "name");
+            }
+            else
+            {
+                Check(PathUtils.ForApi("/") == "/");
+                Check(!PathUtils.IsSame(Path.Combine(scratch, "A"), Path.Combine(scratch, "a")));
+                Check(PathUtils.GetLastPart(Path.Combine(scratch, @"literal\name:")) == @"literal\name:");
+                Check(PathUtils.ForApi(Path.Combine(scratch, "colon:")) == Path.Combine(scratch, "colon:"));
+            }
         }
     )
 );
@@ -581,7 +587,7 @@ await Test(
             var moved = Path.Combine(scratch, "new-folder");
             DirectoryUtils.Move(source, moved);
             Check(
-                File.Exists(
+                !Directory.Exists(source) && File.Exists(
                     Path.Combine(moved, "keep.txt")
                 )
             );
@@ -593,6 +599,45 @@ await Test(
                     Path.Combine(moved, "keep.txt")
                 ) == "safe"
             );
+        }
+    )
+);
+// 链接父目录不能作为递归删除入口；真实目标中的数据必须完整保留。
+await Test(
+    "directory_delete_rejects_symlink_parent",
+    () => Sync(
+        () =>
+        {
+            var target = Path.Combine(scratch, "parent-link-target");
+            var child = Path.Combine(target, "child");
+            Directory.CreateDirectory(child);
+            var keep = Path.Combine(child, "keep.txt");
+            File.WriteAllText(keep, "must survive");
+            var alias = Path.Combine(scratch, "parent-link-alias");
+            Directory.CreateSymbolicLink(alias, target);
+            Throws<IOException>(() => DirectoryUtils.Delete(Path.Combine(alias, "child")));
+            Check(Directory.Exists(alias) && File.ReadAllText(keep) == "must survive");
+            DirectoryUtils.Delete(alias);
+            Check(!Directory.Exists(alias) && File.ReadAllText(keep) == "must survive");
+        }
+    )
+);
+// 正常目录里的嵌套链接也只能 unlink，不能删除目录之外的目标文件。
+await Test(
+    "directory_delete_preserves_nested_symlink_target",
+    () => Sync(
+        () =>
+        {
+            var target = Path.Combine(scratch, "nested-link-target");
+            Directory.CreateDirectory(target);
+            var keep = Path.Combine(target, "keep.txt");
+            File.WriteAllText(keep, "external data");
+            var folder = Path.Combine(scratch, "nested-link-container");
+            Directory.CreateDirectory(folder);
+            File.WriteAllText(Path.Combine(folder, "local.txt"), "delete me");
+            Directory.CreateSymbolicLink(Path.Combine(folder, "link"), target);
+            DirectoryUtils.Delete(folder);
+            Check(!Directory.Exists(folder) && File.ReadAllText(keep) == "external data");
         }
     )
 );
@@ -3913,9 +3958,9 @@ await Test(
                 if (major == 8)
                     Check(
                         libraries.Any(
-                            x => x.Path.Contains("jna/5.12.1")
+                            x => x.Path.Contains(Path.Combine("jna", "5.12.1"))
                         ) && !libraries.Any(
-                            x => x.Path.Contains("java-objc-bridge/1.0.0")
+                            x => x.Path.Contains(Path.Combine("java-objc-bridge", "1.0.0"))
                         )
                     );
                 using var target = new MinecraftService(
