@@ -7,6 +7,7 @@ on:
       - 'src/**'
       - 'vendor/**'
       - 'tests/**'
+      - 'examples/**'
       - 'Directory.Build.props'
       - 'global.json'
       - '.github/workflows/core-ci.yml'
@@ -15,6 +16,7 @@ on:
       - 'src/**'
       - 'vendor/**'
       - 'tests/**'
+      - 'examples/**'
       - 'Directory.Build.props'
       - 'global.json'
       - '.github/workflows/core-ci.yml'
@@ -55,6 +57,22 @@ jobs:
       # dotnet test invocation would not prove that its assertions ran.
       - name: Run core assertions
         run: dotnet tests/Pcl.Tests/bin/Release/net10.0/Pcl.Tests.dll artifacts/ci-core
+      - name: Build real Host and independent minimal client
+        run: |
+          dotnet build src/Pcl.Host/Pcl.Host.csproj --configuration Release -m:1 -nr:false
+          dotnet build tests/Pcl.MinimalClient.Tests/Pcl.MinimalClient.Tests.csproj --configuration Release -m:1 -nr:false
+      # Fresh root, real private-pipe Host, public contracts only. This lane does
+      # not perform a complete game download or access an OS credential store.
+      - name: Run minimal client Host contract acceptance
+        run: dotnet tests/Pcl.MinimalClient.Tests/bin/Release/net10.0/Pcl.MinimalClient.Tests.dll - "$PWD/src/Pcl.Host/bin/Release/net10.0/Pcl.Host.dll" "$PWD/artifacts/ci-minimal-root" "$PWD/artifacts/ci-minimal-result.json" contract
+      - name: Upload bounded minimal client report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: minimal-client-${{ matrix.os }}
+          path: artifacts/ci-minimal-result.json
+          if-no-files-found: warn
+          retention-days: 14
       - name: Upload bounded test report
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
