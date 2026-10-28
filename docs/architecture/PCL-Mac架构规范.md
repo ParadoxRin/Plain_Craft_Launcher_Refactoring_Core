@@ -1,11 +1,11 @@
 # Plain Craft Launcher Refactoring Core 架构规范
 
 版本：1.5.1\
-日期：2026-10-27（Australia/Sydney）\
+日期：2026-10-28（Australia/Sydney；main 最小客户端及 Linux attach 增补）\
 性质：后续增量重构的实施规范  
 依据：历史《分层架构实施规范 v2》讨论、已确认的产品目标与当前仓库调用链；外部讨论稿不随当前仓库交付，也不是构建或接手前置条件。
 
-本规范取代历史讨论稿中的实施约定。§13 描述当前落地范围，§14 的阶段一至三仅保存迁移历史；其余“必须／不得”是维护约束，不表示全部规则已由代码守卫覆盖或全部平台已经实现。本版修订为文档校正，不更改 v0.41.0 发布标签。
+本规范取代历史讨论稿中的实施约定。§13 描述当前落地范围，§14 的阶段一至三仅保存迁移历史；其余“必须／不得”是维护约束，不表示全部规则已由代码守卫覆盖或全部平台已经实现。v1.5.1 的 main 增补记录最小客户端与 Linux attach 出生证明；不更改 v0.41.0 发布标签。
 
 ## 1. 目标与适用范围
 
@@ -21,7 +21,9 @@
 - **建议**：默认做法，有具体理由时可选其他实现。
 - **后续阶段**：尚未实现的目标，不得据此宣称现有功能已具备。
 
-当前 0.41.0 交付为 Apple Silicon Mac 的 Avalonia 参考客户端 + 独立 Host。SwiftUI/Windows/Linux 客户端尚未实现；Windows/Linux Adapter 与平台组合根尚未补齐。保留可用 Avalonia 作为接入参考，不要求先替换它才能交接核心，也不把编译通过当作平台可用。
+当前 0.41.0 交付为 Apple Silicon Mac 的 Avalonia 参考客户端 + 独立 Host。SwiftUI/Windows/Linux 原生图形客户端尚未实现；Windows/Linux Adapter 与平台组合根尚未补齐。保留可用 Avalonia 作为接入参考，不要求先替换它才能交接核心，也不把编译通过当作平台可用。
+
+main 另提供[独立最小客户端](../../examples/Pcl.MinimalClient/README.md)，只引用 Client/Contract，由单独 Host 执行业务；真实协议及安装/启动验收范围见[本轮记录](../最小客户端与Host契约验收.md)。此示例不是通用 SDK、Swift 实现或三平台完整产品。
 
 当前实现追踪：[0.41.0 发布记录](../0.41-核心平台定位与发布.md)、[收尾第五批](../收尾第五批验收.md)及[0.40 生命周期记录](../0.40-Core职责与页面生命周期验收.md)。规范不作为运行证据。
 
@@ -238,7 +240,7 @@ Application 不得成为单个万能服务。版本安装、账户管理、游�
 - stdout 只输出协议，stderr 输出脱敏诊断；底层库的普通日志不得污染协议流。
 - 初始帧上限为 1 MiB，超限明确拒绝。大日志、图片和文件使用受控资源引用与分块／分页能力。
 - 单写队列确保消息不交错，解析不得依赖一次读取恰好等于一条消息。
-- 当前 Desktop 默认连接当前用户私有命名管道；Unix 上是受权限保护的本地 socket，使用 CurrentUserOnly、私有父目录和 socket 权限，不监听 TCP。首帧必须 `session.attach`，参数为 `clientId/processId/startedUtcTicks`，然后才发 `host.hello`。Host 验证客户端进程创建身份及会话所有权。stdio 保留为直接进程/测试入口，直接 hello，不能把新建 stdio Host 当作会话重连。路径算法见 SharedProtocol/PrivatePipePath.cs；权限与身份由各平台实测。
+- 当前 Desktop 默认连接当前用户私有命名管道；Unix 上是受权限保护的本地 socket，使用 CurrentUserOnly、私有父目录和 socket 权限，不监听 TCP。首帧必须 `session.attach`，参数为 `clientId/processId/startedUtcTicks`，Linux 另需 `linuxStartTicks`（内核原始启动 tick，缺少即拒绝），然后才发 `host.hello`。Host 验证客户端进程创建身份及会话所有权。stdio 保留为直接进程/测试入口，直接 hello，不能把新建 stdio Host 当作会话重连。路径算法见 SharedProtocol/PrivatePipePath.cs；权限与身份由各平台实测。
 - RPC 只提供明确命令，不提供任意命令执行、任意 Java 参数注入或无约束文件读取。
 
 ### 7.4 事件、背压与快照

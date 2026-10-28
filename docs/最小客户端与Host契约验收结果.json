@@ -1,0 +1,319 @@
+{
+  "sourceCommit": "953d7b975c5ba9bdc0543f4b6db016354c89f29b",
+  "date": "2026-10-28",
+  "ciRun": "https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core/actions/runs/40650165276",
+  "ciConclusion": "success",
+  "firstCiFailure": {
+    "run": "https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core/actions/runs/40648970580",
+    "sourceCommit": "8c651ae26a7cd453ceba2e16f0acd1b7242940f0",
+    "runner": "ubuntu-latest",
+    "error": "CLIENT_IDENTITY_INVALID",
+    "classification": "Implementation defect: process-local boot UTC estimate is not a stable cross-process birth identity. Fixed by exact Linux kernel start ticks, not tolerance or PID-only fallback."
+  },
+  "ci": [
+    {
+      "runner": "macos-latest",
+      "core": {
+        "status": "passed",
+        "total": 235,
+        "platform": {
+          "Os": "osx",
+          "Architecture": "aarch64",
+          "OsVersion": "26.6.2",
+          "Separator": ":"
+        },
+        "reportSha256": "5e59f69e83439e9084b1ed48f25912be70314c873c6d25f56168f94e7f606de2"
+      },
+      "minimalClient": {
+        "reportSha256": "f4262d62b60d6cecfe57d629858242a69c85ba5715ea523746ac8c75103628ae",
+        "status": "passed",
+        "scope": "Real Host process and public contracts; no complete game install, credentials or GUI",
+        "platform": "macOS 26.6.2",
+        "checks": [
+          "assembly-boundary-Pcl.MinimalClient",
+          "assembly-boundary-Pcl.Client",
+          "assembly-boundary-Pcl.Contract",
+          "assembly-boundary-Pcl.MinimalClient.Tests",
+          "output-has-no-business-assemblies",
+          "reject-attach-CLIENT_IDENTITY_INVALID",
+          "real-host-handshake-and-capabilities",
+          "isolated-root-no-user-credentials",
+          "reject-attach-SESSION_IN_USE",
+          "rejected-takeover-preserves-original-session",
+          "reject-METHOD_NOT_SUPPORTED",
+          "reject-PROTOCOL_INCOMPATIBLE",
+          "reject-UNSUPPORTED_TARGET",
+          "bounded-empty-operation-page",
+          "same-key-same-operation",
+          "reject-IDEMPOTENCY_CONFLICT",
+          "reconnect-retains-host-and-operation",
+          "subscription-watermark-increases",
+          "cancel-reaches-terminal-through-restored-subscription",
+          "subscription-delivers-terminal",
+          "restart-creates-new-host",
+          "cancelled-state-survives-host-restart",
+          "idempotency-survives-host-restart",
+          "offline-account-created-through-host-only",
+          "account-snapshot-is-public-and-offline",
+          "offline-account-restored-and-root-lock-reacquired",
+          "all-owned-hosts-exited",
+          "runtime-loaded-assemblies-remain-contract-only"
+        ],
+        "observed": [],
+        "error": null
+      }
+    },
+    {
+      "runner": "windows-latest",
+      "core": {
+        "status": "passed",
+        "total": 235,
+        "platform": {
+          "Os": "windows",
+          "Architecture": "amd64",
+          "OsVersion": "10.0.26100.0",
+          "Separator": ";"
+        },
+        "reportSha256": "d018e4a9901a451395877ab8474ab49ba940fa013da9d71ac82e410f46dfa482"
+      },
+      "minimalClient": {
+        "reportSha256": "4c531b9298e01ec64ccd291db058e0242862697ef132299f988b389279131ffe",
+        "status": "passed",
+        "scope": "Real Host process and public contracts; no complete game install, credentials or GUI",
+        "platform": "Microsoft Windows 10.0.26100",
+        "checks": [
+          "assembly-boundary-Pcl.MinimalClient",
+          "assembly-boundary-Pcl.Client",
+          "assembly-boundary-Pcl.Contract",
+          "assembly-boundary-Pcl.MinimalClient.Tests",
+          "output-has-no-business-assemblies",
+          "reject-attach-CLIENT_IDENTITY_INVALID",
+          "real-host-handshake-and-capabilities",
+          "isolated-root-no-user-credentials",
+          "reject-attach-SESSION_IN_USE",
+          "rejected-takeover-preserves-original-session",
+          "reject-METHOD_NOT_SUPPORTED",
+          "reject-PROTOCOL_INCOMPATIBLE",
+          "reject-UNSUPPORTED_TARGET",
+          "bounded-empty-operation-page",
+          "same-key-same-operation",
+          "reject-IDEMPOTENCY_CONFLICT",
+          "reconnect-retains-host-and-operation",
+          "subscription-watermark-increases",
+          "cancel-reaches-terminal-through-restored-subscription",
+          "subscription-delivers-terminal",
+          "restart-creates-new-host",
+          "cancelled-state-survives-host-restart",
+          "idempotency-survives-host-restart",
+          "offline-account-created-through-host-only",
+          "account-snapshot-is-public-and-offline",
+          "offline-account-restored-and-root-lock-reacquired",
+          "all-owned-hosts-exited",
+          "runtime-loaded-assemblies-remain-contract-only"
+        ],
+        "observed": [],
+        "error": null
+      }
+    },
+    {
+      "runner": "ubuntu-latest",
+      "core": {
+        "status": "passed",
+        "total": 235,
+        "platform": {
+          "Os": "linux",
+          "Architecture": "amd64",
+          "OsVersion": "7.0.0.1017",
+          "Separator": ":"
+        },
+        "reportSha256": "e1d96ae8de98a1afe1f523d2ab4708d1ab08f6144a5a29515357f1c215c7af0c"
+      },
+      "minimalClient": {
+        "reportSha256": "c05b9d634f409149db4eff7e2bb065ca87ce0f24485a1c622f2d82d956e39bfb",
+        "status": "passed",
+        "scope": "Real Host process and public contracts; no complete game install, credentials or GUI",
+        "platform": "Ubuntu 24.04.5 LTS",
+        "checks": [
+          "assembly-boundary-Pcl.MinimalClient",
+          "assembly-boundary-Pcl.Client",
+          "assembly-boundary-Pcl.Contract",
+          "assembly-boundary-Pcl.MinimalClient.Tests",
+          "output-has-no-business-assemblies",
+          "reject-attach-CLIENT_IDENTITY_INVALID",
+          "linux-missing-birth-proof-rejected",
+          "real-host-handshake-and-capabilities",
+          "isolated-root-no-user-credentials",
+          "reject-attach-SESSION_IN_USE",
+          "rejected-takeover-preserves-original-session",
+          "reject-METHOD_NOT_SUPPORTED",
+          "reject-PROTOCOL_INCOMPATIBLE",
+          "reject-UNSUPPORTED_TARGET",
+          "bounded-empty-operation-page",
+          "same-key-same-operation",
+          "reject-IDEMPOTENCY_CONFLICT",
+          "reconnect-retains-host-and-operation",
+          "subscription-watermark-increases",
+          "cancel-reaches-terminal-through-restored-subscription",
+          "subscription-delivers-terminal",
+          "restart-creates-new-host",
+          "cancelled-state-survives-host-restart",
+          "idempotency-survives-host-restart",
+          "offline-account-created-through-host-only",
+          "account-snapshot-is-public-and-offline",
+          "offline-account-restored-and-root-lock-reacquired",
+          "all-owned-hosts-exited",
+          "runtime-loaded-assemblies-remain-contract-only"
+        ],
+        "observed": [],
+        "error": null
+      }
+    }
+  ],
+  "localMacContract": {
+    "reportSha256": "974148c0eddd6f5ee5bb639cca27e46784bc2d1253d0ffc4b30aac855698d74d",
+    "status": "passed",
+    "scope": "Real Host process and public contracts; no complete game install, credentials or GUI",
+    "platform": "macOS 27.0.1",
+    "checks": [
+      "assembly-boundary-Pcl.MinimalClient",
+      "assembly-boundary-Pcl.Client",
+      "assembly-boundary-Pcl.Contract",
+      "assembly-boundary-Pcl.MinimalClient.Tests",
+      "output-has-no-business-assemblies",
+      "reject-attach-CLIENT_IDENTITY_INVALID",
+      "real-host-handshake-and-capabilities",
+      "isolated-root-no-user-credentials",
+      "reject-attach-SESSION_IN_USE",
+      "rejected-takeover-preserves-original-session",
+      "reject-METHOD_NOT_SUPPORTED",
+      "reject-PROTOCOL_INCOMPATIBLE",
+      "reject-UNSUPPORTED_TARGET",
+      "bounded-empty-operation-page",
+      "same-key-same-operation",
+      "reject-IDEMPOTENCY_CONFLICT",
+      "reconnect-retains-host-and-operation",
+      "subscription-watermark-increases",
+      "cancel-reaches-terminal-through-restored-subscription",
+      "subscription-delivers-terminal",
+      "restart-creates-new-host",
+      "cancelled-state-survives-host-restart",
+      "idempotency-survives-host-restart",
+      "offline-account-created-through-host-only",
+      "account-snapshot-is-public-and-offline",
+      "offline-account-restored-and-root-lock-reacquired",
+      "all-owned-hosts-exited",
+      "runtime-loaded-assemblies-remain-contract-only"
+    ],
+    "observed": [],
+    "error": null
+  },
+  "localMacLive": {
+    "reportSha256": "8fe5ef9955f851c25329466b2ff4c49037002ad6bf5e21201c2d26051dfa2b6e",
+    "status": "passed",
+    "scope": "Real official vanilla 1.21.1 download, receipt recovery, Java and two demo game processes; renderer only, not world/save acceptance",
+    "platform": "macOS 27.0.1",
+    "checks": [
+      "assembly-boundary-Pcl.MinimalClient",
+      "assembly-boundary-Pcl.Client",
+      "assembly-boundary-Pcl.Contract",
+      "assembly-boundary-Pcl.MinimalClient.Tests",
+      "output-has-no-business-assemblies",
+      "reject-attach-CLIENT_IDENTITY_INVALID",
+      "real-host-handshake-and-capabilities",
+      "isolated-root-no-user-credentials",
+      "reject-attach-SESSION_IN_USE",
+      "rejected-takeover-preserves-original-session",
+      "reject-METHOD_NOT_SUPPORTED",
+      "reject-PROTOCOL_INCOMPATIBLE",
+      "reject-UNSUPPORTED_TARGET",
+      "bounded-empty-operation-page",
+      "same-key-same-operation",
+      "reject-IDEMPOTENCY_CONFLICT",
+      "reconnect-retains-host-and-operation",
+      "subscription-watermark-increases",
+      "cancel-reaches-terminal-through-restored-subscription",
+      "subscription-delivers-terminal",
+      "restart-creates-new-host",
+      "cancelled-state-survives-host-restart",
+      "idempotency-survives-host-restart",
+      "offline-account-created-through-host-only",
+      "account-snapshot-is-public-and-offline",
+      "resume-creates-linked-attempt",
+      "crashed-host-replaced",
+      "crash-restores-interrupted-receipt-state",
+      "crash-does-not-silently-rerun-old-key",
+      "real-install-cancel-reconnect-crash-resume-completes",
+      "resume-preserves-parent-history",
+      "reject-RESUME_NOT_ALLOWED",
+      "host-guidance-preserved",
+      "launch-without-guidance-rejected",
+      "managed-demo-started",
+      "managed-real-game-atlases-initialized",
+      "managed-demo-idempotent-no-second-game",
+      "managed-game-restored-in-session-attachment",
+      "managed-game-stop-observed-by-host",
+      "detached-demo-started",
+      "detached-real-game-atlases-initialized",
+      "detached-demo-idempotent-no-second-game",
+      "detached-game-survives-host-exit",
+      "offline-account-restored-and-root-lock-reacquired",
+      "all-owned-hosts-exited",
+      "runtime-loaded-assemblies-remain-contract-only"
+    ],
+    "observed": [
+      {
+        "phase": "download-before-interruption",
+        "State": "running",
+        "Stage": "planned",
+        "Sequence": 4,
+        "Bytes": 220687,
+        "Total": 3952
+      },
+      {
+        "phase": "download-before-interruption",
+        "State": "running",
+        "Stage": "planned",
+        "Sequence": 4,
+        "Bytes": 1017515,
+        "Total": 3952
+      }
+    ],
+    "error": null
+  },
+  "publishedClientOutsideRepository": {
+    "reportSha256": "fc64a67262192c4ac6bbe8cc862e0b02464cef4d5a510c3609423ea6b502c72e",
+    "status": "passed",
+    "checks": [
+      "published-output-only-client-contract-sample",
+      "copied-outside-repository",
+      "interactive-offline-account-through-host",
+      "interactive-reconnect",
+      "interactive-host-restart-restores-account",
+      "interactive-normal-exit-code-zero"
+    ],
+    "assemblies": [
+      "Pcl.Client.dll",
+      "Pcl.Contract.dll",
+      "Pcl.MinimalClient.dll"
+    ],
+    "scope": "Published .NET client copied outside repository; real Host, public offline account, reconnect and restart. No personal credentials."
+  },
+  "build": {
+    "minimalClientAndTests": "passed; 0 warnings, 0 errors",
+    "desktopAndHost": "passed; 15 warnings, 0 errors (12 NU1900 audit-source warnings and 3 existing Desktop warnings)"
+  },
+  "limits": [
+    "No real Microsoft login or skin appearance re-test",
+    "No world entry/save/re-entry or normal game exit claim",
+    "No Windows/Linux Java, graphical game or credential-store acceptance",
+    "No release artifact or feature-matrix status changed",
+    "Pattern scan cannot prove absence of all possible secrets"
+  ],
+  "architectureGuard": {
+    "status": "passed",
+    "methods": 3086,
+    "symbolUses": 50679,
+    "violations": [],
+    "reportSha256": "ed0326593b575c00e57adccbb369883fb3cba5ca02581252a5c5cc637df3006a"
+  }
+}

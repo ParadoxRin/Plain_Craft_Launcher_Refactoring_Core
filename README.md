@@ -4,7 +4,7 @@ PCL 原作者：**龙腾猫跃（LTCatt）** · [支持原作者](https://meloon
 
 项目目标是建立 **macOS、Windows、Linux 通用的 Minecraft 启动器核心**，让开发者复用安装、账户、依赖求解、资源管理和游戏进程能力，自由选择 UI 组件库、组织页面并制作自己的客户端。核心不决定控件、导航或视觉风格，客户端不复制业务规则。
 
-当前版本 **0.41.0 Preview**：已交付的是 **Apple Silicon macOS 14+ 的 Avalonia 参考客户端 + 独立 .NET Host**。SwiftUI 是 Mac 原生客户端接入方向，Windows/Linux 的原生 UI 或其他工具包也可通过契约接入，但 SwiftUI/Windows/Linux 客户端 **尚未实现**，Windows/Linux 平台适配仍需补齐并实际验收。共用代码、可编译与跨平台实际可用是三件不同的事。
+当前版本 **0.41.0 Preview**：已交付的是 **Apple Silicon macOS 14+ 的 Avalonia 参考客户端 + 独立 .NET Host**。SwiftUI 是 Mac 原生客户端接入方向，Windows/Linux 的原生 UI 或其他工具包也可通过契约接入，但 SwiftUI/Windows/Linux 原生图形客户端 **尚未实现**，Windows/Linux 平台适配仍需补齐并实际验收。共用代码、可编译与跨平台实际可用是三件不同的事。
 
 文档现行规范为 **v1.5.1**；`v0.41.0` 标签和 Release 附件是固定发布快照，`main` 可包含后续文档、CI 和维护改动。复现发布包请检出标签，继续开发请使用 `main`。
 
@@ -41,6 +41,7 @@ PCL 原作者：**龙腾猫跃（LTCatt）** · [支持原作者](https://meloon
 ```mermaid
 flowchart TB
   A[当前 Avalonia 参考客户端] --> C[.NET Client]
+  M[main 独立最小命令行示例] --> C
   S[目标 SwiftUI 客户端] -.-> P[版本化私有 RPC 契约]
   W[Windows 自定义客户端] -.-> P
   L[Linux 自定义客户端] -.-> P
@@ -56,6 +57,8 @@ flowchart TB
 Desktop 只依赖 Contract/Client；Host 执行安装、登录和进程操作，应用服务持有任务真相。`Domain` 不引用 `Ports`，外部数据先由应用层取得再传入纯规则。非 .NET 客户端共享协议语义，不需要也不能直接引用 C# 对象。更换控件库不应更换安装事务、凭据存储或依赖规则。
 
 ## 三平台核心还需完成
+
+新增[独立最小客户端](examples/Pcl.MinimalClient/README.md)：只引用 Client/Contract，可从仓库外运行，提供安装、取消、事件观察、重连、receipt 续做与游戏启动命令。它通过真实 Host 执行业务，适合作为自定义 UI 的接线起点；具体测试范围见[验收记录](docs/最小客户端与Host契约验收.md)。提交 `953d7b9` 的[三平台 CI](https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core/actions/runs/40650165276) 均通过：核心各235项，新增 Host 契约 Mac/Windows 各28项、Linux 29项；Mac 另通过真实下载/恢复/试玩图形启动。
 
 Desktop→Core 的展示依赖拆除与现有 Avalonia 导航/生命周期整理已在既定范围完成。接下来仍需 Windows/Linux 的凭据、路径权限、进程/独立运行、Java/natives 和平台组合根，以及跨语言契约一致性测试与稳定 SDK；这不等于重开已完成的 Shell 分层。SwiftUI 和其他客户端是后续接入工作，不要求三套 UI 同时完成才交接核心。既有 CLI 仍有直接 Core/Application 调用，不能当成新客户端的架构范例。
 

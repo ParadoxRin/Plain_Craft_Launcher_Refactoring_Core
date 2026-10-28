@@ -1,7 +1,7 @@
 你接手的是 Plain Craft Launcher Refactoring Core。当前发布为 0.41.0 Preview；main 含发布后的文档、CI 和维护改动。公开仓库：https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core 。应用显示名为 Plain Craft Launcher Refactoring，Git/隐私基线从 v0.36.1 开始。复现发布包检出 v0.41.0；继续开发使用 main，并记录实际提交。不要把 main 的后续改动写成已包含在既有安装包中。
 
 一、目标和现状
-目标是供 macOS、Windows、Linux 复用的启动器核心，让开发者自行选择 UI 组件库、布局和语言制作客户端。已交付 Apple Silicon Mac 的 Avalonia 参考客户端及独立 .NET Host。SwiftUI 是 Mac 原生参考方向，尚未实现；Windows/Linux 客户端尚未实现，对应平台适配仍待补齐与验收。无需先完成三套 UI 才能交接核心，也不因目标变化删除既有功能缺口。不要未经要求重写全部 UI。
+目标是供 macOS、Windows、Linux 复用的启动器核心，让开发者自行选择 UI 组件库、布局和语言制作客户端。已交付 Apple Silicon Mac 的 Avalonia 参考客户端及独立 .NET Host。SwiftUI 是 Mac 原生参考方向，尚未实现；Windows/Linux 原生图形客户端尚未实现，对应平台适配仍待补齐与验收。无需先完成三套 UI 才能交接核心，也不因目标变化删除既有功能缺口。不要未经要求重写全部 UI。
 
 先读 README.md、docs/architecture/PCL-Mac架构规范.md（现行 v1.5.1）、docs/架构与设计取舍.md、docs/客户端接入指南.md、docs/功能实现导览.md、docs/剩余清单.md、docs/architecture/技术债.md，以及本轮用例的源码和证据。docs/0.41-核心平台定位与发布.md 是固定发布记录；docs/CI与文档一致性核对.md 记录首轮核对与失败，docs/Windows-CI六项修复与验收.md 记录后续修复与最终三平台通过结果。规范约束、源码现状、运行证据是三件事。
 
@@ -9,6 +9,8 @@
 优先 git clone，检查 git status、git log --all --oneline、git fsck --full。禁止合并旧 PCL_Mac、旧 bundle 或旧交接包历史。Release 源码 ZIP 是 git archive，不含 .git；游戏、Java、账户、钥匙串、SDK、个人世界及原始测试运行目录不随源码交付。
 
 三个追踪 JSON 位于 docs/data/，普通构建不重新生成。feature-status-overrides.json 是人工审核输入，不能当缓存删除；功能矩阵还以 feature-matrix.json 嵌入 Desktop。生成器需要外部固定 PCL 参考树；缺失时保留快照，不运行历史批次脚本重置状态。详见 docs/data/README.md。
+
+可直接运行 examples/Pcl.MinimalClient：只引用 Client + Contract，发布目录可以复制到仓库外；Host 单独部署。先按该目录 README 使用全新物理数据根跑通 install/cancel/reconnect/restart/resume/launch。tests/Pcl.MinimalClient.Tests 的 contract 模式运行真实 Host 协议验收；live 模式会真实下载、模拟本轮 Host 崩溃并启动两个官方试玩游戏，仅用于隔离根。验收报告见 docs/最小客户端与Host契约验收.md。Linux attach 使用精确的 /proc/pid/stat 启动 tick；升级 Client 与 Host，禁止 UTC 容差或仅凭 PID 回退。不要继续把可运行的 .NET 最小客户端列为未实现，也不要将它称为稳定 Swift SDK 或全部 RPC 的完整验证。
 
 三、实际架构
 Desktop -> Client + Contract；Client -> Contract；Host -> Application + Core + Contract；Application -> Domain + Ports + Contract；Ports -> Domain；Core -> Domain + Ports + Contract + 上游库。Domain/Contract 不引用其他项目。Adapters 仍在 Core 中，Core 不引用 Application。Desktop 的 Host/ArchitectureGuard 引用仅为构建依赖，不是运行时业务引用；Bootstrap 没有业务例外。
@@ -45,9 +47,9 @@ OAuth 自 0.40.1 起内置应用所有者授权的公开 client ID，普通用�
 重要修复：LaunchService 用所选 profile.gameVersion 预检，不误用默认1.21.1；Apple Silicon LWJGL2 使用 -XstartOnFirstThread 且去重，非ARM64策略保留。main 新增 Linux 构建资源大小写修正、Windows 目录链接删除与临时缓存回收/恢复修复，未覆盖已发布安装包。目录链接不得遍历目标，Windows 回收句柄仅共享 Delete、不共享读写，Unix 保持 None；不能为了重命名提前关闭校验句柄。
 
 七、开发与测试
-使用 global.json 固定 SDK。Mac 应用打包需要 Apple Silicon/macOS14+、Xcode CLI、Python3、curl，运行 bash scripts/build-handoff.sh。release.json 与 Desktop Version 必须一致；ad-hoc 签名、未公证。Windows/Linux CI 不使用 Mac 打包脚本。
+使用 global.json 固定 SDK。Mac 应用打包需要 Apple Silicon/macOS14+、Xcode CLI、Python3、curl，运行 bash scripts/build-handoff.sh。release.json 与 Desktop Version 必须一致；ad-hoc 签名、未公证。Windows/Linux CI 不使用 Mac 打包脚本。CI 另构建真实 Host 和最小客户端，执行 Pcl.MinimalClient.Tests 的 contract 模式并上传独立报告；这条通道不执行完整游戏安装或真人凭据调用。
 
-.github/workflows/core-ci.yml 在 macOS/Windows/Ubuntu 构建并实际运行 Pcl.Tests 控制台套件，失败保留，不用 continue-on-error 掩盖。不能用 dotnet test 未报错当作执行。逐次云端结果见 Actions；2026-10-27 最终提交 497cdd16959fa680f752666eb53e26d67e426734 的运行 40444961793，macOS/Windows/Ubuntu 各报告235/235，整体通过。原六项失败已分成2项真实实现缺陷和4项平台预期并修复，新增4项安全测试；具体断言、哈希和作业链接见 docs/Windows-CI六项修复与验收.md 与 docs/CI-Windows修复三平台结果.json。不要重复把原六项列成当前待办，也不能删除测试或放宽保护来保持绿灯。下一步按平台技术债选取组合根、凭据、进程等端到端用例，不把核心CI通过当作平台迁移完成。平台条件分支不能算每系统实际原生验收；CI通过不证明完整Host、登录、UI或游戏世界可用。
+.github/workflows/core-ci.yml 在 macOS/Windows/Ubuntu 构建并实际运行 Pcl.Tests 控制台套件，失败保留，不用 continue-on-error 掩盖。不能用 dotnet test 未报错当作执行。逐次云端结果见 Actions；2026-10-27 最终提交 497cdd16959fa680f752666eb53e26d67e426734 的运行 40444961793，macOS/Windows/Ubuntu 各报告235/235，整体通过。原六项失败已分成2项真实实现缺陷和4项平台预期并修复，新增4项安全测试；具体断言、哈希和作业链接见 docs/Windows-CI六项修复与验收.md 与 docs/CI-Windows修复三平台结果.json。不要重复把原六项列成当前待办，也不能删除测试或放宽保护来保持绿灯。2026-10-28 最小客户端与 Linux attach 修复提交953d7b9的运行40650165276再次三平台通过：核心各235项，Host契约Mac/Windows各28项、Linux29项；Mac另有46项真实下载/恢复/试玩图形链路，仓库外发布6项。详见新增验收记录及JSON。不要把原Ubuntu身份失败列为未修复。下一步按平台技术债选取组合根、凭据、进程等端到端用例，不把核心CI通过当作平台迁移完成。平台条件分支不能算每系统实际原生验收；CI通过不证明完整Host、登录、UI或游戏世界可用。
 
 本地入口见 docs/开发与验证.md。只执行与本次改动相称的测试，使用全新隔离目录。发布包另查解压签名/权限/哈希、dylib install_name、隐私模式、真实Host/UI和适用游戏行为。不打开重要存档、不读完整带令牌命令行，只清理本次拥有的进程。编译/替身/真实安装/菜单/世界/人工确认分别记录，未执行不称通过。
 
