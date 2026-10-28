@@ -40,14 +40,14 @@ OAuth 自 0.40.1 起内置应用所有者授权的公开 client ID，普通用�
 六、待办和证据口径
 功能排期仍为 131 项：68 限定覆盖、35 实现缺口、20 定向验收、8 外部条件验收；标签统计是另一口径。这不是完成率，也不是三平台/SDK工作的完整估算。优先补不需额外账户/密钥的定向验收；复杂 Quilt 插件/多父路径/软偏好、完整 TOML、任意包兼容、Oculus 卸载、外置账户启动、3D 皮肤、自动更新等仍缺。百宝箱已取消，不新增矩阵子进度，不靠改状态关闭缺口。
 
-平台待办另读技术债：Windows/Linux 组合根与凭据、路径/权限、进程脱离、Java/natives、打包和实机验证；跨语言一致性与 SDK。当前 HostRuntime 直接组装 KeychainAccountSecrets，不因 .NET 可编译就宣布三平台 Host 已可用。
+平台待办另读技术债：HostRuntime 已通过 PlatformAccountSecrets 按宿主选择 Mac 原钥匙串、Windows Credential Manager、Linux libsecret/Secret Service；旧页面备用入口和普通 CLI 也使用工厂，不再固定 Mac 绑定。见 docs/三平台凭据与组合根验收.md。Windows 单条2,560字节、Linux65,536字节，超限拒绝；Linux缺服务/锁定拒绝无明文降级。仍需 Windows/Linux 真人登录/皮肤联调、路径/权限、Windows进程脱离、Java/natives、打包和实机验证；跨语言一致性与 SDK。凭据原生测试通过不等于全部三平台 Host 已可用。提交c96df6a、运行40656138100三平台通过：核心各235项、Host契约28/28/29项、原生凭据Mac18/Windows20/Linux27次检查（Linux含重复名称的两次跨进程读取）。Linux服务重启后采用每操作独立proxy，禁止恢复为缓存失效的默认proxy或盲重试写入；首次两轮失败保留在验收报告。
 
 0.41 核心套件 231/231；规划24/24属此前独立测试。已有五种窗口策略、共享缓存、本地双节点 TCP 和历史世界验收，均有范围边界。21个缺失的历史证据路径已登记，不补造文件。0.41 最终包的 1.12.2/OptiFabric 仅隔离副本菜单测试，不算世界保存；微软真人登录/皮肤本轮没有重测。
 
 重要修复：LaunchService 用所选 profile.gameVersion 预检，不误用默认1.21.1；Apple Silicon LWJGL2 使用 -XstartOnFirstThread 且去重，非ARM64策略保留。main 新增 Linux 构建资源大小写修正、Windows 目录链接删除与临时缓存回收/恢复修复，未覆盖已发布安装包。目录链接不得遍历目标，Windows 回收句柄仅共享 Delete、不共享读写，Unix 保持 None；不能为了重命名提前关闭校验句柄。
 
 七、开发与测试
-使用 global.json 固定 SDK。Mac 应用打包需要 Apple Silicon/macOS14+、Xcode CLI、Python3、curl，运行 bash scripts/build-handoff.sh。release.json 与 Desktop Version 必须一致；ad-hoc 签名、未公证。Windows/Linux CI 不使用 Mac 打包脚本。CI 另构建真实 Host 和最小客户端，执行 Pcl.MinimalClient.Tests 的 contract 模式并上传独立报告；这条通道不执行完整游戏安装或真人凭据调用。
+使用 global.json 固定 SDK。Mac 应用打包需要 Apple Silicon/macOS14+、Xcode CLI、Python3、curl，运行 bash scripts/build-handoff.sh。release.json 与 Desktop Version 必须一致；ad-hoc 签名、未公证。Windows/Linux CI 不使用 Mac 打包脚本。CI 另构建真实 Host 和最小客户端，执行 Pcl.MinimalClient.Tests 的 contract 模式并上传独立报告；这条通道不执行完整游戏安装或真人凭据调用。另运行 Pcl.PlatformCredentials.Tests：在临时原生存储中测试合成凭据 CRUD、跨进程恢复和真实 Host 退出/删除，CI 只上传脱敏报告；不要在个人 Linux D-Bus 会话执行会锁定 collection 的隔离测试。
 
 .github/workflows/core-ci.yml 在 macOS/Windows/Ubuntu 构建并实际运行 Pcl.Tests 控制台套件，失败保留，不用 continue-on-error 掩盖。不能用 dotnet test 未报错当作执行。逐次云端结果见 Actions；2026-10-27 最终提交 497cdd16959fa680f752666eb53e26d67e426734 的运行 40444961793，macOS/Windows/Ubuntu 各报告235/235，整体通过。原六项失败已分成2项真实实现缺陷和4项平台预期并修复，新增4项安全测试；具体断言、哈希和作业链接见 docs/Windows-CI六项修复与验收.md 与 docs/CI-Windows修复三平台结果.json。不要重复把原六项列成当前待办，也不能删除测试或放宽保护来保持绿灯。2026-10-28 最小客户端与 Linux attach 修复提交953d7b9的运行40650165276再次三平台通过：核心各235项，Host契约Mac/Windows各28项、Linux29项；Mac另有46项真实下载/恢复/试玩图形链路，仓库外发布6项。详见新增验收记录及JSON。不要把原Ubuntu身份失败列为未修复。下一步按平台技术债选取组合根、凭据、进程等端到端用例，不把核心CI通过当作平台迁移完成。平台条件分支不能算每系统实际原生验收；CI通过不证明完整Host、登录、UI或游戏世界可用。
 

@@ -1,11 +1,11 @@
 # Plain Craft Launcher Refactoring Core 架构规范
 
 版本：1.5.1\
-日期：2026-10-28（Australia/Sydney；main 最小客户端及 Linux attach 增补）\
+日期：2026-10-28（Australia/Sydney；main 最小客户端、Linux attach 及平台凭据增补）\
 性质：后续增量重构的实施规范  
 依据：历史《分层架构实施规范 v2》讨论、已确认的产品目标与当前仓库调用链；外部讨论稿不随当前仓库交付，也不是构建或接手前置条件。
 
-本规范取代历史讨论稿中的实施约定。§13 描述当前落地范围，§14 的阶段一至三仅保存迁移历史；其余“必须／不得”是维护约束，不表示全部规则已由代码守卫覆盖或全部平台已经实现。v1.5.1 的 main 增补记录最小客户端与 Linux attach 出生证明；不更改 v0.41.0 发布标签。
+本规范取代历史讨论稿中的实施约定。§13 描述当前落地范围，§14 的阶段一至三仅保存迁移历史；其余“必须／不得”是维护约束，不表示全部规则已由代码守卫覆盖或全部平台已经实现。v1.5.1 的 main 增补记录最小客户端、Linux attach 出生证明与三平台系统凭据选择；不更改 v0.41.0 发布标签。
 
 ## 1. 目标与适用范围
 
@@ -21,7 +21,7 @@
 - **建议**：默认做法，有具体理由时可选其他实现。
 - **后续阶段**：尚未实现的目标，不得据此宣称现有功能已具备。
 
-当前 0.41.0 交付为 Apple Silicon Mac 的 Avalonia 参考客户端 + 独立 Host。SwiftUI/Windows/Linux 原生图形客户端尚未实现；Windows/Linux Adapter 与平台组合根尚未补齐。保留可用 Avalonia 作为接入参考，不要求先替换它才能交接核心，也不把编译通过当作平台可用。
+当前 0.41.0 交付为 Apple Silicon Mac 的 Avalonia 参考客户端 + 独立 Host。SwiftUI/Windows/Linux 原生图形客户端尚未实现；main 已补齐 Host 系统凭据选择与 Windows/Linux 原生凭据 Adapter，其他平台 Adapter/组合尚未补齐。保留可用 Avalonia 作为接入参考，不要求先替换它才能交接核心，也不把编译通过当作平台可用。
 
 main 另提供[独立最小客户端](../../examples/Pcl.MinimalClient/README.md)，只引用 Client/Contract，由单独 Host 执行业务；真实协议及安装/启动验收范围见[本轮记录](../最小客户端与Host契约验收.md)。此示例不是通用 SDK、Swift 实现或三平台完整产品。
 
@@ -446,12 +446,12 @@ MeloongCore、PCLCS、Pcl.Legacy 当前是 Core 的直接依赖。迁移时逐�
 | Client | 私有 RPC、订阅/快照、请求关联、会话重连 | 非 .NET SDK 与跨语言一致性验收 |
 | Host / Application | 独立组合根、账户与进程用例、持久化受理与关闭协调 | 所有操作类型完整安全续做；各平台组合根 |
 | Domain / Ports | 独立程序集、纯规则与外部能力边界 | 剩余规则整理以具体用例决定，不按文件数强拆 |
-| Core / Adapters | 复用既有下载、安装、资源、账户与系统执行 | Windows/Linux 凭据/文件/进程适配和实机证据 |
+| Core / Adapters | 复用既有下载、安装、资源、账户与系统执行 | Windows/Linux 真人凭据联调/文件/进程适配和实机证据 |
 | 导航与窗口 | 0.40 统一现有 Avalonia 页面导航、工作租约与关闭责任 | 新客户端必须重新接线和测试对应生命周期 |
 
 安装继续复用 InstallOperations → VersionInstaller；凭据继续沿用 IAccountSecrets。当前 HostRuntime 仍直接选择 Mac Keychain Adapter，不能声称全部平台可运行。0.41 修复实例版本依赖预检及 ARM64 LWJGL2 首线程行为，见发布与收尾记录。
 
-功能排期仍为 131 项：68 限定覆盖、35 实现缺口、20 定向验收、8 外部条件验收；该口径不覆盖全部三平台迁移工作量。平台 Adapter、客户端与稳定 SDK 待办另见[技术债](技术债.md)。Core CI 的三系统编译/套件结果不代替平台 Host、凭据库和游戏验收；2026-10-27 提交 `497cdd1` 的三平台核心 CI 均报告235/235，原 Windows 六项已按2项实现缺陷、4项平台预期修复；逐项证据见[Windows CI 修复验收](../Windows-CI六项修复与验收.md)。首轮失败保留于[历史核对记录](../CI与文档一致性核对.md)，不改变上述平台 Host 待办。
+功能排期仍为 131 项：68 限定覆盖、35 实现缺口、20 定向验收、8 外部条件验收；该口径不覆盖全部三平台迁移工作量。平台 Adapter、客户端与稳定 SDK 待办另见[技术债](技术债.md)。Core CI 的三系统编译/套件结果不代替平台 Host、凭据库和游戏验收；2026-10-27 提交 `497cdd1` 的三平台核心 CI 均报告235/235，原 Windows 六项已按2项实现缺陷、4项平台预期修复；逐项证据见[Windows CI 修复验收](../Windows-CI六项修复与验收.md)。首轮失败保留于[历史核对记录](../CI与文档一致性核对.md)。main后续已完成限定范围的 Host 契约与三平台原生凭据测试，见[平台凭据验收](../三平台凭据与组合根验收.md)，但真人认证、Java/natives及游戏待办仍保留。
 
 阶段一至0.31报告描述当时的过渡状态，不是当前允许恢复 Desktop→Core 的例外。历史报告保留不改写，原始证据缺失时登记缺失，不自动追认结果。当前图见[详细架构](../架构与设计取舍.md)，接入步骤见[客户端指南](../客户端接入指南.md)。
 
@@ -540,7 +540,7 @@ SwiftUI 通过 Swift 客户端适配接入现有 Host 契约，先跑通安装 �
 | 版本安装 | VersionInstaller / MinecraftService，纯约束位于Domain | InstallOperationService + ExistingVersionInstaller | Host version.install / operation.get/cancel | 阶段三及加载器/后续版本报告 | 任意任务续做与全部加载器兼容未完成 |
 | 资源安装 | ResourceDependencyPlanner + Domain求解，原事务执行器提交 | 工作区应用操作 + Adapter | Host page.begin/get/cancel | 0.37–0.39及收尾记录 | 复杂插件语义、全部包格式和平台另列 |
 | 启动 | Domain授权/参数规则、Core LaunchService、进程Port | GameLaunchOperationService / GameLaunchBackend | Host game.guidance / game.launch | 0.41最终包、收尾第五批及历史世界记录 | 本版菜单不替代世界验收，外置账户启动仍缺 |
-| 凭据恢复 | 账户规则与IAccountSecrets | HostAccountService / AccountBackend | Host account.* | 历史真实Keychain与自动化分别记录 | 本版未重做微软登录；Windows/Linux凭据Adapter待实现 |
+| 凭据恢复 | 账户规则与IAccountSecrets | HostAccountService / AccountBackend | Host account.* | 历史真实Keychain与自动化分别记录 | 本版未重做微软登录；main三平台原生凭据实现/合成测试见新增验收，真人联调仍待验证 |
 
 验证分工：
 

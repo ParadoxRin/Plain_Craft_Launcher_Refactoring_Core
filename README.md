@@ -60,7 +60,7 @@ Desktop 只依赖 Contract/Client；Host 执行安装、登录和进程操作，
 
 新增[独立最小客户端](examples/Pcl.MinimalClient/README.md)：只引用 Client/Contract，可从仓库外运行，提供安装、取消、事件观察、重连、receipt 续做与游戏启动命令。它通过真实 Host 执行业务，适合作为自定义 UI 的接线起点；具体测试范围见[验收记录](docs/最小客户端与Host契约验收.md)。提交 `953d7b9` 的[三平台 CI](https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core/actions/runs/40650165276) 均通过：核心各235项，新增 Host 契约 Mac/Windows 各28项、Linux 29项；Mac 另通过真实下载/恢复/试玩图形启动。
 
-Desktop→Core 的展示依赖拆除与现有 Avalonia 导航/生命周期整理已在既定范围完成。接下来仍需 Windows/Linux 的凭据、路径权限、进程/独立运行、Java/natives 和平台组合根，以及跨语言契约一致性测试与稳定 SDK；这不等于重开已完成的 Shell 分层。SwiftUI 和其他客户端是后续接入工作，不要求三套 UI 同时完成才交接核心。既有 CLI 仍有直接 Core/Application 调用，不能当成新客户端的架构范例。
+Desktop→Core 的展示依赖拆除与现有 Avalonia 导航/生命周期整理已在既定范围完成。main 已接入 Windows Credential Manager / Linux Secret Service 的平台凭据选择，保留 Mac 原钥匙串，见[实现与验收](docs/三平台凭据与组合根验收.md)。接下来仍需 Windows/Linux 真人账户/皮肤联调、路径权限、进程/独立运行、Java/natives 和其余平台组合，以及跨语言契约一致性测试与稳定 SDK；这不等于重开已完成的 Shell 分层。SwiftUI 和其他客户端是后续接入工作，不要求三套 UI 同时完成才交接核心。既有 CLI 仍有直接 Core/Application 调用，不能当成新客户端的架构范例。
 
 功能矩阵的 35/20/8 是既有功能排期口径，**不包含三平台工作量的完整估算**。核心平台待办见[技术债](docs/architecture/技术债.md)，产品功能待办见[剩余清单](docs/剩余清单.md)。
 
