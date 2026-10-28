@@ -65,6 +65,52 @@ jobs:
       # not perform a complete game download or access an OS credential store.
       - name: Run minimal client Host contract acceptance
         run: dotnet tests/Pcl.MinimalClient.Tests/bin/Release/net10.0/Pcl.MinimalClient.Tests.dll - "$PWD/src/Pcl.Host/bin/Release/net10.0/Pcl.Host.dll" "$PWD/artifacts/ci-minimal-root" "$PWD/artifacts/ci-minimal-result.json" contract
+      - name: Build native credential acceptance
+        run: dotnet build tests/Pcl.PlatformCredentials.Tests/Pcl.PlatformCredentials.Tests.csproj --configuration Release -m:1 -nr:false
+      - name: Prepare Linux Secret Service dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y libsecret-1-0 gnome-keyring dbus-x11 libglib2.0-bin
+      - name: Test Linux native credentials in private D-Bus session
+        if: runner.os == 'Linux'
+        run: |
+          export XDG_DATA_HOME="$RUNNER_TEMP/pcl-credential-data"
+          export XDG_CONFIG_HOME="$RUNNER_TEMP/pcl-credential-config"
+          export XDG_CACHE_HOME="$RUNNER_TEMP/pcl-credential-cache"
+          export PCL_TEST_PRIVATE_SECRET_SERVICE=1
+          mkdir -p "$XDG_DATA_HOME" "$XDG_CONFIG_HOME" "$XDG_CACHE_HOME"
+          dbus-run-session -- bash -eu -c '
+            printf "pcl-ci-fixture-only\n" | gnome-keyring-daemon --unlock --components=secrets > /dev/null
+            dotnet tests/Pcl.PlatformCredentials.Tests/bin/Release/net10.0/Pcl.PlatformCredentials.Tests.dll "$PWD/artifacts/ci-credential-root" "$PWD/artifacts/ci-credentials.json" "$PWD/src/Pcl.Host/bin/Release/net10.0/Pcl.Host.dll"
+          '
+      - name: Test Windows native credentials
+        if: runner.os == 'Windows'
+        run: dotnet tests/Pcl.PlatformCredentials.Tests/bin/Release/net10.0/Pcl.PlatformCredentials.Tests.dll "$PWD/artifacts/ci-credential-root" "$PWD/artifacts/ci-credentials.json" "$PWD/src/Pcl.Host/bin/Release/net10.0/Pcl.Host.dll"
+      - name: Test macOS credentials in temporary keychain
+        if: runner.os == 'macOS'
+        run: |
+          KEYCHAIN="$RUNNER_TEMP/pcl-native-test.keychain-db"
+          ORIGINAL_KEYCHAIN=$(security default-keychain -d user | xargs)
+          cleanup() {
+            security default-keychain -d user -s "$ORIGINAL_KEYCHAIN"
+            security delete-keychain "$KEYCHAIN"
+          }
+          security create-keychain -p pcl-ci-fixture-only "$KEYCHAIN"
+          trap cleanup EXIT
+          security set-keychain-settings -lut 21600 "$KEYCHAIN"
+          security unlock-keychain -p pcl-ci-fixture-only "$KEYCHAIN"
+          security default-keychain -d user -s "$KEYCHAIN"
+          security list-keychains -d user -s "$KEYCHAIN" "$ORIGINAL_KEYCHAIN"
+          dotnet tests/Pcl.PlatformCredentials.Tests/bin/Release/net10.0/Pcl.PlatformCredentials.Tests.dll "$PWD/artifacts/ci-credential-root" "$PWD/artifacts/ci-credentials.json" "$PWD/src/Pcl.Host/bin/Release/net10.0/Pcl.Host.dll"
+      - name: Upload bounded native credential report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: credentials-${{ matrix.os }}
+          path: artifacts/ci-credentials.json
+          if-no-files-found: warn
+          retention-days: 14
       - name: Upload bounded minimal client report
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

@@ -126,10 +126,10 @@ try
 
     if (command.StartsWith("account-"))
     {
-        // [实现] 条件成立（command.StartsWith("account-")）时：准备 var manager = new AccountManager( paths, new Pcl.Core.Adapters.Mac.KeychainAccountSecrets(paths.Root) )；按 command == "account-login" 分支处理；返回 0。
+        // [实现] 条件成立（command.StartsWith("account-")）时：准备 var manager = new AccountManager( paths, Pcl.Core.Adapters.Credentials.PlatformAccountSecrets.Create(paths.Root) )；按 command == "account-login" 分支处理；返回 0。
         var manager = new AccountManager(
             paths,
-            new Pcl.Core.Adapters.Mac.KeychainAccountSecrets(paths.Root)
+            Pcl.Core.Adapters.Credentials.PlatformAccountSecrets.Create(paths.Root)
         );
         if (command == "account-login")
         {
@@ -232,7 +232,7 @@ try
 
     if (command == "keychain-self-test")
     {
-        // [实现] 条件成立（command == "keychain-self-test"）时：准备 var secrets = new Pcl.Core.Adapters.Mac.KeychainAccountSecrets(paths.Root)；准备 var id = "self-test-" + Guid.NewGuid() .ToString("N")；执行受异常处理保护的操作。
+        // Mac 专用自检继续直接验证历史钥匙串适配器；普通账户入口使用宿主平台选择。
         var secrets = new Pcl.Core.Adapters.Mac.KeychainAccountSecrets(paths.Root);
         var id = "self-test-" + Guid.NewGuid()
             .ToString("N");
@@ -706,7 +706,7 @@ try
 
             var manager = new AccountManager(
                 paths,
-                new Pcl.Core.Adapters.Mac.KeychainAccountSecrets(paths.Root)
+                Pcl.Core.Adapters.Credentials.PlatformAccountSecrets.Create(paths.Root)
             );
             var requestedAccount = Option("--account");
             // 已有外置认证诊断路径保留；主流离线/微软启动与桌面、Host 共用统一受理器。
@@ -760,10 +760,10 @@ try
             throw new LoginRequiredException("此版本启动游戏需要微软正版验证。");
         else if (Option("--offline-name")is string offlineName)
         {
-            // [实现] 条件成立（Option("--offline-name")is string offlineName）时：准备 var manager = new AccountManager( paths, new Pcl.Core.Adapters.Mac.KeychainAccountSecrets(paths.Root) )；准备 var account = manager.AddOffline(offlineName)；执行 clientId = ""。
+            // [实现] 条件成立（Option("--offline-name")is string offlineName）时：准备 var manager = new AccountManager( paths, Pcl.Core.Adapters.Credentials.PlatformAccountSecrets.Create(paths.Root) )；准备 var account = manager.AddOffline(offlineName)；执行 clientId = ""。
             var manager = new AccountManager(
                 paths,
-                new Pcl.Core.Adapters.Mac.KeychainAccountSecrets(paths.Root)
+                Pcl.Core.Adapters.Credentials.PlatformAccountSecrets.Create(paths.Root)
             );
             var account = manager.AddOffline(offlineName);
             clientId = "";
@@ -774,10 +774,10 @@ try
         }
         else if (Option("--account")is string accountId)
         {
-            // [实现] 条件成立（Option("--account")is string accountId）时：准备 var manager = new AccountManager( paths, new Pcl.Core.Adapters.Mac.KeychainAccountSecrets(paths.Root) )；准备 var auth = new MicrosoftAuthentication()；执行 session = await manager.ResolveAsync(accountId, auth, cancellation.Token)。
+            // [实现] 条件成立（Option("--account")is string accountId）时：准备 var manager = new AccountManager( paths, Pcl.Core.Adapters.Credentials.PlatformAccountSecrets.Create(paths.Root) )；准备 var auth = new MicrosoftAuthentication()；执行 session = await manager.ResolveAsync(accountId, auth, cancellation.Token)。
             var manager = new AccountManager(
                 paths,
-                new Pcl.Core.Adapters.Mac.KeychainAccountSecrets(paths.Root)
+                Pcl.Core.Adapters.Credentials.PlatformAccountSecrets.Create(paths.Root)
             );
             using var auth = new MicrosoftAuthentication();
             session = await manager.ResolveAsync(accountId, auth, cancellation.Token);
@@ -797,7 +797,7 @@ try
             session = login.Session;
             var manager = new AccountManager(
                 paths,
-                new Pcl.Core.Adapters.Mac.KeychainAccountSecrets(paths.Root)
+                Pcl.Core.Adapters.Credentials.PlatformAccountSecrets.Create(paths.Root)
             );
             launchAccounts = manager;
             launchAccount = manager.SaveMicrosoft(

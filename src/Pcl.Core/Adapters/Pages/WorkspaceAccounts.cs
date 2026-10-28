@@ -10,7 +10,7 @@ public sealed partial class PageExecutionAdapter
     private readonly Dictionary<string, (ExternalLoginChallenge Challenge, DateTimeOffset Expires)> externalChallenges = new();
     private AccountManager PageAccounts => pageAccounts ??= new AccountManager(
         source.Paths,
-        new Pcl.Core.Adapters.Mac.KeychainAccountSecrets(source.Paths.Root)
+        Pcl.Core.Adapters.Credentials.PlatformAccountSecrets.Create(source.Paths.Root)
     );
 
     // These actions share the owned workspace runner and the existing account store. Secrets stay in Host memory/keychain.

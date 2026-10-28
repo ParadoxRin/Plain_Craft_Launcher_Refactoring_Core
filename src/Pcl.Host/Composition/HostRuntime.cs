@@ -1,6 +1,6 @@
 using Pcl.Core;
 using Pcl.Core.Adapters.Accounts;
-using Pcl.Core.Adapters.Mac;
+using Pcl.Core.Adapters.Credentials;
 using Pcl.Core.Adapters.Operations;
 using Pcl.Core.Adapters.Processes;
 using Pcl.Core.Adapters.Pages;
@@ -58,7 +58,7 @@ internal sealed class HostRuntime : IAsyncDisposable
             );
             Accounts = new AccountManager(
                 paths,
-                new KeychainAccountSecrets(paths.Root)
+                PlatformAccountSecrets.Create(paths.Root)
             );
             AccountService = new HostAccountService(
                 new AccountBackend(Accounts),
