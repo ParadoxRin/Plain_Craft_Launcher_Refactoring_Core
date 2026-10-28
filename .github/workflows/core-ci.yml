@@ -79,9 +79,11 @@ jobs:
           export XDG_CONFIG_HOME="$RUNNER_TEMP/pcl-credential-config"
           export XDG_CACHE_HOME="$RUNNER_TEMP/pcl-credential-cache"
           export PCL_TEST_PRIVATE_SECRET_SERVICE=1
-          mkdir -p "$XDG_DATA_HOME" "$XDG_CONFIG_HOME" "$XDG_CACHE_HOME"
+          export GNOME_KEYRING_CONTROL="$RUNNER_TEMP/pcl-native-control"
+          mkdir -p "$XDG_DATA_HOME" "$XDG_CONFIG_HOME" "$XDG_CACHE_HOME" "$GNOME_KEYRING_CONTROL"
+          chmod 700 "$GNOME_KEYRING_CONTROL"
           dbus-run-session -- bash -eu -c '
-            printf "pcl-ci-fixture-only\n" | gnome-keyring-daemon --unlock --components=secrets > /dev/null
+            printf "pcl-ci-fixture-only\n" | gnome-keyring-daemon --unlock --components=secrets --control-directory "$GNOME_KEYRING_CONTROL" > /dev/null
             dotnet tests/Pcl.PlatformCredentials.Tests/bin/Release/net10.0/Pcl.PlatformCredentials.Tests.dll "$PWD/artifacts/ci-credential-root" "$PWD/artifacts/ci-credentials.json" "$PWD/src/Pcl.Host/bin/Release/net10.0/Pcl.Host.dll"
           '
       - name: Test Windows native credentials

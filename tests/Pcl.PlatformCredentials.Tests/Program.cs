@@ -234,7 +234,9 @@ try
         }
         finally
         {
-            await KeyringCommand("gnome-keyring-daemon", ["--unlock", "--components=secrets"], "pcl-ci-fixture-only\n");
+            // --unlock 启动新 daemon，不会给原 daemon 执行再次解锁；替换仅本测试拥有的私有服务。
+            await KeyringCommand("gnome-keyring-daemon", ["--replace", "--unlock", "--components=secrets",
+                "--control-directory", Environment.GetEnvironmentVariable("GNOME_KEYRING_CONTROL")!], "pcl-ci-fixture-only\n");
         }
         Check(secrets.Get(id) == secret, "locked-store-rejection-preserves-secret-after-unlock");
     }
