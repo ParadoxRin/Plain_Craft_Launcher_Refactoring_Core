@@ -238,7 +238,10 @@ try
             await KeyringCommand("gnome-keyring-daemon", ["--replace", "--unlock", "--components=secrets",
                 "--control-directory", Environment.GetEnvironmentVariable("GNOME_KEYRING_CONTROL")!], "pcl-ci-fixture-only\n");
         }
+        await ProbeChild("read-child", new(scope, id, secret));
         Check(secrets.Get(id) == secret, "locked-store-rejection-preserves-secret-after-unlock");
+        secrets.Set(id, secret + "after-service-restart");
+        Check(secrets.Get(id) == secret + "after-service-restart", "same-adapter-writes-after-service-restart");
     }
 
     // 合成账户只用于持久化/退出，不发送到微软，也不调用游戏启动或权益接口。

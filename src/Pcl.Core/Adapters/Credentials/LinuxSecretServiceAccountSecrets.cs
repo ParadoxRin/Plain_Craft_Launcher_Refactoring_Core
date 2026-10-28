@@ -62,13 +62,15 @@ public sealed class LinuxSecretServiceAccountSecrets(string scope) : IAccountSec
             {
                 // 先确认匹配项均已解锁；拒绝把锁住的旧值当作不存在并另建重复项。
                 using var items = Search(call, false);
-                var pointer = Marshal.AllocHGlobal(bytes.Length + 1);
+                var value = secret_value_new(bytes, bytes.Length, "text/plain; charset=utf-8");
+                if (value == 0)
+                {
+                    throw Failure();
+                }
                 try
                 {
-                    Marshal.Copy(bytes, 0, pointer, bytes.Length);
-                    Marshal.WriteByte(pointer, bytes.Length, 0);
-                    var ok = secret_password_storev_sync(0, call.Attributes, null,
-                        "Plain Craft Launcher Refactoring account", pointer, call.Cancellable, out var error);
+                    var ok = secret_service_store_sync(call.Service, 0, call.Attributes, null,
+                        "Plain Craft Launcher Refactoring account", value, call.Cancellable, out var error);
                     Check(error);
                     if (ok == 0)
                     {
@@ -77,8 +79,7 @@ public sealed class LinuxSecretServiceAccountSecrets(string scope) : IAccountSec
                 }
                 finally
                 {
-                    Marshal.Copy(new byte[bytes.Length + 1], 0, pointer, bytes.Length + 1);
-                    Marshal.FreeHGlobal(pointer);
+                    secret_value_unref(value);
                 }
                 return true;
             });
@@ -127,7 +128,7 @@ public sealed class LinuxSecretServiceAccountSecrets(string scope) : IAccountSec
     private static Items Search(NativeCall call, bool load)
     {
         // ALL=2、UNLOCK=4、LOAD_SECRETS=8；解锁失败时 search 仍可能成功，须额外核对 locked。
-        var list = secret_service_search_sync(0, 0, call.Attributes, 2 | 4 | (load ? 8 : 0), call.Cancellable, out var error);
+        var list = secret_service_search_sync(call.Service, 0, call.Attributes, 2 | 4 | (load ? 8 : 0), call.Cancellable, out var error);
         var items = new Items(list);
         try
         {
@@ -161,6 +162,7 @@ public sealed class LinuxSecretServiceAccountSecrets(string scope) : IAccountSec
     {
         internal nint Attributes { get; private set; }
         internal nint Cancellable { get; private set; }
+        internal nint Service { get; private set; }
         private readonly List<nint> strings = new();
         private readonly CancellationTokenSource timeout = new();
         private CancellationTokenRegistration registration;
@@ -171,6 +173,14 @@ public sealed class LinuxSecretServiceAccountSecrets(string scope) : IAccountSec
                 Cancellable = g_cancellable_new();
                 registration = timeout.Token.Register(() => g_cancellable_cancel(Cancellable));
                 timeout.CancelAfter(TimeSpan.FromSeconds(30));
+                // 每次调用持有独立 proxy，避免默认缓存仍绑定已退出的 Secret Service 唯一名称。
+                // 服务重启后下一次操作重新打开；写入失败不在内部盲重试。
+                Service = secret_service_open_sync(secret_service_get_type(), null, 0, Cancellable, out var error);
+                Check(error);
+                if (Service == 0)
+                {
+                    throw Failure();
+                }
                 Attributes = g_hash_table_new(NativeLibrary.GetExport(GlibHandle.Value, "g_str_hash"),
                     NativeLibrary.GetExport(GlibHandle.Value, "g_str_equal"));
                 Add("application", "plain-craft-launcher-refactoring");
@@ -205,6 +215,11 @@ public sealed class LinuxSecretServiceAccountSecrets(string scope) : IAccountSec
                 Marshal.FreeCoTaskMem(pointer);
             }
             strings.Clear();
+            if (Service != 0)
+            {
+                g_object_unref(Service);
+                Service = 0;
+            }
             if (Cancellable != 0)
             {
                 g_object_unref(Cancellable);
@@ -240,9 +255,14 @@ public sealed class LinuxSecretServiceAccountSecrets(string scope) : IAccountSec
     [DllImport(SecretLibrary)] private static extern nint secret_value_get(nint value, out nuint length);
     [DllImport(SecretLibrary)] private static extern void secret_value_unref(nint value);
     [DllImport(SecretLibrary)] private static extern int secret_item_delete_sync(nint item, nint cancellable, out nint error);
-    [DllImport(SecretLibrary)] private static extern int secret_password_storev_sync(nint schema, nint attributes,
+    [DllImport(SecretLibrary)] private static extern nuint secret_service_get_type();
+    [DllImport(SecretLibrary)] private static extern nint secret_service_open_sync(nuint type,
+        [MarshalAs(UnmanagedType.LPUTF8Str)] string? busName, int flags, nint cancellable, out nint error);
+    [DllImport(SecretLibrary)] private static extern nint secret_value_new(byte[] value, nint length,
+        [MarshalAs(UnmanagedType.LPUTF8Str)] string contentType);
+    [DllImport(SecretLibrary)] private static extern int secret_service_store_sync(nint service, nint schema, nint attributes,
         [MarshalAs(UnmanagedType.LPUTF8Str)] string? collection, [MarshalAs(UnmanagedType.LPUTF8Str)] string label,
-        nint password, nint cancellable, out nint error);
+        nint value, nint cancellable, out nint error);
     [DllImport(Glib)] private static extern nint g_hash_table_new(nint hash, nint equal);
     [DllImport(Glib)] private static extern int g_hash_table_insert(nint table, nint key, nint value);
     [DllImport(Glib)] private static extern void g_hash_table_unref(nint table);
