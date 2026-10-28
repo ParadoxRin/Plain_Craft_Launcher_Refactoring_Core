@@ -7,4 +7,4 @@
   </ItemGroup>
   <ItemGroup><ProjectReference Include="../Pcl.Contract/Pcl.Contract.csproj" /></ItemGroup>
   <ItemGroup><ProjectReference Include="../Pcl.Application/Pcl.Application.csproj" /></ItemGroup>
-<ItemGroup><Compile Include="../SharedProtocol/PrivatePipePath.cs" Link="Transport/PrivatePipePath.cs" /></ItemGroup></Project>
+<ItemGroup><Compile Include="../SharedProtocol/PrivatePipePath.cs" Link="Transport/PrivatePipePath.cs" /></ItemGroup><ItemGroup><Compile Include="../SharedProtocol/ProcessBirthIdentity.cs" Link="Protocol/ProcessBirthIdentity.cs" /></ItemGroup></Project>

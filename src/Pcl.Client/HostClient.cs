@@ -19,14 +19,7 @@ public sealed partial class HostClient : IAsyncDisposable
     private volatile bool ready;
     private readonly bool reconnectable;
     private readonly string executable, assembly, dataRoot;
-    private readonly Pcl.Core.Contracts.Sessions.ClientIdentity identity = new(
-        Guid.NewGuid()
-            .ToString("N"),
-        Environment.ProcessId,
-        Process.GetCurrentProcess()
-            .StartTime.ToUniversalTime()
-            .Ticks
-    );
+    private readonly Pcl.Core.Contracts.Sessions.ClientIdentity identity = Pcl.Protocol.ProcessBirthIdentity.Current();
     private readonly SemaphoreSlim writeGate = new(1, 1), reconnectGate = new(1, 1);
     private readonly ConcurrentDictionary<string, TaskCompletionSource<JsonElement>> pending = new();
     private Task reader = Task.CompletedTask, diagnostics = Task.CompletedTask;

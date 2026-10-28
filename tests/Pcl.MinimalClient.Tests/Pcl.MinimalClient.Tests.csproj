@@ -9,4 +9,5 @@
     <ProjectReference Include="../../src/Pcl.Client/Pcl.Client.csproj" />
     <ProjectReference Include="../../src/Pcl.Contract/Pcl.Contract.csproj" />
   </ItemGroup>
+  <ItemGroup><Compile Include="../../src/SharedProtocol/PrivatePipePath.cs" Link="Transport/PrivatePipePath.cs" /></ItemGroup>
 </Project>

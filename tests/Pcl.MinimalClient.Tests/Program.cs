@@ -62,6 +62,20 @@ async Task Reject(Func<Task> action, string code)
     }
     throw new InvalidOperationException("EXPECTED_" + code);
 }
+// 以真实私有管道发送错误身份；只复用端点命名代码，不调用 Host 内部实现。
+async Task RejectAttach(object identity, string code)
+{
+    await using var pipe = new System.IO.Pipes.NamedPipeClientStream(".", Pcl.Protocol.PrivatePipePath.ForRoot(root),
+        System.IO.Pipes.PipeDirection.InOut,
+        System.IO.Pipes.PipeOptions.Asynchronous | System.IO.Pipes.PipeOptions.CurrentUserOnly);
+    await pipe.ConnectAsync(30000, ct);
+    using var writer = new StreamWriter(pipe, leaveOpen: true) { AutoFlush = true, NewLine = "\n" };
+    using var reader = new StreamReader(pipe, leaveOpen: true);
+    await writer.WriteLineAsync(JsonSerializer.Serialize(new { protocolVersion = 1, method = "session.attach", @params = identity }));
+    var line = await reader.ReadLineAsync(ct) ?? throw new InvalidOperationException("ATTACH_RESPONSE_MISSING");
+    using var response = JsonDocument.Parse(line);
+    Check(response.RootElement.GetProperty("error").GetProperty("code").GetString() == code, "reject-attach-" + code);
+}
 async Task<OperationSnapshot> Downloading(string id)
 {
     while (true)
@@ -114,12 +128,35 @@ try
     Check(!Directory.EnumerateFiles(AppContext.BaseDirectory, "*.dll").Any(path =>
         new[] { "Pcl.Core", "Pcl.Application", "Pcl.Ports", "Pcl.Domain", "Pcl.Legacy", "MeloongCore", "PCLCS" }
             .Contains(Path.GetFileNameWithoutExtension(path))), "output-has-no-business-assemblies");
+    // 在首次绑定前核验伪造/缺少出生证明均被拒绝，随后同一真实 Host 接受正常 SDK。
+    var hostStart = new ProcessStartInfo(executable) { UseShellExecute = false };
+    if (args[1] != "-")
+    {
+        hostStart.ArgumentList.Add(args[1]);
+    }
+    hostStart.ArgumentList.Add("--data-root");
+    hostStart.ArgumentList.Add(root);
+    hostStart.ArgumentList.Add("--pipe");
+    ownedHosts.Add(Process.Start(hostStart) ?? throw new InvalidOperationException("HOST_START_FAILED"));
+    await RejectAttach(new { clientId = Guid.NewGuid().ToString("N"), processId = Environment.ProcessId,
+        startedUtcTicks = 1L, linuxStartTicks = ulong.MaxValue }, "CLIENT_IDENTITY_INVALID");
+    if (OperatingSystem.IsLinux())
+    {
+        await RejectAttach(new { clientId = Guid.NewGuid().ToString("N"), processId = Environment.ProcessId,
+            startedUtcTicks = Process.GetCurrentProcess().StartTime.ToUniversalTime().Ticks }, "CLIENT_IDENTITY_INVALID");
+        Check(true, "linux-missing-birth-proof-rejected");
+    }
     await sample.ConnectAsync(ct);
     OwnHost();
     var hostId = sample.Hello.HostInstanceId;
     var hostPid = sample.Client.HostPid;
     Check(sample.Hello.ProtocolVersion == 1 && sample.Hello.InstallationTarget is not null, "real-host-handshake-and-capabilities");
     Check((await sample.AccountsAsync(ct)).Accounts.Length == 0, "isolated-root-no-user-credentials");
+    await sample.Client.DisconnectAsync();
+    await RejectAttach(new { clientId = Guid.NewGuid().ToString("N"), processId = Environment.ProcessId,
+        startedUtcTicks = 1L, linuxStartTicks = ulong.MaxValue }, "SESSION_IN_USE");
+    await sample.ReconnectAsync(ct);
+    Check(sample.Client.HostPid == hostPid && sample.Hello.HostInstanceId == hostId, "rejected-takeover-preserves-original-session");
     await Reject(async () => await sample.Client.Call<JsonElement>("arbitrary.execute", new { }, ct), "METHOD_NOT_SUPPORTED");
     await Reject(async () => await sample.Client.Call<HostHello>("host.hello", new { minimumVersion = 2, maximumVersion = 2 }, ct), "PROTOCOL_INCOMPATIBLE");
     await Reject(async () => await sample.Client.Installations.AcceptAsync(

@@ -11,7 +11,7 @@ internal sealed class SessionOwner : IDisposable
     private ClientIdentity? identity;
     public bool Accept(ClientIdentity value)
     {
-        if (value.ClientId.Length != 32 || !Guid.TryParseExact(value.ClientId, "N", out _) || value.ProcessId <= 0)
+        if (value.ClientId is null || value.ClientId.Length != 32 || !Guid.TryParseExact(value.ClientId, "N", out _) || value.ProcessId <= 0)
         {
             throw new OperationRejectedException("CLIENT_IDENTITY_INVALID");
         }
@@ -35,19 +35,18 @@ internal sealed class SessionOwner : IDisposable
             return true;
         }
 
-        Process candidate;
+        Process? candidate = null;
         try
         {
             candidate = Process.GetProcessById(value.ProcessId);
-            if (candidate.HasExited || candidate.StartTime.ToUniversalTime()
-                .Ticks != value.StartedUtcTicks)
+            if (candidate.HasExited || !Pcl.Protocol.ProcessBirthIdentity.Matches(candidate, value))
             {
-                candidate.Dispose();
                 throw new InvalidOperationException();
             }
         }
         catch (Exception)
         {
+            candidate?.Dispose();
             throw new OperationRejectedException("CLIENT_IDENTITY_INVALID");
         }
 
