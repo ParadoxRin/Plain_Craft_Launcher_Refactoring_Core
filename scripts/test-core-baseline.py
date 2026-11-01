@@ -54,6 +54,12 @@ class BaselineTests(unittest.TestCase):
         (self.file.parent / 'Unexpected.cs').write_text('untracked')
         self.check(False)
 
+    def test_merged_pinned_overlay_is_valid_upstream(self):
+        self.overlay()
+        self.git('add', 'src')
+        self.git('-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.invalid', 'commit', '-qm', 'merge pinned overlay')
+        self.check(True, '--upstream-ref', 'HEAD')
+
     def test_new_upstream_core_requires_rebase(self):
         self.file.write_text('new upstream\n')
         self.git('add', 'src')

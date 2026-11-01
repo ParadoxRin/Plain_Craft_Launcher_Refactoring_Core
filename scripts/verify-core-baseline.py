@@ -76,7 +76,8 @@ if __name__ == '__main__':
                 pin = overlays[name]
                 original = digest(name, git('show', reference + ':' + name)) if name in tracked else None
                 actual = digest(name, path.read_bytes()) if path.is_file() else None
-                if original != pin['baselineSha256'] or actual != pin['sha256'] or name not in current:
+                upstream_matches = original == pin['baselineSha256'] or (reference != baseline and original == pin['sha256'])
+                if not upstream_matches or actual != pin['sha256'] or name not in current:
                     changed.append(name)
             elif name not in current or name not in tracked or not path.is_file():
                 changed.append(name)
