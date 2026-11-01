@@ -4,65 +4,88 @@ PCL 原作者：**龙腾猫跃（LTCatt）** · [支持原作者](https://meloon
 
 项目目标是建立 **macOS、Windows、Linux 通用的 Minecraft 启动器核心**，让开发者复用安装、账户、依赖求解、资源管理和游戏进程能力，自由选择 UI 组件库、组织页面并制作自己的客户端。核心不决定控件、导航或视觉风格，客户端不复制业务规则。
 
-当前版本 **0.41.0 Preview**：已交付的是 **Apple Silicon macOS 14+ 的 Avalonia 参考客户端 + 独立 .NET Host**。SwiftUI 是 Mac 原生客户端接入方向，Windows/Linux 的原生 UI 或其他工具包也可通过契约接入，但 SwiftUI/Windows/Linux 原生图形客户端 **尚未实现**，Windows/Linux 平台适配仍需补齐并实际验收。共用代码、可编译与跨平台实际可用是三件不同的事。
+## 当前状态
 
-文档现行规范为 **v1.5.1**；`v0.41.0` 标签和 Release 附件是固定发布快照，`main` 可包含后续文档、CI 和维护改动。复现发布包请检出标签，继续开发请使用 `main`。
+固定发布版本为 **0.41.0 Preview**：Apple Silicon macOS 14+ 的 Avalonia 参考客户端 + 独立 .NET Host。`main` 已合入统一模组浏览、Host 签名更新、独立最小客户端及三平台凭据适配等后续改动，**不表示既有 v0.41.0 安装包已更新**。复现发布包使用标签，继续开发使用 `main`；现行[架构规范为 v1.5.2](docs/architecture/PCL-Mac架构规范.md)。
 
-源码仓库现为公开的 [Plain_Craft_Launcher_Refactoring_Core](https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core)。Git/隐私基线从 0.36.1 开始，旧历史不重新导入。
+SwiftUI、Windows/Linux 原生图形客户端尚未实现；Windows/Linux 的 Java/natives、完整游戏运行、真人账户/皮肤及其他平台组合仍需补齐验收。共用代码、构建通过和完整产品可用是不同结论。Git/隐私基线从 v0.36.1 开始，不重新导入旧项目历史。
 
-## 0.41.0 发布更新（固定快照）
+## 按更新块浏览仓库
 
-- 打包此前收尾验收与修复：Apple Silicon LWJGL2 首线程崩溃、非默认实例依赖预检误用 1.21.1。
-- 核心测试 231/231、依赖规划 24/24；真实 UI 的五种窗口策略、背景/音乐跟随、共享缓存和本地双节点 TCP 已留证。测试发生时间与最终包复测在发布报告中分列。
-- 更新架构规范至 v1.5，区分当前引用图、运行时链路和三平台目标，补充自定义客户端接入约束。
-- 本项目有权授权的原创部分采用 MIT；上游和第三方内容继续保留原许可，见 [许可范围](LICENSE.md)。
+开发按职责分组件，更新按能保持兼容的一组组件交付。下表同时列出当前实现和后续方向；完整目录对应及特殊资产见[仓库结构与更新分块](docs/仓库结构与更新分块.md)。
 
-当前功能矩阵共 **131 项：68 项已覆盖限定范围、35 项实现缺口、20 项定向验收、8 项外部条件验收**。这不是完成百分比。百宝箱已按需求取消，不计为完成。菜单初始化不等于世界保存验收，旧记录也不等于本版重新测试。
+| 更新块 | 包含内容 | 交付方式与当前状态 |
+|---|---|---|
+| **客户端包** | [Desktop](src/Pcl.Desktop/)、[Client](src/Pcl.Client/)、匹配的 [Contract](src/Pcl.Contract/)、界面资源和 [Native](src/Pcl.Native/) 窗口桥接 | 整体发布客户端；UI 自身自动替换尚未实现 |
+| **Host 核心包** | [Host](src/Pcl.Host/)、[Application](src/Pcl.Application/)、[Domain](src/Pcl.Domain/)、[Ports](src/Pcl.Ports/)、[Core](src/Pcl.Core/)，以及匹配 Contract、必要 Legacy、上游库和运行依赖 | 按系统/CPU 架构整包验证和发布；已有可配置签名更新，默认官方频道未配置 |
+| **数据与内容包** | 百科索引、项目映射、兼容表、帮助、语言和主题等适合外置的内容 | 当前部分仍嵌入程序集或位于代码/文档中；建立格式版本、兼容与校验机制后再独立更新 |
+| **外部工具与运行环境** | 游戏 Java、EasyTier 等 | 按各自版本、平台与校验信息管理；现有自动 Java/EasyTier 路径限定 Apple Silicon Mac |
+| **开发与验证工具** | [tests](tests/)、[scripts](scripts/)、[tools](tools/)、[examples](examples/)、[CI](.github/workflows/core-ci.yml) | 随源码维护，通常不进入用户更新包；生成的运行资产和可独立部署的示例另作区分 |
 
-## 文档导航
+**当前 Mac 打包脚本仍把客户端和完整 `host/` 一起放进 `.app`。** 上表划分的是兼容与交付边界，尚未形成全部独立下载包。Contract 随两端匹配携带，不让用户单独替换；Host 内部 DLL 也不作为可任意组合的更新包。
+
+原生窗口桥当前可随 Desktop/Host 复制；百科原始索引在 `vendor/PCLCS`；布局和功能矩阵部分嵌入 Desktop；`SharedProtocol` 是链接编译源码。具体归属见[跨分类资产](docs/仓库结构与更新分块.md#跨分类资产)。
+
+## 仓库与文档入口
 
 | 目的 | 入口 |
 |---|---|
-| 理解实现与设计理由 | [详细架构图和设计取舍](docs/架构与设计取舍.md) |
-| 替换 UI / 开发自己的客户端 | [客户端接入指南](docs/客户端接入指南.md) |
-| 查看不能破坏的边界 | [架构规范 v1.5.1](docs/architecture/PCL-Mac架构规范.md) |
-| 找到功能执行入口 | [功能实现导览](docs/功能实现导览.md) |
-| 构建、测试与发布 | [开发与验证](docs/开发与验证.md)、[0.41.0 发布记录](docs/0.41-核心平台定位与发布.md) |
-| 确认完成和未完成范围 | [剩余清单](docs/剩余清单.md)、[功能矩阵](docs/data/PCL2完整功能矩阵.json)、[支持范围](docs/支持范围.md) |
-| 接手项目 | [开发交接 Prompt](docs/开发交接Prompt.txt)、[Git 与交接](docs/Git历史与交接.md) |
-| 理解开发责任与许可 | [AI 辅助开发方式](docs/开发方式与责任.md)、[许可范围](LICENSE.md)、[第三方声明](docs/THIRD-PARTY-NOTICES.md) |
+| 按目录定位组件 | [源码组件索引](src/README.md)、[完整分类与仓库配置](docs/仓库结构与更新分块.md) |
+| 按用途找文档、发布和历史证据 | [文档导航](docs/README.md)、[文档状态与弃用索引](docs/文档状态与弃用索引.md) |
+| 理解架构、依赖和生命周期 | [架构与设计取舍](docs/架构与设计取舍.md)、[架构规范](docs/architecture/PCL-Mac架构规范.md) |
+| 开发新客户端 | [客户端接入指南](docs/客户端接入指南.md)、[独立最小客户端](examples/Pcl.MinimalClient/README.md) |
+| 定位功能实现、构建及测试 | [功能实现导览](docs/功能实现导览.md)、[开发与验证](docs/开发与验证.md) |
+| 查看缺口与追踪数据 | [剩余清单](docs/剩余清单.md)、[技术债](docs/architecture/技术债.md)、[支持范围](docs/支持范围.md)、[数据说明](docs/data/README.md) |
+| 接手项目与分支 | [开发交接 Prompt](docs/开发交接Prompt.txt)、[Git 与交接](docs/Git历史与交接.md) |
 
-旧指南和已替代清单以 `【已弃用】` 标记；历史验收报告继续保留为证据。完整映射见[文档状态与弃用索引](docs/文档状态与弃用索引.md)。
+## 架构与功能归属
 
-## 架构概览
-
-下图为运行时调用方向；虚线表示接入目标，实线表示当前参考实现。详细编译依赖、任务和退出时序见架构文档。
+下图表示运行时调用。Desktop 运行时只依赖 Client/Contract；Host 和架构守卫在其项目文件中属于构建依赖。Host 一侧负责权威校验及执行，Domain 不引用 Ports；外部数据先取得再传给纯规则。
 
 ```mermaid
-flowchart TB
-  A[当前 Avalonia 参考客户端] --> C[.NET Client]
-  M[main 独立最小命令行示例] --> C
-  S[目标 SwiftUI 客户端] -.-> P[版本化私有 RPC 契约]
-  W[Windows 自定义客户端] -.-> P
-  L[Linux 自定义客户端] -.-> P
-  C --> P
-  P --> H[Host：组装、会话、数据根锁]
-  H --> APP[Application：操作编排与生命周期]
-  APP --> D[Domain：纯规则与依赖求解]
-  APP --> PORT[Ports：能力约定]
-  PORT --> AD[Core / Adapters：现有执行与平台适配]
-  AD --> EXT[文件、网络、凭据库、Java、游戏进程]
+flowchart LR
+  UI[Desktop / 自定义客户端] --> Client[Client 通信封装]
+  Client -->|Contract 协议约定| Host[Host 组合根与会话]
+  Host --> App[Application 业务编排]
+  App --> Domain[Domain 纯规则]
+  App --> Ports[Ports 外部能力接口]
+  Ports --> Core[Core 执行与适配]
+  Core --> External[网络 / 文件 / 凭据库 / Java / 游戏]
 ```
 
-Desktop 只依赖 Contract/Client；Host 执行安装、登录和进程操作，应用服务持有任务真相。`Domain` 不引用 `Ports`，外部数据先由应用层取得再传入纯规则。非 .NET 客户端共享协议语义，不需要也不能直接引用 C# 对象。更换控件库不应更换安装事务、凭据存储或依赖规则。
+自定义非 .NET 客户端实现同等协议语义，不直接引用 C# 对象。当前没有通用动态插件加载系统；添加功能通常仍需修改对应模块并重新构建兼容包。既有 `Pcl.Cli` 有 Core/Application 直接调用，新客户端应参考最小客户端示例。
 
-## 三平台核心还需完成
+| 需求 | 主要修改位置 |
+|---|---|
+| 按钮、布局、主题、窗口行为 | Desktop；必要时 Native |
+| 为已有能力增加展示入口 | Desktop；必要时补 Client 封装 |
+| 模组兼容、依赖和版本选择规则 | Domain，由 Application/Core 提供输入 |
+| 接入新的模组下载来源 | Core 适配器；确有需要时补 Ports |
+| 新增有进度、取消、恢复的操作 | Application + Core；新接口涉及 Contract、Host、Client |
+| 支持新的操作系统能力 | Ports + 平台适配实现 + Host 接线 |
+| 新增 SwiftUI 或其他界面 | 新客户端通过协议复用 Host |
+| 修复上游解析或基础库 | 对应 vendor，保留来源并控制补丁范围 |
 
-新增[独立最小客户端](examples/Pcl.MinimalClient/README.md)：只引用 Client/Contract，可从仓库外运行，提供安装、取消、事件观察、重连、receipt 续做与游戏启动命令。它通过真实 Host 执行业务，适合作为自定义 UI 的接线起点；具体测试范围见[验收记录](docs/最小客户端与Host契约验收.md)。提交 `953d7b9` 的[三平台 CI](https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core/actions/runs/40650165276) 均通过：核心各235项，新增 Host 契约 Mac/Windows 各28项、Linux 29项；Mac 另通过真实下载/恢复/试玩图形启动。
+先判断是否属于组件原有职责。例如搜索筛选控件属于 Desktop，版本是否适用于实例的判断由核心负责；UI 提示不能代替 Host 校验。
 
-Desktop→Core 的展示依赖拆除与现有 Avalonia 导航/生命周期整理已在既定范围完成。main 已接入 Windows Credential Manager / Linux Secret Service 的平台凭据选择，保留 Mac 原钥匙串，见[实现与验收](docs/三平台凭据与组合根验收.md)。接下来仍需 Windows/Linux 真人账户/皮肤联调、路径权限、进程/独立运行、Java/natives 和其余平台组合，以及跨语言契约一致性测试与稳定 SDK；这不等于重开已完成的 Shell 分层。SwiftUI 和其他客户端是后续接入工作，不要求三套 UI 同时完成才交接核心。既有 CLI 仍有直接 Core/Application 调用，不能当成新客户端的架构范例。
+新功能按以下顺序推进，细节见[开发流程](docs/仓库结构与更新分块.md#五新功能的推荐流程)：
 
-功能矩阵的 35/20/8 是既有功能排期口径，**不包含三平台工作量的完整估算**。核心平台待办见[技术债](docs/architecture/技术债.md)，产品功能待办见[剩余清单](docs/剩余清单.md)。
+1. 明确用户行为和验收标准，包含失败、分页、取消和文件写入范围。
+2. 检查已有搜索会话、版本选择、依赖规划和安装事务，优先复用。
+3. 按职责实现来源接入、纯规则、业务编排及 Host 接线。
+4. 需要新信息/操作时才扩展 Contract，并用能力标识处理客户端与 Host 兼容。
+5. 验证规则、协议和真实入口；平台相关改动在目标系统验收。
+6. 确定交付范围：兼容后台改动可仅更新完整 Host；新 UI/协议协调发布两端；数据格式变化先完成迁移和回退设计。
+
+## main 的已合并增量
+
+- **统一模组浏览与安装**：多来源浏览、可靠身份合并、按需选版本/实例/来源，继续复用 Host 安装事务。见[流程与验收](docs/统一模组浏览与安装-2026-11-01.md)及 [PCLCS 集成职责](vendor/PCLCS/README.integration.md)。
+- **Host 自动更新**：签名与全文件校验、兼容检查、空闲切换、下次启动应用、启动失败回退。需要发布者配置可信公钥与源；不替换 UI、不迁移数据格式、不独立更新词库。见[接入](docs/Host自动更新与接入.md)与[验收](docs/Host自动更新验收.md)。
+- **独立客户端与平台凭据**：已有仅 Client/Contract 的[最小客户端](examples/Pcl.MinimalClient/README.md)，Host 按平台选择 Mac 钥匙串、Windows Credential Manager、Linux Secret Service。见[契约验收](docs/最小客户端与Host契约验收.md)和[凭据验收](docs/三平台凭据与组合根验收.md)。
+
+两项功能已通过 [PR #5](https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core/pull/5) 合入 `main`。整合提交 `92b024f` 的[三平台 CI](https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core/actions/runs/41266487343) 全部通过；本地合并后核心 241 项、Host 契约 28 项、更新 48 项、跨版本选择 9 项、真实 Mac UI 流程 14 项通过。范围和证据见[合并验收](docs/统一浏览与Host更新合并验收.md)。后续改动以对应提交的 CI 为准。
+
+Core CI 执行核心、真实 Host 契约、更新回退、跨版本选择与隔离原生凭据测试，不证明 Windows/Linux 完整图形产品、真人微软认证或游戏世界均可用。固定 v0.41.0 的发布范围单独见[发布记录](docs/0.41-核心平台定位与发布.md)。
 
 ## 已有能力与边界
 
@@ -75,33 +98,23 @@ Desktop→Core 的展示依赖拆除与现有 Avalonia 导航/生命周期整理
 | 光影 | Iris 环境、配置撤销、受管理 ZIP/环境卸载与共享依赖保护 | 旧环境/手工文件不追认；覆盖配置下卸载拒绝；Oculus 环境卸载未实现 |
 | 任务与运行 | 幂等受理、取消、快照/事件、会话重连、部分安全续做、独立游戏运行 | 不是任意任务断点续做；本地双节点 TCP 不代表互联网 NAT 或双玩家世界 |
 
-## 构建与使用
+功能矩阵仍按 131 项追踪：68 项限定覆盖、35 项实现缺口、20 项定向验收、8 项外部条件验收。这不是完成率，也不是三平台工作量的完整估算。百宝箱已取消；本次分类不改矩阵状态。`docs/data` 中的审核输入、嵌入矩阵和少量已跟踪的历史验收资产继续保留。
+
+## 构建与验证入口
+
+先准备 `global.json` 固定的 .NET SDK 10.0.402，再从仓库根目录执行：
 
 ```bash
 git clone https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core.git
 cd Plain_Craft_Launcher_Refactoring_Core
-bash scripts/build-handoff.sh
+dotnet build src/Pcl.Desktop/Pcl.Desktop.csproj -c Release -m:1 -nr:false
+dotnet build tests/Pcl.Tests/Pcl.Tests.csproj -c Release -m:1 -nr:false
+dotnet tests/Pcl.Tests/bin/Release/net10.0/Pcl.Tests.dll artifacts/receiver-core-tests
 ```
 
-Mac 打包依赖 Apple Silicon、macOS 14+、Xcode Command Line Tools、Python 3、curl 和 `global.json` 固定的 .NET SDK 10.0.402。脚本缺少 SDK 时下载并校验，可用 `DOTNET=/absolute/path/to/dotnet` 指定同版本 SDK。
+测试目录必须全新；测试是控制台程序，不能以 `dotnet test` 未报错代替执行。构建不等于图形或游戏验收；原生桥、Host 专项测试及各平台前提见[开发与验证](docs/开发与验证.md)。
 
-输出：`artifacts/Plain Craft Launcher Refactoring 0.41.0.app` 和同版本 macOS arm64 ZIP。当前使用 **ad-hoc 签名，未进行 Developer ID 公证**。源码可供其他平台继续适配，本次不发布未经验证的 Windows/Linux 可运行包。`release.json` 是打包版本入口，Desktop 的项目版本需与其一致，构建脚本会核对。
-
-```bash
-export DOTNET_CLI_HOME="$PWD/.cache/dotnet-home"
-./.tooling/dotnet/dotnet build tests/Pcl.Tests/Pcl.Tests.csproj -m:1 -nr:false
-./.tooling/dotnet/dotnet tests/Pcl.Tests/bin/Debug/net10.0/Pcl.Tests.dll artifacts/receiver-core-tests
-```
-
-使用全新隔离目录；测试是控制台程序，不能以 `dotnet test` 未报错代替运行。详见[开发与验证](docs/开发与验证.md)。
-
-## 自动化与追踪数据
-
-[Core CI](https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core/actions/workflows/core-ci.yml) 使用 macOS、Windows、Ubuntu runner 构建并实际执行 `Pcl.Tests` 控制台套件；逐次结果以 Actions 对应提交为准。它检查已覆盖的规则、文件和受控进程场景，不证明完整 Host/UI、系统凭据库、游戏世界或三平台产品已可用。部分既有用例有平台条件分支，不能将套件总行数当成每个平台实际执行的原生场景数。
-
-2026-10-27 最终修复提交 `497cdd1`：[三平台 CI](https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core/actions/runs/40444961793) 均通过，macOS、Windows、Ubuntu 各报告 **235/235**。Windows 原6项失败中，2项为目录链接删除/缓存重命名实现缺陷，4项为平台测试预期；保留保护断言并新增4项文件安全测试。逐项归因与证据见[Windows CI 修复验收](docs/Windows-CI六项修复与验收.md)，首轮失败仍保留在[历史核对记录](docs/CI与文档一致性核对.md)。这些维护改动尚未进入固定的 v0.41.0 安装包。
-
-三个较大的追踪 JSON 放在 [`docs/data/`](docs/data/README.md)，保留 Git 版本管理。其中状态覆盖文件是人工维护的审核输入，并非可删除的缓存；矩阵还作为应用嵌入资源使用。普通构建不需要重新生成。
+Mac 发行包另由 `bash scripts/build-handoff.sh` 生成，需要 Apple Silicon、macOS 14+、Xcode Command Line Tools、Python 3 和 curl。当前为 ad-hoc 签名、未公证；`release.json` 与 Desktop 版本须一致。分类整理不会执行打包、重发 Release 或创建独立内容更新包。
 
 ## 开发方式
 
@@ -114,13 +127,3 @@ export DOTNET_CLI_HOME="$PWD/.cache/dotnet-home"
 保留数据根、bundle/钥匙串身份，微软/离线登录、皮肤和游戏独立运行行为。保留 PCL 作者署名、赞助与正版购买劝导；赞助不解锁功能，Windows 蓝色限制不因自定义客户端取消。
 
 **原创部分 MIT + 上游/第三方各自许可**，不是全仓统一 MIT。详见 [LICENSE.md](LICENSE.md)、[MIT 标准文本](LICENSE)、[PCL 原文](PCL-LICENCE.txt)。不上传个人账户、令牌、世界存档、Minecraft 客户端、私有 SDK 缓存或原始敏感日志。
-
-## main：可配置的核心自动更新
-
-已增加签名Host包校验、兼容性检查、空闲切换、下次启动应用及启动失败回退，客户端仍不依赖Core。参考客户端通过部署方提供的`host-update-policy.json`启用；没有策略时保持随包Host。本次不提供默认官方签名频道，也不更新既有v0.41.0安装包。接线、发布工具、信任边界及复验见[Host自动更新](docs/Host自动更新与接入.md)。UI自身替换、跨数据格式迁移及词库独立更新不在本轮范围。
-
-本轮[验收记录](docs/Host自动更新验收.md)：三平台更新各48项通过；Mac含真实游戏存活的更新专项54项通过。首次开启需部署者提供可信公钥和签名feed，未默认接收未审核更新。
-
-## main：统一模组浏览与安装
-
-统一模组浏览的当前开发实现见[流程、模块边界与验收](docs/统一模组浏览与安装-2026-11-01.md)：全部来源浏览、可靠跨站合并、按需版本/目标实例/来源选择，复用Host安装事务。PCLCS原始数据与新规则分开，详见[集成职责](vendor/PCLCS/README.integration.md)。这是发布后源码增量，不表示已有安装包同步更新。

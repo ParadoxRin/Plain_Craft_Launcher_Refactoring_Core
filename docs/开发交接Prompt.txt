@@ -3,7 +3,7 @@
 一、目标和现状
 目标是供 macOS、Windows、Linux 复用的启动器核心，让开发者自行选择 UI 组件库、布局和语言制作客户端。已交付 Apple Silicon Mac 的 Avalonia 参考客户端及独立 .NET Host。SwiftUI 是 Mac 原生参考方向，尚未实现；Windows/Linux 原生图形客户端尚未实现，对应平台适配仍待补齐与验收。无需先完成三套 UI 才能交接核心，也不因目标变化删除既有功能缺口。不要未经要求重写全部 UI。
 
-先读 README.md、docs/architecture/PCL-Mac架构规范.md（现行 v1.5.2）、docs/架构与设计取舍.md、docs/客户端接入指南.md、docs/功能实现导览.md、docs/剩余清单.md、docs/architecture/技术债.md，以及本轮用例的源码和证据。docs/0.41-核心平台定位与发布.md 是固定发布记录；docs/CI与文档一致性核对.md 记录首轮核对与失败，docs/Windows-CI六项修复与验收.md 记录后续修复与最终三平台通过结果。规范约束、源码现状、运行证据是三件事。
+先读 README.md、docs/仓库结构与更新分块.md、docs/README.md、docs/architecture/PCL-Mac架构规范.md（现行 v1.5.2）、docs/架构与设计取舍.md、docs/客户端接入指南.md、docs/功能实现导览.md、docs/剩余清单.md、docs/architecture/技术债.md，以及本轮用例的源码和证据。docs/0.41-核心平台定位与发布.md 是固定发布记录；docs/CI与文档一致性核对.md 记录首轮核对与失败，docs/Windows-CI六项修复与验收.md 记录后续修复与最终三平台通过结果。规范约束、源码现状、运行证据是三件事。
 
 二、获取与来源
 优先 git clone，检查 git status、git log --all --oneline、git fsck --full。禁止合并旧 PCL_Mac、旧 bundle 或旧交接包历史。Release 源码 ZIP 是 git archive，不含 .git；游戏、Java、账户、钥匙串、SDK、个人世界及原始测试运行目录不随源码交付。
@@ -67,3 +67,5 @@ main 新增核心自动更新：先读 Host自动更新与接入.md。Client/Upd
 本轮统一模组浏览增量（2026-11-01工作区）：先读docs/统一模组浏览与安装-2026-11-01.md。PCLCS保留原始百科索引，Domain/Search持有保守一对一身份规则，Core/Adapters/Search负责多源查询、会话与版本选择，Host持有下载选择及事务；客户端只有Contract/Client。默认全部筛选，下载阶段按目标实例读取双方来源版本。不可用来源必须明确显示；多来源文件索引唯一，不能把项目映射当文件可互换。真实Mac/Modrinth安装与合成CF分开记录；不宣称CF线上、真人登录或游戏世界已重验。此改动未更新固定Release。
 
 两分支统一整合：见 docs/统一浏览与Host更新合并验收.md。后续以合并提交及对应CI为准，不重复导入旧主工作区的未提交统一搜索副本。版本和既有Release保持0.41.0。
+
+仓库分类：开发按职责分组件，更新按兼容组合交付。客户端、Host核心、数据与内容、外部工具/运行环境、开发验证工具共五类；当前Mac脚本仍生成客户端+host的同一.app，内容包尚无独立更新器。Contract随两端配套，不单独替换内部DLL；SharedProtocol为链接编译源码，Native产物当前可随Desktop/Host复制。新功能按分类文档的职责判断和六步流程实施，不因整理目录改变运行依赖、发布版本或历史证据。
