@@ -102,7 +102,7 @@ def package(client, host, probe, release, output, base_url=None):
         if base_url:
             for item in parts.values():
                 item['url'] = base_url.rstrip('/') + '/' + item['file']
-        parts['client'].update(version=version, bundledHost=False,
+        parts['client'].update(version=version, clientSequence=release.get('build', 0), bundledHost=False,
                                hostCompatibility={'protocol': 1, 'dataEpoch': 1,
                                                   'requiredCapabilities': required_capabilities})
         parts['host'].update(build=build, protocol=probe['protocolVersion'],

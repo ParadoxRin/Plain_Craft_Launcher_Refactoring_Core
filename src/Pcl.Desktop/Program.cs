@@ -11,9 +11,26 @@ internal static class Program
     public static void Main(string[] args)
     {
         Arguments = args;
+        IDisposable? runtimeLease = null;
+        var target = Pcl.Client.SelfUpdate.ClientSelfUpdate.CurrentTarget();
+        if (File.Exists(Path.Combine(AppContext.BaseDirectory, "client-update-policy.json")))
+        {
+            try
+            {
+                var updater = new Pcl.Client.SelfUpdate.ClientSelfUpdate(target);
+                if (updater.RecoverBeforeStartup(args)) return;
+                runtimeLease = updater.AcquireRuntimeLease();
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine("CLIENT_UPDATE_RECOVERY_FAILED " + ex.Message);
+                Environment.ExitCode = 1;
+                return;
+            }
+        }
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-        BuildAvaloniaApp()
-            .StartWithClassicDesktopLifetime(args);
+        using (runtimeLease)
+            BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
     }
 
     // [实现] BuildAvaloniaApp 的实现：计算并返回 AppBuilder.Configure<App>() .UsePlatformDetect() .LogToTrace()。

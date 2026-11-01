@@ -32,6 +32,7 @@ mkdir -p "$artifact_dir"
   -p:NuGetAudit=false -p:UsedAvaloniaProducts= -p:PublishTrimmed=false -p:UseAppHost=true -p:UseSharedCompilation=false \
   -p:PathMap="$project_root=/src/Plain-Craft-Launcher-Refactoring" -p:DebugType=None -p:DebugSymbols=false \
   -p:MicrosoftApplicationConfig="$project_root/src/Pcl.Core/Authentication/microsoft-application.json" -o "$publish"
+DOTNET="$sdk" bash "$project_root/scripts/publish-client-updater.sh" "$publish" osx-arm64
 if [ -n "${PCL_HOST_UPDATE_POLICY:-}" ]; then
   cp "$PCL_HOST_UPDATE_POLICY" "$publish/host-update-policy.json"
 fi

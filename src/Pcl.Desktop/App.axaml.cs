@@ -65,6 +65,8 @@ public sealed class App : Avalonia.Application
                     desktop.MainWindow = main;
                     main.Show();
                     splash.Close();
+                    Pcl.Client.SelfUpdate.ClientSelfUpdate.AcknowledgeReady();
+                    main.BeginClientUpdateCheck();
                     desktop.Exit += (_, _) =>
                     {
                         // 异常退出仍有活动任务时，不在回调里释放其依赖；进程退出后由 OS 回收锁。

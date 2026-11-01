@@ -88,6 +88,7 @@ public partial class MainWindow
             "第三方许可与鸣谢",
             Path.Combine(AppContext.BaseDirectory, "..", "Resources", "Legal", "THIRD-PARTY-NOTICES.md")
         );
+        AddClientUpdateControls(panel);
         return panel;
     }
 

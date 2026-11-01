@@ -344,6 +344,7 @@ public partial class MainWindow : Window
     private readonly ViewLifetime navigationLifetime = new();
     internal async Task PrepareForExit()
     {
+        await StopClientUpdateCheckAsync();
         operation?.Cancel();
         await Task.WhenAll(
             PendingUiAction,

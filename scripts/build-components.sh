@@ -35,6 +35,7 @@ publish() {
         -p:MicrosoftApplicationConfig="$project_root/src/Pcl.Core/Authentication/microsoft-application.json" -o "$2"
 }
 publish "$project_root/src/Pcl.Desktop/Pcl.Desktop.csproj" "$work/client"
+DOTNET="$sdk" bash "$project_root/scripts/publish-client-updater.sh" "$work/client" "$rid"
 publish "$project_root/src/Pcl.Host/Pcl.Host.csproj" "$work/host"
 if [ -n "${PCL_CONTENT_POLICY:-}" ]; then
   cp "$PCL_CONTENT_POLICY" "$work/host/content-update-policy.json"
