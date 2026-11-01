@@ -6,6 +6,7 @@ namespace Pcl.Core.Adapters.Mac;
 // Values are passed directly to Security.framework; no token appears in argv, shell text or files.
 public sealed class KeychainAccountSecrets(string scope) : IAccountSecrets
 {
+    private const int MaxSecretBytes = 65536;
     private const string Security = "/System/Library/Frameworks/Security.framework/Security";
     private const string CF = "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation";
     private static readonly Lazy<nint> Library = new(
@@ -42,7 +43,7 @@ public sealed class KeychainAccountSecrets(string scope) : IAccountSecrets
         {
             // [实现] 在异常保护范围内：准备 var length = CFDataGetLength(result)；按 length > 65536 分支处理；准备 var bytes = new byte[(int)length]。
             var length = CFDataGetLength(result);
-            if (length > 65536)
+            if (length < 0 || length > MaxSecretBytes)
                 throw new CryptographicException("账户凭据长度无效。");
             var bytes = new byte[(int)length];
             Marshal.Copy(
@@ -64,11 +65,15 @@ public sealed class KeychainAccountSecrets(string scope) : IAccountSecrets
     // [实现] Set 的实现：准备 var query = Query(id)；准备 var values = new NativeQuery()；执行 values.Data( "kSecValueData", Encoding.UTF8.GetBytes(secret) )。
     public void Set(string id, string secret)
     {
+        ArgumentNullException.ThrowIfNull(secret);
+        if (Encoding.UTF8.GetByteCount(secret) > MaxSecretBytes)
+            throw new CryptographicException("账户凭据长度无效。");
+        var bytes = Encoding.UTF8.GetBytes(secret);
         using var query = Query(id);
         using var values = new NativeQuery();
         values.Data(
             "kSecValueData",
-            Encoding.UTF8.GetBytes(secret)
+            bytes
         );
         var status = SecItemUpdate(query.Handle, values.Handle);
         if (status == -25300)
@@ -76,7 +81,7 @@ public sealed class KeychainAccountSecrets(string scope) : IAccountSecrets
             // [实现] 条件成立（status == -25300）时：执行 query.Data( "kSecValueData", Encoding.UTF8.GetBytes(secret) )；执行 status = SecItemAdd(query.Handle, 0)。
             query.Data(
                 "kSecValueData",
-                Encoding.UTF8.GetBytes(secret)
+                bytes
             );
             status = SecItemAdd(query.Handle, 0);
         }
