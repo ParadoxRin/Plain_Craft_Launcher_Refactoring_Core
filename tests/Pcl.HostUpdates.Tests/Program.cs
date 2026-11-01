@@ -247,6 +247,24 @@ try
     var restarted = Client("restart");
     Check((await restarted.HelloAsync(ct)).Build!.Sequence == 42000, "pending-applied-on-next-start");
 
+    // 参考客户端真实会话自动调度，无需显式update-check/update-apply。
+    Feed(manifest, zip);
+    var automaticClient = Client("automatic");
+    await using (var session = new LauncherSession(automaticClient))
+    {
+        await session.InitializeAsync();
+        var until = DateTimeOffset.UtcNow.AddSeconds(40);
+        while (automaticClient.UpdateStatus.State != "current" && DateTimeOffset.UtcNow < until)
+        {
+            await Task.Delay(100, ct);
+        }
+        Check(automaticClient.UpdateStatus.State == "current", "launcher-session-automatically-checks-and-applies");
+        using var ownedHost = Process.GetProcessById(automaticClient.HostPid);
+        await session.ShutdownAsync();
+        await Task.Delay(300, ct);
+        Check(ownedHost.HasExited, "session-close-joins-update-loop-without-restarting-host");
+    }
+
     // 签名有效且probe成功，但实际Host启动失败：必须回到已验证版本。
     var fakeHello = new HostHello(1, "fixture", ["host.update.prepare.v1"], 1048576,
         Build: new("0.43.0", 43000, 1, HostUpdateStore.Runtime));
@@ -328,6 +346,44 @@ try
         await Reject(() => Task.Run(() => new HostUpdateStore(crashRoot, Path.Combine(root, "crash-data"), policy, http).Dispose()), "exclusive-update-store-lock");
     }
     await Reject(() => Task.Run(() => new HostUpdateStore(crashRoot, Path.Combine(root, "other-data"), policy, http).Dispose()), "scope-reuse-rejected");
+
+    // 真正遗留一个未确认的候选Host；重开客户端必须先空闲退出它，再使用回退版本。
+    var orphanRoot = Path.Combine(root, "orphan-data");
+    var orphanStore = Path.Combine(root, "orphan-updates");
+    Directory.CreateDirectory(orphanRoot);
+    string candidateDll;
+    Feed(manifest, zip);
+    using (var store = new HostUpdateStore(orphanStore, orphanRoot, policy, http))
+    {
+        await store.StageAsync(ct);
+        await store.BeginAsync(Environment.ProcessPath!, ct);
+        candidateDll = store.Selection(Environment.ProcessPath!)!.Assembly;
+    }
+    var orphanStart = new ProcessStartInfo(Environment.ProcessPath!);
+    foreach (var argument in new[] { candidateDll, "--data-root", orphanRoot, "--pipe" })
+    {
+        orphanStart.ArgumentList.Add(argument);
+    }
+    using var orphanHost = Process.Start(orphanStart)!;
+    try
+    {
+        await Task.Delay(800, ct);
+        Check(!orphanHost.HasExited, "unconfirmed-candidate-really-left-running");
+        var replacement = new HostClient(Environment.ProcessPath!, Path.Combine(oldHost, "Pcl.Host.dll"), orphanRoot, true);
+        replacement.ConfigureUpdates(policy, orphanStore, http);
+        clients.Add(replacement);
+        Check((await replacement.HelloAsync(ct)).Build!.Sequence == 41000, "orphan-trial-retired-and-bundled-host-restored");
+        Check(orphanHost.HasExited, "orphan-exited-without-pid-kill");
+    }
+    finally
+    {
+        if (!orphanHost.HasExited)
+        {
+            orphanHost.Kill();
+            await orphanHost.WaitForExitAsync();
+        }
+    }
+
 }
 catch (Exception ex)
 {

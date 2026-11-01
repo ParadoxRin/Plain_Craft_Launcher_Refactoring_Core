@@ -125,6 +125,10 @@ public sealed partial class HostClient : IAsyncDisposable
         {
             await EnsureConnectedCoreAsync(ct);
         }
+        catch (OperationRejectedException ex) when (ex.Code == "UPDATE_RECONNECT_REQUIRED")
+        {
+            await EnsureConnectedCoreAsync(ct);
+        }
         catch when (updates?.InTrial == true && startedUpdatedHost && !ready)
         {
             await RollbackHostAsync();
@@ -188,6 +192,7 @@ public sealed partial class HostClient : IAsyncDisposable
                         if (host is null || host.HasExited)
                         {
                             host?.Dispose();
+                            host = null;
                             await PrepareHostUpdateAsync(ct);
                             // 探针时间不消耗实际 Host 的连接预算。
                             deadline = DateTime.UtcNow.AddSeconds(8);
@@ -275,6 +280,24 @@ public sealed partial class HostClient : IAsyncDisposable
                     throw new OperationRejectedException("PROTOCOL_INCOMPATIBLE");
                 }
 
+                if (!startedUpdatedHost && updates?.RequiresRetirement(hello) == true)
+                {
+                    // 前一个客户端可能在 trial 启动后崩溃，留下仍运行的候选。
+                    // 只通过已附着会话请求原子空闲退出；不按旧PID强杀进程。
+                    using var orphan = Process.GetProcessById(restored.HostPid);
+                    var retirement = await SendCore<Pcl.Core.Contracts.Updates.HostUpdateReadiness>(
+                        "host.update.prepare", new { }, ct);
+                    if (!retirement.Ready)
+                    {
+                        throw new OperationRejectedException("HOST_UPDATE_RECOVERY_BUSY");
+                    }
+                    await orphan.WaitForExitAsync(ct).WaitAsync(TimeSpan.FromSeconds(15), ct);
+                    pipe.Dispose();
+                    await reader;
+                    host?.Dispose();
+                    host = null;
+                    throw new OperationRejectedException("UPDATE_RECONNECT_REQUIRED");
+                }
                 if (startedUpdatedHost && updates is not null)
                 {
                     updates.Confirm(hello);

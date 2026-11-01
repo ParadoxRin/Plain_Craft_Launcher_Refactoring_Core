@@ -162,6 +162,15 @@ internal sealed class HostUpdateStore : IDisposable
         Commit(state with { Previous = state.Active, Active = id, Trial = id, Pending = null });
     }
     internal UpdateSelection? Selection(string dotnet) => state.Active is { } id ? Select(id, dotnet) : null;
+    internal bool RequiresRetirement(HostHello hello)
+    {
+        if (state.Active is { } active)
+        {
+            return hello.Build != Verify(ReadEnvelope(active), false).Build;
+        }
+        return state.Rejected is { } rejected && hello.Build == Verify(ReadEnvelope(rejected), false).Build;
+    }
+
     internal void Confirm(HostHello hello)
     {
         if (state.Active is not { } id)
@@ -195,6 +204,10 @@ internal sealed class HostUpdateStore : IDisposable
     {
         var path = Path.Combine(root, id + ".json");
         SafeParents(path);
+        if (new FileInfo(path).Length > 2 * 1024 * 1024)
+        {
+            throw new InvalidDataException("UPDATE_RECEIPT_LIMIT");
+        }
         var bytes = File.ReadAllBytes(path);
         if (bytes.Length > 2 * 1024 * 1024 || Hash(bytes) != id)
         {
