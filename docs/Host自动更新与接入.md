@@ -77,7 +77,7 @@ flowchart TD
 3. ZIP和解压总量/文件数有限制；逐文件校验长度与SHA256，拒绝路径穿越、大小写碰撞、链接/特殊文件及清单外文件。再次启动时重验文件，检测暂存/安装后篡改。默认包上限2GiB、展开4GiB、10000文件；路径只支持受限ASCII发布文件名。
 4. 更新存储用OS独占锁，不以PID或TTL夺权；state指针先在同目录写临时文件并Flush，再替换，不覆盖运行中的二进制。内存状态仅在持久化成功后变更。参考[File.Move说明](https://learn.microsoft.com/en-us/dotnet/api/system.io.file.move?view=net-10.0)。这里测试的是进程崩溃，不宣称硬件断电下目录元数据一定持久。
 5. Host在串行请求循环中同时判断空闲和停止受理。安装、页面写任务、登录/皮肤任务、已知托管或独立游戏、联机节点均会推迟更新。不通过主动取消任务达到空闲，不强杀旧Host。
-6. 候选先执行无数据目录的probe，再连接实际Host验证hello构建信息和能力。trial持久化早于业务启动，未确认即客户端崩溃，下次回退；启动失败只终止本次候选Host，不杀进程树、游戏或其他用户进程。失败候选不自动反复尝试。
+6. 候选先执行无数据目录的probe，再连接实际Host验证hello构建信息和能力。trial持久化早于业务启动，未确认即客户端崩溃，下次回退；若遗留候选Host仍在运行，先通过其已附着会话请求空闲退出，忙时拒绝接管；启动失败只终止本次候选Host，不杀进程树、游戏或其他用户进程。失败候选不自动反复尝试。
 7. 自动回退限定在启动/握手阶段；不是长期运行的任意业务故障回退。签名只是发布者声明，不证明任意新代码都正确；epoch相同的发布者仍有保持数据兼容的责任，必须先测试。
 8. 更新窗口中的新客户端请求可能收到 `HOST_UPDATE_IN_PROGRESS`；UI等待重连后刷新状态。请求超时或响应丢失仍遵循原幂等契约，不能生成新键盲目重发。
 
@@ -89,7 +89,8 @@ flowchart TD
 
 ```bash
 dotnet publish src/Pcl.Host/Pcl.Host.csproj -c Release -r osx-arm64 \
-  --self-contained true -p:Version=0.42.0 -p:HostUpdateSequence=42000 -o /tmp/pcl-host-publish
+  --self-contained true -p:Version=0.42.0 -p:HostUpdateSequence=42000 \
+  -p:DebugType=None -p:DebugSymbols=false -p:PathMap="$PWD=/src" -o /tmp/pcl-host-publish
 # 完成原生文件install_name检查、平台签名/公证（若采用）后再生成probe和包。
 /tmp/pcl-host-publish/Pcl.Host --update-probe > /tmp/pcl-host-probe.json
 dotnet run --project tools/Pcl.UpdatePack -c Release -- \
@@ -98,7 +99,7 @@ dotnet run --project tools/Pcl.UpdatePack -c Release -- \
   /secure/path/release-private-key.pem /tmp/pcl-host-delivery
 ```
 
-输出 `host.zip`、签名 `feed.json` 和公钥。私钥路径仅在发布机使用，不能加入Git、CI日志或Release附件。先上传不可变ZIP，再更新feed；为不同RID提供不同feed。公钥预先随客户端交付，不从此次下载包信任公钥。此签名不代替Apple Developer ID、公证或Windows代码签名。
+输出 `host.zip`、签名 `feed.json` 和公钥。私钥路径仅在发布机使用，不能加入Git、CI日志或Release附件。先上传不可变ZIP，再更新feed；为不同RID提供不同feed。公钥预先随客户端交付，不从此次下载包信任公钥。此签名不代替Apple Developer ID、公证或Windows代码签名。公开发布前还须运行仓库已有隐私审计，避免符号文件或构建路径进入交付；测试夹具publish输出仅用于本地/CI，不作为生产Release上传。
 
 不自动删除旧版本，避免运行中删除或失去回退路径；版本存储清理、签名密钥轮换、增量补丁、分批发布、UI自身升级和词库独立更新仍是后续工作。
 
