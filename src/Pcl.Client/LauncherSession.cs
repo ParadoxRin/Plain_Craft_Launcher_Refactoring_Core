@@ -57,6 +57,7 @@ public sealed partial class LauncherSession : IAsyncDisposable, Pcl.Core.Contrac
     private int refreshAfterReconnect;
     private readonly CancellationTokenSource connectionStop = new();
     private Task connectionMonitor = Task.CompletedTask;
+    private Task updateMonitor = Task.CompletedTask;
     public string? ConnectionError { get; private set; }
     public bool IsAvailable => !stopping && Client.IsConnected;
     public IReadOnlyList<ActiveGame> RecoveredGames { get; private set; } = Array.Empty<ActiveGame>();
@@ -85,6 +86,7 @@ public sealed partial class LauncherSession : IAsyncDisposable, Pcl.Core.Contrac
         if (Client.CanReconnect)
         {
             connectionMonitor = MonitorConnectionAsync();
+            updateMonitor = Client.RunUpdatesAsync(connectionStop.Token);
         }
     }
 
@@ -359,7 +361,7 @@ public sealed partial class LauncherSession : IAsyncDisposable, Pcl.Core.Contrac
         // 先收回重连任务所有权，防止正常关闭后由旧监视器重启一个新的 Host。
         // 取消仅作用于客户端重连；游戏的托管/独立运行仍由 Host 原关闭策略处理。
         await connectionStop.CancelAsync();
-        await connectionMonitor;
+        await Task.WhenAll(connectionMonitor, updateMonitor);
         foreach (var id in activePages.Keys.ToArray())
         {
             await new HostPageOperations(Client).CancelAsync(id);
@@ -381,7 +383,7 @@ public sealed partial class LauncherSession : IAsyncDisposable, Pcl.Core.Contrac
     public async ValueTask DisposeAsync()
     {
         await connectionStop.CancelAsync();
-        await connectionMonitor;
+        await Task.WhenAll(connectionMonitor, updateMonitor);
         await Client.DisposeAsync();
         connectionStop.Dispose();
     }

@@ -14,7 +14,7 @@ if (args.Length == 0 || args.Contains("--help"))
 var options = new Dictionary<string, string>(StringComparer.Ordinal);
 for (var index = 0; index < args.Length; index += 2)
 {
-    if (index + 1 >= args.Length || args[index] is not ("--host" or "--host-dll" or "--dotnet" or "--data-root")
+    if (index + 1 >= args.Length || args[index] is not ("--host" or "--host-dll" or "--dotnet" or "--data-root" or "--update-policy" or "--update-store")
         || !options.TryAdd(args[index], args[index + 1]))
     {
         Console.Error.WriteLine("INVALID_OPTIONS; 使用 --help 查看用法。");
@@ -35,6 +35,7 @@ var json = new JsonSerializerOptions { WriteIndented = true, PropertyNamingPolic
 void Show(object? value) => Console.WriteLine(JsonSerializer.Serialize(value, json));
 void Help()
 {
+    Console.WriteLine("update-check | update-apply | update-status (需 --update-policy 与 --update-store)");
     Console.WriteLine("status | accounts | offline <name> <key> | operations | get <operationId>");
     Console.WriteLine("install <version> <loader> <key> | cancel <operationId> | watch <operationId>");
     Console.WriteLine("reconnect | restart | resume <operationId> <new-key>");
@@ -47,6 +48,13 @@ Console.WriteLine("原作者：龙腾猫跃 · " + ProductIdentity.SponsorUrl);
 Console.WriteLine("Plain Craft Launcher Refactoring · 第三方独立二次创作 · 最小客户端示例");
 Console.WriteLine("源码：https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core");
 await using var launcher = new MinimalLauncher(executable, assembly, root);
+if (options.TryGetValue("--update-policy", out var policyPath))
+{
+    var policy = JsonSerializer.Deserialize<Pcl.Client.Updates.HostUpdatePolicy>(File.ReadAllText(policyPath),
+        new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!;
+    launcher.Client.ConfigureUpdates(policy, options.GetValueOrDefault("--update-store")
+        ?? throw new ArgumentException("--update-store required with --update-policy"));
+}
 CancellationTokenSource? command = null;
 Console.CancelKeyPress += (_, e) =>
 {
@@ -76,6 +84,15 @@ try
         {
             switch (parts[0], parts.Length)
             {
+                case ("update-check", 1):
+                    Show(await launcher.Client.CheckForUpdatesAsync(ct));
+                    break;
+                case ("update-apply", 1):
+                    Show(await launcher.Client.ApplyUpdateWhenIdleAsync(ct));
+                    break;
+                case ("update-status", 1):
+                    Show(launcher.Client.UpdateStatus);
+                    break;
                 case ("help", 1):
                     Help();
                     break;

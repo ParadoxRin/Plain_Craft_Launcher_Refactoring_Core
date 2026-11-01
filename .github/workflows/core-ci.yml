@@ -8,6 +8,7 @@ on:
       - 'vendor/**'
       - 'tests/**'
       - 'examples/**'
+      - 'tools/Pcl.UpdatePack/**'
       - 'Directory.Build.props'
       - 'global.json'
       - '.github/workflows/core-ci.yml'
@@ -17,6 +18,7 @@ on:
       - 'vendor/**'
       - 'tests/**'
       - 'examples/**'
+      - 'tools/Pcl.UpdatePack/**'
       - 'Directory.Build.props'
       - 'global.json'
       - '.github/workflows/core-ci.yml'
@@ -65,6 +67,22 @@ jobs:
       # not perform a complete game download or access an OS credential store.
       - name: Run minimal client Host contract acceptance
         run: dotnet tests/Pcl.MinimalClient.Tests/bin/Release/net10.0/Pcl.MinimalClient.Tests.dll - "$PWD/src/Pcl.Host/bin/Release/net10.0/Pcl.Host.dll" "$PWD/artifacts/ci-minimal-root" "$PWD/artifacts/ci-minimal-result.json" contract
+      - name: Build two real Host update candidates and update acceptance
+        run: |
+          dotnet publish src/Pcl.Host/Pcl.Host.csproj -c Release --no-self-contained -o artifacts/update-old -p:Version=0.41.0 -p:HostUpdateSequence=41000 -m:1 -nr:false
+          dotnet publish src/Pcl.Host/Pcl.Host.csproj -c Release --no-self-contained -o artifacts/update-new -p:Version=0.42.0 -p:HostUpdateSequence=42000 -m:1 -nr:false
+          dotnet build tests/Pcl.HostUpdates.Tests/Pcl.HostUpdates.Tests.csproj -c Release -m:1 -nr:false
+          dotnet build tools/Pcl.UpdatePack/Pcl.UpdatePack.csproj -c Release -m:1 -nr:false
+      - name: Run signed Host update and rollback acceptance
+        run: dotnet tests/Pcl.HostUpdates.Tests/bin/Release/net10.0/Pcl.HostUpdates.Tests.dll "$PWD/artifacts/update-old" "$PWD/artifacts/update-new" "$PWD/artifacts/ci-update-root" "$PWD/artifacts/ci-updates.json"
+      - name: Upload bounded Host update report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: host-updates-${{ matrix.os }}
+          path: artifacts/ci-updates.json
+          if-no-files-found: warn
+          retention-days: 14
       - name: Build native credential acceptance
         run: dotnet build tests/Pcl.PlatformCredentials.Tests/Pcl.PlatformCredentials.Tests.csproj --configuration Release -m:1 -nr:false
       - name: Prepare Linux Secret Service dependencies
