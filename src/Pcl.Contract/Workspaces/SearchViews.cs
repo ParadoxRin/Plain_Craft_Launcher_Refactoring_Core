@@ -25,7 +25,12 @@ public sealed record SearchPage(
 );
 public sealed record SearchRelease(string Selection, string Name, string FileName, string? Page, bool Manual)
 {
-    public override string ToString() => Name + (Manual
+    public string Source { get; init; } = "";
+    public string[] GameVersions { get; init; } = [];
+    public string[] Loaders { get; init; } = [];
+    public string Channel { get; init; } = "";
+
+    public override string ToString() => Source + " · " + Name + " · " + Channel + (Manual
         ? " · 需手动下载"
         : "");
 }
