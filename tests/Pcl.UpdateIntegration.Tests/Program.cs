@@ -73,12 +73,23 @@ try { ContentPack.Install(contentRoot, Package(3), policy, new Version(0,42,1));
 catch (InvalidDataException) { Check(true, "cleanup-preserves-anti-replay-state"); }
 if (args.Length > 1)
 {
+    var profile = Path.Combine(root, "host-data", "instances", "fixture");
+    Directory.CreateDirectory(profile);
+    File.WriteAllText(Path.Combine(profile, "profile.json"), "{\"id\":\"fixture\",\"gameVersion\":\"1.21.1\",\"loader\":\"vanilla\"}");
     await using var host = new HostClient(Path.GetFullPath(args[1]), "", Path.Combine(root,"host-data"), true);
     using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30));
     Check((await host.HelloAsync(timeout.Token)).Capabilities.Contains("content.update.v1"), "actual-host-advertises-content-capability");
     var state = await host.Call<JsonElement>("content.update.status", new { }, timeout.Token);
     Check(state.GetProperty("activeSequence").GetInt64() == 2 && state.GetProperty("installedSequence").GetInt64() == 2,
         "actual-host-restart-activates-installed-data-via-rpc");
+    await using var session = new LauncherSession(host);
+    await session.InitializeAsync();
+    var page = await new WorkspaceApi(session.Workspaces).CallAsync<Pcl.Core.Contracts.Workspaces.SearchPage>(
+        "workspace.search.page", "fixture", new { query = "自动更新验收", provider = "mcmod", online = false,
+            gameVersion = "", loader = "", kind = 0 }, timeout.Token);
+    Check(page.Hits.Length == 1 && page.Hits[0].McmodUrl == "https://www.mcmod.cn/class/10001.html",
+        "installed-content-reaches-client-search-through-actual-host");
+    await host.ShutdownAsync(timeout.Token);
 }
 if (OperatingSystem.IsMacOS())
 {

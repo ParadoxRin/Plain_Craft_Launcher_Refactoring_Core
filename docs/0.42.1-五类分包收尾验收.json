@@ -1,0 +1,274 @@
+{
+  "status": "passed",
+  "scope": "Five package classes; local macOS arm64 maintenance and package connectivity closeout",
+  "version": "0.42.1",
+  "clientBuild": 425,
+  "hostSequence": 42102,
+  "contentSequence": 42102,
+  "coreCommit": "81016b476e8811ecbfbd3f969d143b646ac5282d",
+  "runtimeSourceChangedThisRound": false,
+  "rerun": {
+    "unifiedRelease": {
+      "status": "passed",
+      "checks": [
+        "independently-pinned-release-index",
+        "all-indexed-package-hashes",
+        "host-pins-content-feed",
+        "client-feed-policy-version-and-bytes",
+        "installer-feed-policy-version-and-bytes"
+      ]
+    },
+    "signedRejectionTests": {
+      "status": "passed",
+      "checks": [
+        "wrong-independent-publisher-key-rejected",
+        "asset-hash-rejected-even-with-valid-index-signature",
+        "wrong-deployment-feed-rejected-even-with-valid-index-signature"
+      ]
+    },
+    "deliveredPackages": {
+      "status": "passed",
+      "scope": "Actual ZIP extraction and delivered Core; synthetic subprocess fixtures",
+      "hostBuild": {
+        "version": "0.42.1",
+        "sequence": 42102,
+        "dataEpoch": 1,
+        "runtime": "osx-arm64"
+      },
+      "checks": [
+        "client-archive-integrity-and-extraction",
+        "host-archive-integrity-and-extraction",
+        "full-archive-integrity-and-extraction",
+        "content-envelope-integrity",
+        "contentBundle-archive-integrity-and-extraction",
+        "installer-archive-integrity-and-signature",
+        "extracted-host-probe-matches-manifest",
+        "signed-content-policy-and-host-compatibility",
+        "delivered-core-log-and-credential-preflight-regressions"
+      ],
+      "regressions": [
+        "PASS keychain UTF-8 overflow preflight",
+        "PASS detached dual-stream, chunk/newline boundaries, short secrets and exit code",
+        "PASS bounded no-newline output and continued drain",
+        "PASS existing log cap and symlink rejection",
+        "PASS detached soft termination preserves owned game PID",
+        "PASS actual Host process exit with continuing redaction"
+      ]
+    },
+    "hostUpdate": {
+      "status": "passed",
+      "checks": [
+        "release-index-matches-publisher-pin",
+        "tampered-index-rejected",
+        "wrong-publisher-key-rejected",
+        "host-feed-matches-publisher-pin",
+        "index-and-feed-reference-identical-host-bytes",
+        "client-policy-pins-publisher-key",
+        "client-archive-carries-pinned-update-policy",
+        "signed-client-keeps-core-separated",
+        "previous-host-started",
+        "publisher-output-staged-by-real-update-sdk",
+        "publisher-output-activated",
+        "published-self-contained-host-handshake"
+      ],
+      "build": {
+        "Version": "0.42.1",
+        "Sequence": 42102,
+        "DataEpoch": 1,
+        "Runtime": "osx-arm64"
+      },
+      "scope": "Actual signed publisher assets and local transport; no public CDN or production credential acceptance"
+    },
+    "dataAndCleanup": {
+      "status": "passed",
+      "checks": [
+        "host-floor-can-increase-without-changing-trust",
+        "host-floor-downgrade-and-trust-change-rejected",
+        "background-check-single-flight-status-responsive",
+        "automatic-content-fetch-install",
+        "active-index-stays-immutable-until-host-restart",
+        "replay-is-not-reinstalled",
+        "wrong-signature-preserves-installed-data",
+        "failed-fetch-keeps-previous-selection",
+        "host-shutdown-cancels-background-download",
+        "content-cleanup-removes-only-obsolete-package",
+        "content-cleanup-preserves-rollback-and-unrelated-files",
+        "cleanup-preserves-anti-replay-state",
+        "actual-host-advertises-content-capability",
+        "actual-host-restart-activates-installed-data-via-rpc",
+        "installed-content-reaches-client-search-through-actual-host",
+        "client-cleanup-removes-aged-download-and-stage",
+        "client-cleanup-preserves-backup-live-request-and-recent-helper",
+        "client-cleanup-rejects-links-without-touching-target",
+        "pending-update-blocks-cache-cleanup"
+      ]
+    },
+    "externalJava": {
+      "status": "passed",
+      "checks": [
+        "host-runs-real-java21-and-reports-architecture",
+        "external-runtime-path-preserved-through-contract",
+        "missing-java-is-structured-rejection",
+        "runtime-failure-does-not-break-host-connection"
+      ],
+      "scope": "Real external Java binary through published Host and client contract; no game launch or download"
+    },
+    "externalEasyTier": {
+      "Status": "passed",
+      "Checks": [
+        "invalid-room-rejected-before-process-start",
+        "host-starts-real-easytier-and-returns-private-invitation",
+        "second-room-rejected-without-leaking-process",
+        "two-real-local-easytier-nodes-connected",
+        "real-tcp-payload-crosses-overlay-forward-and-returns",
+        "room-credentials-not-written-to-receipts-or-settings",
+        "client-reconnect-retains-host-owned-room",
+        "host-stops-owned-room",
+        "stopped-room-invitation-is-unavailable",
+        "host-shutdown-stops-owned-easytier-listener"
+      ],
+      "Limitations": "Loopback overlay test; not a remote Internet NAT or two-player world acceptance."
+    },
+    "acceptedDesktop": {
+      "status": "passed",
+      "checks": [
+        "desktop-runtime-assembly-has-no-core-application-or-meloong",
+        "network-tab-loads-authoritative-host-value",
+        "enabled-保存网络设置",
+        "network-save-button-persists-in-host",
+        "enabled-暂停下载",
+        "download-pause-button-controls-host",
+        "enabled-继续下载",
+        "download-resume-button-controls-host",
+        "diagnostic-tab-shows-redacted-host-analysis",
+        "reopened-task-window-restores-network-settings",
+        "enabled-检查并导入",
+        "drop-confirm-button-imports-resource-through-host",
+        "remaining-settings-page-renders-with-contract-models"
+      ]
+    },
+    "independentDesktop": {
+      "status": "passed",
+      "checks": [
+        "desktop-runtime-assembly-has-no-core-application-or-meloong",
+        "network-tab-loads-authoritative-host-value",
+        "enabled-保存网络设置",
+        "network-save-button-persists-in-host",
+        "enabled-暂停下载",
+        "download-pause-button-controls-host",
+        "enabled-继续下载",
+        "download-resume-button-controls-host",
+        "diagnostic-tab-shows-redacted-host-analysis",
+        "reopened-task-window-restores-network-settings",
+        "enabled-检查并导入",
+        "drop-confirm-button-imports-resource-through-host",
+        "remaining-settings-page-renders-with-contract-models"
+      ]
+    },
+    "sdkContract": {
+      "status": "passed",
+      "scope": "Real Host process and public contracts; no complete game install, credentials or GUI",
+      "platform": "macOS 27.2.0",
+      "checks": [
+        "assembly-boundary-Pcl.MinimalClient",
+        "assembly-boundary-Pcl.Client",
+        "assembly-boundary-Pcl.Contract",
+        "assembly-boundary-Pcl.MinimalClient.Tests",
+        "output-has-no-business-assemblies",
+        "reject-attach-CLIENT_IDENTITY_INVALID",
+        "real-host-handshake-and-capabilities",
+        "isolated-root-no-user-credentials",
+        "reject-attach-SESSION_IN_USE",
+        "rejected-takeover-preserves-original-session",
+        "reject-METHOD_NOT_SUPPORTED",
+        "reject-PROTOCOL_INCOMPATIBLE",
+        "reject-UNSUPPORTED_TARGET",
+        "bounded-empty-operation-page",
+        "same-key-same-operation",
+        "reject-IDEMPOTENCY_CONFLICT",
+        "reconnect-retains-host-and-operation",
+        "subscription-watermark-increases",
+        "cancel-reaches-terminal-through-restored-subscription",
+        "subscription-delivers-terminal",
+        "restart-creates-new-host",
+        "cancelled-state-survives-host-restart",
+        "idempotency-survives-host-restart",
+        "offline-account-created-through-host-only",
+        "account-snapshot-is-public-and-offline",
+        "offline-account-restored-and-root-lock-reacquired",
+        "all-owned-hosts-exited",
+        "runtime-loaded-assemblies-remain-contract-only"
+      ],
+      "observed": [],
+      "error": null
+    }
+  },
+  "reusedFromProjectSplit425": {
+    "clientSelfUpdate": {
+      "status": "passed",
+      "checks": [
+        "signed-feed-valid",
+        "wrong-key-rejected",
+        "tampered-feed-rejected",
+        "expired-feed-rejected",
+        "wrong-channel-rejected",
+        "wrong-platform-rejected",
+        "non-https-rejected",
+        "package-limit-rejected",
+        "package-tampering-rejected",
+        "archive-traversal-rejected",
+        "archive-link-rejected",
+        "bounded-download-and-stage-via-http-client",
+        "cancelled-download-keeps-client",
+        "concurrent-installer-rejected",
+        "waits-for-old-process-exit",
+        "old-client-not-killed-on-exit-timeout",
+        "all-preflight-failures-preserve-installed-bytes",
+        "another-running-client-blocks-replacement",
+        "actual-app-exit-helper-replacement-restart",
+        "startup-ack-commits-and-retains-backup",
+        "updated-app-signature-intact",
+        "actual-signed-broken-app-restores-identical-previous-client",
+        "failed-version-not-reinstalled",
+        "startup-timeout-rolls-back",
+        "timeout-preserves-previous-app-bytes",
+        "target-always-present-False",
+        "automatic-recovery-before-swap",
+        "target-always-present-True",
+        "automatic-recovery-after-swap",
+        "host-payload-preserved-in-client-fixtures",
+        "user-data-preserved",
+        "standalone-client-updates-without-bundling-core",
+        "standalone-client-restarts-with-external-host"
+      ],
+      "scope": "Real macOS application, copied self-contained helper, RSA signing, atomic directory exchange, startup acknowledgement and rollback; HTTP transport fixture only"
+    }
+  },
+  "finalHostAssemblyHashes": {
+    "Pcl.Host.dll": "66085259ee6fbd8155250773cf930fa3cfa589ed6a372e644e7cc5d921a215ca",
+    "Pcl.Core.dll": "53a868cf05d7de56fb1c7cb59c72e4701fa76a3f9d2276ca65510ebda7002f41",
+    "Pcl.Application.dll": "3b80cf692555a867e41d603b4b692098caca7ea891b65299c9e135b3a6b304be",
+    "Pcl.Contract.dll": "6ff5d4870911fda8f091ce397ffe43b9b81d4993918919b7325e87ace7514299"
+  },
+  "evidence": {
+    "unifiedRelease": "artifacts/five-package-closeout-release/release/unified-verification.json",
+    "signedRejectionTests": "artifacts/five-package-closeout-release/negative.json",
+    "deliveredPackages": "artifacts/five-package-closeout-release/verified/delivery-result.json",
+    "hostUpdate": "artifacts/five-package-closeout-host-update.json",
+    "dataAndCleanup": "artifacts/five-package-closeout-final/integration/results.json",
+    "externalJava": "artifacts/five-package-closeout-final/java.json",
+    "externalEasyTier": "artifacts/five-package-closeout-final/link.json",
+    "acceptedDesktop": "artifacts/five-package-closeout-clients/accepted424/report.json",
+    "independentDesktop": "artifacts/five-package-closeout-clients/independent425/report.json",
+    "sdkContract": "artifacts/five-package-closeout-clients/contract.json"
+  },
+  "limits": [
+    "No push or remote CI",
+    "Temporary RSA fixture key; no production signing, CDN, Developer ID notarization",
+    "HTTP update download handlers are fixtures; signatures and activated local artifacts are real",
+    "Java 21 runtime inspection only, not complete game launch or other Java version acceptance",
+    "Real EasyTier nodes over loopback, not Internet NAT or multiplayer world acceptance",
+    "No Windows/Linux runtime acceptance",
+    "Core internal refinement, cross-language SDK and multi-repository publishing are outside this closeout"
+  ]
+}
