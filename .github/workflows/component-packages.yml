@@ -5,6 +5,7 @@ on:
   pull_request:
     paths:
       - 'scripts/*component*'
+      - 'scripts/*release-privacy*'
       - 'src/Pcl.Desktop/**'
       - 'src/Pcl.Desktop.Updates/**'
       - 'scripts/*client*'
@@ -51,6 +52,7 @@ jobs:
         run: |
           python3 scripts/test-component-packages.py
           python3 scripts/test-core-baseline.py
+          python3 scripts/test-release-privacy.py
       - name: Build native assets
         run: bash scripts/build-native.sh
       - name: Publish independent client and Host candidates
