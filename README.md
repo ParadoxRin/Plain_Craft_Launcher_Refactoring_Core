@@ -114,3 +114,7 @@ export DOTNET_CLI_HOME="$PWD/.cache/dotnet-home"
 保留数据根、bundle/钥匙串身份，微软/离线登录、皮肤和游戏独立运行行为。保留 PCL 作者署名、赞助与正版购买劝导；赞助不解锁功能，Windows 蓝色限制不因自定义客户端取消。
 
 **原创部分 MIT + 上游/第三方各自许可**，不是全仓统一 MIT。详见 [LICENSE.md](LICENSE.md)、[MIT 标准文本](LICENSE)、[PCL 原文](PCL-LICENCE.txt)。不上传个人账户、令牌、世界存档、Minecraft 客户端、私有 SDK 缓存或原始敏感日志。
+
+## main：可配置的核心自动更新
+
+已增加签名Host包校验、兼容性检查、空闲切换、下次启动应用及启动失败回退，客户端仍不依赖Core。参考客户端通过部署方提供的`host-update-policy.json`启用；没有策略时保持随包Host。本次不提供默认官方签名频道，也不更新既有v0.41.0安装包。接线、发布工具、信任边界及复验见[Host自动更新](docs/Host自动更新与接入.md)。UI自身替换、跨数据格式迁移及词库独立更新不在本轮范围。

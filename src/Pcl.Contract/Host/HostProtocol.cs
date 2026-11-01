@@ -4,7 +4,8 @@ public sealed record HostHello(
     string HostInstanceId,
     string[] Capabilities,
     int MaximumFrameBytes,
-    Pcl.Core.Contracts.Installation.InstallationTarget? InstallationTarget = null
+    Pcl.Core.Contracts.Installation.InstallationTarget? InstallationTarget = null,
+    Pcl.Core.Contracts.Updates.HostBuild? Build = null
 );
 public sealed record ResourceReference(string ResourceId, long Size, string Mime, string Sha256, int? Count = null);
 public sealed record ResourceChunk(long Offset, string Base64, bool Eof);

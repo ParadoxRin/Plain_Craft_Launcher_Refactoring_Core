@@ -69,16 +69,29 @@ public sealed partial class HostClient : IAsyncDisposable
 
     private Process StartHost(bool pipe)
     {
-        var start = new ProcessStartInfo(executable)
+        Pcl.Client.Updates.UpdateSelection? selected;
+        try
+        {
+            selected = updates?.Selection(assembly.Length > 0 ? executable : "dotnet");
+        }
+        catch when (updates?.Active is not null)
+        {
+            // 落盘后的已安装版本被破坏：在运行任何新进程之前回到旧指针。
+            updates.Rollback();
+            UpdateStatus = new("rolled-back", "ACTIVE_PACKAGE_INVALID");
+            selected = updates.Selection(assembly.Length > 0 ? executable : "dotnet");
+        }
+        startedUpdatedHost = selected is not null;
+        var start = new ProcessStartInfo(selected?.Executable ?? executable)
         {
             UseShellExecute = false,
             RedirectStandardInput = true,
             RedirectStandardOutput = true,
             RedirectStandardError = true
         };
-        if (assembly.Length > 0)
+        if ((selected?.Assembly ?? assembly).Length > 0)
         {
-            start.ArgumentList.Add(assembly);
+            start.ArgumentList.Add(selected?.Assembly ?? assembly);
         }
 
         start.ArgumentList.Add("--data-root");
@@ -104,6 +117,24 @@ public sealed partial class HostClient : IAsyncDisposable
 
     private async Task EnsureConnectedAsync(CancellationToken ct)
     {
+        if (Volatile.Read(ref updating) != 0)
+        {
+            throw new OperationRejectedException("HOST_UPDATE_IN_PROGRESS");
+        }
+        try
+        {
+            await EnsureConnectedCoreAsync(ct);
+        }
+        catch when (updates?.InTrial == true && startedUpdatedHost && !ready)
+        {
+            await RollbackHostAsync();
+            await EnsureConnectedCoreAsync(ct);
+        }
+    }
+
+    private async Task EnsureConnectedCoreAsync(CancellationToken ct)
+    {
+        ct.ThrowIfCancellationRequested();
         if (ready)
         {
             return;
@@ -157,6 +188,9 @@ public sealed partial class HostClient : IAsyncDisposable
                         if (host is null || host.HasExited)
                         {
                             host?.Dispose();
+                            await PrepareHostUpdateAsync(ct);
+                            // 探针时间不消耗实际 Host 的连接预算。
+                            deadline = DateTime.UtcNow.AddSeconds(8);
                             host = StartHost(true);
                             diagnostics = DrainDiagnosticsAsync();
                             bootstrapOutput = DrainBootstrapOutputAsync();
@@ -241,6 +275,14 @@ public sealed partial class HostClient : IAsyncDisposable
                     throw new OperationRejectedException("PROTOCOL_INCOMPATIBLE");
                 }
 
+                if (startedUpdatedHost && updates is not null)
+                {
+                    updates.Confirm(hello);
+                    if (UpdateStatus.State != "rolled-back")
+                    {
+                        UpdateStatus = new("current", "HEALTH_CONFIRMED", hello.Build?.Version);
+                    }
+                }
                 HostId = hello.HostInstanceId;
                 Capabilities = hello.Capabilities.ToHashSet(StringComparer.Ordinal);
                 Attachment = restored;
@@ -605,6 +647,15 @@ public sealed partial class HostClient : IAsyncDisposable
             return;
         }
 
+        await updateGate.WaitAsync();
+        try
+        {
+            updates?.Dispose();
+        }
+        finally
+        {
+            updateGate.Release();
+        }
         foreach (var subscription in subscriptions.Values)
         {
             subscription.Close();
