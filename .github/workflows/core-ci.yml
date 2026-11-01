@@ -75,6 +75,18 @@ jobs:
           dotnet build tools/Pcl.UpdatePack/Pcl.UpdatePack.csproj -c Release -m:1 -nr:false
       - name: Run signed Host update and rollback acceptance
         run: dotnet tests/Pcl.HostUpdates.Tests/bin/Release/net10.0/Pcl.HostUpdates.Tests.dll "$PWD/artifacts/update-old" "$PWD/artifacts/update-new" "$PWD/artifacts/ci-update-root" "$PWD/artifacts/ci-updates.json"
+      - name: Build unified browser Host acceptance
+        run: dotnet build tests/Pcl.Workspaces.Tests/Pcl.Workspaces.Tests.csproj -c Release -m:1 -nr:false
+      - name: Verify mixed-source selections across Host versions
+        run: dotnet tests/Pcl.Workspaces.Tests/bin/Release/net10.0/Pcl.Workspaces.Tests.dll --unified-contract "$PWD/artifacts/ci-browser-root" "$PWD/artifacts/ci-browser.json" "$PWD/artifacts/update-old/Pcl.Host.dll" "$PWD/artifacts/update-new/Pcl.Host.dll"
+      - name: Upload bounded unified browser report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: unified-browser-${{ matrix.os }}
+          path: artifacts/ci-browser.json
+          if-no-files-found: warn
+          retention-days: 14
       - name: Upload bounded Host update report
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

@@ -8,7 +8,7 @@ using Pcl.Core.Adapters.Pages;
 internal static class UnifiedBrowserFlow
 {
     // 混合来源记录通过真实 Host RPC 选取，验证索引偏移、实例绑定和重启后持久句柄。
-    internal static async Task Run(string root, string report)
+    internal static async Task Run(string root, string report, string? firstHost = null, string? secondHost = null)
     {
         root = Path.GetFullPath(root);
         if (Directory.Exists(root) && Directory.EnumerateFileSystemEntries(root)
@@ -19,6 +19,7 @@ internal static class UnifiedBrowserFlow
 
         Directory.CreateDirectory(root);
         var checks = new List<string>();
+        var builds = new List<Pcl.Core.Contracts.Updates.HostBuild?>();
         void Check(bool value, string name)
         {
             if (!value)
@@ -110,8 +111,9 @@ internal static class UnifiedBrowserFlow
         {
             await using var session = new LauncherSession(
                 new HostClient(
-                    Path.GetFullPath(".tooling/dotnet/dotnet"),
-                    Path.GetFullPath("src/Pcl.Host/bin/Release/net10.0/Pcl.Host.dll"),
+                    Environment.GetEnvironmentVariable("PCL_DOTNET") ?? Environment.ProcessPath!,
+                    Path.GetFullPath((round == 0 ? firstHost : secondHost ?? firstHost)
+                        ?? "src/Pcl.Host/bin/Release/net10.0/Pcl.Host.dll"),
                     root,
                     reconnectable: true
                 )
@@ -119,6 +121,7 @@ internal static class UnifiedBrowserFlow
             try
             {
                 await session.InitializeAsync();
+                builds.Add((await session.Client.HelloAsync()).Build);
                 var api = new WorkspaceApi(session.Workspaces);
                 var accepted = await api.CallAsync<bool>(
                     "workspace.search.match",
@@ -171,6 +174,12 @@ internal static class UnifiedBrowserFlow
             }
         }
 
+        if (firstHost is not null && secondHost is not null)
+        {
+            Check(builds[0] is not null && builds[1] is not null
+                && builds[0]!.Sequence < builds[1]!.Sequence, "different-host-builds-observed");
+        }
+
         File.WriteAllText(
             report,
             JsonSerializer.Serialize(
@@ -178,6 +187,7 @@ internal static class UnifiedBrowserFlow
                 {
                     status = "passed",
                     checks,
+                    builds,
                     scope = "Real Host with synthetic mixed-source private selection; no CurseForge network authentication"
                 }
             )

@@ -65,3 +65,5 @@ LICENSE 为标准 MIT 文本，LICENSE-MIT.txt 是兼容副本，LICENSE.md 界�
 main 新增核心自动更新：先读 Host自动更新与接入.md。Client/Updates 是部署SDK，Host仅提供串行空闲退出与构建身份，不把下载/签名策略写进UI。默认无官方feed/密钥；客户端发布者提供可信策略，LauncherSession持有自动循环。游戏/登录/皮肤/安装/联机活动推迟切换。更新存储与账户数据根分离，保持原Keychain作用域，不覆盖签名.app内部文件，不迁移DataEpoch。回退只覆盖启动/握手和未确认trial，不保证任意业务错误或硬件断电恢复。两份不同序号Host发布夹具用于测试，不代表发布0.42/0.43正式版。新增tests/Pcl.HostUpdates.Tests和tools/Pcl.UpdatePack，签名私钥不得入库，CI保留既有核心/契约/原生凭据测试。既有UI-008仍有UI自身更新和运营发布缺口，不能整项关闭。
 
 本轮统一模组浏览增量（2026-11-01工作区）：先读docs/统一模组浏览与安装-2026-11-01.md。PCLCS保留原始百科索引，Domain/Search持有保守一对一身份规则，Core/Adapters/Search负责多源查询、会话与版本选择，Host持有下载选择及事务；客户端只有Contract/Client。默认全部筛选，下载阶段按目标实例读取双方来源版本。不可用来源必须明确显示；多来源文件索引唯一，不能把项目映射当文件可互换。真实Mac/Modrinth安装与合成CF分开记录；不宣称CF线上、真人登录或游戏世界已重验。此改动未更新固定Release。
+
+两分支统一整合：见 docs/统一浏览与Host更新合并验收.md。后续以合并提交及对应CI为准，不重复导入旧主工作区的未提交统一搜索副本。版本和既有Release保持0.41.0。
