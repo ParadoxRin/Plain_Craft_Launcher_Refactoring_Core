@@ -59,6 +59,10 @@ jobs:
       # dotnet test invocation would not prove that its assertions ran.
       - name: Run core assertions
         run: dotnet tests/Pcl.Tests/bin/Release/net10.0/Pcl.Tests.dll artifacts/ci-core
+      - name: Build and test credential bounds and detached log protection
+        run: |
+          dotnet build tests/Pcl.LogProtection.Tests/Pcl.LogProtection.Tests.csproj -c Release -m:1 -nr:false
+          dotnet tests/Pcl.LogProtection.Tests/bin/Release/net10.0/Pcl.LogProtection.Tests.dll "$PWD/artifacts/ci-log-protection"
       - name: Build real Host and independent minimal client
         run: |
           dotnet build src/Pcl.Host/Pcl.Host.csproj --configuration Release -m:1 -nr:false
@@ -134,6 +138,7 @@ jobs:
           security unlock-keychain -p pcl-ci-fixture-only "$KEYCHAIN"
           security default-keychain -d user -s "$KEYCHAIN"
           security list-keychains -d user -s "$KEYCHAIN" "$ORIGINAL_KEYCHAIN"
+          dotnet tests/Pcl.LogProtection.Tests/bin/Release/net10.0/Pcl.LogProtection.Tests.dll "$PWD/artifacts/ci-log-protection-keychain" --keychain
           dotnet tests/Pcl.PlatformCredentials.Tests/bin/Release/net10.0/Pcl.PlatformCredentials.Tests.dll "$PWD/artifacts/ci-credential-root" "$PWD/artifacts/ci-credentials.json" "$PWD/src/Pcl.Host/bin/Release/net10.0/Pcl.Host.dll"
       - name: Upload bounded native credential report
         if: always()

@@ -25,4 +25,23 @@
   <ItemGroup>
     <EmbeddedResource Include="Adapters/Compatibility/Java/*.class" />
   </ItemGroup>
+  <PropertyGroup>
+    <DetachedLogBinary>$(BaseIntermediateOutputPath)native/pcl-detached-log</DetachedLogBinary>
+    <DetachedLogArchFlags Condition="$([MSBuild]::IsOSPlatform('OSX'))">-arch arm64 -arch x86_64 -mmacosx-version-min=14.0</DetachedLogArchFlags>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(OS)' != 'Windows_NT'">
+    <EmbeddedResource Include="$(DetachedLogBinary)" LogicalName="Pcl.DetachedLog" />
+  </ItemGroup>
+  <Target Name="ValidateDetachedLogPlatform" BeforeTargets="PrepareForBuild" Condition="'$(OS)' != 'Windows_NT'">
+    <Error Condition="'$(RuntimeIdentifier)' != '' and $([System.String]::Copy('$(RuntimeIdentifier)').StartsWith('linux-')) and '$(RuntimeIdentifier)' != '$(NETCoreSdkRuntimeIdentifier)'"
+           Text="Detached log helper requires a native Linux SDK/toolchain matching RuntimeIdentifier." />
+    <Error Condition="'$(RuntimeIdentifier)' != '' and $([System.String]::Copy('$(RuntimeIdentifier)').StartsWith('osx-')) and !$([MSBuild]::IsOSPlatform('OSX'))"
+           Text="Build macOS detached log helper on macOS (universal arm64/x86_64)." />
+  </Target>
+  <Target Name="BuildDetachedLog" BeforeTargets="PrepareForBuild" DependsOnTargets="ValidateDetachedLogPlatform" Condition="'$(OS)' != 'Windows_NT'"
+          Inputs="$(MSBuildProjectFullPath);$(MSBuildProjectDirectory)/Adapters/Processes/Native/detached-log.c"
+          Outputs="$(DetachedLogBinary)">
+    <MakeDir Directories="$(BaseIntermediateOutputPath)native" />
+    <Exec Command="cc -std=c11 -O2 -Wall -Wextra -Werror $(DetachedLogArchFlags) &quot;$(MSBuildProjectDirectory)/Adapters/Processes/Native/detached-log.c&quot; -o &quot;$(DetachedLogBinary)&quot;" />
+  </Target>
 </Project>

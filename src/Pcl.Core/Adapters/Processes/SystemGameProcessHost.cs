@@ -24,36 +24,7 @@ public sealed class SystemGameProcessHost : IGameProcessHost
             StreamWriter? writer = null;
             if (options.Detached)
             {
-                if (OperatingSystem.IsWindows())
-                {
-                    throw new PlatformNotSupportedException("独立游戏文件重定向当前使用 Unix Adapter。");
-                }
-
-                // 固定脚本不拼接任何用户参数；保留原独立运行时直接追加文件的行为。
-                var environment = new Dictionary<string, string>(
-                    spec.Environment ?? new Dictionary<string, string>()
-                )
-                {
-                    ["PCL_DETACHED_LOG"] = file
-                };
-                process = ProcessExecution.Start(
-                    new ProcessSpec(
-                        "/bin/sh",
-                        new[]
-                        {
-                            "-c",
-                            "exec \"$@\" >> \"$PCL_DETACHED_LOG\" 2>&1",
-                            "pcl-game",
-                            spec.Executable
-                        }.Concat(spec.Arguments)
-                            .ToArray(),
-                        spec.WorkingDirectory
-                    )
-                    {
-                        Environment = environment
-                    },
-                    false
-                );
+                process = DetachedLogProcess.Start(spec, file);
             }
             else
             {
@@ -198,8 +169,16 @@ public sealed class SystemGameProcessHost : IGameProcessHost
         {
             if (entry.Detached)
             {
-                await entry.Process.WaitForExitAsync()
-                    .ConfigureAwait(false);
+                var drained = entry.Process.StandardOutput.ReadToEndAsync();
+                await entry.Process.WaitForExitAsync().ConfigureAwait(false);
+                try { await drained.WaitAsync(TimeSpan.FromSeconds(3)).ConfigureAwait(false); }
+                catch (TimeoutException)
+                {
+                    entry.Process.StandardOutput.Dispose();
+                    try { await drained.ConfigureAwait(false); }
+                    catch (IOException) { }
+                    catch (ObjectDisposedException) { }
+                }
             }
             else
             {
