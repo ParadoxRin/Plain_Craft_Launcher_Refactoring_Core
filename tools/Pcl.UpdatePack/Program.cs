@@ -4,6 +4,36 @@ using System.Text.Json;
 using Pcl.Core.Contracts.Host;
 using Pcl.Core.Contracts.Updates;
 
+// Sign/verify the release index with the same publisher key. This does not
+// make a key downloaded beside an index a trusted key: callers supply the pin.
+if (args.Length == 4 && args[0] is "--sign-document" or "--verify-document")
+{
+    using var documentKey = RSA.Create();
+    documentKey.ImportFromPem(File.ReadAllText(args[2]));
+    if (documentKey.KeySize < 2048) throw new InvalidDataException("KEY_TOO_SMALL");
+    if (args[0] == "--sign-document")
+    {
+        var bytes = File.ReadAllBytes(args[1]);
+        var signed = new HostUpdateEnvelope(Convert.ToBase64String(bytes),
+            Convert.ToBase64String(documentKey.SignData(bytes, HashAlgorithmName.SHA256, RSASignaturePadding.Pss)));
+        using var target = new FileStream(args[3], FileMode.CreateNew);
+        JsonSerializer.Serialize(target, signed);
+        Console.WriteLine("DOCUMENT_SIGNED");
+    }
+    else
+    {
+        var signed = JsonSerializer.Deserialize<HostUpdateEnvelope>(File.ReadAllBytes(args[1]))
+            ?? throw new InvalidDataException("ENVELOPE_INVALID");
+        var bytes = Convert.FromBase64String(signed.Payload);
+        if (!documentKey.VerifyData(bytes, Convert.FromBase64String(signed.Signature),
+                HashAlgorithmName.SHA256, RSASignaturePadding.Pss) ||
+            !bytes.AsSpan().SequenceEqual(File.ReadAllBytes(args[3])))
+            throw new CryptographicException("DOCUMENT_SIGNATURE_INVALID");
+        Console.WriteLine("DOCUMENT_SIGNATURE_VERIFIED");
+    }
+    return 0;
+}
+
 // 在受信任发布机调用。签名私钥由本地文件传入，不生成、不上传、不内置任何私钥。
 if (args.Length != 7)
 {

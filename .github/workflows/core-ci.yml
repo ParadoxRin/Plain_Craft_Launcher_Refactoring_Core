@@ -73,8 +73,8 @@ jobs:
         run: dotnet tests/Pcl.MinimalClient.Tests/bin/Release/net10.0/Pcl.MinimalClient.Tests.dll - "$PWD/src/Pcl.Host/bin/Release/net10.0/Pcl.Host.dll" "$PWD/artifacts/ci-minimal-root" "$PWD/artifacts/ci-minimal-result.json" contract
       - name: Build two real Host update candidates and update acceptance
         run: |
-          dotnet publish src/Pcl.Host/Pcl.Host.csproj -c Release --no-self-contained -o artifacts/update-old -p:Version=0.41.0 -p:HostUpdateSequence=41000 -m:1 -nr:false
-          dotnet publish src/Pcl.Host/Pcl.Host.csproj -c Release --no-self-contained -o artifacts/update-new -p:Version=0.42.0 -p:HostUpdateSequence=42000 -m:1 -nr:false
+          dotnet publish src/Pcl.Host/Pcl.Host.csproj -c Release --no-self-contained -o artifacts/update-old -p:Version=0.42.0 -p:HostUpdateSequence=42000 -m:1 -nr:false
+          dotnet publish src/Pcl.Host/Pcl.Host.csproj -c Release --no-self-contained -o artifacts/update-new -m:1 -nr:false
           dotnet build tests/Pcl.HostUpdates.Tests/Pcl.HostUpdates.Tests.csproj -c Release -m:1 -nr:false
           dotnet build tools/Pcl.UpdatePack/Pcl.UpdatePack.csproj -c Release -m:1 -nr:false
       - name: Run signed Host update and rollback acceptance

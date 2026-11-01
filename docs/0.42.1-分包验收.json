@@ -1,0 +1,111 @@
+{
+  "version": "0.42.1",
+  "build": 421,
+  "hostSequence": 42100,
+  "coreVersion": "0.42.0",
+  "coreCommit": "81016b476e8811ecbfbd3f969d143b646ac5282d",
+  "date": "2026-11-01",
+  "scope": "Local Apple Silicon validation of the working packaging changes; remote CI follows the pushed commit",
+  "core": {
+    "status": "passed",
+    "count": 241,
+    "reportSha256": "ff591da5258fe9c5283ccc96924959382fca0a6cd64f54a40a3817b7c4e8c9d6"
+  },
+  "updates": {
+    "status": "passed",
+    "count": 49,
+    "reportSha256": "be7eed9925491b47f7c1482aef5e960ca51621134b39b47d25cf259912e4fea0"
+  },
+  "publisher": {
+    "status": "passed",
+    "count": 12,
+    "reportSha256": "976a66e22d3b2b6b8cb562b12d0a881f64ce99c3c5f37c49fbc5e6e36e3796e8"
+  },
+  "standaloneClientUi": {
+    "status": "passed",
+    "count": 17,
+    "reportSha256": "56d80e5d59cb470fcec0c7d44272f7f1308b64e57d187d47e2bbe0b8fa76a858"
+  },
+  "compatibility": {
+    "new-client-new-host": {
+      "status": "passed",
+      "count": 28,
+      "reportSha256": "cfc7df3e986ce4677cf77aa7bf807a1b3ce2aac2b46a944272781aef3a196a2a"
+    },
+    "new-client-old-host": {
+      "status": "passed",
+      "count": 28,
+      "reportSha256": "cfc7df3e986ce4677cf77aa7bf807a1b3ce2aac2b46a944272781aef3a196a2a"
+    },
+    "old-client-new-host": {
+      "status": "passed",
+      "count": 28,
+      "reportSha256": "cfc7df3e986ce4677cf77aa7bf807a1b3ce2aac2b46a944272781aef3a196a2a"
+    }
+  },
+  "packageTests": {
+    "status": "passed",
+    "count": 7
+  },
+  "architectureGuard": {
+    "status": "passed",
+    "violations": 0
+  },
+  "productionFeedConfigured": false,
+  "productionPrivateKeyCommitted": false,
+  "developerIdNotarized": false,
+  "remoteCi": "pending after push",
+  "installerRoundtrip": {
+    "status": "passed",
+    "extractedSignatureVerified": true,
+    "appFilesVerified": 494,
+    "appleDoubleMetadataFiles": 547,
+    "utf8NamesCorrected": 2,
+    "sha256": "fcc69d6c50287c2e6fabcbe092393f2715f40ce5ea35fd15a98adcf977e73856",
+    "extraction": "macOS ditto / Archive Utility with AppleDouble metadata"
+  },
+  "deliveredCore": {
+    "status": "passed",
+    "scope": "Actual ZIP extraction and delivered Core; synthetic subprocess fixtures",
+    "hostBuild": {
+      "version": "0.42.1",
+      "sequence": 42100,
+      "dataEpoch": 1,
+      "runtime": "osx-arm64"
+    },
+    "checks": [
+      "client-archive-integrity-and-extraction",
+      "host-archive-integrity-and-extraction",
+      "full-archive-integrity-and-extraction",
+      "installer-archive-integrity-and-signature",
+      "extracted-host-probe-matches-manifest",
+      "delivered-core-log-and-credential-preflight-regressions"
+    ],
+    "regressions": [
+      "PASS keychain UTF-8 overflow preflight",
+      "PASS detached dual-stream, chunk/newline boundaries, short secrets and exit code",
+      "PASS bounded no-newline output and continued drain",
+      "PASS existing log cap and symlink rejection",
+      "PASS detached soft termination preserves owned game PID",
+      "PASS actual Host process exit with continuing redaction"
+    ]
+  },
+  "fixtureSigning": "Disposable local key, synthetic HTTPS transport; not a published update channel",
+  "unsignedCandidatePackages": {
+    "client": {
+      "file": "pcl-0.42.1-osx-arm64-client.zip",
+      "size": 45779094,
+      "sha256": "eb062e4d93572519cd1e1bc00741edbf8c6d38c7ed26c7ab0e7beaaeb16003c7"
+    },
+    "host": {
+      "file": "pcl-0.42.1-osx-arm64-host.zip",
+      "size": 34824206,
+      "sha256": "66ba8d6bff51dadda875c591da33f11f5190eb98bc79dd69fc93a6d4199d4775"
+    },
+    "full": {
+      "file": "pcl-0.42.1-osx-arm64-full.zip",
+      "size": 80605868,
+      "sha256": "82d41c85c245aeeabe35979afa095d1b9ac3ea401032948715234bf3ceb0229e"
+    }
+  }
+}

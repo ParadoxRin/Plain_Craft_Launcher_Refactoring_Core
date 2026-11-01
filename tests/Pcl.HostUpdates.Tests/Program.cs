@@ -15,7 +15,7 @@ using Pcl.Core.Contracts.Accounts;
 if (args.SequenceEqual(new[] { "--update-probe" }))
 {
     Console.WriteLine(JsonSerializer.Serialize(new HostHello(1, "fixture", ["host.update.prepare.v1"], 1048576,
-        Build: new("0.43.0", 43000, 1, HostUpdateStore.Runtime))));
+        Build: new("99.0.0", 99000000, 1, HostUpdateStore.Runtime))));
     return;
 }
 if (args.FirstOrDefault() == "--data-root")
@@ -126,12 +126,15 @@ string? error = null;
 try
 {
     var hello = await Probe(Path.Combine(newHost, "Pcl.Host.dll"));
-    Check(hello.Build!.Sequence == 42000 && hello.Build.Version == "0.42.0", "build-version-and-sequence");
+    var oldProbe = await Probe(Path.Combine(oldHost, "Pcl.Host.dll"));
+    var oldSequence = oldProbe.Build!.Sequence;
+    var newSequence = hello.Build!.Sequence;
+    Check(newSequence > oldSequence && Version.Parse(hello.Build.Version) > Version.Parse(oldProbe.Build.Version), "build-version-and-sequence");
     var (zip, manifest) = Package(newHost, hello);
     Feed(manifest, zip);
     var client = Client("main");
     var old = await client.HelloAsync(ct);
-    Check(old.Build!.Sequence == 41000, "real-old-host-started");
+    Check(old.Build!.Sequence == oldSequence, "real-old-host-started");
     // 不经过 Core：真实 Host 创建离线账户，更新前后索引应保持一致。
     var pages = new HostPageOperations(client);
     var accepted = await pages.AcceptAsync(new("update-offline", "workspace.account.addOffline", PayloadJson: "{\"name\":\"UpdateFixture\"}"), ct);
@@ -156,7 +159,7 @@ try
     var applied = await client.ApplyUpdateWhenIdleAsync(ct);
     Check(applied.State == "current", "idle-switch-confirmed");
     var current = await client.HelloAsync(ct);
-    Check(current.Build!.Sequence == 42000 && current.HostInstanceId != old.HostInstanceId, "real-new-host-handshake");
+    Check(current.Build!.Sequence == newSequence && current.HostInstanceId != old.HostInstanceId, "real-new-host-handshake");
     Check((await client.Call<JsonElement>("account.snapshot", new { }, ct)).GetRawText() == before.GetRawText(), "account-metadata-unchanged");
     Check(File.ReadAllBytes(preserved).SequenceEqual(new byte[] { 1, 9, 7, 3 }), "unrelated-data-file-unchanged");
     Check((await client.Installations.GetAsync(activeInstall.OperationId, ct))!.Terminal, "receipt-survives-core-update");
@@ -173,7 +176,7 @@ try
         (manifest with { Capabilities = [] }, "missing-capability"),
         (manifest with { Channel = "preview" }, "wrong-channel"),
         (manifest with { Expires = DateTimeOffset.UtcNow.AddDays(-1) }, "expired-feed"),
-        (manifest with { Build = manifest.Build with { Sequence = 40999 } }, "downgrade-rejected"),
+        (manifest with { Build = manifest.Build with { Sequence = oldSequence - 1 } }, "downgrade-rejected"),
         (manifest with { PackageUrl = "http://updates.example/host.zip" }, "insecure-package-url"),
         (manifest with { Files = [new("../escape", 0, new string('0', 64), false)] }, "path-traversal-rejected"),
         (manifest with { Files = manifest.Files.Concat([manifest.Files[0] with { Path = manifest.Files[0].Path.ToUpperInvariant() }]).ToArray() }, "case-collision-rejected")
@@ -213,7 +216,7 @@ try
     var damagedFolder = Directory.GetDirectories(Path.Combine(root, "damaged-stage-updates")).Single();
     File.AppendAllText(Path.Combine(damagedFolder, "Pcl.Host.dll"), "tampered");
     Check((await damaged.ApplyUpdateWhenIdleAsync(ct)).Code == "CANDIDATE_PROBE_FAILED", "tampered-staged-files-rejected-before-execution");
-    Check((await damaged.HelloAsync(ct)).Build!.Sequence == 41000, "damaged-stage-keeps-old-host");
+    Check((await damaged.HelloAsync(ct)).Build!.Sequence == oldSequence, "damaged-stage-keeps-old-host");
 
     // 新作用域测试损坏下载，不能改变旧包；清单和zip可独立注入错误。
     var badClient = Client("bad-download");
@@ -235,7 +238,7 @@ try
             Check(true, "cancelled-update-does-not-activate");
         }
     }
-    Check((await badClient.HelloAsync(ct)).Build!.Sequence == 41000, "failed-staging-retains-bundled-host");
+    Check((await badClient.HelloAsync(ct)).Build!.Sequence == oldSequence, "failed-staging-retains-bundled-host");
 
     // 待更新持久化：退出客户端以后，下次连接自动尝试，并保留相同账户数据根。
     var restart = Client("restart");
@@ -245,7 +248,7 @@ try
     await restart.ShutdownAsync(ct);
     await restart.DisposeAsync();
     var restarted = Client("restart");
-    Check((await restarted.HelloAsync(ct)).Build!.Sequence == 42000, "pending-applied-on-next-start");
+    Check((await restarted.HelloAsync(ct)).Build!.Sequence == newSequence, "pending-applied-on-next-start");
 
     // 参考客户端真实会话自动调度，无需显式update-check/update-apply。
     Feed(manifest, zip);
@@ -267,12 +270,12 @@ try
 
     // 签名有效且probe成功，但实际Host启动失败：必须回到已验证版本。
     var fakeHello = new HostHello(1, "fixture", ["host.update.prepare.v1"], 1048576,
-        Build: new("0.43.0", 43000, 1, HostUpdateStore.Runtime));
+        Build: new("99.0.0", 99000000, 1, HostUpdateStore.Runtime));
     var (badZip, badManifest) = Package(AppContext.BaseDirectory, fakeHello, "Pcl.HostUpdates.Tests.dll");
     Feed(badManifest, badZip);
     await client.CheckForUpdatesAsync(ct);
     Check((await client.ApplyUpdateWhenIdleAsync(ct)).State == "rolled-back", "failed-real-start-rolls-back");
-    Check((await client.HelloAsync(ct)).Build!.Sequence == 42000, "previous-host-reconnected-after-rollback");
+    Check((await client.HelloAsync(ct)).Build!.Sequence == newSequence, "previous-host-reconnected-after-rollback");
     Check((await client.Call<JsonElement>("account.snapshot", new { }, ct)).GetRawText() == before.GetRawText(), "rollback-preserves-account-index");
     Check((await client.CheckForUpdatesAsync(ct)).Code == "PREVIOUSLY_FAILED", "failed-release-not-retried-forever");
 
@@ -317,7 +320,7 @@ try
             await gameClient.ShutdownAsync(ct);
             await gameClient.DisconnectAsync();
             Check(!game.HasExited, "real-game-survives-old-host-exit");
-            Check((await gameClient.HelloAsync(ct)).Build!.Sequence == 42000, "next-start-updates-with-independent-game-alive");
+            Check((await gameClient.HelloAsync(ct)).Build!.Sequence == newSequence, "next-start-updates-with-independent-game-alive");
             await Task.Delay(2000, ct);
             Check(!game.HasExited, "real-game-survives-updated-host-start");
         }
@@ -372,7 +375,7 @@ try
         var replacement = new HostClient(Environment.ProcessPath!, Path.Combine(oldHost, "Pcl.Host.dll"), orphanRoot, true);
         replacement.ConfigureUpdates(policy, orphanStore, http);
         clients.Add(replacement);
-        Check((await replacement.HelloAsync(ct)).Build!.Sequence == 41000, "orphan-trial-retired-and-bundled-host-restored");
+        Check((await replacement.HelloAsync(ct)).Build!.Sequence == oldSequence, "orphan-trial-retired-and-bundled-host-restored");
         Check(orphanHost.HasExited, "orphan-exited-without-pid-kill");
     }
     finally

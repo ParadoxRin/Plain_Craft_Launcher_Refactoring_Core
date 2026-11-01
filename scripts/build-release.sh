@@ -3,6 +3,7 @@
 set -euo pipefail
 project_root="$(cd "$(dirname "$0")/.." && pwd)"
 sdk="${DOTNET:-$project_root/.tooling/dotnet/dotnet}"
+python3 "$project_root/scripts/verify-core-baseline.py"
 export DOTNET_CLI_HOME="$project_root/.cache/dotnet-home"
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export AVALONIA_TELEMETRY_OPTOUT=1
@@ -10,18 +11,30 @@ version="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["vers
 build="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["build"])' "$project_root/release.json")"
 # Prevent About, assembly and archive versions from silently drifting apart.
 python3 - "$project_root" "$version" <<'PY'
-import pathlib,sys,xml.etree.ElementTree as ET
+import json,pathlib,sys,xml.etree.ElementTree as ET
 root=pathlib.Path(sys.argv[1])
-actual=ET.parse(root/'src/Pcl.Desktop/Pcl.Desktop.csproj').findtext('.//Version')
-if actual != sys.argv[2]: raise SystemExit('Desktop version does not match release.json')
+for project in ('Pcl.Desktop', 'Pcl.Host'):
+    actual=ET.parse(root/'src'/project/(project+'.csproj')).findtext('.//Version')
+    if actual != sys.argv[2]: raise SystemExit(project+' version does not match release.json')
+sequence=ET.parse(root/'src/Pcl.Host/Pcl.Host.csproj').findtext('.//HostUpdateSequence')
+if int(sequence) != json.loads((root/'release.json').read_text())['hostSequence']:
+    raise SystemExit('Host sequence does not match release.json')
 PY
-artifact_dir="$project_root/artifacts"
+artifact_dir="${PCL_RELEASE_OUTPUT:-$project_root/artifacts}"
 publish="$artifact_dir/publish-$version-osx-arm64"
 app="$artifact_dir/Plain Craft Launcher Refactoring $version.app"
+if [ -e "$publish" ] || [ -e "$app" ]; then
+  echo 'Release output already exists; use a fresh PCL_RELEASE_OUTPUT directory.' >&2
+  exit 2
+fi
+mkdir -p "$artifact_dir"
 "$sdk" publish "$project_root/src/Pcl.Desktop/Pcl.Desktop.csproj" -c Release -r osx-arm64 --self-contained true -m:1 -nr:false \
   -p:NuGetAudit=false -p:UsedAvaloniaProducts= -p:PublishTrimmed=false -p:UseAppHost=true -p:UseSharedCompilation=false \
   -p:PathMap="$project_root=/src/Plain-Craft-Launcher-Refactoring" -p:DebugType=None -p:DebugSymbols=false \
   -p:MicrosoftApplicationConfig="$project_root/src/Pcl.Core/Authentication/microsoft-application.json" -o "$publish"
+if [ -n "${PCL_HOST_UPDATE_POLICY:-}" ]; then
+  cp "$PCL_HOST_UPDATE_POLICY" "$publish/host-update-policy.json"
+fi
 find "$publish" -type f -name '*.pdb' -delete
 test -f "$publish/host/libhostfxr.dylib"
 test -x "$publish/host/Pcl.Host"

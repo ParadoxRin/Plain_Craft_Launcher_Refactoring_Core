@@ -19,10 +19,18 @@ internal static class RemoteComposition
                 : "dotnet";
         }
 
-        var nativeHost = Path.Combine(AppContext.BaseDirectory, "host", "Pcl.Host");
-        var standalone = Environment.GetEnvironmentVariable("PCL_HOST_ASSEMBLY")is null && File.Exists(nativeHost) && File.Exists(
-            Path.Combine(AppContext.BaseDirectory, "host", "libhostfxr.dylib")
-        );
+        // Independent clients can launch a separately deployed self-contained Host.
+        var externalHost = Environment.GetEnvironmentVariable("PCL_HOST_EXECUTABLE");
+        var nativeHost = string.IsNullOrWhiteSpace(externalHost)
+            ? Path.Combine(AppContext.BaseDirectory, "host", OperatingSystem.IsWindows() ? "Pcl.Host.exe" : "Pcl.Host")
+            : Path.GetFullPath(externalHost);
+        if (!string.IsNullOrWhiteSpace(externalHost) && !File.Exists(nativeHost))
+            throw new InvalidDataException("HOST_EXECUTABLE_MISSING");
+        var runtimeLibrary = OperatingSystem.IsMacOS() ? "libhostfxr.dylib"
+            : OperatingSystem.IsWindows() ? "hostfxr.dll" : "libhostfxr.so";
+        var standalone = !string.IsNullOrWhiteSpace(externalHost) ||
+            (Environment.GetEnvironmentVariable("PCL_HOST_ASSEMBLY") is null && File.Exists(nativeHost) &&
+             File.Exists(Path.Combine(Path.GetDirectoryName(nativeHost)!, runtimeLibrary)));
         var remote = new Pcl.Client.LauncherSession(
             new HostClient(
                 standalone

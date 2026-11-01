@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup><OutputType>WinExe</OutputType><TargetFramework>net10.0</TargetFramework><AssemblyName>PCL-MacPort</AssemblyName><Version>0.42.0</Version></PropertyGroup>
+  <PropertyGroup><OutputType>WinExe</OutputType><TargetFramework>net10.0</TargetFramework><AssemblyName>PCL-MacPort</AssemblyName><Version>0.42.1</Version><BundleHost Condition="'$(BundleHost)' == ''">true</BundleHost></PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="../../docs/windows-layout-baseline.json" LogicalName="windows-layout.json" />
     <EmbeddedResource Include="../../docs/data/PCL2完整功能矩阵.json" LogicalName="feature-matrix.json" />
@@ -21,7 +21,7 @@
     <ItemGroup><HostFiles Include="../Pcl.Host/bin/$(Configuration)/$(TargetFramework)/$(RuntimeIdentifier)/**/*" Exclude="../Pcl.Host/bin/$(Configuration)/$(TargetFramework)/$(RuntimeIdentifier)/**/*.pdb" /></ItemGroup>
     <Copy SourceFiles="@(HostFiles)" DestinationFiles="@(HostFiles->'$(OutDir)host/%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
   </Target>
-  <Target Name="PublishHost" AfterTargets="Publish">
+  <Target Name="PublishHost" AfterTargets="Publish" Condition="'$(BundleHost)' == 'true'">
     <ItemGroup><PublishedHostFiles Include="../Pcl.Host/bin/$(Configuration)/$(TargetFramework)/$(RuntimeIdentifier)/**/*" Exclude="../Pcl.Host/bin/$(Configuration)/$(TargetFramework)/$(RuntimeIdentifier)/**/*.pdb" /></ItemGroup>
     <Copy SourceFiles="@(PublishedHostFiles)" DestinationFiles="@(PublishedHostFiles->'$(PublishDir)host/%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
   </Target>
