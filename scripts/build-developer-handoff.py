@@ -5,7 +5,7 @@ p.add_argument('--release',type=pathlib.Path,required=True)
 p.add_argument('--sdk-feed',type=pathlib.Path,required=True)
 p.add_argument('--output',type=pathlib.Path,required=True)
 a=p.parse_args();root=pathlib.Path(__file__).resolve().parent.parent;out=a.output.resolve();release=a.release.resolve();feed=a.sdk_feed.resolve()
-if out.exists() or out.with_suffix('.zip').exists():raise SystemExit('FRESH_OUTPUT_REQUIRED')
+if out.exists() or pathlib.Path(str(out)+'.zip').exists():raise SystemExit('FRESH_OUTPUT_REQUIRED')
 if subprocess.check_output(['git','-C',str(root),'status','--porcelain']).strip():raise SystemExit('CLEAN_COMMITTED_SOURCE_REQUIRED')
 def digest(p):
  h=hashlib.sha256()
@@ -93,7 +93,7 @@ for file in list(out.glob('*.json'))+list(out.glob('*.md')):
  if str(root) in data or '-----BEGIN PRIVATE KEY-----' in data or '-----BEGIN RSA PRIVATE KEY-----' in data:raise SystemExit('HANDOFF_METADATA_PRIVACY_FAILED')
 files=sorted(p for p in out.rglob('*') if p.is_file())
 (out/'SHA256SUMS').write_text(''.join(digest(file)+'  '+file.relative_to(out).as_posix()+'\n' for file in files))
-archive=out.with_suffix('.zip')
+archive=pathlib.Path(str(out)+'.zip')
 with zipfile.ZipFile(archive,'w',allowZip64=True) as z:
  for file in sorted(out.rglob('*')):
   if not file.is_file():continue
