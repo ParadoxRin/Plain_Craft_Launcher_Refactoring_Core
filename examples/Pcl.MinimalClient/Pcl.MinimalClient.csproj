@@ -5,7 +5,8 @@
     <DisableTransitiveProjectReferences>true</DisableTransitiveProjectReferences>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="../../src/Pcl.Client/Pcl.Client.csproj" />
-    <ProjectReference Include="../../src/Pcl.Contract/Pcl.Contract.csproj" />
+    <ProjectReference Include="../../src/Pcl.Client/Pcl.Client.csproj" Condition="'$(UsePclSdkPackages)' != 'true'" />
+    <ProjectReference Include="../../src/Pcl.Contract/Pcl.Contract.csproj" Condition="'$(UsePclSdkPackages)' != 'true'" />
   </ItemGroup>
+  <ItemGroup Condition="'$(UsePclSdkPackages)' == 'true'"><PackageReference Include="Pcl.Client" Version="$(PclSdkVersion)" /><PackageReference Include="Pcl.Contract" Version="$(PclSdkVersion)" /></ItemGroup>
 </Project>

@@ -6,6 +6,7 @@ on:
     paths:
       - 'scripts/*component*'
       - 'src/Pcl.Desktop/**'
+      - 'src/Pcl.Desktop.Updates/**'
       - 'scripts/*client*'
       - 'scripts/*content*'
       - 'scripts/*unified*'

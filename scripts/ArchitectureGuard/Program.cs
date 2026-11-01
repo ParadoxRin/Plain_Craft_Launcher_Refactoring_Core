@@ -8,6 +8,7 @@ using System.Xml.Linq;
 var root = Path.GetFullPath(args[0]);
 var desktopFile = Path.GetFullPath(args[1]);
 var output = Path.GetFullPath(args[2]);
+var backendDirectory = args.Length > 3 ? Path.GetFullPath(args[3]) : Path.Combine(Path.GetDirectoryName(desktopFile)!, "host");
 var violations = new List<string>();
 var graph = new Dictionary<string, string[]>();
 var expected = new Dictionary<string, string[]>
@@ -34,9 +35,10 @@ var expected = new Dictionary<string, string[]>
         "Pcl.Contract"
     ],
     ["Pcl.Desktop"] = [
-        "Pcl.Contract",
-        "Pcl.Client"
+        "Pcl.Contract", "Pcl.Client", "Pcl.Desktop.Updates"
     ],
+    ["Pcl.Desktop.Updates"] = ["Pcl.Contract"],
+    ["Pcl.Cli"] = ["Pcl.Contract", "Pcl.Client"],
     ["Pcl.Host"] = [
         "Pcl.Application",
         "Pcl.Contract",
@@ -97,6 +99,7 @@ var directory = Path.GetDirectoryName(desktopFile)!;
 AssemblyLoadContext.Default.Resolving += (_, name) =>
 {
     var path = Path.Combine(directory, name.Name + ".dll");
+    if (!File.Exists(path)) path = Path.Combine(backendDirectory, name.Name + ".dll");
     return File.Exists(path)
         ? AssemblyLoadContext.Default.LoadFromAssemblyPath(path)
         : null;
@@ -129,7 +132,8 @@ foreach (var name in new[]
     "Pcl.Domain",
     "Pcl.Ports",
     "Pcl.Application",
-    "Pcl.Client"
+    "Pcl.Client",
+    "Pcl.Desktop.Updates"
 }
 
 )
@@ -139,7 +143,7 @@ foreach (var name in new[]
             Path.Combine(directory, name + ".dll")
         )
             ? Path.Combine(directory, name + ".dll")
-            : Path.Combine(directory, "host", name + ".dll")
+            : Path.Combine(backendDirectory, name + ".dll")
     );
     var references = part.GetReferencedAssemblies()
         .Select(

@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="examples/Pcl.MinimalClient/Pcl.MinimalClient.csproj" />
+  <Project Path="src/Pcl.Cli/Pcl.Cli.csproj" />
+  <Project Path="src/Pcl.Client/Pcl.Client.csproj" />
+  <Project Path="src/Pcl.Contract/Pcl.Contract.csproj" />
+  <Project Path="src/Pcl.Desktop/Pcl.Desktop.csproj" />
+  <Project Path="src/Pcl.Desktop.Updates/Pcl.Desktop.Updates.csproj" />
+</Solution>

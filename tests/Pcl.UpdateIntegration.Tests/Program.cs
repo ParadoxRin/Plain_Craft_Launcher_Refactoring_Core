@@ -3,7 +3,7 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text.Json;
 using Pcl.Client;
-using Pcl.Client.SelfUpdate;
+using Pcl.Desktop.Updates;
 using Pcl.Core.Adapters.Content;
 using Pcl.Host;
 

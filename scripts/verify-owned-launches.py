@@ -25,12 +25,12 @@ index = json.loads((data / 'accounts.json').read_text())
 account = next((a for a in index['Accounts'] if a['Id'] == index['SelectedId'] and a['Kind'] == 1 and a['Remembered']), None)
 if account is None:
     raise SystemExit('Select and remember a real Microsoft account before running this acceptance test.')
-cli = [str(root / '.tooling/dotnet/dotnet'), str(root / 'src/Pcl.Cli/bin/Release/net10.0/Pcl.Cli.dll')]
+cli = [str(root / '.tooling/dotnet/dotnet'), str(root / 'tools/Pcl.CoreDiagnostics/bin/Release/net10.0/Pcl.CoreDiagnostics.dll')]
 # Record the exact launcher binaries without copying any account or credential data.
 (output / 'binary-provenance.json').write_text(json.dumps({
     'startedAtUnix': time.time(),
     'sha256': {name: hashlib.sha256((Path(cli[1]).parent / name).read_bytes()).hexdigest()
-               for name in ('Pcl.Cli.dll', 'Pcl.Core.dll')},
+               for name in ('Pcl.CoreDiagnostics.dll', 'Pcl.Core.dll')},
     'observationSeconds': options.seconds,
     'worldPlay': 'not_tested',
 }, indent=2) + '\n')

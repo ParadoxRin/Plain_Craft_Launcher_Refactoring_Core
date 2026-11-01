@@ -32,6 +32,13 @@ mkdir -p "$artifact_dir"
   -p:NuGetAudit=false -p:UsedAvaloniaProducts= -p:PublishTrimmed=false -p:UseAppHost=true -p:UseSharedCompilation=false \
   -p:PathMap="$project_root=/src/Plain-Craft-Launcher-Refactoring" -p:DebugType=None -p:DebugSymbols=false \
   -p:MicrosoftApplicationConfig="$project_root/src/Pcl.Core/Authentication/microsoft-application.json" -o "$publish"
+# Composition belongs to the installer pipeline, never to the Desktop project.
+"$sdk" publish "$project_root/src/Pcl.Host/Pcl.Host.csproj" -c Release -r osx-arm64 --self-contained true -m:1 -nr:false \
+  -p:NuGetAudit=false -p:UseSharedCompilation=false -p:DebugType=None -p:DebugSymbols=false \
+  -p:PathMap="$project_root=/src/Plain-Craft-Launcher-Refactoring" \
+  -p:MicrosoftApplicationConfig="$project_root/src/Pcl.Core/Authentication/microsoft-application.json" -o "$publish/host"
+"$sdk" build "$project_root/scripts/ArchitectureGuard/ArchitectureGuard.csproj" -c Release -m:1 -nr:false -p:NuGetAudit=false
+"$sdk" "$project_root/scripts/ArchitectureGuard/bin/Release/net10.0/ArchitectureGuard.dll" "$project_root" "$publish/PCL-MacPort.dll" "$artifact_dir/architecture-guard.json" "$publish/host"
 DOTNET="$sdk" bash "$project_root/scripts/publish-client-updater.sh" "$publish" osx-arm64
 if [ -n "${PCL_HOST_UPDATE_POLICY:-}" ]; then
   cp "$PCL_HOST_UPDATE_POLICY" "$publish/host-update-policy.json"

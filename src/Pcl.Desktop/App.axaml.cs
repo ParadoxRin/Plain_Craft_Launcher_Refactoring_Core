@@ -65,7 +65,7 @@ public sealed class App : Avalonia.Application
                     desktop.MainWindow = main;
                     main.Show();
                     splash.Close();
-                    Pcl.Client.SelfUpdate.ClientSelfUpdate.AcknowledgeReady();
+                    Pcl.Desktop.Updates.ClientSelfUpdate.AcknowledgeReady();
                     main.BeginClientUpdateCheck();
                     desktop.Exit += (_, _) =>
                     {

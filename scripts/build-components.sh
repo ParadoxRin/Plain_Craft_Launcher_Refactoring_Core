@@ -37,6 +37,8 @@ publish() {
 publish "$project_root/src/Pcl.Desktop/Pcl.Desktop.csproj" "$work/client"
 DOTNET="$sdk" bash "$project_root/scripts/publish-client-updater.sh" "$work/client" "$rid"
 publish "$project_root/src/Pcl.Host/Pcl.Host.csproj" "$work/host"
+"$sdk" build "$project_root/scripts/ArchitectureGuard/ArchitectureGuard.csproj" -c Release -m:1 -nr:false -p:NuGetAudit=false
+"$sdk" "$project_root/scripts/ArchitectureGuard/bin/Release/net10.0/ArchitectureGuard.dll" "$project_root" "$work/client/PCL-MacPort.dll" "$work/architecture-guard.json" "$work/host"
 if [ -n "${PCL_CONTENT_POLICY:-}" ]; then
   cp "$PCL_CONTENT_POLICY" "$work/host/content-update-policy.json"
 fi

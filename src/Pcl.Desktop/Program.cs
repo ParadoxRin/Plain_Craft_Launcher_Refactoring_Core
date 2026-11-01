@@ -12,12 +12,12 @@ internal static class Program
     {
         Arguments = args;
         IDisposable? runtimeLease = null;
-        var target = Pcl.Client.SelfUpdate.ClientSelfUpdate.CurrentTarget();
+        var target = Pcl.Desktop.Updates.ClientSelfUpdate.CurrentTarget();
         if (File.Exists(Path.Combine(AppContext.BaseDirectory, "client-update-policy.json")))
         {
             try
             {
-                var updater = new Pcl.Client.SelfUpdate.ClientSelfUpdate(target);
+                var updater = new Pcl.Desktop.Updates.ClientSelfUpdate(target);
                 if (updater.RecoverBeforeStartup(args)) return;
                 runtimeLease = updater.AcquireRuntimeLease();
             }

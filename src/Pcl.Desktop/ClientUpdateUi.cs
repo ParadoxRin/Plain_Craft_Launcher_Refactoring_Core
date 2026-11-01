@@ -1,7 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Threading;
-using Pcl.Client.SelfUpdate;
+using Pcl.Desktop.Updates;
 using System.Diagnostics;
 using System.Text.Json;
 

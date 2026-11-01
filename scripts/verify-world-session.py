@@ -18,7 +18,7 @@ parser.add_argument('--world', required=True)
 parser.add_argument('--label', required=True)
 parser.add_argument('--existing-world', action='store_true')
 parser.add_argument('--visits', type=int, default=2, choices=[1, 2])
-parser.add_argument('--cli-directory', type=Path, default=root / 'src/Pcl.Cli/bin/Release/net10.0')
+parser.add_argument('--cli-directory', type=Path, default=root / 'tools/Pcl.CoreDiagnostics/bin/Release/net10.0')
 parser.add_argument('--data-root', type=Path, default=root / 'runtime/apple-silicon-1.21.1')
 options = parser.parse_args()
 if not re.fullmatch(r'[A-Za-z0-9_-]+', options.label + options.world):
@@ -50,14 +50,14 @@ def inventory(directory):
 before = inventory(world)
 began = time.time()
 provenance = {name: hashlib.sha256((options.cli_directory / name).read_bytes()).hexdigest()
-              for name in ('Pcl.Cli.dll', 'Pcl.Core.dll')}
+              for name in ('Pcl.CoreDiagnostics.dll', 'Pcl.Core.dll')}
 (output / 'before.json').write_text(json.dumps(before, indent=2) + '\n')
 (output / 'host.json').write_text(json.dumps(provenance, indent=2) + '\n')
 # The user operates Minecraft. A bounded title-screen smoke timeout is a safety stop,
 # never proof of a normal save/exit; timed-out sessions fail the checks below.
 with (output / 'launcher.log').open('w') as log:
     process = subprocess.Popen([
-        str(root / '.tooling/dotnet/dotnet'), str(options.cli_directory / 'Pcl.Cli.dll'),
+        str(root / '.tooling/dotnet/dotnet'), str(options.cli_directory / 'Pcl.CoreDiagnostics.dll'),
         'launch', '--game-version', options.version, '--profile', options.profile,
         '--account', account['Id'], '--data-root', str(options.data_root),
         '--smoke-seconds', '1200', '--isolated-evidence'], cwd=root,

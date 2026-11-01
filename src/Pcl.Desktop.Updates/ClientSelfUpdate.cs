@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 
-namespace Pcl.Client.SelfUpdate;
+namespace Pcl.Desktop.Updates;
 
 public sealed record ClientUpdateRequest(string Target, string Envelope, string Archive, int ParentPid,
     long ParentStartedTicks, string[] Arguments, bool Recover = false);

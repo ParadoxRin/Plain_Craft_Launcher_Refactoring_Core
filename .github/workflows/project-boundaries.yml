@@ -1,0 +1,33 @@
+name: Independent core and client projects
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'examples/**'
+      - 'tests/Pcl.MinimalClient.Tests/**'
+      - 'sdk/**'
+      - 'scripts/*workspace*'
+      - 'scripts/*module-boundaries*'
+      - 'scripts/build-client-sdk.sh'
+      - 'scripts/test-independent-clients.sh'
+      - 'PCLCS.*.slnx'
+      - 'Directory.Build.props'
+      - 'release.json'
+      - '.github/workflows/project-boundaries.yml'
+permissions:
+  contents: read
+jobs:
+  independent-projects:
+    runs-on: macos-15
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
+        with:
+          global-json-file: global.json
+      - name: Build source-independent workspaces and exercise the Host contract
+        run: DOTNET="$(command -v dotnet)" bash scripts/test-independent-clients.sh "$RUNNER_TEMP/pcl-project-boundaries"

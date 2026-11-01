@@ -1,11 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework></PropertyGroup>
-  <ItemGroup><ProjectReference Include="../Pcl.Core/Pcl.Core.csproj" /><ProjectReference Include="../Pcl.Client/Pcl.Client.csproj" /></ItemGroup>
-  <ItemGroup>
-    <None Include="../../artifacts/native/libpclwindow.dylib" Link="libpclwindow.dylib" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Condition="Exists('../../artifacts/native/libpclwindow.dylib')" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="../../artifacts/native/lwjgl-unsafe-agent-2.0.jar" Link="lwjgl-unsafe-agent-2.0.jar" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Condition="Exists('../../artifacts/native/lwjgl-unsafe-agent-2.0.jar')" />
-  </ItemGroup>
-  <ItemGroup><ProjectReference Include="../Pcl.Application/Pcl.Application.csproj" /></ItemGroup>
+  <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><DisableTransitiveProjectReferences>true</DisableTransitiveProjectReferences></PropertyGroup>
+  <ItemGroup Condition="'$(UsePclSdkPackages)' != 'true'"><ProjectReference Include="../Pcl.Client/Pcl.Client.csproj" /><ProjectReference Include="../Pcl.Contract/Pcl.Contract.csproj" /></ItemGroup>
+  <ItemGroup Condition="'$(UsePclSdkPackages)' == 'true'"><PackageReference Include="Pcl.Client" Version="$(PclSdkVersion)" /><PackageReference Include="Pcl.Contract" Version="$(PclSdkVersion)" /></ItemGroup>
 </Project>

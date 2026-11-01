@@ -1,10 +1,10 @@
 using Pcl.Client;
-using Pcl.Core;
+using System.Text.Json;
 using Pcl.Core.Contracts.Installation;
 using Pcl.Core.Contracts.Launch;
 
 namespace Pcl.Cli;
-// 独立 Host 的正式 CLI 接线；账户创建/首次登录沿用已有命令，Host 启动后只通过受控契约修改数据。
+// 独立 Host 的正式 CLI 接线；账户准备由其他协议客户端完成，此处只通过受控契约修改数据。
 internal static class RemoteCli
 {
     internal static async Task<int> RunAsync(string[] args)
@@ -24,17 +24,26 @@ internal static class RemoteCli
             cancellation.Cancel();
         };
         var ct = cancellation.Token;
-        var root = new AppPaths(
-            Option("--data-root")
-        );
-        var hostAssembly = Option("--host-assembly") ?? Path.GetFullPath("src/Pcl.Host/bin/Release/net10.0/Pcl.Host.dll");
+        var hostExecutable = Option("--host");
+        var hostAssembly = Option("--host-assembly") ?? "";
         var runtime = Option("--dotnet") ?? (Environment.ProcessPath is { } process && Path.GetFileNameWithoutExtension(process) == "dotnet"
             ? process
             : "dotnet");
         try
         {
-            await using var client = new HostClient(runtime, hostAssembly, root.Root);
+            var root = Path.GetFullPath(Option("--data-root") ?? throw new ArgumentException("--data-root is required"));
+
+            if (hostExecutable is null && hostAssembly.Length == 0) throw new ArgumentException("Specify --host or --host-assembly");
+            if (hostExecutable is not null && hostAssembly.Length != 0) throw new ArgumentException("Choose only one Host deployment");
+            await using var client = new HostClient(hostExecutable ?? runtime, hostAssembly, root);
+
             var hello = await client.HelloAsync(ct);
+            if (args[0] == "host-status")
+            {
+                Console.WriteLine(JsonSerializer.Serialize(hello));
+                await client.ShutdownAsync(ct);
+                return 0;
+            }
             var key = Option("--idempotency-key") ?? Guid.NewGuid()
                 .ToString("N");
             if (args[0] == "host-install")
@@ -65,7 +74,7 @@ internal static class RemoteCli
                     : 2;
             }
 
-            var account = Option("--account") ?? throw new ArgumentException("请先用 account-add-offline/account-login 创建账户，再传 --account <id>。");
+            var account = Option("--account") ?? throw new ArgumentException("请先通过客户端账户接口创建账户，再传 --account <id>。");
             var instance = Option("--profile") ?? "1.21.1";
             bool detached = args.Contains("--detached");
             // The Host owns policy; CLI obtains explicit consent before accepting a launch.
@@ -75,7 +84,7 @@ internal static class RemoteCli
                 culture = "en-US";
             }
             var guidance = await client.Call<LaunchGuidance>("game.guidance", new LaunchGuidanceRequest(account, culture), ct);
-            var consent = await UnifiedCliLaunch.ConfirmGuidanceAsync(guidance, culture, ct);
+            var consent = await LaunchConsent.ConfirmGuidanceAsync(guidance, culture, ct);
             if (consent is null)
             {
                 await client.ShutdownAsync();

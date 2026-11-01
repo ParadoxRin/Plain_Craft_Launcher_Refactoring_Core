@@ -1,0 +1,16 @@
+<Solution>
+  <Project Path="src/Pcl.Application/Pcl.Application.csproj" />
+  <Project Path="src/Pcl.Client/Pcl.Client.csproj" />
+  <Project Path="src/Pcl.Contract/Pcl.Contract.csproj" />
+  <Project Path="src/Pcl.Core/Pcl.Core.csproj" />
+  <Project Path="src/Pcl.Desktop.Updates/Pcl.Desktop.Updates.csproj" />
+  <Project Path="src/Pcl.Domain/Pcl.Domain.csproj" />
+  <Project Path="src/Pcl.Legacy/Pcl.Legacy.vbproj" />
+  <Project Path="src/Pcl.Ports/Pcl.Ports.csproj" />
+  <Project Path="tools/Pcl.ClientUpdater/Pcl.ClientUpdater.csproj" />
+  <Project Path="tools/Pcl.ContentPack/Pcl.ContentPack.csproj" />
+  <Project Path="tools/Pcl.CoreDiagnostics/Pcl.CoreDiagnostics.csproj" />
+  <Project Path="tools/Pcl.UpdatePack/Pcl.UpdatePack.csproj" />
+  <Project Path="vendor/MeloongCore/Shared/MeloongCore.csproj" />
+  <Project Path="vendor/PCLCS/PCLCS.csproj" />
+</Solution>

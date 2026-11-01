@@ -1,0 +1,15 @@
+<Project>
+  <PropertyGroup>
+    <Description>PCLCS versioned client contract and optional .NET client transport. Does not include the core or a graphical client.</Description>
+    <Authors>PCLCS contributors</Authors>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core</RepositoryUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath="/" />
+    <None Include="$(MSBuildThisFileDirectory)../LICENSE.md;$(MSBuildThisFileDirectory)../LICENSE;$(MSBuildThisFileDirectory)../LICENSE-MIT.txt;$(MSBuildThisFileDirectory)../PCL-LICENCE.txt" Pack="true" PackagePath="/" />
+    <None Include="$(MSBuildThisFileDirectory)../vendor/MeloongCore/LICENSE.txt" Pack="true" PackagePath="vendor/MeloongCore/" />
+    <None Include="$(MSBuildThisFileDirectory)../docs/THIRD-PARTY-NOTICES.md" Pack="true" PackagePath="docs/" />
+  </ItemGroup>
+</Project>

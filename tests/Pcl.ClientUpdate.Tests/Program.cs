@@ -3,7 +3,7 @@ using System.IO.Compression;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text.Json;
-using Pcl.Client.SelfUpdate;
+using Pcl.Desktop.Updates;
 
 if (!OperatingSystem.IsMacOS()) throw new PlatformNotSupportedException("Actual macOS acceptance required");
 if (args.Length != 4) throw new ArgumentException("<base.app> <fixtures> <private-fixture-key> <fresh-root>");

@@ -1,11 +1,11 @@
 # Plain Craft Launcher Refactoring Core 架构规范
 
-版本：1.5.2\
-日期：2026-11-01（Australia/Sydney；main 核心更新部署边界增补）\
+版本：1.5.3\
+日期：2026-11-02（Australia/Sydney；本地项目维护边界拆分）\
 性质：后续增量重构的实施规范  
 依据：历史《分层架构实施规范 v2》讨论、已确认的产品目标与当前仓库调用链；外部讨论稿不随当前仓库交付，也不是构建或接手前置条件。
 
-本规范取代历史讨论稿中的实施约定。§13 描述当前落地范围，§14 的阶段一至三仅保存迁移历史；其余“必须／不得”是维护约束，不表示全部规则已由代码守卫覆盖或全部平台已经实现。v1.5.1 的 main 增补记录最小客户端、Linux attach 出生证明与三平台系统凭据选择；不更改 v0.41.0 发布标签。v1.5.2 新增 §19 的签名核心更新、空闲切换与失败回退部署边界。
+本规范取代历史讨论稿中的实施约定。§13 描述当前落地范围，§14 的阶段一至三仅保存迁移历史；其余“必须／不得”是维护约束，不表示全部规则已由代码守卫覆盖或全部平台已经实现。v1.5.1 的 main 增补记录最小客户端、Linux attach 出生证明与三平台系统凭据选择；不更改 v0.41.0 发布标签。v1.5.2 新增 §19 的签名核心更新、空闲切换与失败回退部署边界。v1.5.3 明确本地 SDK、客户端更新模块及诊断工具的维护边界，详见[项目拆分](../0.42.1-项目维护边界拆分.md)。
 
 ## 1. 目标与适用范围
 
@@ -56,7 +56,7 @@ Domain            -> 标准库
 Contract          -> 标准库
 ```
 
-上表是职责依赖目标，不是当前 csproj 的逐项清单。当前 Desktop→Client+Contract，Client→Contract，Host→Application+Core+Contract，Application→Domain+Ports+Contract，Core→Domain+Ports+Contract+上游库；Ports→Domain，Domain/Contract 不引用其他项目。Adapters 尚在 Core 中，并非独立的 Pcl.Adapters 程序集；Core 引用 Contract 的兼容执行与映射代码仍需按用例整理，不能把目标表当作全部已落地。CLI 仍直接引用 Core/Application/Client，不是新 Shell 的例外。详见[当前引用图](../架构与设计取舍.md)。
+上表是职责依赖目标，不是当前 csproj 的逐项清单。当前 Desktop→Client+Contract+Desktop.Updates，Desktop.Updates→Contract，Client→Contract，Host→Application+Core+Contract，Application→Domain+Ports+Contract，Core→Domain+Ports+Contract+上游库；Ports→Domain，Domain/Contract 不引用其他项目。Adapters 尚在 Core 中，并非独立的 Pcl.Adapters 程序集；Core 引用 Contract 的兼容执行与映射代码仍需按用例整理，不能把目标表当作全部已落地。CLI→Client+Contract；旧直接业务命令已迁入 tools/Pcl.CoreDiagnostics。Desktop 不再构建或复制 Host，完整安装器显式组合两端。详见[当前引用图](../架构与设计取舍.md)。
 
 下述阶段一为历史说明；Swift 等非 .NET Shell 对 Contract 的依赖是协议语义依赖，不是 CLR 程序集引用。阶段一同进程且没有 Client 时，展示代码直接调用 **Contract 中定义的应用接口**，不需要经过传输层；`VersionInstallService` 在 Application 中实现该接口，由 Bootstrap 构造后以接口类型注入 Shell。以下两种路径的区别是传输方式，不是允许 Shell 组装实现：
 

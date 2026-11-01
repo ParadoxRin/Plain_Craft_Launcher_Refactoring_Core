@@ -1,15 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup><OutputType>WinExe</OutputType><TargetFramework>net10.0</TargetFramework><AssemblyName>PCL-MacPort</AssemblyName><Version>0.42.1</Version><BundleHost Condition="'$(BundleHost)' == ''">true</BundleHost></PropertyGroup>
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>PCL-MacPort</AssemblyName>
+    <Version>0.42.1</Version>
+  </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="../../docs/windows-layout-baseline.json" LogicalName="windows-layout.json" />
     <EmbeddedResource Include="../../docs/data/PCL2完整功能矩阵.json" LogicalName="feature-matrix.json" />
     <PackageReference Include="Avalonia" Version="12.1.4" />
     <PackageReference Include="Avalonia.Desktop" Version="12.1.4" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.4" />
-
-    <ProjectReference Include="../Pcl.Client/Pcl.Client.csproj" />
-    <ProjectReference Include="../../scripts/ArchitectureGuard/ArchitectureGuard.csproj" ReferenceOutputAssembly="false" PrivateAssets="all" />
-    <ProjectReference Include="../Pcl.Host/Pcl.Host.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="../Pcl.Client/Pcl.Client.csproj" Condition="'$(UsePclSdkPackages)' != 'true'" />
   </ItemGroup>
   <ItemGroup>
     <None Include="../../artifacts/native/libpclwindow.dylib" Link="libpclwindow.dylib" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Condition="Exists('../../artifacts/native/libpclwindow.dylib')" />
@@ -17,34 +19,17 @@
   <ItemGroup>
     <None Include="../../artifacts/native/lwjgl-unsafe-agent-2.0.jar" Link="lwjgl-unsafe-agent-2.0.jar" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Condition="Exists('../../artifacts/native/lwjgl-unsafe-agent-2.0.jar')" />
   </ItemGroup>
-  <Target Name="CopyHost" AfterTargets="Build">
-    <ItemGroup><HostFiles Include="../Pcl.Host/bin/$(Configuration)/$(TargetFramework)/$(RuntimeIdentifier)/**/*" Exclude="../Pcl.Host/bin/$(Configuration)/$(TargetFramework)/$(RuntimeIdentifier)/**/*.pdb" /></ItemGroup>
-    <Copy SourceFiles="@(HostFiles)" DestinationFiles="@(HostFiles->'$(OutDir)host/%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
-  </Target>
-  <Target Name="PublishHost" AfterTargets="Publish" Condition="'$(BundleHost)' == 'true'">
-    <ItemGroup><PublishedHostFiles Include="../Pcl.Host/bin/$(Configuration)/$(TargetFramework)/$(RuntimeIdentifier)/**/*" Exclude="../Pcl.Host/bin/$(Configuration)/$(TargetFramework)/$(RuntimeIdentifier)/**/*.pdb" /></ItemGroup>
-    <Copy SourceFiles="@(PublishedHostFiles)" DestinationFiles="@(PublishedHostFiles->'$(PublishDir)host/%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
-  </Target>
-  <!-- Build-only executable references otherwise leak their apphosts and runtime
-       metadata into Desktop publish even with ReferenceOutputAssembly=false. -->
-  <Target Name="ExcludeBuildOnlyExecutables" AfterTargets="ComputeFilesToPublish">
-    <ItemGroup>
-      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)"
-        Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('%(ResolvedFileToPublish.RelativePath)', '^(Pcl\.Host|ArchitectureGuard)(\.exe|\.deps\.json|\.runtimeconfig\.json)?$'))" />
-    </ItemGroup>
-  </Target>
-  <Target Name="EnforceArchitecture" AfterTargets="Build">
-    <PropertyGroup>
-      <ArchitectureGuardHost>$(NetCoreRoot)dotnet</ArchitectureGuardHost>
-      <ArchitectureGuardHost Condition="'$(OS)' == 'Windows_NT'">$(NetCoreRoot)dotnet.exe</ArchitectureGuardHost>
-      <ArchitectureGuardDll>$(MSBuildThisFileDirectory)../../scripts/ArchitectureGuard/bin/$(Configuration)/net10.0/$(RuntimeIdentifier)/ArchitectureGuard.dll</ArchitectureGuardDll>
-      <ArchitectureGuardDll Condition="!Exists('$(ArchitectureGuardDll)')">$(MSBuildThisFileDirectory)../../scripts/ArchitectureGuard/bin/$(Configuration)/net10.0/ArchitectureGuard.dll</ArchitectureGuardDll>
-    </PropertyGroup>
-    <Exec Command="&quot;$(ArchitectureGuardHost)&quot; &quot;$(ArchitectureGuardDll)&quot; &quot;$(MSBuildThisFileDirectory)../..&quot; &quot;$(TargetPath)&quot; &quot;$(TargetDir)architecture-guard.json&quot;" />
-  </Target>
-  <ItemGroup><ProjectReference Include="../Pcl.Contract/Pcl.Contract.csproj" /></ItemGroup>
-
+  <ItemGroup>
+    <ProjectReference Include="../Pcl.Contract/Pcl.Contract.csproj" Condition="'$(UsePclSdkPackages)' != 'true'" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Pcl.Desktop.Updates/Pcl.Desktop.Updates.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(UsePclSdkPackages)' == 'true'">
+    <PackageReference Include="Pcl.Client" Version="$(PclSdkVersion)" />
+    <PackageReference Include="Pcl.Contract" Version="$(PclSdkVersion)" />
   </ItemGroup>
 </Project>

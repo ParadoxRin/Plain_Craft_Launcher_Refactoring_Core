@@ -1,0 +1,388 @@
+{
+  "status": "passed",
+  "date": "2026-11-02",
+  "platform": "native macOS arm64",
+  "version": "0.42.1",
+  "clientBuild": 425,
+  "hostSequence": 42102,
+  "coreCommit": "81016b476e8811ecbfbd3f969d143b646ac5282d",
+  "coreBusinessSourceChangesThisRound": false,
+  "baseline": "origin/main fetched and pinned baseline plus pre-existing content overlays verified",
+  "builds": {
+    "independentCore": "passed without Desktop/Client transport/CLI source",
+    "sdk": "passed two binary NuGet packages; payload hashes match runtime client DLLs",
+    "independentClients": "passed Desktop, CLI, MinimalClient without backend or SDK source",
+    "tools": "passed zero warnings/errors",
+    "updateIntegrationHarness": "compiled zero warnings/errors; combined update runtime not rerun this round"
+  },
+  "validation": {
+    "existingAcceptedDesktopToNewHost": {
+      "status": "passed",
+      "checks": [
+        "desktop-runtime-assembly-has-no-core-application-or-meloong",
+        "network-tab-loads-authoritative-host-value",
+        "enabled-保存网络设置",
+        "network-save-button-persists-in-host",
+        "enabled-暂停下载",
+        "download-pause-button-controls-host",
+        "enabled-继续下载",
+        "download-resume-button-controls-host",
+        "diagnostic-tab-shows-redacted-host-analysis",
+        "reopened-task-window-restores-network-settings",
+        "enabled-检查并导入",
+        "drop-confirm-button-imports-resource-through-host",
+        "remaining-settings-page-renders-with-contract-models"
+      ]
+    },
+    "independentSdkDesktopToIndependentCore": {
+      "status": "passed",
+      "checks": [
+        "desktop-runtime-assembly-has-no-core-application-or-meloong",
+        "network-tab-loads-authoritative-host-value",
+        "enabled-保存网络设置",
+        "network-save-button-persists-in-host",
+        "enabled-暂停下载",
+        "download-pause-button-controls-host",
+        "enabled-继续下载",
+        "download-resume-button-controls-host",
+        "diagnostic-tab-shows-redacted-host-analysis",
+        "reopened-task-window-restores-network-settings",
+        "enabled-检查并导入",
+        "drop-confirm-button-imports-resource-through-host",
+        "remaining-settings-page-renders-with-contract-models"
+      ]
+    },
+    "sdkOnlyClientContract": {
+      "status": "passed",
+      "scope": "Real Host process and public contracts; no complete game install, credentials or GUI",
+      "platform": "macOS 27.2.0",
+      "checks": [
+        "assembly-boundary-Pcl.MinimalClient",
+        "assembly-boundary-Pcl.Client",
+        "assembly-boundary-Pcl.Contract",
+        "assembly-boundary-Pcl.MinimalClient.Tests",
+        "output-has-no-business-assemblies",
+        "reject-attach-CLIENT_IDENTITY_INVALID",
+        "real-host-handshake-and-capabilities",
+        "isolated-root-no-user-credentials",
+        "reject-attach-SESSION_IN_USE",
+        "rejected-takeover-preserves-original-session",
+        "reject-METHOD_NOT_SUPPORTED",
+        "reject-PROTOCOL_INCOMPATIBLE",
+        "reject-UNSUPPORTED_TARGET",
+        "bounded-empty-operation-page",
+        "same-key-same-operation",
+        "reject-IDEMPOTENCY_CONFLICT",
+        "reconnect-retains-host-and-operation",
+        "subscription-watermark-increases",
+        "cancel-reaches-terminal-through-restored-subscription",
+        "subscription-delivers-terminal",
+        "restart-creates-new-host",
+        "cancelled-state-survives-host-restart",
+        "idempotency-survives-host-restart",
+        "offline-account-created-through-host-only",
+        "account-snapshot-is-public-and-offline",
+        "offline-account-restored-and-root-lock-reacquired",
+        "all-owned-hosts-exited",
+        "runtime-loaded-assemblies-remain-contract-only"
+      ],
+      "observed": [],
+      "error": null
+    },
+    "clientSelfUpdate": {
+      "status": "passed",
+      "checks": [
+        "signed-feed-valid",
+        "wrong-key-rejected",
+        "tampered-feed-rejected",
+        "expired-feed-rejected",
+        "wrong-channel-rejected",
+        "wrong-platform-rejected",
+        "non-https-rejected",
+        "package-limit-rejected",
+        "package-tampering-rejected",
+        "archive-traversal-rejected",
+        "archive-link-rejected",
+        "bounded-download-and-stage-via-http-client",
+        "cancelled-download-keeps-client",
+        "concurrent-installer-rejected",
+        "waits-for-old-process-exit",
+        "old-client-not-killed-on-exit-timeout",
+        "all-preflight-failures-preserve-installed-bytes",
+        "another-running-client-blocks-replacement",
+        "actual-app-exit-helper-replacement-restart",
+        "startup-ack-commits-and-retains-backup",
+        "updated-app-signature-intact",
+        "actual-signed-broken-app-restores-identical-previous-client",
+        "failed-version-not-reinstalled",
+        "startup-timeout-rolls-back",
+        "timeout-preserves-previous-app-bytes",
+        "target-always-present-False",
+        "automatic-recovery-before-swap",
+        "target-always-present-True",
+        "automatic-recovery-after-swap",
+        "host-payload-preserved-in-client-fixtures",
+        "user-data-preserved",
+        "standalone-client-updates-without-bundling-core",
+        "standalone-client-restarts-with-external-host"
+      ],
+      "scope": "Real macOS application, copied self-contained helper, RSA signing, atomic directory exchange, startup acknowledgement and rollback; HTTP transport fixture only"
+    },
+    "deliveredPackages": {
+      "status": "passed",
+      "scope": "Actual ZIP extraction and delivered Core; synthetic subprocess fixtures",
+      "hostBuild": {
+        "version": "0.42.1",
+        "sequence": 42102,
+        "dataEpoch": 1,
+        "runtime": "osx-arm64"
+      },
+      "checks": [
+        "client-archive-integrity-and-extraction",
+        "host-archive-integrity-and-extraction",
+        "full-archive-integrity-and-extraction",
+        "extracted-host-probe-matches-manifest",
+        "delivered-core-log-and-credential-preflight-regressions"
+      ],
+      "regressions": [
+        "PASS keychain UTF-8 overflow preflight",
+        "PASS detached dual-stream, chunk/newline boundaries, short secrets and exit code",
+        "PASS bounded no-newline output and continued drain",
+        "PASS existing log cap and symlink rejection",
+        "PASS detached soft termination preserves owned game PID",
+        "PASS actual Host process exit with continuing redaction"
+      ]
+    },
+    "compiledArchitecture": {
+      "status": "passed",
+      "runtimeProjectReferences": {
+        "Pcl.Contract": [],
+        "Pcl.Domain": [],
+        "Pcl.Ports": [
+          "Pcl.Domain"
+        ],
+        "Pcl.Application": [
+          "Pcl.Contract",
+          "Pcl.Domain",
+          "Pcl.Ports"
+        ],
+        "Pcl.Core": [
+          "MeloongCore",
+          "Pcl.Contract",
+          "Pcl.Domain",
+          "Pcl.Legacy",
+          "Pcl.Ports",
+          "PCLCS"
+        ],
+        "Pcl.Client": [
+          "Pcl.Contract"
+        ],
+        "Pcl.Desktop": [
+          "Pcl.Client",
+          "Pcl.Contract",
+          "Pcl.Desktop.Updates"
+        ],
+        "Pcl.Desktop.Updates": [
+          "Pcl.Contract"
+        ],
+        "Pcl.Cli": [
+          "Pcl.Client",
+          "Pcl.Contract"
+        ],
+        "Pcl.Host": [
+          "Pcl.Application",
+          "Pcl.Contract",
+          "Pcl.Core"
+        ]
+      },
+      "checkedDomainMethods": 527,
+      "checkedMethods": 3180,
+      "checkedMemberUses": 52349,
+      "knownTransitionExceptions": [],
+      "violations": []
+    },
+    "sourceBuildBoundaries": {
+      "status": "passed",
+      "scope": "All project references including ReferenceOutputAssembly=false and cross-module source links",
+      "graph": {
+        "src/Pcl.Contract/Pcl.Contract.csproj": [],
+        "src/Pcl.Client/Pcl.Client.csproj": [
+          "Pcl.Contract"
+        ],
+        "src/Pcl.Domain/Pcl.Domain.csproj": [],
+        "src/Pcl.Ports/Pcl.Ports.csproj": [
+          "Pcl.Domain"
+        ],
+        "src/Pcl.Application/Pcl.Application.csproj": [
+          "Pcl.Contract",
+          "Pcl.Domain",
+          "Pcl.Ports"
+        ],
+        "src/Pcl.Core/Pcl.Core.csproj": [
+          "MeloongCore",
+          "PCLCS",
+          "Pcl.Contract",
+          "Pcl.Domain",
+          "Pcl.Legacy",
+          "Pcl.Ports"
+        ],
+        "src/Pcl.Host/Pcl.Host.csproj": [
+          "Pcl.Application",
+          "Pcl.Contract",
+          "Pcl.Core"
+        ],
+        "src/Pcl.Desktop.Updates/Pcl.Desktop.Updates.csproj": [
+          "Pcl.Contract"
+        ],
+        "src/Pcl.Desktop/Pcl.Desktop.csproj": [
+          "Pcl.Client",
+          "Pcl.Contract",
+          "Pcl.Desktop.Updates"
+        ],
+        "src/Pcl.Cli/Pcl.Cli.csproj": [
+          "Pcl.Client",
+          "Pcl.Contract"
+        ],
+        "examples/Pcl.MinimalClient/Pcl.MinimalClient.csproj": [
+          "Pcl.Client",
+          "Pcl.Contract"
+        ]
+      },
+      "violations": []
+    }
+  },
+  "ilFaultInjection": {
+    "tests": [
+      {
+        "case": "positive",
+        "status": "passed",
+        "guardExitCode": 0
+      },
+      {
+        "case": "negative-symbols",
+        "status": "passed",
+        "guardExitCode": 1
+      },
+      {
+        "case": "negative-project-reference",
+        "status": "passed",
+        "guardExitCode": 1
+      },
+      {
+        "case": "negative-manual-reference",
+        "status": "passed",
+        "guardExitCode": 1
+      },
+      {
+        "case": "negative-desktop-project-reference",
+        "status": "passed",
+        "guardExitCode": 1
+      },
+      {
+        "case": "negative-desktop-manual-reference",
+        "status": "passed",
+        "guardExitCode": 1
+      },
+      {
+        "case": "negative-domain-io",
+        "status": "passed",
+        "guardExitCode": 1
+      }
+    ]
+  },
+  "moduleFaultInjection": {
+    "passed": 4,
+    "cases": [
+      "valid source graph",
+      "reject Desktop build-only Host reference",
+      "reject CLI Core reference",
+      "reject SDK linked Desktop source"
+    ]
+  },
+  "packageGuardTests": {
+    "passed": 7
+  },
+  "cliHello": {
+    "ProtocolVersion": 1,
+    "HostInstanceId": "d4854ad63d0e4e11b57e33125c10d651",
+    "Capabilities": [
+      "page.operations.v1",
+      "workspace.operations.v1",
+      "blob.file.v1",
+      "version.install.v3",
+      "game.launch.v2",
+      "game.guidance.v1",
+      "session.reconnect.v1",
+      "event.subscribe.v1",
+      "request.ordered-ids.v1",
+      "operation.snapshot",
+      "operation.cancel",
+      "blob.read",
+      "blob.page",
+      "operation.log.snapshot",
+      "desktop.contract-only.v1",
+      "account.login.v1",
+      "game.details",
+      "host.update.prepare.v1",
+      "content.update.v1"
+    ],
+    "MaximumFrameBytes": 1048576,
+    "InstallationTarget": {
+      "Os": "osx",
+      "Architecture": "aarch64",
+      "OsVersion": "27.2.0"
+    },
+    "Build": {
+      "Version": "0.42.1",
+      "Sequence": 42102,
+      "DataEpoch": 1,
+      "Runtime": "osx-arm64"
+    }
+  },
+  "sdk": {
+    "version": "0.42.1",
+    "protocol": 1,
+    "packages": [
+      {
+        "id": "Pcl.Contract",
+        "file": "Pcl.Contract.0.42.1.nupkg",
+        "sha256": "6f04578407ac8ac779ab8fe9b76120b4d086f7665557563b8432c8f8c866a642",
+        "dependencies": []
+      },
+      {
+        "id": "Pcl.Client",
+        "file": "Pcl.Client.0.42.1.nupkg",
+        "sha256": "92afd1d3e43b2840919fbf367f6a44b86a3d2dc80803f2a20fbdb6623242a6b1",
+        "dependencies": [
+          [
+            "Pcl.Contract",
+            "0.42.1"
+          ]
+        ]
+      }
+    ]
+  },
+  "provenance": {
+    "artifacts/unified424-complete/components/client/PCL-MacPort.dll": "3abded3e51d91bb795ee7af2ef2471e69fa790bb545406b3f10de83670e656e5",
+    "artifacts/project-split425-components/host/Pcl.Host.dll": "13df653d563f5a4667a180f82e46e59a9eeeb99687023a824e5f7aa36b2f3994",
+    "artifacts/project-split425-independent-final/core/src/Pcl.Host/bin/Release/net10.0/Pcl.Host.dll": "4fe0e4230176b6d9cc8ee46718a2b92033c6c8e9e2481c58d3a998e2265adbfb",
+    "artifacts/project-split425-independent-final/clients/src/Pcl.Desktop/bin/Release/net10.0/PCL-MacPort.dll": "8d25c62cc52a531b305f4c568497df82d3ff567df53a79b01395ec310c946784"
+  },
+  "localEvidence": {
+    "existingAcceptedDesktopToNewHost": "artifacts/project-split425-gui/accepted424/report.json",
+    "independentSdkDesktopToIndependentCore": "artifacts/project-split425-independent-final/gui/report.json",
+    "sdkOnlyClientContract": "artifacts/project-split425-independent-final/contract.json",
+    "clientSelfUpdate": "artifacts/project-split425-self-update/run/results.json",
+    "deliveredPackages": "artifacts/project-split425-package-delivery/delivery-result.json",
+    "compiledArchitecture": "artifacts/project-split425-components/architecture-guard.json",
+    "sourceBuildBoundaries": "artifacts/project-split425-boundaries.json"
+  },
+  "limits": [
+    "No GitHub push or remote CI run",
+    "No new full game install/world-play/real Microsoft sign-in acceptance",
+    "No Windows/Linux runtime acceptance this round",
+    "Signed self-update uses disposable keys and HTTP fixtures, not production HTTPS deployment",
+    "Core adapter/legacy cleanup remains incremental; no separate remote repositories or cross-language SDK",
+    "One writable session per data root; multiple client implementations do not imply concurrent writers"
+  ]
+}

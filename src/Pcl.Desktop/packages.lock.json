@@ -203,6 +203,12 @@
       },
       "pcl.contract": {
         "type": "Project"
+      },
+      "pcl.desktop.updates": {
+        "type": "Project",
+        "dependencies": {
+          "Pcl.Contract": "[1.0.0, )"
+        }
       }
     },
     "net10.0/osx-arm64": {

@@ -1,4 +1,4 @@
-using Pcl.Client.SelfUpdate;
+using Pcl.Desktop.Updates;
 
 if (args.Length != 1) return 2;
 try

@@ -8,10 +8,11 @@ import subprocess
 root = pathlib.Path(__file__).resolve().parent.parent
 output = root / os.environ.get('PCL_ARCH_TEST_OUTPUT','artifacts/architecture-contract-0.25')
 output.mkdir(parents=True, exist_ok=True)
-sdk = root / '.tooling/dotnet/dotnet'
+sdk = pathlib.Path(os.environ.get('DOTNET', str(root / '.tooling/dotnet/dotnet')))
 env = dict(os.environ, DOTNET_CLI_HOME=str(root / '.cache/dotnet-home'))
-guard = root / 'scripts/ArchitectureGuard/bin/Debug/net10.0/ArchitectureGuard.dll'
-desktop = root / 'src/Pcl.Desktop/bin/Debug/net10.0/PCL-MacPort.dll'
+guard = pathlib.Path(os.environ.get('PCL_ARCH_GUARD', str(root / 'scripts/ArchitectureGuard/bin/Debug/net10.0/ArchitectureGuard.dll')))
+desktop = pathlib.Path(os.environ.get('PCL_ARCH_DESKTOP', str(root / 'src/Pcl.Desktop/bin/Debug/net10.0/PCL-MacPort.dll')))
+backend = pathlib.Path(os.environ.get('PCL_ARCH_BACKEND', str(root / 'src/Pcl.Host/bin/Debug/net10.0')))
 fixture = output / 'negative-fixture'
 fixture.mkdir(exist_ok=True)
 (fixture / 'Fixture.csproj').write_text(f'''<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><TargetFramework>net10.0</TargetFramework><AssemblyName>GuardFaultFixture</AssemblyName></PropertyGroup><ItemGroup><ProjectReference Include="{root}/src/Pcl.Core/Pcl.Core.csproj"/><ProjectReference Include="{root}/src/Pcl.Application/Pcl.Application.csproj"/><ProjectReference Include="{root}/src/Pcl.Client/Pcl.Client.csproj"/></ItemGroup></Project>''')
@@ -55,9 +56,9 @@ with (output / 'negative-fixture-build.log').open('w') as log:
     subprocess.run([str(sdk), 'build', str(fixture / 'Fixture.csproj'), '--nologo', '-m:1', '-nr:false', '-p:UseSharedCompilation=false', '-p:NuGetAudit=false', '--source', str(root / '.cache/nuget')], cwd=root, env=env, stdout=log, stderr=subprocess.STDOUT, check=True)
 
 
-def run_case(name, project_root, assembly, expected_code=None):
+def run_case(name, project_root, assembly, expected_code=None, backend_path=backend):
     report = output / (name + '.json')
-    result = subprocess.run([str(sdk), str(guard), str(project_root), str(assembly), str(report)], cwd=root, env=env, capture_output=True, text=True)
+    result = subprocess.run([str(sdk), str(guard), str(project_root), str(assembly), str(report), str(backend_path)], cwd=root, env=env, capture_output=True, text=True)
     data = json.loads(report.read_text())
     if expected_code is None:
         assert result.returncode == 0 and data['status'] == 'passed'
@@ -79,7 +80,7 @@ assert any(item.startswith('SHELL_EXECUTION_USE:Pcl.Desktop.MainWindow.LoginClic
 assert any(item.startswith('UNMANAGED_DIALOG_PRESENTATION:') for item in negative)
 # 只更改测试副本的 Client 引用，验证真实项目引用检查，保留生产 csproj。
 clone = output / 'negative-project-root'
-for name in ('Pcl.Domain','Pcl.Ports','Pcl.Application','Pcl.Contract', 'Pcl.Core', 'Pcl.Client', 'Pcl.Desktop', 'Pcl.Host'):
+for name in ('Pcl.Domain','Pcl.Ports','Pcl.Application','Pcl.Contract', 'Pcl.Core', 'Pcl.Client', 'Pcl.Desktop', 'Pcl.Desktop.Updates', 'Pcl.Cli', 'Pcl.Host'):
     destination = clone / 'src' / name
     destination.mkdir(parents=True, exist_ok=True)
     shutil.copy2(root / 'src' / name / (name + '.csproj'), destination)
@@ -105,7 +106,8 @@ with (output / 'negative-domain-build.log').open('w') as log:
 # Guard uses only metadata: a copied bundle with the injected Domain exposes the forbidden IL.
 bundle = output / 'negative-domain-bundle'
 shutil.copytree(desktop.parent, bundle, dirs_exist_ok=True)
+shutil.copytree(backend, bundle / 'host', dirs_exist_ok=True)
 shutil.copy2(domain / 'bin/Debug/net10.0/Pcl.Domain.dll', bundle / 'host/Pcl.Domain.dll')
-results.append(run_case('negative-domain-io', root, bundle / desktop.name, 'DOMAIN_EXTERNAL_DEPENDENCY:'))
+results.append(run_case('negative-domain-io', root, bundle / desktop.name, 'DOMAIN_EXTERNAL_DEPENDENCY:', bundle / 'host'))
 (output / 'guard-tests.json').write_text(json.dumps({'tests': results}, indent=2))
 print(json.dumps(results))

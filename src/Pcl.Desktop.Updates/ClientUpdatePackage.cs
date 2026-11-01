@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 
-namespace Pcl.Client.SelfUpdate;
+namespace Pcl.Desktop.Updates;
 
 public sealed record ClientRelease(string Version, long Sequence, string Runtime);
 public sealed record ClientUpdatePolicy(string FeedUrl, string PublicKeyPem, string Channel);

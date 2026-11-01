@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src/Pcl.Contract/Pcl.Contract.csproj" />
+  <Project Path="src/Pcl.Client/Pcl.Client.csproj" />
+</Solution>
