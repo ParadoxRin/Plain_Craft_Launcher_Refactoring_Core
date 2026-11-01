@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Pcl.Client;
 using Pcl.Core.Contracts.Workspaces;
+using Pcl.Core.Contracts.Operations;
 
 if (args.Length is < 2 or > 3)
 {
@@ -26,6 +27,11 @@ try
     }
     Console.WriteLine("QUICKSTART_CONNECTED");
     return 0;
+}
+catch (OperationRejectedException ex)
+{
+    Console.Error.WriteLine(ex.Code + ": verify Host compatibility and use physical absolute paths (pwd -P on macOS).");
+    return 2;
 }
 finally
 {

@@ -3,6 +3,7 @@
 .NET 10, matching Pcl.Client/Pcl.Contract 0.42.1 NuGet packages, and a separately extracted Host are required. No Core project/source reference is used.
 
 ```sh
+cd -P "$PWD" # use physical absolute paths, especially on macOS
 dotnet restore Pcl.DeveloperQuickstart.csproj --source /absolute/local-sdk-feed
 dotnet build Pcl.DeveloperQuickstart.csproj -c Release --no-restore
 dotnet bin/Release/net10.0/Pcl.DeveloperQuickstart.dll /absolute/host/Pcl.Host /absolute/fresh-data-root
