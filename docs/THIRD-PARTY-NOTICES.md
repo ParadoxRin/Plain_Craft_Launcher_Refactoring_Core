@@ -18,7 +18,7 @@ Pcl.Legacy/MinecraftRules.vb 从 PCL 的规则检查逻辑提取并改为显式�
 
 0.8 的外置认证按 [authlib-injector 官方规范](https://yushijinhun.github.io/authlib-injector/en/launcher-technical-specification.html)独立实现。认证组件仅在需要时从官方 API 下载未修改的 JAR 并校验 SHA-256；本轮联网核验为 1.2.8 / build 56。组件采用 AGPL-3.0-or-later 附 AUTHLIB-INJECTOR 例外，参见上游 [COPYING.md](https://github.com/yushijinhun/authlib-injector/blob/develop/COPYING.md) 和[完整许可](https://github.com/yushijinhun/authlib-injector/blob/develop/AGPLv3-with-authlib-injector-exception.txt)。组件没有预装进应用源码/运行包；用户下载的运行时组件由其上游许可约束。
 
-0.8 EasyTier：EasyTier contributors，Apache-2.0；按需下载官方 2.6.4 macOS aarch64 二进制，GitHub 发布 SHA-256 为 `4be1882d1aa36d31c1d6ba0596f2cf8a097e371f8da124212324b2e0f8df7e4b`。来源 https://github.com/EasyTier/EasyTier/releases/tag/v2.6.4 。模块不预装在源码或应用包。
+0.8 EasyTier：EasyTier contributors；2.6.4 标签根目录 LICENSE 为 GNU LGPL v3（https://github.com/EasyTier/EasyTier/blob/v2.6.4/LICENSE），替代此前误记的 Apache-2.0；按需下载官方 2.6.4 macOS aarch64 二进制，GitHub 发布 SHA-256 为 `4be1882d1aa36d31c1d6ba0596f2cf8a097e371f8da124212324b2e0f8df7e4b`。来源 https://github.com/EasyTier/EasyTier/releases/tag/v2.6.4 。模块不预装在源码或应用包。
 
 0.8 TOML 解析使用 Tomlyn 2.10.1（Alexandre Mutel，BSD-2-Clause），用于 Forge/NeoForge 模组元数据；锁定版本见 packages.lock.json，许可全文见 Tomlyn-LICENSE.txt。
 
