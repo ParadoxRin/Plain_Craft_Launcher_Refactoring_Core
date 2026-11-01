@@ -6,7 +6,7 @@ PCL 原作者：**龙腾猫跃（LTCatt）** · [支持原作者](https://meloon
 
 ## 当前状态
 
-固定发布版本为 **0.41.0 Preview**：Apple Silicon macOS 14+ 的 Avalonia 参考客户端 + 独立 .NET Host。`main` 已合入统一模组浏览、Host 签名更新、独立最小客户端及三平台凭据适配等后续改动，**不表示既有 v0.41.0 安装包已更新**。复现发布包使用标签，继续开发使用 `main`；现行[架构规范为 v1.5.2](docs/architecture/PCL-Mac架构规范.md)。
+当前发布版本为 **0.42.0 Preview**：Apple Silicon macOS 14+ 的 Avalonia 参考客户端 + 独立 .NET Host。本版纳入统一模组浏览、Host 签名更新、独立最小客户端和三平台凭据适配等 main 增量；默认官方签名更新源仍未配置。既有 v0.41.0 附件保持不变。复现本版使用 `v0.42.0` 标签，继续开发使用 `main`；现行[架构规范为 v1.5.2](docs/architecture/PCL-Mac架构规范.md)。本版交付与验证见[0.42.0 发布记录](docs/0.42-发布记录.md)。
 
 SwiftUI、Windows/Linux 原生图形客户端尚未实现；Windows/Linux 的 Java/natives、完整游戏运行、真人账户/皮肤及其他平台组合仍需补齐验收。共用代码、构建通过和完整产品可用是不同结论。Git/隐私基线从 v0.36.1 开始，不重新导入旧项目历史。
 
@@ -77,7 +77,7 @@ flowchart LR
 5. 验证规则、协议和真实入口；平台相关改动在目标系统验收。
 6. 确定交付范围：兼容后台改动可仅更新完整 Host；新 UI/协议协调发布两端；数据格式变化先完成迁移和回退设计。
 
-## main 的已合并增量
+## 0.42.0 纳入的已合并增量
 
 - **统一模组浏览与安装**：多来源浏览、可靠身份合并、按需选版本/实例/来源，继续复用 Host 安装事务。见[流程与验收](docs/统一模组浏览与安装-2026-11-01.md)及 [PCLCS 集成职责](vendor/PCLCS/README.integration.md)。
 - **Host 自动更新**：签名与全文件校验、兼容检查、空闲切换、下次启动应用、启动失败回退。需要发布者配置可信公钥与源；不替换 UI、不迁移数据格式、不独立更新词库。见[接入](docs/Host自动更新与接入.md)与[验收](docs/Host自动更新验收.md)。
@@ -114,7 +114,7 @@ dotnet tests/Pcl.Tests/bin/Release/net10.0/Pcl.Tests.dll artifacts/receiver-core
 
 测试目录必须全新；测试是控制台程序，不能以 `dotnet test` 未报错代替执行。构建不等于图形或游戏验收；原生桥、Host 专项测试及各平台前提见[开发与验证](docs/开发与验证.md)。
 
-Mac 发行包另由 `bash scripts/build-handoff.sh` 生成，需要 Apple Silicon、macOS 14+、Xcode Command Line Tools、Python 3 和 curl。当前为 ad-hoc 签名、未公证；`release.json` 与 Desktop 版本须一致。分类整理不会执行打包、重发 Release 或创建独立内容更新包。
+Mac 发行包另由 `bash scripts/build-handoff.sh` 生成，需要 Apple Silicon、macOS 14+、Xcode Command Line Tools、Python 3 和 curl。当前为 ad-hoc 签名、未公证；`release.json` 与 Desktop 版本须一致。本版仍按客户端与 Host 合装交付，不创建独立内容更新包。
 
 ## 开发方式
 
