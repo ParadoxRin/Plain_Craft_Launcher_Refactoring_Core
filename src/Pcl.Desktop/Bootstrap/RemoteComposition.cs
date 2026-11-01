@@ -37,6 +37,18 @@ internal static class RemoteComposition
         );
         try
         {
+            // 客户端部署方显式提供可信更新源；没有策略文件时保持随包 Host 和原登录行为。
+            var policyFile = Path.Combine(AppContext.BaseDirectory, "host-update-policy.json");
+            if (File.Exists(policyFile))
+            {
+                var policy = System.Text.Json.JsonSerializer.Deserialize<Pcl.Client.Updates.HostUpdatePolicy>(File.ReadAllText(policyFile),
+                    new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true })
+                    ?? throw new InvalidDataException("UPDATE_POLICY_INVALID");
+                var scope = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(
+                    System.Text.Encoding.UTF8.GetBytes(AppContext.BaseDirectory + "\n" + Path.GetFullPath(root))));
+                remote.Client.ConfigureUpdates(policy, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                    "PlainCraftLauncherRefactoring", "host-updates", scope));
+            }
             await remote.InitializeAsync();
             var journal = new LifecycleJournal();
             return new(

@@ -1,6 +1,10 @@
 namespace Pcl.Core;
 // [实现] 数据约定：ResourceSearchQuery 汇集 Kind、Text、GameVersion、Loader、Page，供该模块传递状态。
-public sealed record ResourceSearchQuery(ResourceKind Kind, string Text, string GameVersion, string Loader, int Page = 0);
+public sealed record ResourceSearchQuery(ResourceKind Kind, string Text, string GameVersion, string Loader, int Page = 0)
+{
+    public string Provider { get; init; } = "all";
+}
+
 // [实现] 数据约定：ResourceSearchHit 汇集 Identity、Title、Description、Sources、Modrinth、CurseForge、LocalDirectory、Mcmod，供该模块传递状态。
 public sealed record ResourceSearchHit(
     string Identity,
@@ -84,8 +88,9 @@ public static class UnifiedResourceSearch
     {
         var order = new List<string>();
         var rows = new Dictionary<string, ResourceSearchHit>(StringComparer.Ordinal);
-        foreach (var hit in input)
+        foreach (var raw in input)
         {
+            var hit = Adapters.Search.BundledProjectIdentity.Enrich(raw);
             // [实现] 对 input 中的每一项：按 !rows.TryGetValue(hit.Identity, out var prior) 分支处理。
             if (!rows.TryGetValue(hit.Identity, out var prior))
             {
@@ -138,15 +143,16 @@ public static class UnifiedResourceSearch
             ? null
             : new CurseForgeCatalog(curseKey ?? "", paths: service.Paths);
         var providers = new Dictionary<string, Func<ResourceSearchQuery, CancellationToken, Task<ResourceSourcePage>>>();
-        if (!mcmodOnly)
+        bool Include(string name) => query.Provider == "all" || query.Provider == name;
+        if (!mcmodOnly && Include("local"))
             providers["本地"] = async (q, token) =>
             {
-                // [实现] 回调触发时：准备 var installer = new ResourceInstaller(profile.GameDirectory, service.Downloads, profile.Loader,…；准备 var text = ResourceAliases.SearchQuery(q.Text)；准备 var rows = installer.List() .Where( x => x.Kind == q.Kind && (string.IsNullOrWhiteSpace(q.Text)…。
+                // [实现] 回调触发时：准备 var installer = new ResourceInstaller(profile.GameDirectory, service.Downloads, profile.Loader,…；准备 var text = ResourceAliases.SearchQuery(q.Text)；准备 var rows = installer.List() .Where( x => x.Kind == q.Kind && (q.GameVersion.Length == 0 || q.GameVersion == profile.GameVersion) && (q.Loader.Length == 0 || q.Loader == profile.Loader) && (string.IsNullOrWhiteSpace(q.Text)…。
                 var installer = new ResourceInstaller(profile.GameDirectory, service.Downloads, profile.Loader, profile.GameVersion);
                 var text = ResourceAliases.SearchQuery(q.Text);
                 var rows = installer.List()
                     .Where(
-                        x => x.Kind == q.Kind && (string.IsNullOrWhiteSpace(q.Text) || x.Name.Contains(q.Text, StringComparison.OrdinalIgnoreCase) || x.FileName.Contains(q.Text, StringComparison.OrdinalIgnoreCase) || x.Name.Contains(text, StringComparison.OrdinalIgnoreCase) || x.FileName.Contains(text, StringComparison.OrdinalIgnoreCase))
+                        x => x.Kind == q.Kind && (q.GameVersion.Length == 0 || q.GameVersion == profile.GameVersion) && (q.Loader.Length == 0 || q.Loader == profile.Loader) && (string.IsNullOrWhiteSpace(q.Text) || x.Name.Contains(q.Text, StringComparison.OrdinalIgnoreCase) || x.FileName.Contains(q.Text, StringComparison.OrdinalIgnoreCase) || x.Name.Contains(text, StringComparison.OrdinalIgnoreCase) || x.FileName.Contains(text, StringComparison.OrdinalIgnoreCase))
                     )
                     .OrderBy(
                         x => x.Name,
@@ -232,51 +238,121 @@ public static class UnifiedResourceSearch
 
                 return new("本地", hits, (q.Page + 1) * 20 < rows.Length);
             };
-        if (online && !mcmodOnly)
+        if (online && !mcmodOnly && Include("modrinth"))
             providers["Modrinth"] = async (q, token) =>
             {
                 // [实现] 回调触发时：准备 var result = await catalog.SearchAsync(q.Kind, q.Text, q.GameVersion, q.Loader, q.Page * 20, ct…；返回 new( "Modrinth", result.Projects.Select( x => new ResourceSearchHit( "modrinth:" + x.Id, x.Titl…。
-                var result = await catalog.SearchAsync(q.Kind, q.Text, q.GameVersion, q.Loader, q.Page * 20, ct: token);
+                var projects = new List<ResourceProject>();
+                var hasNext = false;
+                foreach (var term in ResourceAliases.SearchTerms(q.Text, "modrinth"))
+                {
+                    var result = await catalog.SearchAsync(
+                        q.Kind,
+                        term,
+                        q.GameVersion,
+                        q.Loader,
+                        q.Page * 20,
+                        ct: token,
+                        translateAlias: false
+                    );
+                    hasNext |= q.Page * 20 + 20 < result.Total;
+                    foreach (var project in result.Projects)
+                    {
+                        if (q.Kind == ResourceKind.Mod && q.GameVersion.Length > 0 && q.Loader.Length > 0)
+                        {
+                            var candidates = await catalog.VersionsAsync(project.Id, q.Kind, q.GameVersion, q.Loader, token);
+                            if (!candidates.Any(
+                                x => x.GameVersions.Contains(q.GameVersion) && (x.Loaders.Contains(q.Loader) || (q.Loader == "quilt" && x.Loaders.Contains("fabric")))
+                            ))
+                            {
+                                continue;
+                            }
+                        }
+
+                        projects.Add(project);
+                    }
+                }
+
                 return new(
                     "Modrinth",
-                    result.Projects.Select(
-                        x => new ResourceSearchHit(
-                            "modrinth:" + x.Id,
-                            x.Title,
-                            x.Description,
-                            [
-                                "Modrinth"
-                            ],
-                            x
-                        )
+                    projects.DistinctBy(
+                        x => x.Id
                     )
+                        .Select(
+                            x => new ResourceSearchHit(
+                                "modrinth:" + x.Id,
+                                x.Title,
+                                x.Description,
+                                [
+                                    "Modrinth"
+                                ],
+                                x
+                            )
+                        )
                         .ToArray(),
-                    q.Page * 20 + 20 < result.Total
+                    hasNext
                 );
             };
-        if (online && !mcmodOnly && curse is not null && query.Kind != ResourceKind.DataPack)
+        if (online && !mcmodOnly && Include("curseforge") && curse is not null && query.Kind != ResourceKind.DataPack)
             providers["CurseForge"] = async (q, token) =>
             {
                 // [实现] 回调触发时：准备 var result = await curse.SearchAsync(q.Kind, q.Text, q.GameVersion, q.Loader, q.Page * 20, toke…；返回 new( "CurseForge", result.Select( x => new ResourceSearchHit( "curseforge:" + x.Id, x.Name, x.S…。
-                var result = await curse.SearchAsync(q.Kind, q.Text, q.GameVersion, q.Loader, q.Page * 20, token);
+                var projects = new List<CurseResourceProject>();
+                var hasNext = false;
+                foreach (var term in ResourceAliases.SearchTerms(q.Text, "curseforge"))
+                {
+                    var result = await curse.SearchAsync(q.Kind, term, q.GameVersion, q.Loader, q.Page * 20, token, translateAlias: false);
+                    hasNext |= result.Count == 20;
+                    foreach (var project in result)
+                    {
+                        if (q.Kind == ResourceKind.Mod && q.GameVersion.Length > 0 && q.Loader.Length > 0)
+                        {
+                            var candidates = await curse.VersionsAsync(project.Id, q.Kind, q.GameVersion, q.Loader, token);
+                            if (!candidates.Any(
+                                x => x.GameVersions.Contains(q.GameVersion) && x.GameVersions.Contains(q.Loader, StringComparer.OrdinalIgnoreCase)
+                            ))
+                            {
+                                continue;
+                            }
+                        }
+
+                        projects.Add(project);
+                    }
+                }
+
                 return new(
                     "CurseForge",
-                    result.Select(
-                        x => new ResourceSearchHit(
-                            "curseforge:" + x.Id,
-                            x.Name,
-                            x.Summary,
-                            [
-                                "CurseForge"
-                            ],
-                            CurseForge: x
-                        )
+                    projects.DistinctBy(
+                        x => x.Id
                     )
+                        .Select(
+                            x => new ResourceSearchHit(
+                                "curseforge:" + x.Id,
+                                x.Name,
+                                x.Summary,
+                                [
+                                    "CurseForge"
+                                ],
+                                CurseForge: x
+                            )
+                        )
                         .ToArray(),
-                    result.Count == 20
+                    hasNext
                 );
             };
-        if (query.Kind == ResourceKind.Mod)
+        if (online && !mcmodOnly && Include("curseforge") && curse is null)
+        {
+            providers["CurseForge"] = (_, _) => Task.FromResult(
+                new ResourceSourcePage(
+                    "CurseForge",
+                    [],
+                    false,
+                    "未配置密钥或可用镜像"
+                )
+            );
+        }
+
+        if (query.Kind == ResourceKind.Mod && (mcmodOnly || (Include("mcmod") && query.GameVersion.Length == 0 && query.Loader.Length == 0)))
             providers[McmodCatalog.Source] = (q, token) =>
             {
                 // [实现] 回调触发时：准备 var result = McmodCatalog.Search(q.Text, q.Page, ct: token)；返回 Task.FromResult( new ResourceSourcePage( McmodCatalog.Source, result.Projects.Select( x => new …。

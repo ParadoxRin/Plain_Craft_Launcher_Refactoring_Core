@@ -73,7 +73,35 @@ public static class ResourceAliases
     // [实现] WikiUrl 的实现：计算并返回 Find(slug, source)?.WikiUrl ?? "https://www.mcmod.cn/s?key=" + Uri.EscapeDataString(original) +…。
     public static string WikiUrl(string slug, string original, string source = "modrinth") => Find(slug, source)?.WikiUrl ?? "https://www.mcmod.cn/s?key=" + Uri.EscapeDataString(original) + "&site=all&filter=0";
     // [实现] CanonicalIdentity 的实现：计算并返回 Find(slug, source)is { } match ? "mcmod:" + match.WikiId : source + ":" + slug。
-    public static string CanonicalIdentity(string source, string slug) => Find(slug, source)is { } match
-        ? "mcmod:" + match.WikiId
-        : source + ":" + slug;
+    public static string CanonicalIdentity(string source, string slug) => Adapters.Search.BundledProjectIdentity.Index.Identity(source, slug, slug);
+    /// <summary>保留原查询，只附加至多两个明确别名；模糊热门条目不能替换用户意图。</summary>
+    public static IReadOnlyList<string> SearchTerms(string query, string source)
+    {
+        var original = query.Trim();
+        var platform = source == "curseforge"
+            ? ResourcePlatforms.CurseForge
+            : ResourcePlatforms.Modrinth;
+        var terms = WikiEntry.All.Value.Where(
+            x => (string.Equals(x.ChineseName, original, StringComparison.OrdinalIgnoreCase) || string.Equals(
+                x.ChineseName?.Split(" (")[0].Trim(),
+                original,
+                StringComparison.OrdinalIgnoreCase
+            ))
+        )
+            .Select(
+                x => x.Slugs.GetValueOrDefault(platform)
+            )
+            .Where(
+                x => !string.IsNullOrEmpty(x)
+            )
+            .Cast<string>()
+            .Distinct(StringComparer.Ordinal)
+            .Take(2);
+        return new[]
+        {
+            original
+        }.Concat(terms)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+    }
 }

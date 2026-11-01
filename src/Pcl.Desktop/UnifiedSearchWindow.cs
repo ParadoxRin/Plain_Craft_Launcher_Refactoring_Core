@@ -9,7 +9,7 @@ using Pcl.Core.Contracts.Workspaces;
 
 namespace Pcl.Desktop;
 // 资源发现：查询并转换下载平台元数据，按游戏版本和加载器筛选资源，保留来源与可用性信息。
-public sealed class UnifiedSearchWindow : WorkspaceWindow, IHostWorkspace
+public sealed partial class UnifiedSearchWindow : WorkspaceWindow, IHostWorkspace
 {
     private readonly WorkspaceApi api;
     private readonly GameProfile profile;
@@ -39,10 +39,60 @@ public sealed class UnifiedSearchWindow : WorkspaceWindow, IHostWorkspace
         ItemsSource = new[]
         {
             "全部来源",
-            "MC 百科"
+            "MC 百科",
+            "Modrinth",
+            "CurseForge",
+            "本地"
         },
         SelectedIndex = 0
     };
+    private readonly CheckBox allVersions = new()
+    {
+        Content = "全部游戏版本",
+        IsChecked = true
+    };
+    private readonly TextBox gameVersion = new()
+    {
+        PlaceholderText = "指定游戏版本",
+        Width = 120,
+        IsEnabled = false
+    };
+    private readonly ComboBox loader = new()
+    {
+        ItemsSource = new[]
+        {
+            "全部加载器",
+            "fabric",
+            "forge",
+            "neoforge",
+            "quilt",
+            "liteloader"
+        },
+        SelectedIndex = 0
+    };
+    private readonly ComboBox downloadSource = new()
+    {
+        ItemsSource = new[]
+        {
+            "全部下载来源",
+            "Modrinth",
+            "CurseForge"
+        },
+        SelectedIndex = 0
+    };
+    private readonly StackPanel downloadChoices = new()
+    {
+        Spacing = 10,
+        IsVisible = false
+    };
+    private SearchRelease[] availableReleases = [];
+    private readonly ComboBox installTarget = new()
+    {
+        Name = "UnifiedInstallTarget",
+        HorizontalAlignment = HorizontalAlignment.Stretch
+    };
+    private GameProfile InstallTarget => installTarget.SelectedItem as GameProfile ?? profile;
+
     private readonly CheckBox online = new()
     {
         Name = "UnifiedOnline",
@@ -69,6 +119,10 @@ public sealed class UnifiedSearchWindow : WorkspaceWindow, IHostWorkspace
         TextWrapping = TextWrapping.Wrap
     };
     private readonly TextBlock detail = new()
+    {
+        TextWrapping = TextWrapping.Wrap
+    };
+    private readonly TextBlock releaseDetails = new()
     {
         TextWrapping = TextWrapping.Wrap
     };
@@ -103,7 +157,8 @@ public sealed class UnifiedSearchWindow : WorkspaceWindow, IHostWorkspace
         NavigationContext = profile.Id + (mcmodOnly
             ? ":mcmod"
             : ":all");
-        Title = "多源搜索 · " + profile.GameVersion;
+        Title = "统一资源浏览 · " + profile.GameVersion;
+        gameVersion.Text = profile.GameVersion;
         Width = 900;
         Height = 720;
         MinWidth = 700;
@@ -122,7 +177,7 @@ public sealed class UnifiedSearchWindow : WorkspaceWindow, IHostWorkspace
         top.Children.Add(
             new TextBlock
             {
-                Text = "多源搜索",
+                Text = "统一资源浏览",
                 FontSize = 26,
                 FontWeight = FontWeight.SemiBold
             }
@@ -153,6 +208,14 @@ public sealed class UnifiedSearchWindow : WorkspaceWindow, IHostWorkspace
             )
         );
         top.Children.Add(search);
+        var filters = new WrapPanel
+        {
+            ItemSpacing = 10
+        };
+        filters.Children.Add(allVersions);
+        filters.Children.Add(gameVersion);
+        filters.Children.Add(loader);
+        top.Children.Add(filters);
         top.Children.Add(key);
         var footer = new StackPanel
         {
@@ -237,10 +300,44 @@ public sealed class UnifiedSearchWindow : WorkspaceWindow, IHostWorkspace
         );
         Grid.SetColumn(grid.Children[1], 1);
         side.Children.Add(detail);
-        side.Children.Add(versions);
         side.Children.Add(
+            Action("选择版本与下载来源", LoadVersions)
+        );
+        downloadChoices.Children.Add(
+            new TextBlock
+            {
+                Text = "浏览可选全部版本；安装只列出目标实例兼容文件。",
+                TextWrapping = TextWrapping.Wrap
+            }
+        );
+        downloadChoices.Children.Add(
+            new TextBlock
+            {
+                Text = "安装到（游戏版本和加载器随实例）："
+            }
+        );
+        installTarget.ItemsSource = new[]
+        {
+            profile
+        };
+        installTarget.SelectedIndex = 0;
+        downloadChoices.Children.Add(installTarget);
+        downloadChoices.Children.Add(downloadSource);
+        downloadChoices.Children.Add(versions);
+        downloadChoices.Children.Add(releaseDetails);
+        versions.SelectionChanged += (_, _) =>
+        {
+            releaseDetails.Text = versions.SelectedItem is SearchRelease selected
+                ? selected.Source + " · " + selected.FileName + "\n" + string.Join(", ", selected.GameVersions) + " · " + string.Join(", ", selected.Loaders)
+                : "";
+        };
+        downloadChoices.Children.Add(
             Action("安装所选版本（含前置）", Install)
         );
+        downloadChoices.Children.Add(
+            Action("匹配手动下载文件", MatchDownload)
+        );
+        side.Children.Add(downloadChoices);
         side.Children.Add(
             Action(
                 "百科检索网页",
@@ -296,17 +393,34 @@ public sealed class UnifiedSearchWindow : WorkspaceWindow, IHostWorkspace
         );
         root.Children.Add(grid);
         Content = root;
-        results.SelectionChanged += async (_, _) =>
+        results.SelectionChanged += (_, _) =>
         {
-            if (operation is null)
-                await Run(LoadVersions);
+            downloadChoices.IsVisible = false;
+            availableReleases = [];
+            versions.ItemsSource = null;
+            if (results.SelectedItem is SearchHit hit)
+            {
+                detail.Text = hit.Title + "\n" + hit.Description + "\n" + string.Join(" · ", hit.Sources);
+            }
+        };
+        downloadSource.SelectionChanged += (_, _) => FilterDownloads();
+        installTarget.SelectionChanged += (_, _) =>
+        {
+            availableReleases = [];
+            versions.ItemsSource = null;
+            status.Text = "目标实例已变更，请重新点击“选择版本与下载来源”。";
         };
         void Reset()
         {
-            source.IsVisible = Kind == ResourceKind.Mod;
-            if (Kind != ResourceKind.Mod)
+            source.IsVisible = true;
+            if (Kind != ResourceKind.Mod && source.SelectedIndex == 1)
+            {
                 source.SelectedIndex = 0;
-            key.IsVisible = source.SelectedIndex == 0;
+            }
+
+            key.IsVisible = source.SelectedIndex is 0 or 3;
+            downloadChoices.IsVisible = false;
+            availableReleases = [];
             foreach (var b in buttons)
                 if (b.Content?.ToString()is "百科检索网页" or "百科资料" or "百科站内下载" or "导入已下载 JAR")
                     b.IsVisible = Kind == ResourceKind.Mod;
@@ -333,6 +447,19 @@ public sealed class UnifiedSearchWindow : WorkspaceWindow, IHostWorkspace
             }
         };
         online.IsCheckedChanged += (_, _) => Reset();
+        allVersions.IsCheckedChanged += (_, _) =>
+        {
+            gameVersion.IsEnabled = allVersions.IsChecked != true;
+            Reset();
+        };
+        gameVersion.PropertyChanged += (_, e) =>
+        {
+            if (e.Property == TextBox.TextProperty)
+            {
+                Reset();
+            }
+        };
+        loader.SelectionChanged += (_, _) => Reset();
         ViewLifetime.OnStop(
             () =>
             {
@@ -362,6 +489,7 @@ public sealed class UnifiedSearchWindow : WorkspaceWindow, IHostWorkspace
         foreach (var b in buttons)
             b.IsEnabled = false;
         results.IsEnabled = query.IsEnabled = kind.IsEnabled = key.IsEnabled = online.IsEnabled = source.IsEnabled = false;
+        allVersions.IsEnabled = gameVersion.IsEnabled = loader.IsEnabled = downloadSource.IsEnabled = installTarget.IsEnabled = false;
         try
         {
             await action(operation.Token);
@@ -381,6 +509,8 @@ public sealed class UnifiedSearchWindow : WorkspaceWindow, IHostWorkspace
             foreach (var b in buttons)
                 b.IsEnabled = true;
             results.IsEnabled = query.IsEnabled = kind.IsEnabled = key.IsEnabled = online.IsEnabled = source.IsEnabled = true;
+            allVersions.IsEnabled = loader.IsEnabled = downloadSource.IsEnabled = installTarget.IsEnabled = true;
+            gameVersion.IsEnabled = allVersions.IsChecked != true;
         }
     }
 
@@ -409,9 +539,20 @@ public sealed class UnifiedSearchWindow : WorkspaceWindow, IHostWorkspace
                 retry,
                 query = query.Text ?? "",
                 kind = (int)Kind,
-                provider = source.SelectedIndex == 1
-                    ? "mcmod"
-                    : "all",
+                provider = source.SelectedIndex switch
+                {
+                    1 => "mcmod",
+                    2 => "modrinth",
+                    3 => "curseforge",
+                    4 => "local",
+                    _ => "all"
+                },
+                gameVersion = allVersions.IsChecked == true
+                    ? ""
+                    : (gameVersion.Text ?? "").Trim(),
+                loader = loader.SelectedIndex == 0
+                    ? ""
+                    : loader.SelectedItem?.ToString() ?? "",
                 online = online.IsChecked == true,
                 secretHandle = await SecretAsync(ct)
             },
@@ -422,8 +563,6 @@ public sealed class UnifiedSearchWindow : WorkspaceWindow, IHostWorkspace
         results.ItemsSource = session.Hits;
         status.Text = $"第 {session.Page + 1} 页 · {session.Hits.Length} 项 · 合并 {session.FilteredDuplicates} 个重复项目\n" + string.Join(" · ", session.SourceStatus) + (session.HasErrors
             ? "\n部分来源失败，可重试本页。"
-            : "") + (string.IsNullOrWhiteSpace(key.Text)
-            ? "\nCurseForge 未启用：未提供密钥"
             : "");
     }
 
@@ -442,9 +581,21 @@ public sealed class UnifiedSearchWindow : WorkspaceWindow, IHostWorkspace
             return;
         }
 
+        var target = InstallTarget;
+        var instances = await api.CallAsync<InstanceSnapshot>("workspace.instances.list", null, ct: ct);
+        installTarget.ItemsSource = instances.Items.Select(
+            x => x.Profile
+        )
+            .ToArray();
+        installTarget.SelectedItem = instances.Items.Select(
+            x => x.Profile
+        )
+            .FirstOrDefault(
+                x => x.Id == target.Id
+            ) ?? profile;
         var found = await api.CallAsync<SearchVersions>(
             "workspace.search.versions",
-            profile.Id,
+            InstallTarget.Id,
             new
             {
                 selection = hit.Selection,
@@ -452,9 +603,25 @@ public sealed class UnifiedSearchWindow : WorkspaceWindow, IHostWorkspace
             },
             ct
         );
-        versions.ItemsSource = found.Releases;
+        availableReleases = found.Releases;
+        downloadChoices.IsVisible = true;
+        FilterDownloads();
+        status.Text = Kind == ResourceKind.Mod && InstallTarget.Loader == "vanilla"
+            ? "原版实例不能直接安装模组；请选择加载器实例，或先在组件管理安装加载器。"
+            : $"找到 {found.Releases.Length} 个兼容版本。" + found.Message;
+    }
+
+    // 这里只过滤 Host 已确认的候选快照，不重新推断兼容性或构造下载地址。
+    private void FilterDownloads()
+    {
+        var selected = downloadSource.SelectedIndex == 0
+            ? null
+            : downloadSource.SelectedItem?.ToString();
+        versions.ItemsSource = availableReleases.Where(
+            x => selected is null || x.Source == selected
+        )
+            .ToArray();
         versions.SelectedIndex = 0;
-        status.Text = $"找到 {found.Releases.Length} 个兼容版本。" + found.Message;
     }
 
     // 本地导入同样进入 Host，类型、加载器和 JAR 元数据由执行层检查。
@@ -494,13 +661,47 @@ public sealed class UnifiedSearchWindow : WorkspaceWindow, IHostWorkspace
             await ImportFileAsync(path, ct);
     }
 
+    private async Task MatchDownload(CancellationToken ct)
+    {
+        var selected = versions.SelectedItem as SearchRelease ?? throw new InvalidOperationException("请选择文件版本。");
+        if (!selected.Manual)
+        {
+            throw new InvalidOperationException("此文件允许自动下载。");
+        }
+
+        var files = await StorageProvider.OpenFilePickerAsync(
+            new()
+            {
+                Title = "选择已从作者页面下载的文件",
+                AllowMultiple = false
+            }
+        );
+        var path = files.FirstOrDefault()?.TryGetLocalPath();
+        if (path is null)
+        {
+            return;
+        }
+
+        await api.CallAsync<bool>(
+            "workspace.search.match",
+            InstallTarget.Id,
+            new
+            {
+                selection = selected.Selection,
+                path
+            },
+            ct
+        );
+        status.Text = "文件已按来源记录校验，可点击安装。";
+    }
+
     private async Task Install(CancellationToken ct)
     {
         var selected = versions.SelectedItem as SearchRelease ?? throw new InvalidOperationException("请选择兼容版本。");
         var secret = await SecretAsync(ct);
         var result = await api.CallAsync<SearchInstalled>(
             "workspace.search.install",
-            profile.Id,
+            InstallTarget.Id,
             new
             {
                 selection = selected.Selection,

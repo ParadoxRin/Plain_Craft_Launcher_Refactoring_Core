@@ -35,6 +35,13 @@ var json = new JsonSerializerOptions
     DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
     MaxDepth = 32
 };
+// 受签名包更新器调用；不初始化 HostRuntime，不迁移数据或访问钥匙串。
+if (args.SequenceEqual(new[] { "--update-probe" }))
+{
+    await output.WriteLineAsync(JsonSerializer.Serialize(new HostHello(1, "probe", HostBuildInfo.Capabilities,
+        BoundedNdjson.MaximumBytes, Build: HostBuildInfo.Build), json));
+    return;
+}
 bool connected = true, hello = false, requestedShutdown = false;
 bool pipeMode = args.Contains("--pipe");
 var hostId = Guid.NewGuid()
@@ -171,27 +178,10 @@ try
                                 new HostHello(
                                     1,
                                     hostId,
-                                    [
-                                        "page.operations.v1",
-                                        "workspace.operations.v1",
-                                        "blob.file.v1",
-                                        "version.install.v3",
-                                        "game.launch.v2",
-                                        "game.guidance.v1",
-                                        "session.reconnect.v1",
-                                        "event.subscribe.v1",
-                                        "request.ordered-ids.v1",
-                                        "operation.snapshot",
-                                        "operation.cancel",
-                                        "blob.read",
-                                        "blob.page",
-                                        "operation.log.snapshot",
-                                        "desktop.contract-only.v1",
-                                        "account.login.v1",
-                                        "game.details"
-                                    ],
+                                    HostBuildInfo.Capabilities,
                                     BoundedNdjson.MaximumBytes,
-                                    target
+                                    target,
+                                    HostBuildInfo.Build
                                 )
                             );
                             continue;
@@ -394,6 +384,12 @@ try
                                 parameters.GetProperty("resourceId")
                                     .GetString()!
                             ),
+                            // 同一顺序请求循环中检查并封闭入口，避免“查空闲→新任务→退出”的竞态。
+                            "host.update.prepare" => new Pcl.Core.Contracts.Updates.HostUpdateReadiness(
+                                !accountService.IsBusy && !pages.IsBusy && !executor.HasRunning && !pageExecutor.HasActiveLinks
+                                && !(await installs.ListAsync()).Any(x => !x.Terminal)
+                                && !launches.ListSnapshots().Cast<GameLaunchSnapshot>().Any(x => !x.Terminal),
+                                "IDLE_REQUIRED"),
                             "host.shutdown" => !executor.HasManagedRunning
                                 ? new
                                 {
@@ -404,7 +400,7 @@ try
                             _ => throw new OperationRejectedException("METHOD_NOT_SUPPORTED")
                         };
                         await Result(id, result);
-                        if (method == "host.shutdown")
+                        if (method == "host.shutdown" || result is Pcl.Core.Contracts.Updates.HostUpdateReadiness { Ready: true })
                         {
                             requestedShutdown = true;
                             break;

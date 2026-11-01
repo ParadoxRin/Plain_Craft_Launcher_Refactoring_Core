@@ -5,6 +5,12 @@ using Pcl.Core.Contracts.Pages;
 using Pcl.Core.Contracts.Workspaces;
 using Pcl.Core.Contracts.Operations;
 
+if (args[0] == "--unified-contract")
+{
+    await UnifiedBrowserFlow.Run(args[1], args[2], args.ElementAtOrDefault(3), args.ElementAtOrDefault(4));
+    return;
+}
+
 if (args[0] == "--closeout-workspace")
 {
     await CloseoutWorkspaceFlow.Run(args[1], args[2]);

@@ -813,7 +813,16 @@ public partial class MainWindow
         try
         {
             // [实现] 在异常保护范围内：按 route is "mod" or "modpack" or "datapack" or "resourcepack" or "shader" 分支处理。
-            if (route is "mod" or "modpack" or "datapack" or "resourcepack" or "shader")
+            if (route == "mod")
+            {
+                // 模组入口共享统一浏览窗口；原单站目录及本地管理仍保留。
+                classicPage.Content = new TextBlock { Text = "统一模组浏览", Margin = new Thickness(24) };
+                if (ProfileBox.SelectedItem is Pcl.Core.Contracts.Workspaces.GameProfile selected)
+                {
+                    await Bootstrap.WorkspacePages.Search(this, service, selected, p => RefreshProfiles(p.Id), Open).PresentAsync(this);
+                }
+            }
+            else if (route is "modpack" or "datapack" or "resourcepack" or "shader")
             {
                 // [实现] 条件成立（route is "mod" or "modpack" or "datapack" or "resourcepack" or "shader"）时：执行 classicPage.IsVisible = false；执行 ResourcePanel.IsVisible = true；执行 await resources.ShowAsync( route switch { "mod" => ResourceKind.Mod, "shader" => ResourceKind.S…。
                 classicPage.IsVisible = false;

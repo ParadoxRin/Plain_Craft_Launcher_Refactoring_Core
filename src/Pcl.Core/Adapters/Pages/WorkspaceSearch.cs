@@ -16,7 +16,22 @@ public sealed record ReleaseSelection(
     ResourceKind Kind,
     ResourceRelease[] Modrinth,
     CurseResourceRelease[] Curse
-);
+)
+{
+    // 扁平索引唯一指向一个来源文件，两个数组不能从0开始复用下载句柄。
+    public (ResourceRelease? Modrinth, CurseResourceRelease? Curse) At(int index)
+    {
+        if (index < 0 || index >= Modrinth.Length + Curse.Length)
+        {
+            throw new OperationInstallException("WORKSPACE_SELECTION_INVALID");
+        }
+
+        return index < Modrinth.Length
+            ? (Modrinth[index], null)
+            : (null, Curse[index - Modrinth.Length]);
+    }
+}
+
 public sealed partial class PageExecutionAdapter
 {
     private sealed record SearchState(string Instance, ResourceKind Kind, UnifiedSearchSession Session, DateTimeOffset Created);
@@ -67,61 +82,43 @@ public sealed partial class PageExecutionAdapter
 
                 var online = (bool? )args["online"] ?? true;
                 var provider = Text("provider");
+                if (provider is not ("" or "all" or "modrinth" or "curseforge" or "mcmod" or "local"))
+                {
+                    throw new OperationInstallException("SEARCH_PROVIDER_INVALID");
+                }
+
+                var gameVersion = (string? )args["gameVersion"] ?? profile.GameVersion;
+                var loader = (string? )args["loader"] ?? (profile.Loader == "vanilla"
+                    ? ""
+                    : profile.Loader);
+                if (gameVersion.Length > 80 || loader is not ("" or "fabric" or "forge" or "neoforge" or "quilt" or "liteloader" or "vanilla"))
+                {
+                    throw new OperationInstallException("SEARCH_FILTER_INVALID");
+                }
+
                 var query = new ResourceSearchQuery(
                     kind,
                     Text("query"),
-                    profile.GameVersion,
-                    profile.Loader
-                );
-                // 只捕获密钥句柄；调用时再读取内存密钥，过期不能从 receipt 恢复明文。
+                    gameVersion,
+                    loader
+                )
+                {
+                    Provider = provider.Length == 0
+                        ? "all"
+                        : provider
+                };
+                // 会话固定筛选快照；仅捕获临时密钥句柄，不把密钥写入持久记录。
                 var session = new UnifiedSearchSession(
                     query,
-                    async (q, token) =>
-                    {
-                        if (provider != "curseforge")
-                        {
-                            return await UnifiedResourceSearch.SearchAsync(
-                                source,
-                                profile,
-                                q,
-                                online,
-                                Secret(secretHandle),
-                                token,
-                                provider == "mcmod"
-                            );
-                        }
-
-                        if (string.IsNullOrWhiteSpace(
-                            Secret(secretHandle)
-                        ))
-                        {
-                            throw new OperationInstallException("CURSEFORGE_KEY_REQUIRED");
-                        }
-
-                        using var catalog = new CurseForgeCatalog(
-                            Secret(secretHandle) ?? "",
-                            paths: source.Paths
-                        );
-                        var rows = await catalog.SearchAsync(q.Kind, q.Text, q.GameVersion, q.Loader, q.Page * 20, token);
-                        var hits = rows.Select(
-                            x => new ResourceSearchHit(
-                                "curse:" + x.Id,
-                                x.Name,
-                                x.Summary,
-                                [
-                                    "CurseForge"
-                                ],
-                                CurseForge: x
-                            )
-                        )
-                            .ToArray();
-                        return new UnifiedSearchResult(
-                            hits,
-                            [
-                                new ResourceSourcePage("CurseForge", hits, rows.Count == 20)
-                            ]
-                        );
-                    }
+                    (q, token) => UnifiedResourceSearch.SearchAsync(
+                        source,
+                        profile,
+                        q,
+                        online,
+                        Secret(secretHandle),
+                        token,
+                        provider == "mcmod"
+                    )
                 );
                 state = new(profile.Id, kind, session, DateTimeOffset.UtcNow);
                 sessionId = id;
@@ -203,37 +200,32 @@ public sealed partial class PageExecutionAdapter
         if (request.Method == "workspace.search.versions")
         {
             var selected = Read<SearchSelection>(selectionId, "search-hits");
-            if (selected.Instance != profile.Id || index < 0 || index >= selected.Hits.Length)
+            // 浏览选择可以用于另一目标实例；本次版本快照仍绑定目标实例，安装时必须一致。
+            if (index < 0 || index >= selected.Hits.Length)
             {
                 throw new OperationInstallException("WORKSPACE_SELECTION_INVALID");
             }
 
             var hit = selected.Hits[index];
-            ResourceRelease[] mr = [];
-            CurseResourceRelease[] cf = [];
-            var message = "";
-            using var catalog = new ResourceCatalog(paths: source.Paths);
-            if (hit.Mcmod is not null)
+            // 下载候选始终按目标实例重新过滤，不能复用“全部版本”的浏览条件进行安装。
+            var selectedSource = Text("source");
+            if (selectedSource is not ("" or "all" or "modrinth" or "curseforge"))
             {
-                var found = await McmodCatalog.VersionsAsync(hit.Mcmod, catalog, profile.GameVersion, profile.Loader, ct);
-                mr = found.Releases.ToArray();
-                message = "百科索引对应的 Modrinth 版本；站内文件请下载后导入。" + (found.UnavailableProjects.Count > 0
-                    ? " 部分索引项目不可用。"
-                    : "");
-            }
-            else if (hit.Modrinth is not null)
-            {
-                mr = (await catalog.VersionsAsync(hit.Modrinth.Id, selected.Kind, profile.GameVersion, profile.Loader, ct)).ToArray();
-            }
-            else if (hit.CurseForge is not null)
-            {
-                using var curse = new CurseForgeCatalog(
-                    Secret(secretHandle) ?? "",
-                    paths: source.Paths
-                );
-                cf = (await curse.VersionsAsync(hit.CurseForge.Id, selected.Kind, profile.GameVersion, profile.Loader, ct)).ToArray();
+                throw new OperationInstallException("SEARCH_PROVIDER_INVALID");
             }
 
+            using var catalog = new ResourceCatalog(paths: source.Paths);
+            var key = Secret(secretHandle) ?? "";
+            var network = DownloadTasks.For(source.Paths)
+                .Options;
+            var cfAvailable = key.Length > 0 || (network.CurseForgeApiMirror.Length > 0 && network.ResourceSource != "official");
+            using var curse = cfAvailable
+                ? new CurseForgeCatalog(key, paths: source.Paths)
+                : null;
+            var candidates = await new UnifiedReleaseResolver(catalog, curse).ResolveAsync(hit, selected.Kind, profile.GameVersion, profile.Loader, selectedSource, ct);
+            var mr = candidates.Modrinth;
+            var cf = candidates.Curse;
+            var message = string.Join("；", candidates.Messages);
             // 有界结果：版本列表过大应显式拒绝，不能静默丢弃可选择的版本。
             Save(
                 id,
@@ -242,11 +234,31 @@ public sealed partial class PageExecutionAdapter
             );
             return new SearchVersions(
                 mr.Select(
-                    (x, i) => new SearchRelease(id + ":" + i, x.Name, "", "https://modrinth.com/project/" + x.ProjectId, false)
+                    (x, i) => new SearchRelease(
+                        id + ":" + i,
+                        x.Name,
+                        x.File.Name,
+                        "https://modrinth.com/project/" + x.ProjectId,
+                        false
+                    )
+                    {
+                        Source = "Modrinth",
+                        GameVersions = x.GameVersions.ToArray(),
+                        Loaders = x.Loaders.ToArray(),
+                        Channel = x.Channel
+                    }
                 )
                     .Concat(
                         cf.Select(
-                            (x, i) => new SearchRelease(id + ":" + i, x.Name, x.FileName, x.Page, x.DownloadUrl is null)
+                            (x, i) => new SearchRelease(id + ":" + (mr.Length + i), x.Name, x.FileName, x.Page, x.DownloadUrl is null)
+                            {
+                                Source = "CurseForge",
+                                GameVersions = x.GameVersions.ToArray(),
+                                Loaders = [
+                                    profile.Loader
+                                ],
+                                Channel = x.Channel
+                            }
                         )
                     )
                     .ToArray(),
@@ -255,13 +267,12 @@ public sealed partial class PageExecutionAdapter
         }
 
         var releases = Read<ReleaseSelection>(selectionId, "search-releases");
-        if (releases.Instance != profile.Id || index < 0 || index >= Math.Max(releases.Modrinth.Length, releases.Curse.Length))
+        if (releases.Instance != profile.Id || index < 0 || index >= releases.Modrinth.Length + releases.Curse.Length)
         {
             throw new OperationInstallException("WORKSPACE_SELECTION_INVALID");
         }
 
-        var curseFile = releases.Curse.ElementAtOrDefault(index);
-        var modrinth = releases.Modrinth.ElementAtOrDefault(index);
+        var(modrinth, curseFile) = releases.At(index);
         string Cache(CurseResourceRelease f) => ResourceInstaller.SafeTarget(profile.GameDirectory, ".pcl-downloads/" + f.Sha1);
         bool Verified(CurseResourceRelease f) => DownloadService.IsValid(
             new(

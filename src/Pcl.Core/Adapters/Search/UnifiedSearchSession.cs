@@ -79,7 +79,7 @@ public sealed class UnifiedSearchSession(
     // [实现] Result 的实现：准备 var owners = new Dictionary<string, int>(StringComparer.Ordinal)；遍历 pages 处理 pair；准备 var enriched = UnifiedResourceSearch.Merge( pages.Values.SelectMany( x => x.Hits ) )。
     private UnifiedSearchResult Result(int page)
     {
-        // Identity is source-qualified. Equal titles across stores never establish project identity.
+        // Identity 使用明确映射或来源限定 ID；标题相同不建立身份，跨页只补充已验证的来源。
         var owners = new Dictionary<string, int>(StringComparer.Ordinal);
         foreach (var pair in pages)
             foreach (var hit in pair.Value.Hits)

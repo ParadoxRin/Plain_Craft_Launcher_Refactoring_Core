@@ -15,6 +15,7 @@ public sealed partial class PageExecutionAdapter
         ConcurrentQueue<string> Lines
     );
     private readonly ConcurrentDictionary<string, ActiveLink> links = new();
+    public bool HasActiveLinks => links.Values.Any(x => !x.Process.Process.HasExited);
     // Ephemeral invitations contain room credentials: read only over the private RPC, never through receipts or logs.
     public string LinkInvitation(string id) => links.TryGetValue(id, out var link) && !link.Process.Process.HasExited
         ? link.Room.Encode()
