@@ -114,3 +114,5 @@ export DOTNET_CLI_HOME="$PWD/.cache/dotnet-home"
 保留数据根、bundle/钥匙串身份，微软/离线登录、皮肤和游戏独立运行行为。保留 PCL 作者署名、赞助与正版购买劝导；赞助不解锁功能，Windows 蓝色限制不因自定义客户端取消。
 
 **原创部分 MIT + 上游/第三方各自许可**，不是全仓统一 MIT。详见 [LICENSE.md](LICENSE.md)、[MIT 标准文本](LICENSE)、[PCL 原文](PCL-LICENCE.txt)。不上传个人账户、令牌、世界存档、Minecraft 客户端、私有 SDK 缓存或原始敏感日志。
+
+统一模组浏览的当前开发实现见[流程、模块边界与验收](docs/统一模组浏览与安装-2026-11-01.md)：全部来源浏览、可靠跨站合并、按需版本/目标实例/来源选择，复用Host安装事务。PCLCS原始数据与新规则分开，详见[集成职责](vendor/PCLCS/README.integration.md)。这是发布后源码增量，不表示已有安装包同步更新。

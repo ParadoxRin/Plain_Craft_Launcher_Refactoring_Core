@@ -4321,6 +4321,7 @@ await AppearanceTests.RunAsync(scratch, Test);
 await LocalSettingsTests.RunAsync(scratch, Test);
 await FinalIntegrationTests.RunAsync(scratch, Test);
 await NoAccountFeatureTests.RunAsync(scratch, Test);
+await UnifiedBrowserTests.RunAsync(Test);
 await CompletionFeatureTests.RunAsync(scratch, Test);
 await SearchBackupTests.RunAsync(scratch, Test);
 await DependencyPackTests.RunAsync(scratch, Test);

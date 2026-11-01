@@ -1,0 +1,65 @@
+{
+  "date": "2026-11-01",
+  "baseCommit": "60e6ea04a6be9009a3dbc609d8bf151b43d0022f",
+  "state": "working-tree implementation; no release or remote upload",
+  "core": {
+    "status": "passed",
+    "count": 241
+  },
+  "mixedSourceHost": {
+    "status": "passed",
+    "checks": [
+      "mixed-cf-index-matches-exact-file",
+      "round-0-reject-1.21.1-0",
+      "round-0-reject-1.21.1-2",
+      "round-0-reject-other-1",
+      "mixed-selection-survives-host-restart",
+      "round-1-reject-1.21.1-0",
+      "round-1-reject-1.21.1-2",
+      "round-1-reject-other-1"
+    ],
+    "scope": "Real Host with synthetic mixed-source private selection; no CurseForge network authentication"
+  },
+  "realMacUi": {
+    "status": "passed",
+    "checks": [
+      "all-filter-defaults",
+      "real-public-search-results",
+      "unavailable-source-visible",
+      "explicit-project-result",
+      "selection-does-not-fetch-downloads",
+      "download-options-loaded-on-request",
+      "versions-match-same-target-instance",
+      "unavailable-cf-does-not-relabel-mr",
+      "source-choice-retains-file-identity",
+      "real-host-installs-selected-mod",
+      "installed-jar-exists",
+      "installed-resource-visible-in-local-source",
+      "installed-project-can-reopen-version-picker",
+      "result-card-realized-in-visible-list"
+    ],
+    "scope": "Real UI/Host/public Modrinth query and mod installation into a synthetic isolated instance; no game run or Microsoft account"
+  },
+  "architecture": {
+    "status": "passed",
+    "checkedDomainMethods": 527,
+    "checkedMethods": 3130,
+    "checkedMemberUses": 51505,
+    "violations": []
+  },
+  "hashes": {
+    "core-formatted/test-results.json": "89bcdb7bbb91d19db65c0d85a7f98625c9ecf65d5e7336900ecb3c08bb4a7857",
+    "mixed.json": "b8a4e8966ad916043ed4179378394d02cfb2221750fdc49d3ebf0b41bb4d25aa",
+    "ui-final.json": "058aa71347f98325b686ab5ec0b9d87e0089c3b7fb7c7a260a61853f5551ab24",
+    "ui-render.json": "24cdb337c2709508dbf7548c438b8b39d463d0d862693b2852f0f0b84308d2fb",
+    "architecture-final.json": "8ba2b39072a490baf10f38f2752ff2f37beec68fc74afd8ff4d302177c6b748c"
+  },
+  "limits": [
+    "CF network authentication not executed; exact identity/versions verified with synthetic HTTP and real Host snapshots",
+    "No Microsoft login, skin upload or Minecraft process/world run this task",
+    "Synthetic Fabric1.21.1 profile with Java21/Loader0.19.5 used for real public Fabric API installation",
+    "Initial alias assertion failed on bilingual suffix and was fixed; initial UI fixture lacked Java21 and installation correctly refused",
+    "PCLCS fixed dataset and parser unchanged; no online mappings, user dictionary or arbitrary version attachment selector",
+    "No product feature-matrix states changed; no fixed release updated"
+  ]
+}

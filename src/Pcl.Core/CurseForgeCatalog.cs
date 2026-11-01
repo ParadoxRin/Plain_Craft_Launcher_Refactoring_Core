@@ -4,6 +4,8 @@ namespace Pcl.Core;
 // [实现] 数据约定：CurseResourceProject 汇集 Id、Name、Summary、WebUrl、Downloads、Kind，供该模块传递状态。
 public sealed record CurseResourceProject(long Id, string Name, string Summary, string WebUrl, long Downloads, ResourceKind Kind)
 {
+    public string Slug { get; init; } = "";
+
     // [实现] ToString 的实现：计算并返回 $"{Name} · {Downloads:N0}"。
     public override string ToString() => $"{Name} · {Downloads:N0}";
 }
@@ -66,7 +68,8 @@ public sealed class CurseForgeCatalog(string apiKey, HttpMessageHandler? handler
         string gameVersion,
         string loader,
         int offset = 0,
-        CancellationToken ct = default
+        CancellationToken ct = default,
+        bool translateAlias = true
     )
     {
         if (long.TryParse(
@@ -83,7 +86,11 @@ public sealed class CurseForgeCatalog(string apiKey, HttpMessageHandler? handler
             ];
         }
 
-        query = ResourceAliases.SearchQuery(query, "curseforge");
+        if (translateAlias)
+        {
+            query = ResourceAliases.SearchQuery(query, "curseforge");
+        }
+
         var filter = kind == ResourceKind.Mod && LoaderId(loader) != 0
             ? "&modLoaderType=" + LoaderId(loader)
             : "";
@@ -117,7 +124,29 @@ public sealed class CurseForgeCatalog(string apiKey, HttpMessageHandler? handler
             url!,
             (long? )json["downloadCount"] ?? 0,
             kind
+        )
+        {
+            Slug = slug
+        };
+    }
+
+    /// <summary>只接受 API 返回的精确 slug，不用模糊搜索的第一条代替项目身份。</summary>
+    public async Task<CurseResourceProject?> FindBySlugAsync(string slug, ResourceKind kind, CancellationToken ct)
+    {
+        var data = await client.Get(
+            $"mods/search?gameId=432&classId={ClassId(kind)}&slug={Uri.EscapeDataString(slug)}&pageSize=50",
+            ct
         );
+        var matches = data.Select(
+            x => ParseProject(x, kind)
+        )
+            .Where(
+                x => x.Slug == slug
+            )
+            .ToArray();
+        return matches.Length == 1
+            ? matches[0]
+            : null;
     }
 
     // [实现] VersionsAsync 的实现：按 project <= 0 分支处理；准备 var filter = kind == ResourceKind.Mod && LoaderId(loader) != 0 ? "&modLoaderType=" + LoaderId(l…；准备 var data = await client.Get( $"mods/{project}/files?gameVersion={Uri.EscapeDataString(gameVersi…。

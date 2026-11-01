@@ -192,6 +192,12 @@ public partial class MainWindow : Window
                 return;
             }
 
+            if (Program.Arguments.Contains("--unified-browser-smoke"))
+            {
+                await UnifiedBrowserSmokeAsync();
+                return;
+            }
+
             if (Program.Arguments.Contains("--nested038-smoke"))
             {
                 await Nested038SmokeAsync();
@@ -1453,7 +1459,7 @@ public partial class MainWindow : Window
     }
 
     // [实现] ModsClick 的实现：执行 await ShowResourceAsync(ResourceKind.Mod, NavMods)。
-    private async void ModsClick(object? sender, RoutedEventArgs e) => await ShowResourceAsync(ResourceKind.Mod, NavMods);
+    private void ModsClick(object? sender, RoutedEventArgs e) => UnifiedSearchClick(sender, e);
     // [实现] ShadersClick 的实现：执行 await ShowResourceAsync(ResourceKind.Shader, NavShaders)。
     private async void ShadersClick(object? sender, RoutedEventArgs e) => await ShowResourceAsync(ResourceKind.Shader, NavShaders);
     // [实现] PacksClick 的实现：执行 await ShowResourceAsync(ResourceKind.ResourcePack, NavPacks)。

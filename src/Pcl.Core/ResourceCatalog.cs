@@ -123,7 +123,8 @@ public sealed class ResourceCatalog : IDisposable
         int offset = 0,
         string sort = "relevance",
         CancellationToken ct = default,
-        string? category = null
+        string? category = null,
+        bool translateAlias = true
     )
     {
         var facets = new List<string[]>
@@ -159,7 +160,11 @@ public sealed class ResourceCatalog : IDisposable
                     "categories:" + category
                 }
             );
-        query = ResourceAliases.SearchQuery(query);
+        if (translateAlias)
+        {
+            query = ResourceAliases.SearchQuery(query);
+        }
+
         if (sort is not ("relevance" or "downloads" or "updated" or "newest"))
             throw new ArgumentException("无效排序。");
         var json = await Get(
