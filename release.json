@@ -1,10 +1,10 @@
 {
   "version": "0.42.1",
-  "build": 423,
+  "build": 424,
   "repository": "https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core",
   "channel": "preview",
   "verifiedPackageTarget": "osx-arm64",
-  "hostSequence": 42101,
+  "hostSequence": 42102,
   "coreVersion": "0.42.0",
   "coreCommit": "81016b476e8811ecbfbd3f969d143b646ac5282d",
   "contentIntegration": {
@@ -18,15 +18,28 @@
     },
     "src/Pcl.Core/Adapters/Content/ContentPack.cs": {
       "baselineSha256": null,
-      "sha256": "8d31d3f7af9225532fe8318f984e5c574589e92faf850db2d97bd343de35af65"
+      "sha256": "57b170d4207231e541a7104a94bb6713f687ee00ecc5f11afec2ecbda3689820"
     },
     "src/Pcl.Core/Adapters/Content/ActiveContentIndex.cs": {
       "baselineSha256": null,
-      "sha256": "9dcb6d8423c990bac2d31ccada4c849309317a434229a270709c1f671297a6d7"
+      "sha256": "95e3b940a611f5a4d23b42672211890b413a652fcca4970eb218f66c648a731e"
     },
     "src/Pcl.Core/Adapters/Search/UnifiedResourceSearch.cs": {
       "baselineSha256": "0080f16f41b8ea93d199eed17839cb79131b909394cc70468d5fd6f3b5b7d261",
       "sha256": "d4ee032cecf8d5840207c8f0bfa1299f3d0aead6223c0a8694a33e6a4fc66fff"
+    },
+    "src/Pcl.Host/ContentUpdates.cs": {
+      "baselineSha256": null,
+      "sha256": "e6417454dc3cb6930111bd5f5546e945fdb6ac4fdab8d741e8fd8c7bc7f1d06e"
+    },
+    "src/Pcl.Host/Program.cs": {
+      "baselineSha256": "5de81e0ce7de10e0a507e3cfe8bf79ca01f31dc6c5c1ee7e4783c113b6ca9ec9",
+      "sha256": "f79b3010d753932dabb59d5cb50491ceca307b1b9b59b27c7707149abe733f7f"
+    },
+    "src/Pcl.Host/HostBuildInfo.cs": {
+      "baselineSha256": "1e09ff6c0de4e2f73e566f4f71c7105c5d6a970c10965461b4db94e27dd0db84",
+      "sha256": "9437db66f9d15442fdb7c29691dab8cb28b1e0a4fe93dc6ec5c3494d1f172928"
     }
-  }
+  },
+  "contentSequence": 42102
 }

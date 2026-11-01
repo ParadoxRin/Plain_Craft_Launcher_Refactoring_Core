@@ -8,7 +8,7 @@ public sealed record ContentRow(int Id, string? Title, string? Modrinth, string?
 public sealed record ContentDocument(int Format, string Kind, string Channel, long Sequence,
     string MinHostVersion, string MaxHostVersion, string Provenance, ContentRow[] Entries);
 public sealed record ContentEnvelope(string Payload, string Signature);
-public sealed record ContentPolicy(string Channel, string PublicKeyPem);
+public sealed record ContentPolicy(string Channel, string PublicKeyPem, string? FeedUrl = null);
 public sealed record ContentSelection(IReadOnlyList<WikiEntry> Entries, string Source, long Sequence, string? Rejection);
 
 /// <summary>Signed, platform-independent wiki/mapping data. No code or archive extraction.</summary>
@@ -164,6 +164,25 @@ public static class ContentPack
         ReadPackage(root, state.Previous, policy, version);
         AtomicWrite(Path.Combine(root, "state.json"), JsonSerializer.SerializeToUtf8Bytes(
             new State(state.Previous, null, state.HighestSequence)), true);
+    }
+
+    // Only hash-addressed packages owned by this store; preserve both active and rollback candidates.
+    public static int Cleanup(string root)
+    {
+        CheckDirectory(root, false);
+        if (!Directory.Exists(root)) return 0;
+        using var held = Lock(root);
+        var state = ReadState(root);
+        var removed = 0;
+        foreach (var path in Directory.EnumerateFiles(root, "*.json"))
+        {
+            var hash = Path.GetFileNameWithoutExtension(path);
+            if (hash.Length != 64 || !hash.All(c => c is >= '0' and <= '9' or >= 'a' and <= 'f') ||
+                hash == state.Current || hash == state.Previous) continue;
+            if ((File.GetAttributes(path) & FileAttributes.ReparsePoint) != 0) continue;
+            File.Delete(path); removed++;
+        }
+        return removed;
     }
 
     private static FileStream Lock(string root)

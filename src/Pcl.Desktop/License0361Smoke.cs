@@ -55,6 +55,10 @@ public partial class MainWindow
             );
             Check(Title == ProductIdentity.Name, "product-name-in-window");
             var about = BuildAboutContent();
+            Check(about.Children.OfType<Button>().Any(x => x.Content?.ToString() == "检查并安装百科与映射数据更新"),
+                "content-update-action-visible");
+            Check(about.Children.OfType<Button>().Any(x => x.Content?.ToString() == "清理旧客户端更新缓存"),
+                "client-cache-cleanup-action-visible");
             Check(
                 ((TextBlock)about.Children[0]).Text!.Contains("龙腾猫跃"),
                 "upstream-author-first"

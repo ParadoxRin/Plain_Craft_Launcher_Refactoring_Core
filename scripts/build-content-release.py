@@ -16,6 +16,7 @@ parser.add_argument('--sequence', type=int, required=True)
 parser.add_argument('--min-host', default='0.42.1')
 parser.add_argument('--max-host', default='0.42.99')
 parser.add_argument('--channel', default='preview')
+parser.add_argument('--feed-url', help='Stable HTTPS URL serving the signed content envelope')
 parser.add_argument('--provenance', default='PCL 6b9a50df911c9d68b69b24c979efba477fb14b67 / PCLCS Resource/WikiEntries.txt')
 args = parser.parse_args()
 root = pathlib.Path(__file__).resolve().parent.parent
@@ -40,6 +41,14 @@ with tempfile.TemporaryDirectory(prefix='.content-', dir=output.parent) as tempo
     run('sign', rows, args.sequence, args.min_host, args.max_host, args.channel, args.provenance, key, package)
     policy = stage / 'content-update-policy.json'
     run('policy', key, args.channel, policy)
+    if args.feed_url:
+        from urllib.parse import urlsplit
+        url = urlsplit(args.feed_url)
+        if url.scheme != 'https' or not url.netloc or url.username or url.fragment or url.query:
+            raise SystemExit('HTTPS_CONTENT_FEED_REQUIRED')
+        trust = json.loads(policy.read_text())
+        trust['FeedUrl'] = args.feed_url
+        policy.write_text(json.dumps(trust, indent=2) + '\n')
     run('verify', package, policy, args.min_host)
     for source, target in [('PCL-LICENCE.txt', 'PCL-LICENCE.txt'), ('LICENSE.md', 'LICENSE.md'),
                            ('vendor/PCLCS/README.integration.md', 'PCLCS-integration.md')]:

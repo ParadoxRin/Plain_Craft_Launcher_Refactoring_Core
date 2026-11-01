@@ -56,6 +56,7 @@ try
         throw new InvalidDataException("HOST_ARGUMENTS_INVALID");
     }
 
+    using var contentUpdates = new ContentUpdates();
     var paths = new AppPaths(args[1]);
     using var rootLease = new FileStream(
         Path.Combine(paths.Root, ".launcher.lock"),
@@ -264,6 +265,8 @@ try
                                 parameters.GetProperty("subscriptionId")
                                     .GetString()!
                             ),
+                            "content.update.status" => contentUpdates.Status(),
+                            "content.update.begin" => contentUpdates.Begin(),
                             "account.snapshot" => accountService.Snapshot(),
                             "desktop.snapshot" => pageExecutor.DesktopSnapshot(
                                 accountService.Snapshot()

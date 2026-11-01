@@ -55,7 +55,8 @@ if __name__ == '__main__':
     # business baseline. Pin both sides, so this is not a broad directory exemption.
     overlays = release.get('contentIntegration', {})
     allowed = {'src/Pcl.Core/McmodCatalog.cs', 'src/Pcl.Core/Adapters/Search/UnifiedResourceSearch.cs', 'src/Pcl.Core/Adapters/Search/BundledProjectIdentity.cs',
-               'src/Pcl.Core/Adapters/Content/ContentPack.cs', 'src/Pcl.Core/Adapters/Content/ActiveContentIndex.cs'}
+               'src/Pcl.Core/Adapters/Content/ContentPack.cs', 'src/Pcl.Core/Adapters/Content/ActiveContentIndex.cs',
+               'src/Pcl.Host/ContentUpdates.cs', 'src/Pcl.Host/Program.cs', 'src/Pcl.Host/HostBuildInfo.cs'}
     if set(overlays) - allowed:
         raise SystemExit('UNSUPPORTED_CORE_OVERLAY')
     def digest(name, content):

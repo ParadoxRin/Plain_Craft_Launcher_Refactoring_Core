@@ -336,7 +336,12 @@ public partial class MainWindow : Window
         if (await shutdownScope(pending))
         {
             closeApproved = true;
-            Close();
+            // Application exit must also close auxiliary windows after the shared scope has drained.
+            if (Avalonia.Application.Current?.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop)
+                desktop.Shutdown();
+            else Close();
+            // Native macOS run-loop callbacks can outlive the final window. The shared scope is already drained.
+            Environment.Exit(0);
         }
     }
 

@@ -1,0 +1,154 @@
+{
+  "version": "0.42.1",
+  "build": 424,
+  "hostSequence": 42102,
+  "contentSequence": 42102,
+  "coreCommit": "81016b476e8811ecbfbd3f969d143b646ac5282d",
+  "parentLocalCommit": "47c14f6",
+  "localDate": "2026-11-02",
+  "scope": "Local Apple Silicon macOS; no GitHub push, public publishing or remote CI",
+  "unifiedRelease": {
+    "status": "passed",
+    "count": 5,
+    "report": "artifacts/unified424-complete/release/unified-verification.json",
+    "sha256": "9b9c58e9ed2c2477ded4646ec496d08c5073e14e55e3e4fcfcbba9cd4e8d8aa9"
+  },
+  "publisherRejectionCases": {
+    "status": "passed",
+    "count": 3,
+    "report": "artifacts/unified424-complete-negative.json",
+    "sha256": "922f918b74d2a91290dec3fb231b1b6410b0936555aef1b71b6f1a0767d82628"
+  },
+  "dataUpdateAndCleanup": {
+    "status": "passed",
+    "count": 18,
+    "report": "artifacts/update-integration424-verified/results.json",
+    "sha256": "2ff06648b6ce1676dd29cfd55314ae7277473bffe7616fc572903fb770fefead"
+  },
+  "core": {
+    "status": "passed",
+    "count": 241,
+    "report": "artifacts/core424-verified/test-results.json",
+    "sha256": "3b98fe55685d1f111a8d3415909b8b1cf26f97e91ab7503b960da9c988d99190"
+  },
+  "contentRegression": {
+    "status": "passed",
+    "count": 26,
+    "report": "artifacts/content424-regression/results.json",
+    "sha256": "db73074bfa2fa61a84dde634a79d1aee776c78820bc35e9a44d76f49dc58991f"
+  },
+  "hostContract": {
+    "status": "passed",
+    "count": 28,
+    "report": "artifacts/contract424.json",
+    "sha256": "cfc7df3e986ce4677cf77aa7bf807a1b3ce2aac2b46a944272781aef3a196a2a"
+  },
+  "ui": {
+    "status": "passed",
+    "count": 19,
+    "report": "artifacts/verification-unified424-complete/client-ui.json",
+    "sha256": "99c6ddee85f5c3588898ecbd81ee11c2e7cd6e51c92135c95091c4ad9b4c9085"
+  },
+  "newClientOldHost": {
+    "status": "passed",
+    "count": 19,
+    "report": "artifacts/compat424-complete-new-client-old-host/results.json",
+    "sha256": "99c6ddee85f5c3588898ecbd81ee11c2e7cd6e51c92135c95091c4ad9b4c9085"
+  },
+  "oldClientNewHost": {
+    "status": "passed",
+    "count": 17,
+    "report": "artifacts/compat424-old-client-new-host/results.json",
+    "sha256": "56d80e5d59cb470fcec0c7d44272f7f1308b64e57d187d47e2bbe0b8fa76a858"
+  },
+  "hostArtifactContinuity": {
+    "status": "passed",
+    "files": 260,
+    "scope": "All final Host files match the Host used for integration and contract checks",
+    "inventorySha256": "7b8729f7b6b1048bf80d49c8ce2e66470c49f0b0ce357c82a092670976c9c024"
+  },
+  "actualDelivery": {
+    "status": "passed",
+    "scope": "Actual ZIP extraction and delivered Core; synthetic subprocess fixtures",
+    "hostBuild": {
+      "version": "0.42.1",
+      "sequence": 42102,
+      "dataEpoch": 1,
+      "runtime": "osx-arm64"
+    },
+    "checks": [
+      "client-archive-integrity-and-extraction",
+      "host-archive-integrity-and-extraction",
+      "full-archive-integrity-and-extraction",
+      "content-envelope-integrity",
+      "contentBundle-archive-integrity-and-extraction",
+      "installer-archive-integrity-and-signature",
+      "extracted-host-probe-matches-manifest",
+      "signed-content-policy-and-host-compatibility",
+      "delivered-core-log-and-credential-preflight-regressions"
+    ],
+    "regressions": [
+      "PASS keychain UTF-8 overflow preflight",
+      "PASS detached dual-stream, chunk/newline boundaries, short secrets and exit code",
+      "PASS bounded no-newline output and continued drain",
+      "PASS existing log cap and symlink rejection",
+      "PASS detached soft termination preserves owned game PID",
+      "PASS actual Host process exit with continuing redaction"
+    ]
+  },
+  "installerRoundtrip": {
+    "status": "passed",
+    "extractedSignatureVerified": true,
+    "appFilesVerified": 683,
+    "appleDoubleMetadataFiles": 737,
+    "utf8NamesCorrected": 2,
+    "sha256": "237a11b89c66c89c54707f410fd47ca9bee0948ae059da4ad7261ea48b003f94",
+    "extraction": "macOS ditto / Archive Utility with AppleDouble metadata"
+  },
+  "installerPrivacy": {
+    "filesScanned": 683,
+    "findings": [],
+    "scope": "current developer home, cloud project IDs, debug symbols, runtime state, credential patterns; not exhaustive"
+  },
+  "packageBoundaryTests": 7,
+  "baselineGuardTests": 3,
+  "latestCoreFetch": "origin/main fetched and baseline verified this turn",
+  "productionFeedConfigured": false,
+  "testFeedPolicyInFixtureArtifactsOnly": true,
+  "remoteCI": "workflow definitions wired and YAML parsed; not executed remotely",
+  "warnings": [
+    "Existing two Bitmap.Save obsolete warnings and MainWindow XAML constructor warning"
+  ],
+  "validationNotes": [
+    "Initial core run was blocked by sandbox loopback bind permissions; rerun with authorized local-process access passed 241/241.",
+    "An initial cleanup negative test used a newly created link, correctly protected by the seven-day grace period; corrected fixture places a link inside an aged managed stage and verifies rejection without touching the target.",
+    "Initial full self-update repeat exposed a restored-client process remaining alive after scope.drained. Final application exit closes the Avalonia lifetime and explicitly terminates the process only after shared resources drain; final binaries rebuilt and tested.",
+    "Data network transfer uses an injected HttpMessageHandler; actual Host RPC and restart activation use a real separate Host."
+  ],
+  "notValidated": [
+    "Production HTTPS/CDN and production signing secrets",
+    "Remote GitHub CI",
+    "Windows/Linux platform runtime for this new integration",
+    "Real game sessions or Microsoft accounts",
+    "Developer ID notarization",
+    "Power-loss durability"
+  ],
+  "remainingScope": [
+    "Full .app still bundles Host; client-only installation layout migration remains separate",
+    "Host version-cache cleanup is unchanged; this stage cleans client cache and content package history",
+    "Conservative retention is not a hard disk-space quota"
+  ],
+  "architectureGuard": {
+    "status": "passed",
+    "checkedMethods": 3180,
+    "checkedMemberUses": 52349,
+    "violations": 0,
+    "report": "artifacts/unified424-architecture.json"
+  },
+  "selfUpdate": {
+    "status": "passed",
+    "count": 33,
+    "report": "artifacts/client-update424-complete-verified/results.json",
+    "sha256": "eb390d1cedd7ebb8b7629674aaeb8cae274b97b097ac0e54f6f4930c605f31ec"
+  }
+}

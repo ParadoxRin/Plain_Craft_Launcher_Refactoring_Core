@@ -11,6 +11,9 @@ public partial class MainWindow
 {
     private readonly CancellationTokenSource clientUpdateStop = new();
     private Task? clientUpdateCheck;
+    private Task? contentUpdateCheck;
+    private string contentUpdateStatus = "正在读取数据更新状态…";
+    private readonly List<TextBlock> contentUpdateLabels = [];
     private string? clientUpdateRequest;
     private string clientUpdateStatus = "尚未配置客户端更新源。";
     private readonly List<TextBlock> clientUpdateLabels = [];
@@ -29,6 +32,7 @@ public partial class MainWindow
             _ = RunClientUpdateAcceptanceAsync();
             return;
         }
+        contentUpdateCheck = ContentUpdateLoopAsync();
         if (Environment.GetEnvironmentVariable("PCL_CLIENT_UPDATE_ACK") is not null)
         {
             UpdateClientStatus("正在确认新版本启动状态…");
@@ -50,6 +54,7 @@ public partial class MainWindow
         {
             var updater = ClientUpdater();
             if (updater is null) return;
+            try { updater.CleanupCache(); } catch (IOException) { } catch (UnauthorizedAccessException) { }
             UpdateClientStatus(updater.Status.Result switch
             {
                 "rolled-back" => "上次更新启动失败，已回退。正在检查新版本…",
@@ -84,6 +89,23 @@ public partial class MainWindow
         var install = new Button { Content = "安装客户端更新并重启" };
         install.Click += async (_, _) => await InstallClientUpdateAsync();
         panel.Children.Add(install);
+        var contentLabel = new TextBlock { Text = contentUpdateStatus, TextWrapping = TextWrapping.Wrap };
+        contentUpdateLabels.Add(contentLabel); panel.Children.Add(contentLabel);
+        var content = new Button { Content = "检查并安装百科与映射数据更新" };
+        content.Click += async (_, _) =>
+        {
+            try { await CheckContentUpdateAsync(true); }
+            catch (OperationCanceledException) { }
+            catch (Exception) { SetContentStatus("数据更新失败，已有数据仍可使用。"); }
+        };
+        panel.Children.Add(content);
+        var clean = new Button { Content = "清理旧客户端更新缓存" };
+        clean.Click += (_, _) =>
+        {
+            try { var count = ClientUpdater()?.CleanupCache() ?? 0; UpdateClientStatus($"已清理 {count} 项旧缓存；保留当前更新和最近回退备份。"); }
+            catch (Exception) { UpdateClientStatus("更新正在进行或缓存不可访问，稍后再试。"); }
+        };
+        panel.Children.Add(clean);
     }
     private async Task InstallClientUpdateAsync()
     {
@@ -101,6 +123,59 @@ public partial class MainWindow
     {
         clientUpdateStop.Cancel();
         if (clientUpdateCheck is not null) await clientUpdateCheck;
+        if (contentUpdateCheck is not null) await contentUpdateCheck;
+        await contentCheckGate.WaitAsync();
+        contentCheckGate.Release();
+    }
+
+    private void SetContentStatus(string value)
+    {
+        contentUpdateStatus = value;
+        foreach (var label in contentUpdateLabels) label.Text = value;
+    }
+    private readonly SemaphoreSlim contentCheckGate = new(1);
+    private async Task CheckContentUpdateAsync(bool begin)
+    {
+        var ct = clientUpdateStop.Token;
+        if (!await contentCheckGate.WaitAsync(0, ct)) return;
+        try
+        {
+            var hello = await service.Client.HelloAsync(ct);
+            if (!hello.Capabilities.Contains("content.update.v1")) { SetContentStatus("当前 Host 不支持数据自动更新。"); return; }
+            var state = await service.Client.Call<JsonElement>("content.update.status", new { }, ct);
+            if (!state.GetProperty("configured").GetBoolean()) { SetContentStatus("尚未配置百科与映射数据更新源。"); return; }
+            if (begin) state = await service.Client.Call<JsonElement>("content.update.begin", new { }, ct);
+            while (state.GetProperty("busy").GetBoolean())
+            {
+                SetContentStatus("正在检查并安装签名数据包…");
+                await Task.Delay(500, ct);
+                state = await service.Client.Call<JsonElement>("content.update.status", new { }, ct);
+            }
+            var installed = state.GetProperty("installedSequence").GetInt64();
+            var active = state.GetProperty("activeSequence").GetInt64();
+            SetContentStatus(state.GetProperty("result").GetString() switch
+            {
+                "failed" or "invalid-policy" => "数据更新失败，已有数据仍可使用。",
+                "cancelled" => "已取消数据更新。",
+                _ when installed != active => $"数据包 {installed} 已安装，下次 Host 启动生效（当前 {active}）。",
+                _ => $"数据已是当前可用版本（序号 {active}）。"
+            });
+        }
+        finally { contentCheckGate.Release(); }
+    }
+    private async Task ContentUpdateLoopAsync()
+    {
+        try
+        {
+            while (!clientUpdateStop.IsCancellationRequested)
+            {
+                try { await CheckContentUpdateAsync(true); }
+                catch (OperationCanceledException) { throw; }
+                catch (Exception) { SetContentStatus("数据更新检查失败，已有数据仍可使用。"); }
+                await Task.Delay(TimeSpan.FromHours(6), clientUpdateStop.Token);
+            }
+        }
+        catch (OperationCanceledException) { }
     }
 
     // Explicit local acceptance mode: no production feed, no personal data, no auto-exit of other processes.

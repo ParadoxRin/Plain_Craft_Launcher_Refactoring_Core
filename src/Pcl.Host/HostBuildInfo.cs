@@ -12,7 +12,7 @@ internal static class HostBuildInfo
         "game.launch.v2", "game.guidance.v1", "session.reconnect.v1", "event.subscribe.v1",
         "request.ordered-ids.v1", "operation.snapshot", "operation.cancel", "blob.read", "blob.page",
         "operation.log.snapshot", "desktop.contract-only.v1", "account.login.v1", "game.details",
-        "host.update.prepare.v1"
+        "host.update.prepare.v1", "content.update.v1"
     ];
     internal static HostBuild Build => new(
         typeof(HostBuildInfo).Assembly.GetName().Version!.ToString(3),

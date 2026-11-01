@@ -20,6 +20,7 @@ with open(sys.argv[2],'w') as output:
                'PublicKeyPem':open(sys.argv[1]).read(),'Channel':'preview'},output,indent=2)
 PY
 unset PCL_HOST_UPDATE_POLICY PCL_CONTENT_POLICY PCL_CONTENT_ROOT PCL_HOST_EXECUTABLE PCL_HOST_ASSEMBLY
+export PCL_CONTENT_ROOT="$work/content-state"
 export DOTNET_CLI_HOME="$root/.cache/dotnet-home"
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 cd "$root"

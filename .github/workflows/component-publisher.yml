@@ -10,6 +10,18 @@ on:
         description: Stable HTTPS Host feed endpoint for preview/osx-arm64
         required: true
         type: string
+      client_feed_url:
+        description: Stable standalone client feed
+        required: true
+        type: string
+      app_feed_url:
+        description: Stable complete Mac app feed
+        required: true
+        type: string
+      content_feed_url:
+        description: Stable signed content envelope URL
+        required: true
+        type: string
 permissions:
   contents: read
 jobs:
@@ -27,48 +39,38 @@ jobs:
           global-json-file: global.json
       - name: Require the latest core baseline
         run: python3 scripts/verify-core-baseline.py --upstream-ref origin/main
-      - name: Build native assets and component candidates
-        run: |
-          bash scripts/build-native.sh
-          DOTNET="$(command -v dotnet)" bash scripts/build-components.sh osx-arm64
-          dotnet build tools/Pcl.UpdatePack/Pcl.UpdatePack.csproj -c Release -m:1 -nr:false -p:UseSharedCompilation=false
-      - name: Sign Host feed, index and installer with publisher identity
+      - name: Build and verify unified signed candidates
         shell: bash
         env:
           COMPONENT_SIGNING_PRIVATE_KEY: ${{ secrets.COMPONENT_SIGNING_PRIVATE_KEY }}
           PCL_PUBLISH_BASE_URL: ${{ inputs.base_url }}
-          PCL_PUBLISH_FEED_URL: ${{ inputs.feed_url }}
+          PCL_HOST_FEED_URL: ${{ inputs.feed_url }}
+          PCL_CLIENT_FEED_URL: ${{ inputs.client_feed_url }}
+          PCL_APP_FEED_URL: ${{ inputs.app_feed_url }}
+          PCL_CONTENT_FEED_URL: ${{ inputs.content_feed_url }}
         run: |
           key="$RUNNER_TEMP/pcl-publisher.pem"
           trap 'rm -f "$key"' EXIT
-          python3 - "$key" <<'PY'
+          python3 - "$key" <<'PYKEY'
           import os, sys
           secret = os.environ.get('COMPONENT_SIGNING_PRIVATE_KEY', '')
           if not secret:
-              raise SystemExit('Configure COMPONENT_SIGNING_PRIVATE_KEY in component-publishing first')
-          descriptor = os.open(sys.argv[1], os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
-          with os.fdopen(descriptor, 'w') as stream:
-              stream.write(secret)
-          PY
+              raise SystemExit('Configure COMPONENT_SIGNING_PRIVATE_KEY first')
+          with os.fdopen(os.open(sys.argv[1], os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600), 'w') as output:
+              output.write(secret)
+          PYKEY
           unset COMPONENT_SIGNING_PRIVATE_KEY
-          version=$(python3 -c 'import json; print(json.load(open("release.json"))["version"])')
-          python3 scripts/sign-component-release.py --work "artifacts/components-$version-osx-arm64" --release release.json --key "$key" --dotnet "$(command -v dotnet)" --tool tools/Pcl.UpdatePack/bin/Release/net10.0/Pcl.UpdatePack.dll --output artifacts/signed-components --base-url "$PCL_PUBLISH_BASE_URL" --feed-url "$PCL_PUBLISH_FEED_URL"
-          PCL_HOST_UPDATE_POLICY="$PWD/artifacts/signed-components/host-update-policy.json" DOTNET="$(command -v dotnet)" bash scripts/build-release.sh
-          python3 scripts/add-component-installer.py artifacts/signed-components "artifacts/Plain-Craft-Launcher-Refactoring-$version-macOS-arm64.zip" "$key" "$(command -v dotnet)" tools/Pcl.UpdatePack/bin/Release/net10.0/Pcl.UpdatePack.dll
-      - name: Verify the actual signed delivery
-        run: |
-          dotnet build tests/Pcl.LogProtection.Tests/Pcl.LogProtection.Tests.csproj -c Release -m:1 -nr:false -p:UseSharedCompilation=false
-          python3 scripts/verify-component-delivery.py artifacts/signed-components tests/Pcl.LogProtection.Tests/bin/Release/net10.0/Pcl.LogProtection.Tests.dll "$(command -v dotnet)" artifacts/signed-delivery
+          PCL_PUBLISH_KEY="$key" DOTNET="$(command -v dotnet)" bash scripts/build-unified-release.sh "$PWD/artifacts/unified"
       # Upload for operator review. This never uploads a private key, replaces a
       # public feed, creates a GitHub Release, or asserts Developer ID notarization.
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: signed-macos-component-release
           path: |
-            artifacts/signed-components/*.zip
-            artifacts/signed-components/*.json
-            artifacts/signed-components/*.pem
-            artifacts/signed-components/SHA256SUMS
-            artifacts/signed-delivery/delivery-result.json
+            artifacts/unified/release/*.zip
+            artifacts/unified/release/*.json
+            artifacts/unified/release/*.pem
+            artifacts/unified/release/SHA256SUMS
+            artifacts/unified/verified/delivery-result.json
           if-no-files-found: error
           retention-days: 14

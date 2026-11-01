@@ -5,7 +5,14 @@ on:
   pull_request:
     paths:
       - 'scripts/*component*'
-      - 'src/Pcl.Desktop/Pcl.Desktop.csproj'
+      - 'src/Pcl.Desktop/**'
+      - 'scripts/*client*'
+      - 'scripts/*content*'
+      - 'scripts/*unified*'
+      - 'tools/Pcl.ClientUpdater/**'
+      - 'tools/Pcl.ContentPack/**'
+      - 'tests/Pcl.ClientUpdate.Tests/**'
+      - 'tests/Pcl.UpdateIntegration.Tests/**'
       - 'src/Pcl.Core/**'
       - 'src/Pcl.Host/**'
       - 'src/Pcl.Client/**'
@@ -28,7 +35,7 @@ permissions:
 jobs:
   mac-components:
     runs-on: macos-15
-    timeout-minutes: 25
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -55,27 +62,30 @@ jobs:
           trap 'rm -f "$key"' EXIT
           openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 -out "$key"
           openssl pkey -in "$key" -pubout -out "$RUNNER_TEMP/pcl-signing-fixture-public.pem"
-          dotnet build tools/Pcl.UpdatePack/Pcl.UpdatePack.csproj -c Release -m:1 -nr:false -p:UseSharedCompilation=false
-          python3 scripts/sign-component-release.py --work "artifacts/components-$version-osx-arm64" --release release.json --key "$key" --dotnet "$(command -v dotnet)" --tool tools/Pcl.UpdatePack/bin/Release/net10.0/Pcl.UpdatePack.dll --output artifacts/signing-fixture --base-url "https://updates.example/$version/osx-arm64" --feed-url https://updates.example/preview/osx-arm64/feed.json
-          PCL_RELEASE_OUTPUT="$PWD/artifacts/signing-installer" PCL_HOST_UPDATE_POLICY="$PWD/artifacts/signing-fixture/host-update-policy.json" DOTNET="$(command -v dotnet)" bash scripts/build-release.sh
-          python3 scripts/add-component-installer.py artifacts/signing-fixture "artifacts/signing-installer/Plain-Craft-Launcher-Refactoring-$version-macOS-arm64.zip" "$key" "$(command -v dotnet)" tools/Pcl.UpdatePack/bin/Release/net10.0/Pcl.UpdatePack.dll
-          dotnet build tests/Pcl.LogProtection.Tests/Pcl.LogProtection.Tests.csproj -c Release -m:1 -nr:false -p:UseSharedCompilation=false
-          python3 scripts/verify-component-delivery.py artifacts/signing-fixture tests/Pcl.LogProtection.Tests/bin/Release/net10.0/Pcl.LogProtection.Tests.dll "$(command -v dotnet)" artifacts/signing-delivery
+          PCL_PUBLISH_KEY="$key" PCL_PUBLISH_BASE_URL="https://updates.example/$version/osx-arm64" PCL_HOST_FEED_URL=https://updates.example/host.json PCL_CLIENT_FEED_URL=https://updates.example/client.json PCL_APP_FEED_URL=https://updates.example/app.json PCL_CONTENT_FEED_URL=https://updates.example/content.json DOTNET="$(command -v dotnet)" bash scripts/build-unified-release.sh "$PWD/artifacts/unified-fixture"
+          python3 scripts/test-unified-release.py --release artifacts/unified-fixture/release --key "$key" --dotnet "$(command -v dotnet)" --tool tools/Pcl.UpdatePack/bin/Release/net10.0/Pcl.UpdatePack.dll --report artifacts/unified-negative.json
           dotnet publish src/Pcl.Host/Pcl.Host.csproj -c Release -r osx-arm64 --self-contained true -p:Version=0.42.0 -p:HostUpdateSequence=42000 -p:UseSharedCompilation=false -o artifacts/signing-baseline -m:1 -nr:false
-          dotnet build tests/Pcl.ComponentDelivery.Tests/Pcl.ComponentDelivery.Tests.csproj -c Release -m:1 -nr:false -p:UseSharedCompilation=false
-          dotnet tests/Pcl.ComponentDelivery.Tests/bin/Release/net10.0/Pcl.ComponentDelivery.Tests.dll "$PWD/artifacts/signing-fixture" "$PWD/artifacts/signing-baseline/Pcl.Host" "$RUNNER_TEMP/pcl-signing-fixture-public.pem" "$PWD/artifacts/signing-test-root" "$PWD/artifacts/signing-result.json"
+          dotnet build tests/Pcl.ComponentDelivery.Tests/Pcl.ComponentDelivery.Tests.csproj -c Release -m:1 -nr:false -p:UseSharedCompilation=false -p:RuntimeIdentifiers=osx-arm64
+          dotnet tests/Pcl.ComponentDelivery.Tests/bin/Release/net10.0/Pcl.ComponentDelivery.Tests.dll "$PWD/artifacts/unified-fixture/release" "$PWD/artifacts/signing-baseline/Pcl.Host" "$RUNNER_TEMP/pcl-signing-fixture-public.pem" "$PWD/artifacts/signing-test-root" "$PWD/artifacts/signing-result.json"
       - name: Verify extracted packages and shipped Core regressions
         shell: bash
         run: |
           version=$(python3 -c 'import json; print(json.load(open("release.json"))["version"])')
-          dotnet build tests/Pcl.LogProtection.Tests/Pcl.LogProtection.Tests.csproj -c Release -m:1 -nr:false -p:UseSharedCompilation=false
+          dotnet build tests/Pcl.LogProtection.Tests/Pcl.LogProtection.Tests.csproj -c Release -m:1 -nr:false -p:UseSharedCompilation=false -p:RuntimeIdentifiers=osx-arm64
           python3 scripts/verify-component-delivery.py "artifacts/components-$version-osx-arm64/packages" tests/Pcl.LogProtection.Tests/bin/Release/net10.0/Pcl.LogProtection.Tests.dll "$(command -v dotnet)" artifacts/component-delivery
       - name: Verify private-pipe contract with packaged Host
         shell: bash
         run: |
           version=$(python3 -c 'import json; print(json.load(open("release.json"))["version"])')
-          dotnet build tests/Pcl.MinimalClient.Tests/Pcl.MinimalClient.Tests.csproj -c Release -m:1 -nr:false
+          dotnet build tests/Pcl.MinimalClient.Tests/Pcl.MinimalClient.Tests.csproj -c Release -m:1 -nr:false -p:RuntimeIdentifiers=osx-arm64
           dotnet tests/Pcl.MinimalClient.Tests/bin/Release/net10.0/Pcl.MinimalClient.Tests.dll "$PWD/artifacts/component-delivery/full/host/Pcl.Host" - "$PWD/artifacts/component-contract-root" "$PWD/artifacts/component-contract.json" contract
+      - name: Verify actual client self-update and rollback
+        run: DOTNET="$(command -v dotnet)" bash scripts/test-client-self-update.sh "$PWD/artifacts/client-update-acceptance"
+      - name: Verify data update background operation and cleanup
+        run: |
+          dotnet build tests/Pcl.UpdateIntegration.Tests/Pcl.UpdateIntegration.Tests.csproj -c Release -m:1 -nr:false -p:RuntimeIdentifiers=osx-arm64
+          version=$(python3 -c 'import json; print(json.load(open("release.json"))["version"])')
+          dotnet tests/Pcl.UpdateIntegration.Tests/bin/Release/net10.0/Pcl.UpdateIntegration.Tests.dll "$PWD/artifacts/update-integration" "$PWD/artifacts/components-$version-osx-arm64/host/Pcl.Host"
       # Candidates are not Developer ID signed/notarized production releases.
       # Production Host signing/feed creation runs on a trusted publisher machine.
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
@@ -85,7 +95,11 @@ jobs:
             artifacts/components-*/packages/*
             artifacts/component-contract.json
             artifacts/component-delivery/delivery-result.json
+            artifacts/client-update-acceptance/run/results.json
+            artifacts/update-integration/results.json
             artifacts/signing-result.json
-            artifacts/signing-delivery/delivery-result.json
+            artifacts/unified-fixture/verified/delivery-result.json
+            artifacts/unified-fixture/release/unified-verification.json
+            artifacts/unified-negative.json
           if-no-files-found: error
           retention-days: 14

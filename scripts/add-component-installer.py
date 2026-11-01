@@ -29,6 +29,10 @@ with zipfile.ZipFile(installer) as archive:
     policy_path = plists[0].replace('Info.plist', 'MacOS/host-update-policy.json')
     if json.loads(archive.read(policy_path)) != json.loads((release / 'host-update-policy.json').read_text()):
         raise SystemExit('INSTALLER_PUBLISHER_POLICY_MISMATCH')
+    if 'appFeedUrl' in manifest:
+        app_policy_path = plists[0].replace('Info.plist', 'MacOS/client-update-policy.json')
+        if json.loads(archive.read(app_policy_path)) != json.loads((release / 'app-update-policy.json').read_text()):
+            raise SystemExit('INSTALLER_CLIENT_POLICY_MISMATCH')
     if 'content' in manifest['packages']:
         content_policy_path = plists[0].replace('Info.plist', 'MacOS/host/content-update-policy.json')
         with zipfile.ZipFile(release / manifest['packages']['host']['file']) as host_archive:
@@ -42,6 +46,14 @@ with destination.open('rb') as stream:
 base_url = manifest['packages']['host']['url'].rsplit('/', 1)[0]
 manifest['packages']['installer'] = {'file': destination.name, 'kind': 'macos-app',
     'size': destination.stat().st_size, 'sha256': digest.hexdigest(), 'url': base_url + '/' + destination.name}
+if 'appFeedUrl' in manifest:
+    feed = release / 'app-feed.json'
+    subprocess.run(['python3', str(pathlib.Path(__file__).with_name('sign-client-update.py')),
+        '--archive', str(destination), '--kind', 'macos-app', '--url', base_url + '/' + destination.name,
+        '--key', str(key), '--dotnet', str(dotnet), '--tool', str(tool), '--channel', manifest['channel'],
+        '--output', str(feed)], check=True)
+    manifest['packages']['installer']['signature'] = {'file': feed.name, 'algorithm': 'RSA-PSS-SHA256',
+        'sha256': hashlib.sha256(feed.read_bytes()).hexdigest()}
 with tempfile.TemporaryDirectory(prefix='.installer-index-', dir=release) as temporary:
     stage = pathlib.Path(temporary)
     candidate = stage / index.name

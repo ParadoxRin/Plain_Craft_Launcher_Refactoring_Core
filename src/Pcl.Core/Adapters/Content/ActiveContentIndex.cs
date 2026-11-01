@@ -4,11 +4,11 @@ using PCLCS;
 namespace Pcl.Core.Adapters.Content;
 
 /// <summary>One immutable selection per Host process, shared by search and identity projection.</summary>
-internal static class ActiveContentIndex
+public static class ActiveContentIndex
 {
     private static readonly Lazy<ContentSelection> Selected = new(Select);
     internal static IReadOnlyList<WikiEntry> Entries => Selected.Value.Entries;
-    internal static ContentSelection Status => Selected.Value;
+    public static ContentSelection Status => Selected.Value;
 
     private static ContentSelection Select()
     {

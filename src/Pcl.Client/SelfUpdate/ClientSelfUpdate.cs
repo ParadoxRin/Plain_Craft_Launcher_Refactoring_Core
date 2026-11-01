@@ -317,9 +317,8 @@ public sealed class ClientSelfUpdate
         {
             var oldFile = Path.Combine(previous, relative);
             var newFile = Path.Combine(next, relative);
-            if (File.Exists(oldFile) && (!File.Exists(newFile) || !System.Text.Json.Nodes.JsonNode.DeepEquals(
-                    System.Text.Json.Nodes.JsonNode.Parse(ClientUpdatePackage.ReadBytes(oldFile, 1024 * 1024)),
-                    System.Text.Json.Nodes.JsonNode.Parse(ClientUpdatePackage.ReadBytes(newFile, 1024 * 1024)))))
+            if (File.Exists(oldFile) && (!File.Exists(newFile) || !CompatiblePolicy(ClientUpdatePackage.ReadBytes(oldFile, 1024 * 1024),
+                    ClientUpdatePackage.ReadBytes(newFile, 1024 * 1024), relative == "host-update-policy.json")))
                 throw new InvalidDataException("CLIENT_UPDATE_HOST_POLICY_CHANGED");
         }
         var oldHost = Path.Combine(previous, "host/Pcl.Host");
@@ -332,6 +331,73 @@ public sealed class ClientSelfUpdate
             newProbe.Build.Sequence < oldProbe.Build.Sequence || !newProbe.Capabilities.Contains("desktop.contract-only.v1"))
             throw new InvalidDataException("CLIENT_UPDATE_HOST_INCOMPATIBLE_OR_OLDER");
     }
+    public static bool CompatiblePolicy(byte[] previous, byte[] next, bool host)
+    {
+        var oldPolicy = System.Text.Json.Nodes.JsonNode.Parse(previous);
+        var newPolicy = System.Text.Json.Nodes.JsonNode.Parse(next);
+        if (host)
+        {
+            var oldMinimum = oldPolicy?["MinimumSequence"]?.GetValue<long>();
+            var newMinimum = newPolicy?["MinimumSequence"]?.GetValue<long>();
+            if (oldMinimum is null || newMinimum is null || newMinimum < oldMinimum) return false;
+            // A new bundled Host raises the installation floor without rotating trust.
+            newPolicy!["MinimumSequence"] = oldMinimum.Value;
+        }
+        return System.Text.Json.Nodes.JsonNode.DeepEquals(oldPolicy, newPolicy);
+    }
+
+    public int CleanupCache()
+    {
+        using var held = Lock();
+        var state = Status;
+        if (state.Pending is not null) throw new IOException("CLIENT_UPDATE_IN_PROGRESS");
+        var keep = new HashSet<string>(StringComparer.Ordinal);
+        var runnerPath = Path.Combine(Store, "recovery-helper.json");
+        if (File.Exists(runnerPath)) keep.Add(ClientUpdatePackage.Read<ClientRecoveryRunner>(runnerPath).Directory);
+        if (state.PreviousDirectory is not null)
+        {
+            keep.Add(state.PreviousDirectory);
+            keep.Add(Path.GetDirectoryName(state.PreviousDirectory)!);
+        }
+        // Requests belonging to a live client may still be waiting for the user's Install click.
+        foreach (var requestPath in Directory.EnumerateFiles(Store, "request-*.json"))
+        {
+            var request = ClientUpdatePackage.Read<ClientUpdateRequest>(requestPath);
+            try
+            {
+                using var owner = Process.GetProcessById(request.ParentPid);
+                if (!owner.HasExited && owner.StartTime.ToUniversalTime().Ticks == request.ParentStartedTicks)
+                { keep.Add(requestPath); keep.Add(Path.GetDirectoryName(request.Archive)!); }
+            }
+            catch (ArgumentException) { }
+        }
+        var cutoff = DateTime.UtcNow.AddDays(-7);
+        var removed = 0;
+        bool Owned(string name, string prefix, string suffix = "") => name.StartsWith(prefix, StringComparison.Ordinal) &&
+            name.EndsWith(suffix, StringComparison.Ordinal) && Guid.TryParseExact(name.Substring(prefix.Length, name.Length - prefix.Length - suffix.Length), "N", out _);
+        var directories = Directory.EnumerateDirectories(Store).Where(path => Owned(Path.GetFileName(path), "download-") ||
+            Owned(Path.GetFileName(path), "helper-")).OrderByDescending(Directory.GetLastWriteTimeUtc).ToArray();
+        foreach (var path in directories.Take(2)) keep.Add(path);
+        var prefix = "." + Path.GetFileName(Target) + ".pcl-update-";
+        foreach (var path in directories.Concat(Directory.EnumerateDirectories(Path.GetDirectoryName(Target)!)
+                     .Where(path => Owned(Path.GetFileName(path), prefix))))
+        {
+            if (keep.Contains(path) || Directory.GetLastWriteTimeUtc(path) >= cutoff) continue;
+            ClientUpdatePackage.TreeHash(path); // Refuse links anywhere in a candidate tree.
+            Directory.Delete(path, true); removed++;
+        }
+        foreach (var path in Directory.EnumerateFiles(Store))
+        {
+            var name = Path.GetFileName(path);
+            if (!(Owned(name, "request-", ".json") || name.StartsWith("ready-", StringComparison.Ordinal) &&
+                  name.EndsWith(".json", StringComparison.Ordinal) && name.Length == 75 && name.Substring(6, 64).All(Uri.IsHexDigit)) ||
+                keep.Contains(path) || File.GetLastWriteTimeUtc(path) >= cutoff) continue;
+            ClientUpdatePackage.RejectLinks(path);
+            File.Delete(path); removed++;
+        }
+        return removed;
+    }
+
     private void Recover()
     {
         var state = Status;
