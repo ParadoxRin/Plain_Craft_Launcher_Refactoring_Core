@@ -1,9 +1,10 @@
 """Fail packaging when business sources differ from the selected/latest core.
 
-Host version/sequence are packaging metadata. All other tracked core content,
-including native helpers and upstream libraries, must match the core baseline.
+Host version/sequence are packaging metadata. Explicit content integration files
+pin both baseline and current hashes; other core/native/vendor files must match.
 """
 import argparse
+import hashlib
 import json
 import pathlib
 import subprocess
@@ -50,7 +51,18 @@ if __name__ == '__main__':
     if release['version'].split('.')[:2] != release['coreVersion'].split('.')[:2] or not release['version'].endswith('.1'):
         raise SystemExit('PACKAGING_VERSION_MUST_FOLLOW_CORE_AS_0_XX_1')
     references = [baseline] + ([args.upstream_ref] if args.upstream_ref else [])
+    # Data loading requires a small, reviewable adapter delta over the latest
+    # business baseline. Pin both sides, so this is not a broad directory exemption.
+    overlays = release.get('contentIntegration', {})
+    allowed = {'src/Pcl.Core/McmodCatalog.cs', 'src/Pcl.Core/Adapters/Search/UnifiedResourceSearch.cs', 'src/Pcl.Core/Adapters/Search/BundledProjectIdentity.cs',
+               'src/Pcl.Core/Adapters/Content/ContentPack.cs', 'src/Pcl.Core/Adapters/Content/ActiveContentIndex.cs'}
+    if set(overlays) - allowed:
+        raise SystemExit('UNSUPPORTED_CORE_OVERLAY')
+    def digest(name, content):
+        return hashlib.sha256(normalize(name, content)).hexdigest()
     current = set(git('ls-files', '-z', '--', *PATHS).decode().split('\0')) - {''}
+    if set(overlays) - current:
+        raise SystemExit('UNTRACKED_CONTENT_INTEGRATION')
     untracked = git('ls-files', '--others', '--exclude-standard', '-z', '--', *PATHS)
     if untracked:
         raise SystemExit('UNTRACKED_CORE_CONTENT: commit core work before packaging')
@@ -59,7 +71,13 @@ if __name__ == '__main__':
         changed = []
         for name in sorted(current | tracked):
             path = ROOT / name
-            if name not in current or name not in tracked or not path.is_file():
+            if name in overlays:
+                pin = overlays[name]
+                original = digest(name, git('show', reference + ':' + name)) if name in tracked else None
+                actual = digest(name, path.read_bytes()) if path.is_file() else None
+                if original != pin['baselineSha256'] or actual != pin['sha256'] or name not in current:
+                    changed.append(name)
+            elif name not in current or name not in tracked or not path.is_file():
                 changed.append(name)
             elif normalize(name, path.read_bytes()) != normalize(name, git('show', reference + ':' + name)):
                 changed.append(name)

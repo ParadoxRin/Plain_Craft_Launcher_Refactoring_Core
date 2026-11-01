@@ -59,6 +59,10 @@ jobs:
       # dotnet test invocation would not prove that its assertions ran.
       - name: Run core assertions
         run: dotnet tests/Pcl.Tests/bin/Release/net10.0/Pcl.Tests.dll artifacts/ci-core
+      - name: Build and test signed content packs
+        run: |
+          dotnet build tests/Pcl.ContentPack.Tests/Pcl.ContentPack.Tests.csproj -c Release -m:1 -nr:false
+          dotnet tests/Pcl.ContentPack.Tests/bin/Release/net10.0/Pcl.ContentPack.Tests.dll "$PWD/artifacts/ci-content"
       - name: Build and test credential bounds and detached log protection
         run: |
           dotnet build tests/Pcl.LogProtection.Tests/Pcl.LogProtection.Tests.csproj -c Release -m:1 -nr:false

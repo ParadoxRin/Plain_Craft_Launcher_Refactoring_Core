@@ -17,6 +17,9 @@ export DOTNET_CLI_TELEMETRY_OPTOUT=1
   -p:NuGetAudit=false -p:PublishTrimmed=false -p:UseAppHost=true -p:UseSharedCompilation=false \
   -p:PathMap="$project_root=/src/Plain-Craft-Launcher-Refactoring" -p:DebugType=None -p:DebugSymbols=false \
   -p:MicrosoftApplicationConfig="$project_root/src/Pcl.Core/Authentication/microsoft-application.json" -o "$work/host"
+if [ -n "${PCL_CONTENT_POLICY:-}" ]; then
+  cp "$PCL_CONTENT_POLICY" "$work/host/content-update-policy.json"
+fi
 python3 "$project_root/scripts/prepare-component-legal.py" "$project_root" "$work/host"
 entry="$work/host/Pcl.Host"
 if [[ "$rid" == win-* ]]; then entry="$entry.exe"; fi

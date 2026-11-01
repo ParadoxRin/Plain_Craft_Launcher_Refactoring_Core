@@ -185,7 +185,7 @@ public sealed partial class UnifiedSearchWindow : WorkspaceWindow, IHostWorkspac
         top.Children.Add(
             new TextBlock
             {
-                Text = "Modrinth · 本地 · MC 百科内置索引 · CurseForge",
+                Text = "Modrinth · 本地 · MC 百科离线索引 · CurseForge",
                 TextWrapping = TextWrapping.Wrap
             }
         );

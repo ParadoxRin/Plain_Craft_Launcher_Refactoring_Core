@@ -6,7 +6,7 @@ PCL 原作者：**龙腾猫跃（LTCatt）** · [支持原作者](https://meloon
 
 ## 当前状态
 
-当前源码已推进到 **0.42.1 分包版**（Host 序号 42100），基于最新修复核心 `81016b4`；完成独立客户端/Host 交付、签名发布与配套更新策略。构建与验证见 [0.42.1 分包交付](docs/0.42.1-分包交付.md)。以下为既有公开发布记录，不表示已自动发布 0.42.1 附件。
+当前源码已推进到 **0.42.1 分包版**（Host 序号 42101，本地 build 422），基于最新修复核心 `81016b4`；完成独立客户端/Host 交付、签名发布与配套更新策略；本地追加[百科/映射数据包](docs/0.42.1-数据分包.md)。构建与验证见 [0.42.1 分包交付](docs/0.42.1-分包交付.md)。以下为既有公开发布记录，不表示已自动发布 0.42.1 附件。
 
 此前公开发布版本为 **0.42.0 Preview**：Apple Silicon macOS 14+ 的 Avalonia 参考客户端 + 独立 .NET Host。本版纳入统一模组浏览、Host 签名更新、独立最小客户端和三平台凭据适配等 main 增量；默认官方签名更新源仍未配置。既有 v0.41.0 附件保持不变。复现本版使用 `v0.42.0` 标签，继续开发使用 `main`；现行[架构规范为 v1.5.2](docs/architecture/PCL-Mac架构规范.md)。本版交付与验证见[0.42.0 发布记录](docs/0.42-发布记录.md)。
 
@@ -20,7 +20,7 @@ SwiftUI、Windows/Linux 原生图形客户端尚未实现；Windows/Linux 的 Ja
 |---|---|---|
 | **客户端包** | [Desktop](src/Pcl.Desktop/)、[Client](src/Pcl.Client/)、匹配的 [Contract](src/Pcl.Contract/)、界面资源和 [Native](src/Pcl.Native/) 窗口桥接 | 整体发布客户端；UI 自身自动替换尚未实现 |
 | **Host 核心包** | [Host](src/Pcl.Host/)、[Application](src/Pcl.Application/)、[Domain](src/Pcl.Domain/)、[Ports](src/Pcl.Ports/)、[Core](src/Pcl.Core/)，以及匹配 Contract、必要 Legacy、上游库和运行依赖 | 按系统/CPU 架构整包验证和发布；已有可配置签名更新，默认官方频道未配置 |
-| **数据与内容包** | 百科索引、项目映射、兼容表、帮助、语言和主题等适合外置的内容 | 当前部分仍嵌入程序集或位于代码/文档中；建立格式版本、兼容与校验机制后再独立更新 |
+| **数据与内容包** | 百科索引、项目映射、兼容表、帮助、语言和主题等适合外置的内容 | 百科/项目映射已支持签名独立更新、兼容检查与回退；其他内容仍按原方式管理 |
 | **外部工具与运行环境** | 游戏 Java、EasyTier 等 | 按各自版本、平台与校验信息管理；现有自动 Java/EasyTier 路径限定 Apple Silicon Mac |
 | **开发与验证工具** | [tests](tests/)、[scripts](scripts/)、[tools](tools/)、[examples](examples/)、[CI](.github/workflows/core-ci.yml) | 随源码维护，通常不进入用户更新包；生成的运行资产和可独立部署的示例另作区分 |
 
@@ -116,7 +116,7 @@ dotnet tests/Pcl.Tests/bin/Release/net10.0/Pcl.Tests.dll artifacts/receiver-core
 
 测试目录必须全新；测试是控制台程序，不能以 `dotnet test` 未报错代替执行。构建不等于图形或游戏验收；原生桥、Host 专项测试及各平台前提见[开发与验证](docs/开发与验证.md)。
 
-Mac 发行包另由 `bash scripts/build-handoff.sh` 生成，需要 Apple Silicon、macOS 14+、Xcode Command Line Tools、Python 3 和 curl。当前为 ad-hoc 签名、未公证；`release.json` 与 Desktop 版本须一致。本版仍按客户端与 Host 合装交付，不创建独立内容更新包。
+Mac 发行包另由 `bash scripts/build-handoff.sh` 生成，需要 Apple Silicon、macOS 14+、Xcode Command Line Tools、Python 3 和 curl。当前为 ad-hoc 签名、未公证；`release.json` 与 Desktop 版本须一致。首次安装保留客户端与 Host 合装；独立交付及数据包入口见 0.42.1 分包文档。
 
 ## 开发方式
 

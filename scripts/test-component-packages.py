@@ -60,6 +60,12 @@ class Packages(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'CLIENT_CONTAINS_CORE'):
             self.run_package()
         self.assertFalse((self.root / 'packages').exists())
+        (self.client / 'Pcl.Core.dll').unlink()
+        for name in ('Pcl.Host', 'Pcl.Host.runtimeconfig.json', 'ArchitectureGuard.deps.json'):
+            (self.client / name).write_bytes(b'build-only')
+            with self.assertRaisesRegex(ValueError, 'CLIENT_CONTAINS_CORE'):
+                self.run_package()
+            (self.client / name).unlink()
 
     def test_reject_link(self):
         (self.host / 'private-link').symlink_to(self.root / 'outside')

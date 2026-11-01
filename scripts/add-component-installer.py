@@ -29,6 +29,11 @@ with zipfile.ZipFile(installer) as archive:
     policy_path = plists[0].replace('Info.plist', 'MacOS/host-update-policy.json')
     if json.loads(archive.read(policy_path)) != json.loads((release / 'host-update-policy.json').read_text()):
         raise SystemExit('INSTALLER_PUBLISHER_POLICY_MISMATCH')
+    if 'content' in manifest['packages']:
+        content_policy_path = plists[0].replace('Info.plist', 'MacOS/host/content-update-policy.json')
+        with zipfile.ZipFile(release / manifest['packages']['host']['file']) as host_archive:
+            if json.loads(archive.read(content_policy_path)) != json.loads(host_archive.read('content-update-policy.json')):
+                raise SystemExit('INSTALLER_CONTENT_POLICY_MISMATCH')
 shutil.copy2(installer, destination)
 digest = hashlib.sha256()
 with destination.open('rb') as stream:

@@ -18,6 +18,8 @@ for name in ('work', 'release', 'key', 'dotnet', 'tool', 'output'):
     parser.add_argument('--' + name, type=pathlib.Path, required=True)
 parser.add_argument('--base-url', required=True, help='Immutable HTTPS asset directory for this release')
 parser.add_argument('--feed-url', required=True, help='Stable HTTPS Host feed endpoint for this platform/channel')
+parser.add_argument('--content-release', type=pathlib.Path)
+parser.add_argument('--content-tool', type=pathlib.Path, help='Built Pcl.ContentPack.dll, required with --content-release')
 args = parser.parse_args()
 args.work, args.output, args.key = (p.resolve() for p in (args.work, args.output, args.key))
 for directory in (args.work, args.output):
@@ -73,6 +75,33 @@ with tempfile.TemporaryDirectory(prefix='.signed-components-', dir=args.output.p
     manifest['trust'] = 'RSA-PSS-SHA256; verify using an independently pinned publisher key'
     manifest['hostFeedUrl'] = args.feed_url
     manifest['publisherPublicKeySha256'] = hashlib.sha256(public_key.encode()).hexdigest()
+    if args.content_release:
+        if not args.content_tool:
+            raise SystemExit('CONTENT_VERIFIER_REQUIRED')
+        content = args.content_release.resolve()
+        inventory = json.loads((content / 'content-manifest.json').read_text())
+        asset = inventory['package']
+        if pathlib.PurePath(asset['file']).name != asset['file'] or '/' in asset['file'] or '\\' in asset['file']:
+            raise SystemExit('CONTENT_ASSET_PATH_INVALID')
+        source = content / asset['file']
+        if source.is_symlink() or source.stat().st_size != asset['size'] or hashlib.sha256(source.read_bytes()).hexdigest() != asset['sha256']:
+            raise SystemExit('CONTENT_ASSET_HASH_INVALID')
+        trusted_policy = args.work / 'host/content-update-policy.json'
+        subprocess.run([str(args.dotnet.resolve()), str(args.content_tool.resolve()), 'verify', str(source),
+                        str(trusted_policy), release['version']], check=True)
+        shutil.copy2(source, result / asset['file'])
+        manifest['packages']['content'] = {**asset, 'runtime': 'any', 'kind': 'wiki-project-index',
+            'url': args.base_url.rstrip('/') + '/' + asset['file'],
+            'trust': 'embedded RSA-PSS signature verified against Host content policy'}
+        bundle = inventory['archive']
+        if pathlib.PurePath(bundle['file']).name != bundle['file'] or '/' in bundle['file'] or '\\' in bundle['file']:
+            raise SystemExit('CONTENT_BUNDLE_PATH_INVALID')
+        source_bundle = content / bundle['file']
+        if source_bundle.is_symlink() or source_bundle.stat().st_size != bundle['size'] or hashlib.sha256(source_bundle.read_bytes()).hexdigest() != bundle['sha256']:
+            raise SystemExit('CONTENT_BUNDLE_HASH_INVALID')
+        shutil.copy2(source_bundle, result / bundle['file'])
+        manifest['packages']['contentBundle'] = {**bundle, 'runtime': 'any', 'kind': 'content-distribution',
+            'url': args.base_url.rstrip('/') + '/' + bundle['file']}
     index = result / 'release-manifest.json'
     index.write_text(json.dumps(manifest, indent=2) + '\n')
     envelope = result / 'release-manifest.signed.json'

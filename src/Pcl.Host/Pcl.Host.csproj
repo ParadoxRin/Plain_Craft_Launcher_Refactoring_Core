@@ -9,7 +9,7 @@
   <ItemGroup><ProjectReference Include="../Pcl.Application/Pcl.Application.csproj" /></ItemGroup>
 <ItemGroup><Compile Include="../SharedProtocol/PrivatePipePath.cs" Link="Transport/PrivatePipePath.cs" /></ItemGroup><ItemGroup><Compile Include="../SharedProtocol/ProcessBirthIdentity.cs" Link="Protocol/ProcessBirthIdentity.cs" /></ItemGroup><PropertyGroup>
 <Version>0.42.1</Version>
-<HostUpdateSequence Condition="'$(HostUpdateSequence)' == ''">42100</HostUpdateSequence>
+<HostUpdateSequence Condition="'$(HostUpdateSequence)' == ''">42101</HostUpdateSequence>
 </PropertyGroup>
 <ItemGroup><AssemblyMetadata Include="HostUpdateSequence" Value="$(HostUpdateSequence)" /></ItemGroup>
 </Project>

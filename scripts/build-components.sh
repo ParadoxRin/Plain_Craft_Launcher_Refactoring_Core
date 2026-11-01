@@ -36,6 +36,9 @@ publish() {
 }
 publish "$project_root/src/Pcl.Desktop/Pcl.Desktop.csproj" "$work/client"
 publish "$project_root/src/Pcl.Host/Pcl.Host.csproj" "$work/host"
+if [ -n "${PCL_CONTENT_POLICY:-}" ]; then
+  cp "$PCL_CONTENT_POLICY" "$work/host/content-update-policy.json"
+fi
 python3 "$project_root/scripts/prepare-component-legal.py" "$project_root" "$work/client" "$work/host"
 entry="$work/host/Pcl.Host"
 if [[ "$rid" == win-* ]]; then entry="$entry.exe"; fi

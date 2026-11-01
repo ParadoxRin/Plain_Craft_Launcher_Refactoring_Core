@@ -36,6 +36,9 @@ if [ -n "${PCL_HOST_UPDATE_POLICY:-}" ]; then
   cp "$PCL_HOST_UPDATE_POLICY" "$publish/host-update-policy.json"
 fi
 find "$publish" -type f -name '*.pdb' -delete
+if [ -n "${PCL_CONTENT_POLICY:-}" ]; then
+  cp "$PCL_CONTENT_POLICY" "$publish/host/content-update-policy.json"
+fi
 test -f "$publish/host/libhostfxr.dylib"
 test -x "$publish/host/Pcl.Host"
 mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources/Legal"

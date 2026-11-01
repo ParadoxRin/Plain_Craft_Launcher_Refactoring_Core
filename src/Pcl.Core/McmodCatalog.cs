@@ -24,10 +24,10 @@ public sealed record McmodVersions(IReadOnlyList<ResourceRelease> Releases, IRea
 /// </summary>
 public static class McmodCatalog
 {
-    public const string Source = "MC 百科（内置索引）";
+    public const string Source = "MC 百科（离线索引）";
     public const string IndexProvenance = "PCL 6b9a50df911c9d68b69b24c979efba477fb14b67 / PCLCS Resource/WikiEntries.txt";
     private static readonly Lazy<IReadOnlyList<McmodProject>> index = new(
-        () => WikiEntry.All.Value.GroupBy(
+        () => Pcl.Core.Adapters.Content.ActiveContentIndex.Entries.GroupBy(
             x => x.Id
         )
             .Select(
@@ -70,6 +70,9 @@ public static class McmodCatalog
             .ToArray()
     );
     public static IReadOnlyList<McmodProject> Entries => index.Value;
+    public static string ActiveIndexProvenance => Adapters.Content.ActiveContentIndex.Status.Source;
+    public static long ActiveIndexSequence => Adapters.Content.ActiveContentIndex.Status.Sequence;
+    public static string? IndexRejection => Adapters.Content.ActiveContentIndex.Status.Rejection;
 
     // [实现] ValidSlug 的实现：计算并返回 value is { Length: > 0 and <= 128 } && value.All( c => char.IsAsciiLetterOrDigit(c) || c is '-'…。
     private static bool ValidSlug(string? value) => value is { Length: > 0 and <= 128 } && value.All(

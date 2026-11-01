@@ -364,7 +364,7 @@ public static class UnifiedResourceSearch
                             x => new ResourceSearchHit(
                                 "mcmod:" + x.Id,
                                 x.Title,
-                                "内置索引；选择后联网检查兼容版本。",
+                                "离线索引；选择后联网检查兼容版本。",
                                 [
                                     McmodCatalog.Source
                                 ],

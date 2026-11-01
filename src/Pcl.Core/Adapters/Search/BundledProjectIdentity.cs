@@ -2,11 +2,11 @@ using PCLCS;
 using Pcl.Domain.Search;
 
 namespace Pcl.Core.Adapters.Search;
-/// <summary>把 PCLCS 原始词库投影为纯规则输入；不修改 vendor 数据，也不在词库中加入网络或 UI。</summary>
+/// <summary>将同一进程选定的签名数据包或内置词库投影为纯规则输入；身份规则不变。</summary>
 public static class BundledProjectIdentity
 {
     public static ProjectIdentityIndex Index { get; } = new(
-        WikiEntry.All.Value.Select(
+        Pcl.Core.Adapters.Content.ActiveContentIndex.Entries.Select(
             x => new ProjectIdentityLink(
                 x.Id,
                 x.Slugs.GetValueOrDefault(ResourcePlatforms.Modrinth),

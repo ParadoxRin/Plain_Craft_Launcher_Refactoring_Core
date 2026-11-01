@@ -27,6 +27,9 @@ for name, item in manifest['packages'].items():
             digest.update(block)
     if archive.stat().st_size != item['size'] or digest.hexdigest() != item['sha256']:
         raise ValueError('ARCHIVE_INTEGRITY_FAILED:' + name)
+    if item.get('kind') == 'wiki-project-index':
+        checks.append('content-envelope-integrity')
+        continue
     target = output / name
     target.mkdir()
     if item.get('kind') == 'macos-app':
@@ -60,6 +63,15 @@ probe = json.loads(subprocess.check_output([str(entry), '--update-probe'], text=
 if probe['build'] != manifest['packages']['host']['build']:
     raise ValueError('HOST_BUILD_MISMATCH')
 checks.append('extracted-host-probe-matches-manifest')
+if 'content' in manifest['packages']:
+    content_tool = pathlib.Path(__file__).resolve().parent.parent / 'tools/Pcl.ContentPack/bin/Release/net10.0/Pcl.ContentPack.dll'
+    for suffix in ('.dll', '.deps.json', '.runtimeconfig.json'):
+        source = content_tool.with_suffix(suffix)
+        shutil.copy2(source, host / source.name)
+    subprocess.run([str(dotnet), str(host / content_tool.name), 'verify',
+                    str(packages / manifest['packages']['content']['file']),
+                    str(host / 'content-update-policy.json'), probe['build']['version']], check=True)
+    checks.append('signed-content-policy-and-host-compatibility')
 # Load the regression harness beside the delivered assemblies, without copying
 # build-directory Pcl.Core.dll, any other business DLL, or dependency binaries.
 for suffix in ('.dll', '.deps.json', '.runtimeconfig.json'):

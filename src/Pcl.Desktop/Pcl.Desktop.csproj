@@ -25,6 +25,14 @@
     <ItemGroup><PublishedHostFiles Include="../Pcl.Host/bin/$(Configuration)/$(TargetFramework)/$(RuntimeIdentifier)/**/*" Exclude="../Pcl.Host/bin/$(Configuration)/$(TargetFramework)/$(RuntimeIdentifier)/**/*.pdb" /></ItemGroup>
     <Copy SourceFiles="@(PublishedHostFiles)" DestinationFiles="@(PublishedHostFiles->'$(PublishDir)host/%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
   </Target>
+  <!-- Build-only executable references otherwise leak their apphosts and runtime
+       metadata into Desktop publish even with ReferenceOutputAssembly=false. -->
+  <Target Name="ExcludeBuildOnlyExecutables" AfterTargets="ComputeFilesToPublish">
+    <ItemGroup>
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)"
+        Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('%(ResolvedFileToPublish.RelativePath)', '^(Pcl\.Host|ArchitectureGuard)(\.exe|\.deps\.json|\.runtimeconfig\.json)?$'))" />
+    </ItemGroup>
+  </Target>
   <Target Name="EnforceArchitecture" AfterTargets="Build">
     <PropertyGroup>
       <ArchitectureGuardHost>$(NetCoreRoot)dotnet</ArchitectureGuardHost>

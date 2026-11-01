@@ -59,7 +59,8 @@ def package(client, host, probe, release, output, base_url=None):
         raise ValueError('CLIENT_CONTAINS_BUNDLED_HOST')
     forbidden = {'pcl.host.dll', 'pcl.core.dll', 'pcl.application.dll', 'pcl.domain.dll',
                  'pcl.ports.dll', 'pcl.legacy.dll', 'pclcs.dll', 'meloongcore.dll'}
-    if any(path.name.casefold() in forbidden for _, path in files(client)):
+    if any(path.name.casefold() in forbidden or path.name.casefold().startswith(('pcl.host', 'architectureguard'))
+           for _, path in files(client)):
         raise ValueError('CLIENT_CONTAINS_CORE')
     build = probe['build']
     rid, version = build['runtime'], release['version']
@@ -110,7 +111,8 @@ def package(client, host, probe, release, output, base_url=None):
         manifest = {'format': 1, 'version': version, 'channel': release['channel'], 'runtime': rid,
                     'packages': parts, 'trust': 'inventory-only; use a signed Host feed for automatic updates'}
         if 'coreCommit' in release:
-            manifest['core'] = {'version': release['coreVersion'], 'commit': release['coreCommit']}
+            manifest['core'] = {'version': release['coreVersion'], 'commit': release['coreCommit'],
+                                'contentIntegration': release.get('contentIntegration', {})}
         (stage / 'release-manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
         stage.rename(output)
     return manifest
