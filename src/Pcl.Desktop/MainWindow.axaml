@@ -121,10 +121,11 @@
                         <CheckBox x:Name="RememberLoginBox" Grid.Column="1" Content="记住登录" IsChecked="True" IsVisible="False"/>
                         <Button x:Name="LoginButton" Grid.Column="2" Content="使用此名称" Click="LoginClick" Padding="12,8"/>
                     </Grid>
-                    <StackPanel Grid.Row="3" Grid.ColumnSpan="2" Orientation="Horizontal" Spacing="10">
+                    <Grid Grid.Row="3" Grid.ColumnSpan="2" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
                         <TextBlock x:Name="LoginHint" Text="" IsVisible="False" Classes="muted" FontSize="11" MaxWidth="560" TextWrapping="Wrap"/>
-                        <Button x:Name="CopyCodeButton" Content="复制设备码" Click="CopyLoginCodeClick" IsVisible="False" Padding="8,4"/>
-                    </StackPanel>
+                        <Button x:Name="CancelLoginButton" Grid.Column="1" Content="取消登录" Click="CancelClick" IsVisible="False" Padding="8,4"/>
+                        <Button x:Name="CopyCodeButton" Grid.Column="2" Content="复制设备码" Click="CopyLoginCodeClick" IsVisible="False" Padding="8,4"/>
+                    </Grid>
                 </Grid>
             </Border>
             <Border Grid.Row="3" Classes="card" Padding="18,16">

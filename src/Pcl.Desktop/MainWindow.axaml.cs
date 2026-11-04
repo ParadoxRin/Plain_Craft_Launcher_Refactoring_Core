@@ -44,6 +44,7 @@ public partial class MainWindow : Window
     private AccountViewCache? accounts;
     private bool refreshingAccounts;
     private string? loginUserCode;
+    private Action<string> openLoginBrowser = Open;
     private Pcl.Core.Contracts.Launch.IGameSession? game;
     private Bitmap? instanceArtwork;
     private bool installed;
@@ -95,7 +96,7 @@ public partial class MainWindow : Window
             Button.ClickEvent,
             (_, e) =>
             {
-                if (remote is { IsAvailable: false } && e.Source is Button button && button != CancelButton && button != StopGameButton && button != CopyCodeButton)
+                if (remote is { IsAvailable: false } && e.Source is Button button && button != CancelButton && button != CancelLoginButton && button != StopGameButton && button != CopyCodeButton)
                 {
                     e.Handled = true;
                 }
@@ -201,6 +202,12 @@ public partial class MainWindow : Window
             if (Program.Arguments.Contains("--nested038-smoke"))
             {
                 await Nested038SmokeAsync();
+                return;
+            }
+
+            if (Program.Arguments.Contains("--login-cancel-smoke"))
+            {
+                await LoginCancelSmokeAsync();
                 return;
             }
 
@@ -772,6 +779,9 @@ public partial class MainWindow : Window
                 return;
             }
 
+            CancelLoginButton.IsVisible = LoginHint.IsVisible = true;
+            LoginHint.Text = "正在请求微软授权；放弃登录可点击“取消登录”。";
+            StatusText.Text = "等待微软登录，可在账户区域取消";
             try
             {
                 var accountId = await Bootstrap.WorkspacePages.Login(this, accounts)
@@ -781,8 +791,8 @@ public partial class MainWindow : Window
                         {
                             loginUserCode = challenge.UserCode;
                             CopyCodeButton.IsVisible = LoginHint.IsVisible = true;
-                            LoginHint.Text = $"设备码：{challenge.UserCode} · 请在浏览器完成授权";
-                            Open(challenge.VerificationUri);
+                            LoginHint.Text = $"设备码：{challenge.UserCode} · 请在浏览器完成授权；关闭网页后请点击“取消登录”";
+                            openLoginBrowser(challenge.VerificationUri);
                         },
                         c
                     );
@@ -798,8 +808,8 @@ public partial class MainWindow : Window
             finally
             {
                 loginUserCode = null;
-                CopyCodeButton.IsVisible = false;
-                if (LoginHint.Text?.StartsWith("设备码：") == true)
+                CancelLoginButton.IsVisible = CopyCodeButton.IsVisible = false;
+                if (c.IsCancellationRequested || LoginHint.Text?.StartsWith("设备码：") == true || LoginHint.Text?.StartsWith("正在请求微软授权") == true)
                 {
                     LoginHint.Text = "授权已结束，可以重新登录";
                 }

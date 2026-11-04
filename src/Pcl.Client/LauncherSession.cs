@@ -226,7 +226,7 @@ public sealed partial class LauncherSession : IAsyncDisposable, Pcl.Core.Contrac
                     cancelled = true;
                 }
 
-                if (!shown && row.Prompt is { } challenge)
+                if (!cancelled && !shown && row.Prompt is { } challenge)
                 {
                     prompt(challenge);
                     shown = true;
