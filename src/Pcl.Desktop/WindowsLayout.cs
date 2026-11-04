@@ -390,6 +390,7 @@ public partial class MainWindow
             RememberLoginBox,
             LoginButton,
             LoginHint,
+            CancelLoginButton,
             CopyCodeButton
         }
 
@@ -762,9 +763,16 @@ public partial class MainWindow
         using var navigationActivity = navigationLifetime.Begin();
         if (operation is not null)
         {
-            // [实现] 条件成立（operation is not null）时：执行 Log("当前操作结束后可切换页面。")；结束当前过程。
-            Log("当前操作结束后可切换页面。");
-            return;
+            if (!microsoftLoginPending)
+            {
+                Log("当前操作结束后可切换页面。");
+                return;
+            }
+
+            // Leaving account authorization abandons only that login, not an install or game.
+            operation.Cancel();
+            await PendingUiAction;
+            if (navigationLifetime.IsStopping) return;
         }
 
         int revision = ++classicPageRevision;

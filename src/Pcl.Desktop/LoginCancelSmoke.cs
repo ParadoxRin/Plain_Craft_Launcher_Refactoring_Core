@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Avalonia.Interactivity;
+using Avalonia.VisualTree;
 
 namespace Pcl.Desktop;
 public partial class MainWindow
@@ -35,7 +36,7 @@ public partial class MainWindow
             for (var attempt = 0; attempt < 3; attempt++)
             {
                 LoginButton.RaiseEvent(new RoutedEventArgs(Avalonia.Controls.Button.ClickEvent));
-                Check(CancelLoginButton.IsVisible && CancelLoginButton.IsEffectivelyEnabled, "cancel-available-during-request-" + attempt);
+                Check(CancelLoginButton.GetVisualAncestors().Contains(this) && CancelLoginButton.IsEffectivelyVisible && CancelLoginButton.IsEffectivelyEnabled, "cancel-available-during-request-" + attempt);
                 if (attempt != 0)
                 {
                     await Until(() => loginUserCode is not null || PendingUiAction.IsCompleted);
@@ -46,7 +47,14 @@ public partial class MainWindow
                     Check(LoginHint.Text!.Contains("关闭网页"), "browser-abandonment-guidance-" + attempt);
                 }
                 var opened = browserRequests;
-                CancelLoginButton.RaiseEvent(new RoutedEventArgs(Avalonia.Controls.Button.ClickEvent));
+                if (attempt == 2 && WindowsLayout)
+                {
+                    await NavigateClassicAsync("matrix");
+                    Check(classicRoute == "matrix" && classicPage.IsEffectivelyVisible, "navigation-cancels-login-and-opens-target");
+                    await NavigateClassicAsync("launch");
+                }
+                else
+                    CancelLoginButton.RaiseEvent(new RoutedEventArgs(Avalonia.Controls.Button.ClickEvent));
                 await PendingUiAction.WaitAsync(TimeSpan.FromSeconds(30));
                 Check(browserRequests == opened, "no-browser-open-after-cancel-" + attempt);
                 Check(operation is null && LoginButton.IsEffectivelyEnabled && AccountTypeBox.IsEffectivelyEnabled && VersionButton.IsEffectivelyEnabled,

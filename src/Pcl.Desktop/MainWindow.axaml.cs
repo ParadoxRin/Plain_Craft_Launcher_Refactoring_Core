@@ -44,6 +44,7 @@ public partial class MainWindow : Window
     private AccountViewCache? accounts;
     private bool refreshingAccounts;
     private string? loginUserCode;
+    private bool microsoftLoginPending;
     private Action<string> openLoginBrowser = Open;
     private Pcl.Core.Contracts.Launch.IGameSession? game;
     private Bitmap? instanceArtwork;
@@ -779,6 +780,7 @@ public partial class MainWindow : Window
                 return;
             }
 
+            microsoftLoginPending = true;
             CancelLoginButton.IsVisible = LoginHint.IsVisible = true;
             LoginHint.Text = "正在请求微软授权；放弃登录可点击“取消登录”。";
             StatusText.Text = "等待微软登录，可在账户区域取消";
@@ -807,6 +809,7 @@ public partial class MainWindow : Window
             }
             finally
             {
+                microsoftLoginPending = false;
                 loginUserCode = null;
                 CancelLoginButton.IsVisible = CopyCodeButton.IsVisible = false;
                 if (c.IsCancellationRequested || LoginHint.Text?.StartsWith("设备码：") == true || LoginHint.Text?.StartsWith("正在请求微软授权") == true)
