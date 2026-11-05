@@ -6,7 +6,7 @@
   "verifiedPackageTarget": "osx-arm64",
   "hostSequence": 43000,
   "coreVersion": "0.43.0",
-  "coreCommit": "5ff272affab7e19d65a02b2e9d817cd5972c2908",
+  "coreCommit": "d6c28f7d1557ffc84ec79443b2ce73ebe2a6e109",
   "contentIntegration": {},
   "contentSequence": 42102,
   "sdkVersion": "0.43.0",
