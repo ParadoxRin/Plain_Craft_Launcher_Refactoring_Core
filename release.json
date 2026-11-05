@@ -1,8 +1,8 @@
 {
   "version": "0.42.1",
-  "build": 426,
+  "build": 427,
   "repository": "https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core",
-  "channel": "rc",
+  "channel": "stable",
   "verifiedPackageTarget": "osx-arm64",
   "hostSequence": 42102,
   "coreVersion": "0.42.0",
@@ -43,7 +43,8 @@
   },
   "contentSequence": 42102,
   "sdkVersion": "0.42.1",
-  "releaseTag": "v0.42.1-rc.1",
-  "displayVersion": "0.42.1 RC1",
-  "automaticUpdates": false
+  "releaseTag": "v0.42.1",
+  "displayVersion": "0.42.1",
+  "automaticUpdates": false,
+  "runtimeBuildCommit": "628df7ed4ac01f46784e8067c7bd229be094999a"
 }

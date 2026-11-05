@@ -1,11 +1,11 @@
-"""Check a manual-update RC application before public distribution; never print secrets."""
+"""Check a manual-update release application before public distribution; never print secrets."""
 import argparse, json, pathlib, plistlib
 p = argparse.ArgumentParser(description=__doc__)
 p.add_argument('app', type=pathlib.Path)
 a = p.parse_args()
 root = pathlib.Path(__file__).resolve().parent.parent
 release = json.loads((root/'release.json').read_text())
-assert release['channel'] == 'rc' and release['automaticUpdates'] is False
+assert release['channel'] in ('rc', 'stable') and release['automaticUpdates'] is False
 bundle = a.app/'Contents'
 info = plistlib.loads((bundle/'Info.plist').read_bytes())
 assert info['CFBundleShortVersionString'] == release['version']
@@ -18,4 +18,4 @@ assert b'Pcl.DetachedLog' in (bundle/'MacOS/host/Pcl.Core.dll').read_bytes(), 'M
 for path in bundle.rglob('*'):
     assert path.name not in ('host-update-policy.json', 'client-update-policy.json', 'content-update-policy.json', 'app-update-policy.json'), 'UNEXPECTED_UPDATE_POLICY'
     assert path.suffix not in ('.pdb', '.pem', '.key'), 'UNEXPECTED_SYMBOL_OR_KEY'
-print('RC_PACKAGE_CHECK_PASSED: version/build, executable layout, manual updates, no bundled policies/keys/symbols')
+print('RELEASE_PACKAGE_CHECK_PASSED: version/build, executable layout, manual updates, no bundled policies/keys/symbols')
