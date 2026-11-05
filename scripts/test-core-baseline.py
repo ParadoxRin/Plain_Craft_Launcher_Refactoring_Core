@@ -69,6 +69,7 @@ class BaselineTests(unittest.TestCase):
         self.check(False, '--upstream-ref', 'HEAD')
 
     def unified(self):
+        self.file.write_text('reviewed unified core change\n')
         self.release.update(version='0.43.0', coreVersion='0.43.0', coreReleasePolicy='unified')
         self.save()
         self.git('add', '.')
@@ -96,5 +97,15 @@ class BaselineTests(unittest.TestCase):
         self.release['coreReleasePolicy'] = 'skip'
         self.save()
         self.check(False)
+
+    def test_unified_includes_old_upstream_but_rejects_new_business(self):
+        old_upstream = self.baseline
+        self.unified()
+        self.check(True, '--upstream-ref', old_upstream)
+        self.file.write_text('new upstream change\n')
+        self.git('add', 'src')
+        self.git('-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.invalid', 'commit', '-qm', 'new upstream')
+        self.file.write_text('reviewed unified core change\n')
+        self.check(False, '--upstream-ref', 'HEAD')
 
 if __name__ == '__main__': unittest.main()

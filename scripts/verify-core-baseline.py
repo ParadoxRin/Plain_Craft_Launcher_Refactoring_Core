@@ -61,7 +61,15 @@ if __name__ == '__main__':
             raise SystemExit('PACKAGING_VERSION_MUST_FOLLOW_CORE_AS_0_XX_1')
     else:
         raise SystemExit('UNKNOWN_CORE_RELEASE_POLICY')
-    references = [baseline] + ([args.upstream_ref] if args.upstream_ref else [])
+    references = [baseline]
+    if args.upstream_ref:
+        includes_upstream = subprocess.run(
+            ['git', '-C', str(ROOT), 'merge-base', '--is-ancestor', args.upstream_ref, baseline],
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0
+        # A unified core release intentionally changes business code over main, but
+        # must include main's history. A newer/divergent upstream still gets compared.
+        if policy != 'unified' or not includes_upstream:
+            references.append(args.upstream_ref)
     # Data loading requires a small, reviewable adapter delta over the latest
     # business baseline. Pin both sides, so this is not a broad directory exemption.
     overlays = release.get('contentIntegration', {})

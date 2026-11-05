@@ -73,10 +73,14 @@ Check(typeof(LauncherSession).Assembly.GetReferencedAssemblies().Where(a => a.Na
 Check(!File.Exists(Path.Combine(AppContext.BaseDirectory, "Pcl.Core.dll")), "test-output-has-no-core");
 
 var root = Path.GetFullPath(args[0]);Directory.CreateDirectory(root);
+// dotnet run uses the test apphost as ProcessPath; HostClient requires the actual
+// dotnet muxer before the fixture DLL, otherwise the child receives a stray DLL arg.
+var dotnetHost = Environment.GetEnvironmentVariable("DOTNET_HOST_PATH") ?? Path.GetFullPath(
+    Path.Combine(System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory(), "../../..", OperatingSystem.IsWindows() ? "dotnet.exe" : "dotnet"));
 foreach (var dispose in new[] { false, true })
 {
     var scenario = Path.Combine(root, dispose ? "dispose" : "shutdown");Directory.CreateDirectory(scenario);
-    var client = new HostClient(Environment.ProcessPath!, Assembly.GetExecutingAssembly().Location, scenario);
+    var client = new HostClient(dotnetHost, Assembly.GetExecutingAssembly().Location, scenario);
     var session = new LauncherSession(client);
     var prompted = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
     var task = session.LoginAsync(false, _ => prompted.TrySetResult(), default);
@@ -93,7 +97,7 @@ foreach (var dispose in new[] { false, true })
 foreach (var scenarioName in new[] { "success", "callback" })
 {
     var scenario = Path.Combine(root, scenarioName);Directory.CreateDirectory(scenario);
-    await using var session = new LauncherSession(new HostClient(Environment.ProcessPath!, Assembly.GetExecutingAssembly().Location, scenario));
+    await using var session = new LauncherSession(new HostClient(dotnetHost, Assembly.GetExecutingAssembly().Location, scenario));
     if (scenarioName == "success")
     {
         Check(await session.LoginAsync(false, _ => {}, default) == "fixture-account", "session-success-account-returned");
@@ -107,7 +111,7 @@ foreach (var scenarioName in new[] { "success", "callback" })
 }
 {
     var scenario = Path.Combine(root, "pages");Directory.CreateDirectory(scenario);
-    await using var session = new LauncherSession(new HostClient(Environment.ProcessPath!, Assembly.GetExecutingAssembly().Location, scenario));
+    await using var session = new LauncherSession(new HostClient(dotnetHost, Assembly.GetExecutingAssembly().Location, scenario));
     await session.Client.HelloAsync();
     using var cancelWrite = new CancellationTokenSource();
     var write = session.Workspaces.ExecuteAsync("workspace.instances.backup", "fixture", "{}", ct: cancelWrite.Token);
