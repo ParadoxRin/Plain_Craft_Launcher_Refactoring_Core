@@ -123,7 +123,7 @@
                     </Grid>
                     <Grid Grid.Row="3" Grid.ColumnSpan="2" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
                         <TextBlock x:Name="LoginHint" Text="" IsVisible="False" Classes="muted" FontSize="11" MaxWidth="560" TextWrapping="Wrap"/>
-                        <Button x:Name="CancelLoginButton" Grid.Column="1" Content="取消登录" Click="CancelClick" IsVisible="False" Padding="8,4"/>
+                        <Button x:Name="CancelLoginButton" Grid.Column="1" Content="取消登录" Click="CancelLoginClick" IsVisible="False" Padding="8,4"/>
                         <Button x:Name="CopyCodeButton" Grid.Column="2" Content="复制设备码" Click="CopyLoginCodeClick" IsVisible="False" Padding="8,4"/>
                     </Grid>
                 </Grid>

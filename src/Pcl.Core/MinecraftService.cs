@@ -111,10 +111,7 @@ public sealed class MinecraftService : IDisposable
             ? await MetadataSourcePolicy.ReadAsync(metadata, url, network.ManifestMirror, network.ManifestSource, cancellationToken)
             : await MetadataRequest.GetAsync(metadata, url, cancellationToken);
         var json = JObject.Parse(text);
-        Directory.CreateDirectory(
-            Path.GetDirectoryName(path)!
-        );
-        FileUtils.WriteAtomic(path, text);
+        Pcl.Core.Adapters.Operations.MetadataCacheWriter.Write(path, text);
         return json;
     }
 

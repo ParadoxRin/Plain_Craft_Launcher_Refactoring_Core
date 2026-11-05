@@ -48,9 +48,28 @@ if __name__ == '__main__':
     baseline_release = json.loads(git('show', baseline + ':release.json'))
     if release['coreVersion'] != baseline_release.get('coreVersion', baseline_release['version']):
         raise SystemExit('CORE_VERSION_METADATA_MISMATCH')
-    if release['version'].split('.')[:2] != release['coreVersion'].split('.')[:2] or not release['version'].endswith('.1'):
-        raise SystemExit('PACKAGING_VERSION_MUST_FOLLOW_CORE_AS_0_XX_1')
-    references = [baseline] + ([args.upstream_ref] if args.upstream_ref else [])
+    policy = release.get('coreReleasePolicy', 'legacy-packaging')
+    if policy == 'unified':
+        # A new unified release pins a committed core with the same declared version.
+        # The byte comparison below still rejects every unpinned business change.
+        if release['version'] != release['coreVersion'] or baseline_release['version'] != release['coreVersion']:
+            raise SystemExit('UNIFIED_CORE_VERSION_MISMATCH')
+        if release.get('contentIntegration'):
+            raise SystemExit('UNIFIED_CORE_OVERLAYS_NOT_ALLOWED')
+    elif policy == 'legacy-packaging':
+        if release['version'].split('.')[:2] != release['coreVersion'].split('.')[:2] or not release['version'].endswith('.1'):
+            raise SystemExit('PACKAGING_VERSION_MUST_FOLLOW_CORE_AS_0_XX_1')
+    else:
+        raise SystemExit('UNKNOWN_CORE_RELEASE_POLICY')
+    references = [baseline]
+    if args.upstream_ref:
+        includes_upstream = subprocess.run(
+            ['git', '-C', str(ROOT), 'merge-base', '--is-ancestor', args.upstream_ref, baseline],
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0
+        # A unified core release intentionally changes business code over main, but
+        # must include main's history. A newer/divergent upstream still gets compared.
+        if policy != 'unified' or not includes_upstream:
+            references.append(args.upstream_ref)
     # Data loading requires a small, reviewable adapter delta over the latest
     # business baseline. Pin both sides, so this is not a broad directory exemption.
     overlays = release.get('contentIntegration', {})

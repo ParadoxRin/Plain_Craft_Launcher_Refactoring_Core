@@ -39,7 +39,8 @@ try
         using var lane = new SemaphoreSlim(0, 1);
         var fake = new FixtureExecutor();
         var service = new PageOperationService(store, fake, lane);
-        var command = new PageCommand("stable", "artifact.list", GameVersion: "1.21.1", Loader: "client");
+        // This fixture tests the writer queue; catalog reads now use the independent read lane.
+        var command = new PageCommand("stable", "artifact.download", GameVersion: "1.21.1", Loader: "client");
         var accepted = await service.AcceptAsync(command);
         Check(
             fake.Calls == 0 && store.ReadAll()

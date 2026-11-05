@@ -68,4 +68,44 @@ class BaselineTests(unittest.TestCase):
         self.check(True)
         self.check(False, '--upstream-ref', 'HEAD')
 
+    def unified(self):
+        self.file.write_text('reviewed unified core change\n')
+        self.release.update(version='0.43.0', coreVersion='0.43.0', coreReleasePolicy='unified')
+        self.save()
+        self.git('add', '.')
+        self.git('-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.invalid', 'commit', '-qm', 'unified core baseline')
+        self.release['coreCommit'] = self.git('rev-parse', 'HEAD').strip()
+        self.save()
+
+    def test_unified_version_and_exact_business_pin(self):
+        self.unified()
+        self.check(True)
+        self.file.write_text('unexpected unified business change\n')
+        self.check(False)
+
+    def test_unified_version_mismatch_rejected(self):
+        self.unified()
+        self.release['version'] = '0.43.1'
+        self.save()
+        self.check(False)
+
+    def test_unified_overlays_and_unknown_policy_rejected(self):
+        self.unified()
+        self.overlay()
+        self.check(False)
+        self.release.pop('contentIntegration')
+        self.release['coreReleasePolicy'] = 'skip'
+        self.save()
+        self.check(False)
+
+    def test_unified_includes_old_upstream_but_rejects_new_business(self):
+        old_upstream = self.baseline
+        self.unified()
+        self.check(True, '--upstream-ref', old_upstream)
+        self.file.write_text('new upstream change\n')
+        self.git('add', 'src')
+        self.git('-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.invalid', 'commit', '-qm', 'new upstream')
+        self.file.write_text('reviewed unified core change\n')
+        self.check(False, '--upstream-ref', 'HEAD')
+
 if __name__ == '__main__': unittest.main()

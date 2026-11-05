@@ -69,12 +69,13 @@ public sealed partial class ResourceBrowser
         FontSize = 13
     };
     private readonly List<Bitmap> classicIcons = new();
-    private readonly CancellationTokenSource iconLifetime = new();
+    private readonly IconRequestQueue iconQueue = new();
     private readonly HashSet<Task> iconTasks = new();
     // Optional images are owned by the view and cancelled at disposal; business download work stays in Host.
     private async void StartIcon(Image image, string handle)
     {
-        var task = LoadClassicIconAsync(image, handle);
+        if (!IsEffectivelyVisible) return;
+        var task = iconQueue.RunAsync(ct => LoadClassicIconAsync(image, handle, ct));
         iconTasks.Add(task);
         try
         {
@@ -285,27 +286,12 @@ public sealed partial class ResourceBrowser
 
         Grid.SetRow(feedback, 1);
         classicRoot.Children.Add(feedback);
-        mutating.AddRange(
-            new Control[]
-            {
-                search,
-                reset,
-                browseVersion,
-                browseSource,
-                browseLoader
-            }
-        );
         Content = classicRoot;
     }
 
     // 其它数据源沿用已实现的多源/CF 工作台，明确展示迁移边界，不冒充 Modrinth 结果。
     private async Task ClassicSearchAsync()
     {
-        if (busy)
-        {
-            return;
-        }
-
         offset = 0;
         await SearchAsync();
     }
@@ -441,7 +427,7 @@ public sealed partial class ResourceBrowser
     }
 
     // 仅加载 Modrinth HTTPS 图标，限定长度和生命周期；窗口关闭后停止请求并释放位图。
-    private async Task LoadClassicIconAsync(Image image, string url)
+    private async Task LoadClassicIconAsync(Image image, string url, CancellationToken ct)
     {
         try
         {
@@ -452,7 +438,7 @@ public sealed partial class ResourceBrowser
                 {
                     selection = url
                 },
-                iconLifetime.Token
+                ct
             );
             if (bytes is null)
             {
@@ -462,7 +448,7 @@ public sealed partial class ResourceBrowser
             using var data = new MemoryStream(bytes);
             data.Position = 0;
             var bitmap = Bitmap.DecodeToWidth(data, 96);
-            if (iconLifetime.IsCancellationRequested)
+            if (ct.IsCancellationRequested)
             {
                 bitmap.Dispose();
                 return;
@@ -737,15 +723,18 @@ public sealed partial class ResourceBrowser
         }
     }
 
+    internal void CancelIconPage() => iconQueue.CancelPage();
+    internal Task StopIconsAsync() => iconQueue.StopAsync();
+
     private void DisposeClassicResources()
     {
-        iconLifetime.Cancel();
+        iconQueue.CancelPage();
         foreach (var image in classicIcons)
         {
             image.Dispose();
         }
 
         classicIcons.Clear();
-        iconLifetime.Dispose();
+        iconQueue.Dispose();
     }
 }

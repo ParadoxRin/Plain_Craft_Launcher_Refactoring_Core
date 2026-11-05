@@ -28,6 +28,9 @@ public sealed class PageOperationService : IPageOperations
         }
     );
     private readonly Task worker;
+    private readonly Task readWorker;
+    private readonly Channel<string> readQueue = Channel.CreateUnbounded<string>(new UnboundedChannelOptions { SingleReader = true });
+    private readonly Func<PageCommand, string?>? executionRejection;
     private bool stopping, storeFailed;
     private static readonly JsonSerializerOptions Wire = new()
     {
@@ -37,13 +40,15 @@ public sealed class PageOperationService : IPageOperations
         IOperationStore store,
         IPageExecutor executor,
         SemaphoreSlim lane,
-        IOperationObserver? observer = null
+        IOperationObserver? observer = null,
+        Func<PageCommand, string?>? executionRejection = null
     )
     {
         this.store = store;
         this.executor = executor;
         this.lane = lane;
         this.observer = observer;
+        this.executionRejection = executionRejection;
         foreach (var bytes in store.ReadAll())
         {
             var row = JsonSerializer.Deserialize<StoredPage>(bytes) ?? throw new InvalidDataException("PAGE_STORE_INVALID");
@@ -74,7 +79,8 @@ public sealed class PageOperationService : IPageOperations
             }
         }
 
-        worker = RunAsync();
+        worker = RunAsync(queue.Reader, false);
+        readWorker = RunAsync(readQueue.Reader, true);
     }
 
     public string ExecutionId(string id)
@@ -96,6 +102,15 @@ public sealed class PageOperationService : IPageOperations
                     x => !x.Snapshot.Terminal
                 );
             }
+        }
+    }
+
+    public bool HasAccountConflict
+    {
+        get
+        {
+            lock (gate)
+                return rows.Values.Any(x => !x.Snapshot.Terminal && PageResourcePolicy.ConflictsWithAccounts(x.Snapshot.Command.Method));
         }
     }
 
@@ -173,7 +188,7 @@ public sealed class PageOperationService : IPageOperations
                 id,
                 new(TaskCreationOptions.RunContinuationsAsynchronously)
             );
-            queue.Writer.TryWrite(id);
+            (PageResourcePolicy.IsConcurrentRead(command.Method) ? readQueue : queue).Writer.TryWrite(id);
             return Task.FromResult(
                 new OperationAcceptance(id, "queued", false)
             );
@@ -262,18 +277,20 @@ public sealed class PageOperationService : IPageOperations
                 }
 
                 queue.Writer.TryComplete();
+                readQueue.Writer.TryComplete();
             }
 
             return Task.WhenAll(
                 worker,
+                readWorker,
                 Task.WhenAll(signals)
             );
         }
     }
 
-    private async Task RunAsync()
+    private async Task RunAsync(ChannelReader<string> reader, bool concurrentRead)
     {
-        await foreach (var id in queue.Reader.ReadAllAsync())
+        await foreach (var id in reader.ReadAllAsync())
         {
             CancellationToken ct;
             StoredPage row;
@@ -286,8 +303,13 @@ public sealed class PageOperationService : IPageOperations
             bool held = false;
             try
             {
-                await lane.WaitAsync(ct);
-                held = true;
+                if (!concurrentRead)
+                {
+                    await lane.WaitAsync(ct);
+                    held = true;
+                }
+                if (executionRejection?.Invoke(row.Snapshot.Command) is { } rejection)
+                    throw new OperationRejectedException(rejection);
                 ct.ThrowIfCancellationRequested();
                 lock (gate)
                 {

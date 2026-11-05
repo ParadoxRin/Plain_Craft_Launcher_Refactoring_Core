@@ -97,7 +97,7 @@ public partial class MainWindow : Window
             Button.ClickEvent,
             (_, e) =>
             {
-                if (remote is { IsAvailable: false } && e.Source is Button button && button != CancelButton && button != CancelLoginButton && button != StopGameButton && button != CopyCodeButton)
+                if (remote is { IsAvailable: false } && e.Source is Button button && button != CancelButton && button != CancelLoginButton && button != dismissLoginStatus && button != StopGameButton && button != CopyCodeButton)
                 {
                     e.Handled = true;
                 }
@@ -137,6 +137,7 @@ public partial class MainWindow : Window
 
         resources = new(
             RunAsync,
+            RunReadAsync,
             async ct => Bootstrap.WorkspacePages.Describe(
                 await EnsureFabricAsync(ct)
             ),
@@ -156,6 +157,10 @@ public partial class MainWindow : Window
             )
         );
         ResourcePanel.Content = resources;
+        ResourcePanel.PropertyChanged += (_, e) =>
+        {
+            if (e.Property == IsVisibleProperty && !ResourcePanel.IsVisible) resources.CancelIconPage();
+        };
         MicrosoftLoginInfo.Text = service.DesktopState.MicrosoftConfigured
             ? "在微软网页安全登录"
             : "微软登录准备中";
@@ -167,6 +172,7 @@ public partial class MainWindow : Window
         RefreshAccounts();
         RefreshProfiles(service.DesktopState.SelectedProfile);
         InitializeWindowsLayout();
+        InitializeBackgroundLoginStatus();
         Opened += async (_, _) =>
         {
             // [实现] 回调触发时：执行 await RefreshInstalledAsync()；执行 Console.WriteLine("DESKTOP_WINDOW_OPENED")；按 Program.Arguments.Contains("--acceptance-visibility") 分支处理。
@@ -359,7 +365,10 @@ public partial class MainWindow : Window
     {
         await StopClientUpdateCheckAsync();
         operation?.Cancel();
+        loginCancellation?.Cancel();
         await Task.WhenAll(
+            resources.StopIconsAsync(),
+            PendingLoginTask,
             PendingUiAction,
             navigationLifetime.StopAsync(true),
             WindowNavigation.For(this)
@@ -370,7 +379,7 @@ public partial class MainWindow : Window
     // 只释放窗口自己拥有的资源；共享 MinecraftService 与数据锁由组合根单独拥有。
     private void ReleaseViewResources()
     {
-        if (viewReleased || !PendingUiAction.IsCompleted)
+        if (viewReleased || !PendingUiAction.IsCompleted || !PendingLoginTask.IsCompleted)
         {
             return;
         }
@@ -419,10 +428,11 @@ public partial class MainWindow : Window
     {
         var busy = operation is not null;
         StopGameButton.IsVisible = game is not null;
-        SkinsButton.IsEnabled = !busy && game is null;
-        NavMcmod.IsEnabled = NavUnified.IsEnabled = NavInstances.IsEnabled = NavLocal.IsEnabled = NavPackTools.IsEnabled = NavCurseForge.IsEnabled = !busy && game is null;
+        var accountBusy = busy || microsoftLoginPending;
+        SkinsButton.IsEnabled = !accountBusy && game is null;
+        NavMcmod.IsEnabled = NavUnified.IsEnabled = NavInstances.IsEnabled = NavLocal.IsEnabled = NavPackTools.IsEnabled = NavCurseForge.IsEnabled = true;
         InstallButton.IsEnabled = !busy && game is null;
-        LoginButton.IsEnabled = !busy && game is null;
+        LoginButton.IsEnabled = !microsoftLoginPending && game is null;
         foreach (var control in new Control[]
         {
             AccountTypeBox,
@@ -434,7 +444,7 @@ public partial class MainWindow : Window
         }
 
         )
-            control.IsEnabled = !busy && game is null;
+            control.IsEnabled = !accountBusy && game is null;
         FabricButton.IsEnabled = !busy && game is null;
         VersionButton.IsEnabled = !busy && game is null;
         MacSetupButton.IsEnabled = !busy && game is null;
@@ -452,7 +462,7 @@ public partial class MainWindow : Window
         }
 
         )
-            nav.IsEnabled = !busy && game is null;
+            nav.IsEnabled = true;
         // 离线模式按输入名称启用；微软模式仍检查真实凭据，注销不能退化为离线启动。
         var canLogin = AccountTypeBox.SelectedIndex == 0
             ? IsOfflineNameValid()
@@ -467,8 +477,8 @@ public partial class MainWindow : Window
                 : "离线账户 · " + offlineName;
         }
 
-        RemoveAccountButton.IsEnabled = !busy && game is null && AccountBox.SelectedItem is LauncherAccount removableAccount && (AccountTypeBox.SelectedIndex != 0 || removableAccount.Name == offlineName);
-        LogoutButton.IsEnabled = !busy && game is null && AccountBox.SelectedItem is LauncherAccount { Kind: not AccountKind.Offline };
+        RemoveAccountButton.IsEnabled = !accountBusy && game is null && AccountBox.SelectedItem is LauncherAccount removableAccount && (AccountTypeBox.SelectedIndex != 0 || removableAccount.Name == offlineName);
+        LogoutButton.IsEnabled = !accountBusy && game is null && AccountBox.SelectedItem is LauncherAccount { Kind: not AccountKind.Offline };
         LaunchButton.IsEnabled = installed && canLogin && !busy && game is null;
         CancelButton.IsVisible = busy && game is null;
     }
@@ -505,7 +515,10 @@ public partial class MainWindow : Window
     private async Task RunAsync(Func<CancellationToken, Task> action)
     {
         if (operation is not null || closePending)
+        {
+            Log("此操作与正在进行的任务冲突，请等待任务完成或取消后重试；仍可切换页面浏览。");
             return;
+        }
         operation = new();
         var completion = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         uiActionCompletion = completion;
@@ -752,73 +765,26 @@ public partial class MainWindow : Window
         );
     }
 
-    // [实现] LoginClick 的实现：执行 await RunAsync( async c => { if (accounts is null) return; if (AccountTypeBox.SelectedIndex == …。
-    private async void LoginClick(object? sender, RoutedEventArgs e) => await RunAsync(
-        async c =>
+    private async void LoginClick(object? sender, RoutedEventArgs e)
+    {
+        if (accounts is null) return;
+        if (AccountTypeBox.SelectedIndex == 1)
         {
-            // [实现] 回调触发时：按 accounts is null 分支处理；按 AccountTypeBox.SelectedIndex == 2 分支处理；按 AccountTypeBox.SelectedIndex == 0 分支处理。
-            if (accounts is null)
-                return;
+            StartBackgroundMicrosoftLogin();
+            return;
+        }
+        await RunAsync(async ct =>
+        {
             if (AccountTypeBox.SelectedIndex == 2)
             {
-                // [实现] 条件成立（AccountTypeBox.SelectedIndex == 2）时：执行 await Bootstrap.WorkspacePages.Accounts(this, accounts, id => RefreshAccounts(id) ).PresentAsync(this)；结束当前过程。
-                await Bootstrap.WorkspacePages.Accounts(
-                    this,
-                    accounts,
-                    id => RefreshAccounts(id)
-                )
-                    .PresentAsync(this);
+                await Bootstrap.WorkspacePages.Accounts(this, accounts, id => RefreshAccounts(id)).PresentAsync(this);
                 return;
             }
-
-            if (AccountTypeBox.SelectedIndex == 0)
-            {
-                // [实现] 条件成立（AccountTypeBox.SelectedIndex == 0）时：准备 var account = accounts.AddOffline(OfflineNameBox.Text ?? "")；执行 RefreshAccounts(account.Id)；执行 StatusText.Text = "已选择离线账户"。
-                var account = await AddOfflineAccountAsync(OfflineNameBox.Text ?? "", c);
-                RefreshAccounts(account.Id);
-                StatusText.Text = "已选择离线账户";
-                return;
-            }
-
-            microsoftLoginPending = true;
-            CancelLoginButton.IsVisible = LoginHint.IsVisible = true;
-            LoginHint.Text = "正在请求微软授权；放弃登录可点击“取消登录”。";
-            StatusText.Text = "等待微软登录，可在账户区域取消";
-            try
-            {
-                var accountId = await Bootstrap.WorkspacePages.Login(this, accounts)
-                    .LoginAsync(
-                        RememberLoginBox.IsChecked == true,
-                        challenge =>
-                        {
-                            loginUserCode = challenge.UserCode;
-                            CopyCodeButton.IsVisible = LoginHint.IsVisible = true;
-                            LoginHint.Text = $"设备码：{challenge.UserCode} · 请在浏览器完成授权；关闭网页后请点击“取消登录”";
-                            openLoginBrowser(challenge.VerificationUri);
-                        },
-                        c
-                    );
-                RefreshAccounts(accountId);
-                StatusText.Text = "微软账户已登录";
-                LoginHint.Text = accounts.Accounts.Single(
-                    x => x.Id == accountId
-                )
-                    .Remembered
-                    ? "已登录 · 已记住登录"
-                    : "已登录 · 仅本次会话";
-            }
-            finally
-            {
-                microsoftLoginPending = false;
-                loginUserCode = null;
-                CancelLoginButton.IsVisible = CopyCodeButton.IsVisible = false;
-                if (c.IsCancellationRequested || LoginHint.Text?.StartsWith("设备码：") == true || LoginHint.Text?.StartsWith("正在请求微软授权") == true)
-                {
-                    LoginHint.Text = "授权已结束，可以重新登录";
-                }
-            }
-        }
-    );
+            var account = await AddOfflineAccountAsync(OfflineNameBox.Text ?? "", ct);
+            RefreshAccounts(account.Id);
+            StatusText.Text = "已选择离线账户";
+        });
+    }
     // [实现] CopyLoginCodeClick 的实现：按 loginUserCode is not null && Clipboard is not null 分支处理。
     private async void CopyLoginCodeClick(object? sender, RoutedEventArgs e)
     {
@@ -1474,7 +1440,7 @@ public partial class MainWindow : Window
         SelectNav(nav);
         HomePanel.IsVisible = false;
         ResourcePanel.IsVisible = true;
-        await resources.ShowAsync((Pcl.Core.Contracts.Workspaces.ResourceKind)kind, managed);
+        await RunReadAsync(_ => resources.ShowAsync((Pcl.Core.Contracts.Workspaces.ResourceKind)kind, managed));
     }
 
     // [实现] ModsClick 的实现：执行 await ShowResourceAsync(ResourceKind.Mod, NavMods)。

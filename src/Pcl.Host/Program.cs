@@ -193,38 +193,26 @@ try
                             throw new OperationRejectedException("HANDSHAKE_REQUIRED");
                         }
 
-                        if (method is ("version.install" or "game.launch") && accountService.IsBusy)
-                        {
+                        var launchPending = launches.ListSnapshots().Cast<GameLaunchSnapshot>().Any(x => !x.Terminal);
+                        var accountCommand = method is "account.login.begin" or "account.logout" or "account.remove"
+                            or "account.appearance" or "account.appearance.begin";
+                        if (method is ("game.launch" or "account.logout" or "account.remove" or "account.appearance") && accountService.IsBusy)
                             throw new OperationRejectedException("ACCOUNT_OPERATION_BUSY");
-                        }
-
-                        if (method is ("account.login.begin" or "account.logout" or "account.remove" or "account.appearance" or "account.appearance.begin") && ((await installs.ListAsync()).Any(
-                            x => !x.Terminal
-                        ) || launches.ListSnapshots()
-                            .Cast<GameLaunchSnapshot>()
-                            .Any(
-                                x => !x.Terminal
-                            ) || executor.HasRunning))
-                        {
+                        if ((accountCommand && (executor.HasRunning || launchPending || pages.HasAccountConflict)) ||
+                            (method == "game.launch" && pages.HasAccountConflict))
                             throw new OperationRejectedException("HOST_WRITER_ACTIVE");
-                        }
 
-                        bool linkPage = method == "page.begin" && parameters.TryGetProperty("method", out var pageMethod) && pageMethod.GetString()is "workspace.link.start" or "workspace.link.status" or "workspace.link.stop";
-                        if (method == "page.begin" && ((executor.HasRunning && !linkPage) || accountService.IsBusy || (await installs.ListAsync()).Any(
-                            x => !x.Terminal
-                        ) || launches.ListSnapshots()
-                            .Cast<GameLaunchSnapshot>()
-                            .Any(
-                                x => !x.Terminal
-                            )))
+                        if (method == "page.begin")
                         {
-                            throw new OperationRejectedException("HOST_WRITER_ACTIVE");
+                            var pageMethod = parameters.GetProperty("method").GetString()!;
+                            if (PageResourcePolicy.ConflictsWithAccounts(pageMethod) && accountService.IsBusy)
+                                throw new OperationRejectedException("ACCOUNT_OPERATION_BUSY");
+                            if ((executor.HasRunning && !PageResourcePolicy.CanRunDuringGame(pageMethod)) ||
+                                (launchPending && PageResourcePolicy.ConflictsWithAccounts(pageMethod)))
+                                throw new OperationRejectedException("HOST_WRITER_ACTIVE");
                         }
-
-                        if (pages.IsBusy && method is ("version.install" or "game.launch" or "account.login.begin" or "account.logout" or "account.remove" or "account.appearance" or "account.appearance.begin"))
-                        {
-                            throw new OperationRejectedException("HOST_WRITER_ACTIVE");
-                        }
+                        // Workspace mutations and installation still share their owned writer lane.
+                        // Read-only pages and OAuth do not reserve that lane for their entire lifetime.
 
                         object? result = method switch
                         {

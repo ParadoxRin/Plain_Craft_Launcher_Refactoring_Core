@@ -13,13 +13,16 @@ for name in ('dotnet', 'tool', 'key', 'output'):
     parser.add_argument('--' + name, type=pathlib.Path, required=True)
 parser.add_argument('--rows', type=pathlib.Path, help='Omit to export the exact built-in PCLCS index')
 parser.add_argument('--sequence', type=int, required=True)
-parser.add_argument('--min-host', default='0.42.1')
-parser.add_argument('--max-host', default='0.42.99')
+parser.add_argument('--min-host', help='Defaults to the current release version')
+parser.add_argument('--max-host', help='Defaults to the current release version; widen only after compatibility testing')
 parser.add_argument('--channel', default='preview')
 parser.add_argument('--feed-url', help='Stable HTTPS URL serving the signed content envelope')
 parser.add_argument('--provenance', default='PCL 6b9a50df911c9d68b69b24c979efba477fb14b67 / PCLCS Resource/WikiEntries.txt')
 args = parser.parse_args()
 root = pathlib.Path(__file__).resolve().parent.parent
+release_version = json.loads((root / 'release.json').read_text())['version']
+args.min_host = args.min_host or release_version
+args.max_host = args.max_host or release_version
 output, key = args.output.resolve(), args.key.resolve()
 if output.exists() or output == key or output in key.parents or args.sequence <= 0:
     raise SystemExit('FRESH_OUTPUT_AND_SEPARATE_KEY_REQUIRED')

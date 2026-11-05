@@ -31,11 +31,10 @@ public sealed partial class LauncherSession
             ct
         )
     );
-    // UI 取消映射为 Host 的取消请求；连接或窗口消失不自动取消后端。
+    // The admission gate protects request submission only; Host resource policy owns execution conflicts.
+    // UI cancellation maps to Host cancellation, never a fabricated local terminal state.
     private async Task<PageSnapshot> RunPageAsync(PageCommand command, IProgress<VersionInstallProgress>? progress, CancellationToken ct)
     {
-        await pageGate.WaitAsync(ct);
-        string? operationId = null;
         bool entered = false;
         try
         {
@@ -43,9 +42,13 @@ public sealed partial class LauncherSession
             await EnterHostAsync();
             entered = true;
             var operations = new HostPageOperations(Client);
-            var accepted = await operations.AcceptAsync(command);
-            operationId = accepted.OperationId;
-            activePages[operationId] = 0;
+            var accepted = await AdmitCommandAsync(async () =>
+            {
+                var receipt = await operations.AcceptAsync(command);
+                // Register before releasing admission: shutdown sees every accepted page.
+                activePages[receipt.OperationId] = 0;
+                return receipt;
+            }, ct);
             async Task<PageSnapshot> ObserveAsync()
             {
                 await foreach (var row in operations.WatchAsync(accepted.OperationId))
@@ -83,21 +86,14 @@ public sealed partial class LauncherSession
             }
 
             var terminal = await waiting;
-            activePages.TryRemove(operationId, out _);
+            activePages.TryRemove(accepted.OperationId, out _);
             return terminal;
         }
         finally
         {
-            try
+            if (entered)
             {
-                if (entered)
-                {
-                    await RefreshStateAfterOperationAsync();
-                }
-            }
-            finally
-            {
-                pageGate.Release();
+                await RefreshStateAfterOperationAsync();
             }
         }
     }

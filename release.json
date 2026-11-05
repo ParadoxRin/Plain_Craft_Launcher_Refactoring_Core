@@ -1,50 +1,18 @@
 {
-  "version": "0.42.1",
-  "build": 427,
+  "version": "0.43.0",
+  "build": 428,
   "repository": "https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core",
   "channel": "stable",
   "verifiedPackageTarget": "osx-arm64",
-  "hostSequence": 42102,
-  "coreVersion": "0.42.0",
-  "coreCommit": "81016b476e8811ecbfbd3f969d143b646ac5282d",
-  "contentIntegration": {
-    "src/Pcl.Core/McmodCatalog.cs": {
-      "baselineSha256": "6dad934d179d1e382acca8e26a42bcd74afe524657ab7fc7d7a02d4ffe0c6119",
-      "sha256": "e7a2f6b1f062ace7e963d571d5c2313e2b8314eb839730626ed15cb610d18d51"
-    },
-    "src/Pcl.Core/Adapters/Search/BundledProjectIdentity.cs": {
-      "baselineSha256": "f400cf2265ab252a7b8e29e9dd4f2717dd06209cae735c07fd3e03ae54837448",
-      "sha256": "fd5175ce42c6756410278f75bacd4ff1bca51e7f9719328ea94c70543068b7ae"
-    },
-    "src/Pcl.Core/Adapters/Content/ContentPack.cs": {
-      "baselineSha256": null,
-      "sha256": "57b170d4207231e541a7104a94bb6713f687ee00ecc5f11afec2ecbda3689820"
-    },
-    "src/Pcl.Core/Adapters/Content/ActiveContentIndex.cs": {
-      "baselineSha256": null,
-      "sha256": "95e3b940a611f5a4d23b42672211890b413a652fcca4970eb218f66c648a731e"
-    },
-    "src/Pcl.Core/Adapters/Search/UnifiedResourceSearch.cs": {
-      "baselineSha256": "0080f16f41b8ea93d199eed17839cb79131b909394cc70468d5fd6f3b5b7d261",
-      "sha256": "d4ee032cecf8d5840207c8f0bfa1299f3d0aead6223c0a8694a33e6a4fc66fff"
-    },
-    "src/Pcl.Host/ContentUpdates.cs": {
-      "baselineSha256": null,
-      "sha256": "e6417454dc3cb6930111bd5f5546e945fdb6ac4fdab8d741e8fd8c7bc7f1d06e"
-    },
-    "src/Pcl.Host/Program.cs": {
-      "baselineSha256": "5de81e0ce7de10e0a507e3cfe8bf79ca01f31dc6c5c1ee7e4783c113b6ca9ec9",
-      "sha256": "f79b3010d753932dabb59d5cb50491ceca307b1b9b59b27c7707149abe733f7f"
-    },
-    "src/Pcl.Host/HostBuildInfo.cs": {
-      "baselineSha256": "1e09ff6c0de4e2f73e566f4f71c7105c5d6a970c10965461b4db94e27dd0db84",
-      "sha256": "9437db66f9d15442fdb7c29691dab8cb28b1e0a4fe93dc6ec5c3494d1f172928"
-    }
-  },
+  "hostSequence": 43000,
+  "coreVersion": "0.43.0",
+  "coreCommit": "5ff272affab7e19d65a02b2e9d817cd5972c2908",
+  "contentIntegration": {},
   "contentSequence": 42102,
-  "sdkVersion": "0.42.1",
-  "releaseTag": "v0.42.1",
-  "displayVersion": "0.42.1",
+  "sdkVersion": "0.43.0",
+  "releaseTag": "v0.43.0",
+  "displayVersion": "0.43.0",
   "automaticUpdates": false,
-  "runtimeBuildCommit": "628df7ed4ac01f46784e8067c7bd229be094999a"
+  "coreReleasePolicy": "unified",
+  "runtimeBuildCommit": "5ff272affab7e19d65a02b2e9d817cd5972c2908"
 }

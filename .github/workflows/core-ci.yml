@@ -67,6 +67,11 @@ jobs:
         run: |
           dotnet build tests/Pcl.LogProtection.Tests/Pcl.LogProtection.Tests.csproj -c Release -m:1 -nr:false
           dotnet tests/Pcl.LogProtection.Tests/bin/Release/net10.0/Pcl.LogProtection.Tests.dll "$PWD/artifacts/ci-log-protection"
+      - name: Test background login and resource concurrency
+        run: |
+          dotnet run --project tests/Pcl.ClientLogin.Tests -c Release -- "$PWD/artifacts/ci-client-login"
+          dotnet run --project tests/Pcl.ResourceConcurrency.Tests -c Release -- "$PWD/artifacts/ci-resource-concurrency"
+          dotnet run --project tests/Pcl.DesktopQueue.Tests -c Release
       - name: Build real Host and independent minimal client
         run: |
           dotnet build src/Pcl.Host/Pcl.Host.csproj --configuration Release -m:1 -nr:false

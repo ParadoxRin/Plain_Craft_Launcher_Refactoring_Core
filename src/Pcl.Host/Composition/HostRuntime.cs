@@ -96,7 +96,12 @@ internal sealed class HostRuntime : IAsyncDisposable
             PageExecutor = Own(
                 new PageExecutionAdapter(Source, privateStore, Accounts)
             );
-            Pages = new PageOperationService(pageStore, PageExecutor, lane, broker);
+            Pages = new PageOperationService(pageStore, PageExecutor, lane, broker, command =>
+                AccountService.IsBusy && PageResourcePolicy.ConflictsWithAccounts(command.Method)
+                    ? "ACCOUNT_OPERATION_BUSY"
+                    : Executor.HasRunning && !PageResourcePolicy.CanRunDuringGame(command.Method)
+                        ? "HOST_WRITER_ACTIVE"
+                        : null);
             Launches = new GameLaunchOperationService(launchStore, Executor, lane, Journal, observer: broker);
             new InstallOperations(paths).MarkInterrupted();
         }
