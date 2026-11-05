@@ -3,6 +3,8 @@ using System.Collections.Concurrent;
 using System.Text.Json;
 using Pcl.Core.Application.Accounts;
 using Pcl.Core.Application.Pages;
+using Pcl.Core.Application.Operations;
+using Pcl.Core.Contracts.Installation;
 using Pcl.Core.Contracts.Pages;
 using Pcl.Core.Contracts.Operations;
 using Pcl.Core.Ports.Accounts;
@@ -36,6 +38,26 @@ try
     Check(executor.WriteEntries == 1, "rejected-or-cancelled-writer-never-touches-adapter");
 }
 finally { executor.ReleaseWriter.TrySetResult(); await pages.StopAsync(); }
+
+// The install is accepted before a game starts, but cannot enter its adapter after obtaining
+// the shared lane. This is the same execution-time guard wired by HostRuntime.
+using (var installLane = new SemaphoreSlim(0, 1))
+{
+    var running = false;
+    var installer = new CountingInstaller();
+    var target = new InstallationTarget("osx", "arm64", "14.0");
+    var installs = new InstallOperationService(new MemoryStore(), installer, target, installLane, () => running);
+    var queued = await installs.AcceptAsync(new("queued-before-game", new("1.21.1", "vanilla", target)));
+    running = true;
+    installLane.Release();
+    var result = await installs.WaitAsync(queued.OperationId).WaitAsync(TimeSpan.FromSeconds(5));
+    Check(result.State == "failed" && result.ErrorCode == "INSTANCE_BUSY" && installer.Calls == 0,
+        "install-queued-before-game-rechecks-resource-after-lane");
+    var during = await installs.AcceptAsync(new("accepted-during-game", new("1.21.1", "vanilla", target)));
+    Check((await installs.WaitAsync(during.OperationId)).ErrorCode == "INSTANCE_BUSY" && installer.Calls == 0,
+        "install-during-game-never-enters-installer");
+    await installs.StopAsync();
+}
 
 var backend = new BarrierAccounts();
 var accounts = new HostAccountService(backend, new MemoryStore());
@@ -123,4 +145,15 @@ sealed class BarrierAccounts : IAccountBackend
     }
     public void Logout(string id, bool remove) => committed = false;
     public Task<AccountLook?> AppearanceAsync(string id, string action, string? value, byte[]? png, bool slim, CancellationToken ct) => Task.FromResult<AccountLook?>(null);
+}
+
+sealed class CountingInstaller : IOperationInstaller
+{
+    public int Calls;
+    public Task<OperationInstalledInstance> InstallAsync(string id, OperationInstallInput request, InstallReceipt? previous,
+        Action<InstallReceipt> checkpoint, IProgress<InstallProgress> progress, CancellationToken ct)
+    {
+        Interlocked.Increment(ref Calls);
+        throw new Exception("GAME_RESOURCE_GUARD_WAS_BYPASSED");
+    }
 }
