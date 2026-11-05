@@ -761,20 +761,6 @@ public partial class MainWindow
         }
 
         using var navigationActivity = navigationLifetime.Begin();
-        if (operation is not null)
-        {
-            if (!microsoftLoginPending)
-            {
-                Log("当前操作结束后可切换页面。");
-                return;
-            }
-
-            // Leaving account authorization abandons only that login, not an install or game.
-            operation.Cancel();
-            await PendingUiAction;
-            if (navigationLifetime.IsStopping) return;
-        }
-
         int revision = ++classicPageRevision;
         classicRoute = route;
         if (route == "launch")

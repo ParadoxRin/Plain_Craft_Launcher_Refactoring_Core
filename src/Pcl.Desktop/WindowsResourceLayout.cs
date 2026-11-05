@@ -285,27 +285,12 @@ public sealed partial class ResourceBrowser
 
         Grid.SetRow(feedback, 1);
         classicRoot.Children.Add(feedback);
-        mutating.AddRange(
-            new Control[]
-            {
-                search,
-                reset,
-                browseVersion,
-                browseSource,
-                browseLoader
-            }
-        );
         Content = classicRoot;
     }
 
     // 其它数据源沿用已实现的多源/CF 工作台，明确展示迁移边界，不冒充 Modrinth 结果。
     private async Task ClassicSearchAsync()
     {
-        if (busy)
-        {
-            return;
-        }
-
         offset = 0;
         await SearchAsync();
     }

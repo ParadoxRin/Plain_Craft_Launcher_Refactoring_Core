@@ -16,6 +16,9 @@ public sealed partial class ResourceBrowser : UserControl, IDisposable
     private WorkspaceApi Api => workspaceApi ??= workspace();
 
     private readonly Func<Func<CancellationToken, Task>, Task> run;
+    private readonly Func<Func<CancellationToken, Task>, Task> read;
+    private int browseRevision, searchRevision;
+    private CancellationTokenSource? activeRead;
     private readonly Func<CancellationToken, Task<GameProfile>> ensureFabric;
     private readonly Func<GameProfile> profile;
     private readonly Func<ResourceRelease, bool, CancellationToken, Task<GameProfile>> installPack;
@@ -164,6 +167,7 @@ public sealed partial class ResourceBrowser : UserControl, IDisposable
     private readonly List<Control> mutating = new();
     public ResourceBrowser(
         Func<Func<CancellationToken, Task>, Task> run,
+        Func<Func<CancellationToken, Task>, Task> read,
         Func<CancellationToken, Task<GameProfile>> ensureFabric,
         Func<GameProfile> profile,
         Action<string> open,
@@ -177,6 +181,7 @@ public sealed partial class ResourceBrowser : UserControl, IDisposable
         this.installPack = installPack;
         this.importPack = importPack;
         this.run = run;
+        this.read = read;
         this.ensureFabric = ensureFabric;
         this.profile = profile;
         this.open = open;
@@ -198,7 +203,7 @@ public sealed partial class ResourceBrowser : UserControl, IDisposable
         };
         query.KeyDown += async (_, e) =>
         {
-            if (e.Key == Key.Enter && !busy)
+            if (e.Key == Key.Enter)
             {
                 offset = 0;
                 await (ClassicEnabled
@@ -409,7 +414,7 @@ public sealed partial class ResourceBrowser : UserControl, IDisposable
         Content = layout;
         projects.SelectionChanged += async (_, _) =>
         {
-            if (!busy && !suppressSelection)
+            if (!suppressSelection)
                 await SelectAsync();
         };
         releases.SelectionChanged += (_, _) =>
@@ -523,24 +528,7 @@ public sealed partial class ResourceBrowser : UserControl, IDisposable
                 return Task.CompletedTask;
             }
         );
-        mutating.AddRange(
-            new Control[]
-            {
-                search,
-                query,
-                sort,
-                category,
-                projects,
-                releases,
-                install,
-                previous,
-                next,
-                support,
-                importPackButton,
-                optionalFiles,
-                manageBar
-            }
-        );
+        mutating.AddRange(new Control[] { install, support, importPackButton, optionalFiles, manageBar });
         InitializeClassicResources();
     }
 
@@ -584,23 +572,25 @@ public sealed partial class ResourceBrowser : UserControl, IDisposable
         foreach (var control in mutating)
             control.IsEnabled = !value;
         install.IsEnabled = !value && selectedRelease is not null && !management;
-        previous.IsEnabled = !value && offset > 0;
-        next.IsEnabled = !value && offset + 20 < total;
+        previous.IsEnabled = offset > 0;
+        next.IsEnabled = offset + 20 < total;
     }
 
     public async Task ShowAsync(ResourceKind selectedKind, bool installed = false)
     {
-        if (busy)
-            return;
+        var revision = ++browseRevision;
+        ++searchRevision;
+        ++selectionRevision;
         kind = selectedKind;
         management = installed;
-        await Execute(
+        await ExecuteRead(
             async ct =>
             {
                 var settings = await Api.CallAsync<SettingsSnapshot>("workspace.settings.read", null, ct: ct);
                 MainWindow.ApplyHiddenActions(this, settings.Appearance.HiddenRoutes);
             }
         );
+        if (revision != browseRevision) return;
         ResetClassicResourceLayout(installed);
         offset = 0;
         query.Text = "";
@@ -625,7 +615,8 @@ public sealed partial class ResourceBrowser : UserControl, IDisposable
         paging.IsVisible = !installed;
         category.IsVisible = !installed;
         compatibility.IsVisible = false;
-        await RefreshBackendHints();
+        await ExecuteRead(RefreshBackendHints);
+        if (revision != browseRevision) return;
         support.IsVisible = !installed && kind == ResourceKind.Shader;
         releases.IsVisible = !installed;
         install.IsVisible = !installed;
@@ -635,7 +626,8 @@ public sealed partial class ResourceBrowser : UserControl, IDisposable
         {
             try
             {
-                await RefreshManaged();
+                await ExecuteRead(RefreshManaged);
+                if (revision != browseRevision) return;
                 status.Text = "";
             }
             catch (Exception ex)
@@ -646,32 +638,30 @@ public sealed partial class ResourceBrowser : UserControl, IDisposable
         }
         else
         {
-            await Execute(
+            await ExecuteRead(
                 async ct =>
                 {
-                    category.ItemsSource = new[]
-                    {
-                        "全部分类"
-                    }.Concat(
-                        await Api.CallAsync<string[]>(
-                            "workspace.catalog.categories",
-                            null,
-                            new
-                            {
-                                kind = (int)kind
-                            },
-                            ct
-                        )
-                    )
-                        .ToArray();
+                    var categories = await Api.CallAsync<string[]>("workspace.catalog.categories", null,
+                        new { kind = (int)kind }, ct);
+                    if (revision != browseRevision) return;
+                    category.ItemsSource = new[] { "全部分类" }.Concat(categories).ToArray();
                     category.SelectedIndex = 0;
                 }
             );
-            await SearchAsync();
+            if (revision == browseRevision) await SearchAsync();
         }
     }
 
     private async Task Execute(Func<CancellationToken, Task> action) => await run(action);
+    private async Task ExecuteRead(Func<CancellationToken, Task> action) => await read(async lifetime =>
+    {
+        using var cancellation = CancellationTokenSource.CreateLinkedTokenSource(lifetime);
+        activeRead?.Cancel();
+        activeRead = cancellation;
+        try { await action(cancellation.Token); }
+        catch (OperationCanceledException) when (cancellation.IsCancellationRequested) { }
+        finally { if (ReferenceEquals(activeRead, cancellation)) activeRead = null; }
+    });
     private async Task SearchAsync()
     {
         if (RouteClassicSource())
@@ -679,7 +669,8 @@ public sealed partial class ResourceBrowser : UserControl, IDisposable
             return;
         }
 
-        await Execute(
+        var revision = ++searchRevision;
+        await ExecuteRead(
             async ct =>
             {
                 status.Text = "搜索中…";
@@ -711,6 +702,7 @@ public sealed partial class ResourceBrowser : UserControl, IDisposable
                     },
                     ct
                 );
+                if (revision != searchRevision) return;
                 projects.ItemsSource = results.Projects.Select(CreateClassicProjectRow)
                     .ToArray();
                 total = results.Total;
@@ -760,7 +752,7 @@ public sealed partial class ResourceBrowser : UserControl, IDisposable
             return;
         selectedProject = project;
         var revision = ++selectionRevision;
-        await Execute(
+        await ExecuteRead(
             async ct =>
             {
                 title.Text = project.Title;
@@ -950,6 +942,7 @@ public sealed partial class ResourceBrowser : UserControl, IDisposable
 
     private async Task RefreshBackendHints(CancellationToken ct = default)
     {
+        var revision = browseRevision;
         compatibility.Text = "";
         compatibility.IsVisible = false;
         try
@@ -960,6 +953,7 @@ public sealed partial class ResourceBrowser : UserControl, IDisposable
                     .Id,
                 ct: ct
             );
+            if (revision != browseRevision || ct.IsCancellationRequested) return;
             compatibility.Text = string.Join("\n", backends);
             compatibility.IsVisible = backends.Length > 0;
         }
@@ -978,12 +972,15 @@ public sealed partial class ResourceBrowser : UserControl, IDisposable
         selectedManaged = null;
         selectedRelease = null;
         selectedProject = null;
-        projects.ItemsSource = (await Api.CallAsync<ManagedResource[]>(
+        var revision = browseRevision;
+        var items = await Api.CallAsync<ManagedResource[]>(
             "workspace.browser.display",
             profile()
                 .Id,
             ct: ct
-        )).Select(
+        );
+        if (revision != browseRevision || ct.IsCancellationRequested) return;
+        projects.ItemsSource = items.Select(
             x => new ListBoxItem
             {
                 Content = new TextBlock
@@ -997,6 +994,7 @@ public sealed partial class ResourceBrowser : UserControl, IDisposable
         )
             .ToArray();
         await RefreshBackendHints(ct);
+        if (revision != browseRevision || ct.IsCancellationRequested) return;
         title.Text = "";
         description.Text = "";
         releases.ItemsSource = null;
@@ -1120,6 +1118,7 @@ public sealed partial class ResourceBrowser : UserControl, IDisposable
 
     public void Dispose()
     {
+        activeRead?.Cancel();
         DisposeClassicResources();
     }
 }
