@@ -14,6 +14,5 @@
 1. 先取得对应实现、测试范围与来源证据，再审核修改 `feature-status-overrides.json`；不靠修改状态关闭缺口。
 2. `scripts/build-feature-matrix.py` 仍需外部固定参考树 `../pcl-download-fix/PCL-2.99.0.0/Plain Craft Launcher 2`（相对仓库根）。这是历史生成器的输入约定，不是构建前置条件。缺少参考树时脚本拒绝写出，不产生空 inventory。
 3. 如需重建，在有正确参考输入的工作副本运行 `python3 scripts/build-feature-matrix.py`，逐项审查三个 JSON 与 Markdown 的差异、来源身份、状态和证据路径。生成器包含历史来源声明，不重新查询上游，也不提供新的验收结论。
-4. `update-matrix-*`、`reconcile-matrix-*`、`finalize-*`、`audit-matrix-0.40.py` 是特定版本的数据维护脚本，可能回写历史口径或需要已不随仓库提供的运行产物。它们不是接手者应顺次重跑的初始化步骤。
 
 历史证据里的旧 `docs/*.json` 路径按同名文件迁移到 `docs/data/`；原始回执与哈希保持原样，不为改目录重写历史证明。

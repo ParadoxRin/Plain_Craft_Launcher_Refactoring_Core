@@ -98,6 +98,7 @@ public partial class MainWindow
                     dialog.Close((release.Id, loaders.SelectedIndex));
             };
             panel.Children.Add(install);
+#if PCL_DESKTOP_ACCEPTANCE
             if (Program.Arguments.Contains("--phase-one-version-manager"))
             {
                 dialog.Opened += async (_, _) =>
@@ -164,6 +165,7 @@ public partial class MainWindow
                     );
                     dialog.Close(null);
                 };
+#endif
             dialog.Opened += (_, _) => Console.WriteLine("VERSION_UI_DIALOG_OPENED");
             var choice = await dialog.PresentAsync<(string Version, int Loader)?>(this);
             if (choice is null)

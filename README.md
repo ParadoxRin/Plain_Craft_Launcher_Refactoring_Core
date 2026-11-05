@@ -92,7 +92,7 @@ export DOTNET="$PWD/.tooling/dotnet/dotnet"
 "$DOTNET" build PCLCS.Clients.slnx -c Release
 
 # 构建 Mac 应用（首次构建需要网络；使用新的输出目录）
-PCL_RELEASE_OUTPUT="$PWD/artifacts/rc-build" bash scripts/build-handoff.sh
+PCL_RELEASE_OUTPUT="$PWD/artifacts/rc-build" bash scripts/build-macos.sh
 ```
 
 独立维护入口：`PCLCS.Core.slnx`、`PCLCS.ClientSdk.slnx`、`PCLCS.Clients.slnx`、`PCLCS.Tools.slnx`；`PCL-MacPort.sln` 为整仓集成入口。
@@ -113,7 +113,7 @@ PCL_HOST_EXECUTABLE=/absolute/host/Pcl.Host \
   /absolute/client/PCL-MacPort --data-root /absolute/new-data-root
 ```
 
-使用 `pwd -P` 确认物理路径；客户端身份和 Host 路径必须一致。完整开发说明见 [客户端接入](docs/客户端接入指南.md)、[调用指南](docs/开发与调用指南.md)与 [包间协议](docs/五类包连接规范.md)。
+使用 `pwd -P` 确认物理路径；客户端身份和 Host 路径必须一致。默认 Desktop 构建不包含 `TestSupport/` 验收代码；测试构建需显式启用 `EnableDesktopAcceptance`。完整开发说明见 [客户端接入](docs/客户端接入指南.md)、[调用指南](docs/开发指南.md)与 [包间协议](docs/五类包连接规范.md)。
 
 ## 测试与发布
 

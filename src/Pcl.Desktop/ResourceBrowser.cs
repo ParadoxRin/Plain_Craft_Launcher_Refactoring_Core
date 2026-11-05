@@ -1093,6 +1093,7 @@ public sealed partial class ResourceBrowser : UserControl, IDisposable
         status.Text = $"已导入 {files.Count} 个文件";
     }
 
+#if PCL_DESKTOP_ACCEPTANCE
     public async Task SmokeAsync(ResourceKind resourceKind, string search, CancellationToken ct = default)
     {
         kind = resourceKind;
@@ -1119,6 +1120,7 @@ public sealed partial class ResourceBrowser : UserControl, IDisposable
         }
     }
 
+#endif
     public void Dispose()
     {
         activeRead?.Cancel();

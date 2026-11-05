@@ -1,4 +1,9 @@
 <Project>
+  <PropertyGroup Condition="'$(MSBuildProjectName)' == 'Pcl.Desktop' and '$(EnableDesktopAcceptance)' == 'true'">
+    <BaseOutputPath>$(MSBuildThisFileDirectory)artifacts/desktop-acceptance/bin/</BaseOutputPath>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)artifacts/desktop-acceptance/obj/</BaseIntermediateOutputPath>
+    <DefaultItemExcludes>$(DefaultItemExcludes);bin/**;obj/**</DefaultItemExcludes>
+  </PropertyGroup>
   <PropertyGroup>
     <PclSdkVersion Condition="'$(PclSdkVersion)' == ''">0.43.0</PclSdkVersion>
     <Deterministic>true</Deterministic>

@@ -24,6 +24,7 @@ on:
       - 'release.json'
       - 'tools/Pcl.UpdatePack/**'
       - 'tests/Pcl.ComponentDelivery.Tests/**'
+      - 'tests/Pcl.BuildLayout.Tests/**'
       - 'scripts/verify-core-baseline.py'
       - 'scripts/build-release.sh'
       - 'scripts/package-macos.py'
@@ -51,12 +52,18 @@ jobs:
       - name: Verify package boundaries and failure cases
         run: |
           python3 scripts/test-component-packages.py
+          python3 scripts/test-component-legal.py
           python3 scripts/test-core-baseline.py
           python3 scripts/test-release-privacy.py
       - name: Build native assets
         run: bash scripts/build-native.sh
       - name: Publish independent client and Host candidates
         run: DOTNET="$(command -v dotnet)" bash scripts/build-components.sh osx-arm64
+      - name: Verify production and acceptance build isolation
+        run: |
+          dotnet build src/Pcl.Desktop/Pcl.Desktop.csproj -c Release -p:EnableDesktopAcceptance=true -p:UsedAvaloniaProducts= -m:1 -nr:false
+          version=$(python3 -c 'import json; print(json.load(open("release.json"))["version"])')
+          dotnet run --project tests/Pcl.BuildLayout.Tests -c Release -- "artifacts/components-$version-osx-arm64/client/PCL-MacPort.dll" artifacts/desktop-acceptance/bin/Release/net10.0/PCL-MacPort.dll "artifacts/components-$version-osx-arm64/host/Pcl.Core.dll" "artifacts/components-$version-osx-arm64/host"
       - name: Verify actual signed publisher outputs with a disposable key
         shell: bash
         run: |
@@ -81,7 +88,7 @@ jobs:
         run: |
           version=$(python3 -c 'import json; print(json.load(open("release.json"))["version"])')
           dotnet build tests/Pcl.MinimalClient.Tests/Pcl.MinimalClient.Tests.csproj -c Release -m:1 -nr:false -p:RuntimeIdentifiers=osx-arm64
-          dotnet tests/Pcl.MinimalClient.Tests/bin/Release/net10.0/Pcl.MinimalClient.Tests.dll "$PWD/artifacts/component-delivery/full/host/Pcl.Host" - "$PWD/artifacts/component-contract-root" "$PWD/artifacts/component-contract.json" contract
+          dotnet tests/Pcl.MinimalClient.Tests/bin/Release/net10.0/Pcl.MinimalClient.Tests.dll "$PWD/artifacts/component-delivery/assembled/host/Pcl.Host" - "$PWD/artifacts/component-contract-root" "$PWD/artifacts/component-contract.json" contract
       - name: Verify actual client self-update and rollback
         run: DOTNET="$(command -v dotnet)" bash scripts/test-client-self-update.sh "$PWD/artifacts/client-update-acceptance"
       - name: Verify data update background operation and cleanup

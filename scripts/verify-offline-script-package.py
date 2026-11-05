@@ -1,4 +1,4 @@
-"""驱动正式包的实际导出窗口；等 UI/Host 退出后直接执行 .command，不通过启动器启动游戏。"""
+"""驱动显式验收构建的实际导出窗口；等 UI/Host 退出后直接执行 .command，不通过启动器启动游戏。"""
 from pathlib import Path
 import json,os,signal,subprocess,sys,time
 app,data,out=map(lambda s:Path(s).resolve(),sys.argv[1:4])
@@ -10,7 +10,7 @@ def alive(pid):
 launcher=game=None
 try:
     with (out/'ui.log').open('w') as log:
-        launcher=subprocess.Popen([str(app/'Contents/MacOS/PCL-MacPort'),'--data-root',str(data),'--offline-script-smoke','--offline-script-report',str(report)],stdout=log,stderr=subprocess.STDOUT)
+        launcher=subprocess.Popen([str(app if app.is_file() else app/'Contents/MacOS/PCL-MacPort'),'--data-root',str(data),'--offline-script-smoke','--offline-script-report',str(report)],stdout=log,stderr=subprocess.STDOUT)
         launcher.wait(timeout=150)
     ui=json.loads(report.read_text())
     assert ui['status']=='passed' and launcher.returncode==0,ui

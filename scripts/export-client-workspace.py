@@ -25,10 +25,8 @@ for name in ['Directory.Build.props','global.json','release.json','LICENSE','LIC
              'docs/windows-layout-baseline.json','docs/data/PCL2完整功能矩阵.json','docs/THIRD-PARTY-NOTICES.md',
              'src/SharedProtocol/PrivatePipePath.cs']:
  target=out/name;target.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(root/name,target)
-for name in ['libpclwindow.dylib','lwjgl-unsafe-agent-2.0.jar']:
- source=root/'artifacts/native'/name
- if source.exists():
-  target=out/'artifacts/native'/name;target.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(source,target)
+for name in ['src/Pcl.Native/window-agent.m', 'scripts/build-native.sh']:
+ target=out/name;target.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(root/name,target)
 # Normalise away unused source ProjectReferences; this workspace can never fall back to a sibling core checkout.
 for project in out.rglob('*.csproj'):
  tree=ET.parse(project)
@@ -44,5 +42,5 @@ ET.SubElement(sources,'add',key='pclcs-local-sdk',value='sdk-packages')
 ET.SubElement(sources,'add',key='nuget.org',value='https://api.nuget.org/v3/index.json')
 ET.ElementTree(config).write(out/'NuGet.Config',encoding='unicode')
 (out/'Clients.slnx').write_text('<Solution><Project Path="src/Pcl.Desktop/Pcl.Desktop.csproj" /><Project Path="src/Pcl.Desktop.Updates/Pcl.Desktop.Updates.csproj" /><Project Path="src/Pcl.Cli/Pcl.Cli.csproj" /><Project Path="examples/Pcl.MinimalClient/Pcl.MinimalClient.csproj" /></Solution>\n')
-(out/'README.md').write_text('PCLCS independent client workspace\n\nBuild Clients.slnx with .NET 10. Set PCL_HOST_EXECUTABLE to a separately supplied Host.\nSDK packages: '+str(feed)+'\nNo core source is included. This is a local export, not a new remote repository.\n')
+(out/'README.md').write_text('PCLCS independent client workspace\n\nOn macOS ARM64 first run bash scripts/build-native.sh. Build Clients.slnx with .NET 10. Set PCL_HOST_EXECUTABLE to a separately supplied Host.\nSDK packages: '+str(feed)+'\nNo core source is included. This is a local export, not a new remote repository.\n')
 print('INDEPENDENT_CLIENT_WORKSPACE_EXPORTED',out)

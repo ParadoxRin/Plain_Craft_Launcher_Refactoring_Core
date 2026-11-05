@@ -57,6 +57,10 @@ for name, item in manifest['packages'].items():
             zipped.extract(info, target)
             path.chmod(mode & 0o777)
     checks.append(name + '-archive-integrity-and-extraction')
+# Assemble only for integration testing; never archive or upload this layout.
+if 'client' in manifest['packages']:
+    shutil.copytree(output / 'client', output / 'assembled')
+    shutil.copytree(output / 'host', output / 'assembled/host')
 host = output / 'host'
 entry = host / manifest['packages']['host']['entryPoint']
 probe = json.loads(subprocess.check_output([str(entry), '--update-probe'], text=True))
