@@ -5,7 +5,7 @@ namespace Pcl.Core;
 internal static class MetadataRequest
 {
     // [实现] GetAsync 的实现：在 空 条件下迭代。
-    internal static async Task<string> GetAsync(HttpClient client, string url, CancellationToken ct)
+    internal static async Task<string> GetAsync(HttpClient client, string url, CancellationToken ct, Action<HttpRequestMessage>? configure = null)
     {
         for (var attempt = 0;; attempt++)
         {
@@ -20,7 +20,9 @@ internal static class MetadataRequest
             {
                 // [实现] 在异常保护范围内：准备 var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, requestToke…；按 response.StatusCode is HttpStatusCode.RequestTimeout or HttpStatusCode.TooManyRequests || (int)… 分支处理。
                 RuntimeTrace.Write("metadata.request", attempt);
-                using var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, requestToken);
+                using var request = new HttpRequestMessage(HttpMethod.Get, url);
+                configure?.Invoke(request);
+                using var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, requestToken);
                 RuntimeTrace.Write("metadata.response", (int)response.StatusCode);
                 if (response.StatusCode is HttpStatusCode.RequestTimeout or HttpStatusCode.TooManyRequests || (int)response.StatusCode >= 500)
                 {

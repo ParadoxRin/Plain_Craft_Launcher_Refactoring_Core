@@ -36,6 +36,14 @@ public sealed class UnifiedReleaseResolver(ResourceCatalog modrinth, CurseForgeC
             {
                 throw;
             }
+            catch (CurseForgeRequestException ex)
+            {
+                messages.Add(site + " [" + ex.Code + "] " + ex.SafeMessage);
+            }
+            catch (Exception ex) when (site == "CurseForge" && ex is InvalidDataException or FormatException or InvalidCastException or ArgumentException)
+            {
+                messages.Add("CurseForge [CURSEFORGE_RESPONSE_INVALID] 返回的数据无效");
+            }
             catch (Exception ex)when (ex is HttpRequestException or IOException or TaskCanceledException or Newtonsoft.Json.JsonException)
             {
                 messages.Add(site + " 版本查询失败，请重试；未自动切换版本");

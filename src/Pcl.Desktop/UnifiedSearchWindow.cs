@@ -101,7 +101,7 @@ public sealed partial class UnifiedSearchWindow : WorkspaceWindow, IHostWorkspac
     };
     private readonly TextBox key = new()
     {
-        PlaceholderText = "CurseForge API Key（可选，仅 Host 内存，30 分钟过期）",
+        PlaceholderText = "CurseForge 临时密钥（可选，覆盖 Host 配置，30 分钟过期）",
         PasswordChar = '●'
     };
     private readonly ListBox results = new()
@@ -562,7 +562,9 @@ public sealed partial class UnifiedSearchWindow : WorkspaceWindow, IHostWorkspac
         detail.Text = "";
         results.ItemsSource = session.Hits;
         status.Text = $"第 {session.Page + 1} 页 · {session.Hits.Length} 项 · 合并 {session.FilteredDuplicates} 个重复项目\n" + string.Join(" · ", session.SourceStatus) + (session.HasErrors
-            ? "\n部分来源失败，可重试本页。"
+            ? (session.Availability.Any(x => !x.Available && !x.Retryable)
+                ? "\n部分来源需检查配置或授权；其他来源仍可使用。"
+                : "\n部分来源失败，可重试本页。")
             : "");
     }
 

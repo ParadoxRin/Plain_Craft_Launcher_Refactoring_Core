@@ -121,6 +121,12 @@ public sealed partial class PageExecutionAdapter
         .ToLowerInvariant()[..32];
     private async Task<byte[]> ExecuteWorkspaceAsync(string id, PageInput request, IProgress<InstallProgress> progress, CancellationToken ct)
     {
+        try { return await ExecuteWorkspaceCoreAsync(id, request, progress, ct); }
+        catch (CurseForgeRequestException ex) { throw new OperationInstallException(ex.Code); }
+    }
+
+    private async Task<byte[]> ExecuteWorkspaceCoreAsync(string id, PageInput request, IProgress<InstallProgress> progress, CancellationToken ct)
+    {
         var tracking = TrackingId(id);
         var fingerprint = Convert.ToHexString(
             SHA256.HashData(

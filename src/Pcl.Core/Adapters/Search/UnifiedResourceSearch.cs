@@ -22,7 +22,11 @@ public sealed record ResourceSearchHit(
 }
 
 // [实现] 数据约定：ResourceSourcePage 汇集 Source、Hits、HasNext、Error，供该模块传递状态。
-public sealed record ResourceSourcePage(string Source, IReadOnlyList<ResourceSearchHit> Hits, bool HasNext, string? Error = null);
+public sealed record ResourceSourcePage(string Source, IReadOnlyList<ResourceSearchHit> Hits, bool HasNext, string? Error = null)
+{
+    public string? ErrorCode { get; init; }
+    public bool Retryable { get; init; }
+}
 // [实现] 数据约定：UnifiedSearchResult 汇集 Hits、Sources，供该模块传递状态。
 public sealed record UnifiedSearchResult(IReadOnlyList<ResourceSearchHit> Hits, IReadOnlyList<ResourceSourcePage> Sources)
 {
@@ -58,6 +62,15 @@ public static class UnifiedResourceSearch
                 {
                     // [实现] 捕获 (OperationCanceledException) 后：重新抛出当前异常。
                     throw;
+                }
+                catch (CurseForgeRequestException ex)
+                {
+                    return new ResourceSourcePage(p.Key, [], false, ex.SafeMessage)
+                    { ErrorCode = ex.Code, Retryable = ex.Retryable };
+                }
+                catch (Exception ex) when (p.Key == "CurseForge" && ex is InvalidDataException or FormatException or InvalidCastException or ArgumentException)
+                {
+                    return new ResourceSourcePage(p.Key, [], false, "CurseForge 返回的数据无效") { ErrorCode = "CURSEFORGE_RESPONSE_INVALID" };
                 }
                 catch (Exception ex)when (ex is HttpRequestException or IOException or TaskCanceledException or Newtonsoft.Json.JsonException)
                 {
@@ -125,7 +138,6 @@ public static class UnifiedResourceSearch
             .ToArray();
     }
 
-    // [实现] SearchAsync 的实现：准备 var catalog = new ResourceCatalog(paths: service.Paths)；准备 var curse = string.IsNullOrWhiteSpace(curseKey) ? null : new CurseForgeCatalog(curseKey ?? "", paths: service.Paths)；准备 var providers = new Dictionary<string, Func<ResourceSearchQuery, CancellationToken, Task<Resour…。
     public static async Task<UnifiedSearchResult> SearchAsync(
         MinecraftService service,
         GameProfile profile,
@@ -133,15 +145,12 @@ public static class UnifiedResourceSearch
         bool online = true,
         string? curseKey = null,
         CancellationToken ct = default,
-        bool mcmodOnly = false
+        bool mcmodOnly = false,
+        Func<string?>? curseKeyProvider = null
     )
     {
         using var catalog = new ResourceCatalog(paths: service.Paths);
-        using var curse = string.IsNullOrWhiteSpace(curseKey) && (DownloadTasks.For(service.Paths)
-            .Options.CurseForgeApiMirror.Length == 0 || DownloadTasks.For(service.Paths)
-            .Options.ResourceSource == "official")
-            ? null
-            : new CurseForgeCatalog(curseKey ?? "", paths: service.Paths);
+        using var curse = new CurseForgeCatalog(curseKey ?? "", paths: service.Paths, keyProvider: curseKeyProvider);
         var providers = new Dictionary<string, Func<ResourceSearchQuery, CancellationToken, Task<ResourceSourcePage>>>();
         bool Include(string name) => query.Provider == "all" || query.Provider == name;
         if (!mcmodOnly && Include("local"))
@@ -293,7 +302,7 @@ public static class UnifiedResourceSearch
                     hasNext
                 );
             };
-        if (online && !mcmodOnly && Include("curseforge") && curse is not null && query.Kind != ResourceKind.DataPack)
+        if (online && !mcmodOnly && Include("curseforge") && query.Kind != ResourceKind.DataPack)
             providers["CurseForge"] = async (q, token) =>
             {
                 // [实现] 回调触发时：准备 var result = await curse.SearchAsync(q.Kind, q.Text, q.GameVersion, q.Loader, q.Page * 20, toke…；返回 new( "CurseForge", result.Select( x => new ResourceSearchHit( "curseforge:" + x.Id, x.Name, x.S…。
@@ -340,18 +349,6 @@ public static class UnifiedResourceSearch
                     hasNext
                 );
             };
-        if (online && !mcmodOnly && Include("curseforge") && curse is null)
-        {
-            providers["CurseForge"] = (_, _) => Task.FromResult(
-                new ResourceSourcePage(
-                    "CurseForge",
-                    [],
-                    false,
-                    "未配置密钥或可用镜像"
-                )
-            );
-        }
-
         if (query.Kind == ResourceKind.Mod && (mcmodOnly || (Include("mcmod") && query.GameVersion.Length == 0 && query.Loader.Length == 0)))
             providers[McmodCatalog.Source] = (q, token) =>
             {

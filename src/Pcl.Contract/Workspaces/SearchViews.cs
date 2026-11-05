@@ -22,7 +22,12 @@ public sealed record SearchPage(
     SearchHit[] Hits,
     string[] SourceStatus,
     bool HasErrors
-);
+)
+{
+    // Additive field: older clients keep using SourceStatus and HasErrors.
+    public SearchSourceAvailability[] Availability { get; init; } = [];
+}
+public sealed record SearchSourceAvailability(string Source, bool Available, string Code, string Message, bool Retryable);
 public sealed record SearchRelease(string Selection, string Name, string FileName, string? Page, bool Manual)
 {
     public string Source { get; init; } = "";

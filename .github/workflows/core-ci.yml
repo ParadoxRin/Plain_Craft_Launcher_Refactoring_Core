@@ -72,10 +72,15 @@ jobs:
           dotnet run --project tests/Pcl.ClientLogin.Tests -c Release -- "$PWD/artifacts/ci-client-login"
           dotnet run --project tests/Pcl.ResourceConcurrency.Tests -c Release -- "$PWD/artifacts/ci-resource-concurrency"
           dotnet run --project tests/Pcl.DesktopQueue.Tests -c Release
+      - name: Test CurseForge configuration, errors and source isolation
+        run: |
+          dotnet run --project tests/Pcl.CurseForge.Tests -c Release -- "$PWD/artifacts/ci-curseforge"
       - name: Build real Host and independent minimal client
         run: |
           dotnet build src/Pcl.Host/Pcl.Host.csproj --configuration Release -m:1 -nr:false
           dotnet build tests/Pcl.MinimalClient.Tests/Pcl.MinimalClient.Tests.csproj --configuration Release -m:1 -nr:false
+      - name: Test CurseForge status over real Host protocol
+        run: dotnet tests/Pcl.CurseForge.Tests/bin/Release/net10.0/Pcl.CurseForge.Tests.dll host-probe "$PWD/src/Pcl.Host/bin/Release/net10.0/Pcl.Host.dll" "$PWD/artifacts/ci-curseforge-host"
       # Fresh root, real private-pipe Host, public contracts only. This lane does
       # not perform a complete game download or access an OS credential store.
       - name: Run minimal client Host contract acceptance
