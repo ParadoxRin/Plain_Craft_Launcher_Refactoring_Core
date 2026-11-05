@@ -70,6 +70,34 @@ try
     Check(accounts.Begin("login", true).OperationId == login.OperationId, "login-replay-does-not-create-another-resource-owner");
     try { accounts.Logout("any", true); throw new Exception("logout-not-rejected"); }
     catch (OperationRejectedException e) { Check(e.Code == "ACCOUNT_OPERATION_BUSY", "logout-protects-in-flight-credential-commit"); }
+    // Real resource scans must queue behind file writers, but do not own the account resource.
+    using (var scanLane = new SemaphoreSlim(1, 1))
+    {
+        var scanExecutor = new BarrierPages();
+        var scans = new PageOperationService(new MemoryStore(), scanExecutor, scanLane,
+            executionRejection: command => accounts.IsBusy && PageResourcePolicy.ConflictsWithAccounts(command.Method)
+                ? "ACCOUNT_OPERATION_BUSY" : null);
+        try
+        {
+            var write = await scans.AcceptAsync(Command("scan-writer", "workspace.settings.save"));
+            await scanExecutor.WriterEntered.Task.WaitAsync(TimeSpan.FromSeconds(5));
+            var list = await scans.AcceptAsync(Command("scan-list", "workspace.browser.list"));
+            var display = await scans.AcceptAsync(Command("scan-display", "workspace.browser.display"));
+            Check(!PageResourcePolicy.IsConcurrentRead("workspace.browser.list") &&
+                !PageResourcePolicy.IsConcurrentRead("workspace.browser.display") && scanExecutor.WriteEntries == 1,
+                "resource-scans-wait-for-shared-file-writer");
+            scanExecutor.ReleaseWriter.TrySetResult();
+            await scans.WaitAsync(write.OperationId).WaitAsync(TimeSpan.FromSeconds(5));
+            Check((await scans.WaitAsync(list.OperationId).WaitAsync(TimeSpan.FromSeconds(5))).State == "succeeded" &&
+                (await scans.WaitAsync(display.OperationId).WaitAsync(TimeSpan.FromSeconds(5))).State == "succeeded" &&
+                accounts.IsBusy && !backend.ReleaseCommit.Task.IsCompleted,
+                "serialized-resource-scans-complete-during-account-wait");
+            Check(PageResourcePolicy.CanRunDuringGame("workspace.browser.list") &&
+                PageResourcePolicy.CanRunDuringGame("workspace.browser.display"),
+                "serialized-resource-scans-remain-available-during-game");
+        }
+        finally { scanExecutor.ReleaseWriter.TrySetResult(); await scans.StopAsync(); }
+    }
     backend.ReleaseCommit.TrySetResult();
     while (accounts.IsBusy) await Task.Delay(10);
     Check(accounts.Get(login.OperationId).State == "succeeded" && accounts.Snapshot().Accounts.Length == 1, "completed-commit-publishes-new-account-snapshot");

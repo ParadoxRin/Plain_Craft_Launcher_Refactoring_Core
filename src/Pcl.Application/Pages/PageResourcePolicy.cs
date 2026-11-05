@@ -8,7 +8,8 @@ public static class PageResourcePolicy
 {
     // These methods return snapshots/remote catalogs. Their private result records are keyed by
     // operation ID; network metadata caches use the adapter's atomic download path. One read worker
-    // owns mutable search sessions. Account challenges and prepared write batches stay on writer lane.
+    // owns mutable search sessions. Java inspect/discover are controlled external probes, not pure reads.
+    // Account challenges and prepared write batches stay on writer lane.
     private static readonly FrozenSet<string> ConcurrentReads = new[]
     {
         "instance.list", "component.versions", "artifact.list", "artifact.notes",
@@ -22,8 +23,15 @@ public static class PageResourcePolicy
         "workspace.instances.icon", "workspace.instances.listTrash",
         "workspace.java.inspect", "workspace.java.discover", "workspace.link.status",
         "workspace.search.page", "workspace.search.versions",
-        "workspace.browser.backends", "workspace.browser.list", "workspace.browser.display",
+        "workspace.browser.backends",
         "workspace.packs.exportOptions"
+    }.ToFrozenSet(StringComparer.Ordinal);
+
+    // ZIP/resource scans keep file handles open without delete sharing on Windows. Serialize them
+    // with installs/removals, while still permitting read-only browsing during a running game.
+    private static readonly FrozenSet<string> SerializedReads = new[]
+    {
+        "workspace.browser.list", "workspace.browser.display"
     }.ToFrozenSet(StringComparer.Ordinal);
 
     public static bool IsConcurrentRead(string method) => ConcurrentReads.Contains(method);
@@ -36,6 +44,6 @@ public static class PageResourcePolicy
             "component.confirmation" or "component.preview" or "component.apply" or "artifact.list" or
             "artifact.download" or "artifact.notes");
 
-    public static bool CanRunDuringGame(string method) => IsConcurrentRead(method) ||
+    public static bool CanRunDuringGame(string method) => IsConcurrentRead(method) || SerializedReads.Contains(method) ||
         method is "workspace.link.start" or "workspace.link.stop";
 }
