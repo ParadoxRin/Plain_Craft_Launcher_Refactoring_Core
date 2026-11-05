@@ -61,6 +61,12 @@ public partial class MainWindow
                     Check(loginUserCode is not null, "real-microsoft-challenge-" + attempt);
                     await LeaveHome();
                     Check(!pending.IsCompleted && microsoftLoginPending, "navigation-keeps-login-running-" + attempt);
+                    using (var readTimeout = new CancellationTokenSource(TimeSpan.FromSeconds(10)))
+                    {
+                        var snapshot = await DesktopApi.CallAsync<JsonElement>("workspace.settings.read", null, new { }, readTimeout.Token);
+                        Check(snapshot.ValueKind == JsonValueKind.Object && !pending.IsCompleted,
+                            "real-host-read-completes-while-login-remains-active-" + attempt);
+                    }
                     Check(Visible(CancelLoginButton) && Visible(CopyCodeButton), "global-actions-visible-away-from-home-" + attempt);
                     await Task.Delay(100);
                     Check(dismissLoginStatus.Bounds.Right <= ((Control)dismissLoginStatus.Parent!).Bounds.Width + 1, "global-actions-fit-minimum-width-" + attempt);
@@ -97,7 +103,7 @@ public partial class MainWindow
         }
         catch (Exception ex)
         {
-            File.WriteAllText(report, JsonSerializer.Serialize(new { status = "failed", checks, error = ex.GetType().Name, code = ex is InvalidOperationException ? ex.Message : null }));
+            File.WriteAllText(report, JsonSerializer.Serialize(new { status = "failed", checks, error = ex.GetType().Name, code = ex is InvalidOperationException ? ex.Message : ex is Pcl.Core.Contracts.Operations.OperationRejectedException rejected ? rejected.Code : null }));
             Environment.ExitCode = 1;
         }
         finally
