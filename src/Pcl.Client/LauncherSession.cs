@@ -18,19 +18,24 @@ public sealed partial class LauncherSession : IAsyncDisposable, Pcl.Core.Contrac
     // Cache contains only public DTOs. Every completed command obtains authoritative Host state.
     public async Task RefreshDesktopAsync(CancellationToken ct = default)
     {
-        var state = await Client.Call<Pcl.Core.Contracts.Workspaces.DesktopSnapshot>(
-            "desktop.snapshot",
-            new { },
-            ct
-        );
-        DesktopState = state;
-        credentials = state.Accounts.Accounts.Where(
-            x => x.HasCredential
-        )
-            .Select(
-                x => x.Id
+        await gate.WaitAsync(ct);
+        try
+        {
+            var state = await Client.Call<Pcl.Core.Contracts.Workspaces.DesktopSnapshot>(
+                "desktop.snapshot",
+                new { },
+                ct
+            );
+            DesktopState = state;
+            credentials = state.Accounts.Accounts.Where(
+                x => x.HasCredential
             )
-            .ToHashSet();
+                .Select(
+                    x => x.Id
+                )
+                .ToHashSet();
+        }
+        finally { gate.Release(); }
     }
 
     private volatile HashSet<string> credentials = [];
@@ -192,69 +197,6 @@ public sealed partial class LauncherSession : IAsyncDisposable, Pcl.Core.Contrac
     }
 
     public IGameSession? BorrowGame(string id) => games.GetValueOrDefault(id);
-    // 登录任务属于 Host，客户端只展示短时 user_code；取消后等待终态，才重新启用旧页面。
-    public async Task<string> LoginAsync(bool remember, Action<LoginPrompt> prompt, CancellationToken ct)
-    {
-        await EnterHostAsync();
-        LoginSnapshot? row = null;
-        bool shown = false, cancelled = false;
-        try
-        {
-            row = await AdmitCommandAsync(
-                () => Client.Call<LoginSnapshot>(
-                    "account.login.begin",
-                    new
-                    {
-                        key = Guid.NewGuid()
-                            .ToString("N"),
-                        remember
-                    }
-                ),
-                ct
-            );
-            while (row.State is not ("succeeded" or "failed" or "cancelled"))
-            {
-                if (ct.IsCancellationRequested && !cancelled)
-                {
-                    await Client.Call<JsonElement>(
-                        "account.login.cancel",
-                        new
-                        {
-                            operationId = row.OperationId
-                        }
-                    );
-                    cancelled = true;
-                }
-
-                if (!cancelled && !shown && row.Prompt is { } challenge)
-                {
-                    prompt(challenge);
-                    shown = true;
-                }
-
-                await Task.Delay(250);
-                row = await Client.Call<LoginSnapshot>(
-                    "account.login.get",
-                    new
-                    {
-                        operationId = row.OperationId
-                    }
-                );
-            }
-
-            if (row.State == "cancelled")
-            {
-                throw new OperationCanceledException(ct);
-            }
-
-            return row.AccountId ?? throw new OperationRejectedException(row.ErrorCode ?? "LOGIN_FAILED");
-        }
-        finally
-        {
-            await RefreshStateAfterOperationAsync();
-        }
-    }
-
     public async Task LogoutAsync(string id, bool remove)
     {
         await EnterHostAsync();
@@ -358,6 +300,7 @@ public sealed partial class LauncherSession : IAsyncDisposable, Pcl.Core.Contrac
     public async Task ShutdownAsync()
     {
         stopping = true;
+        await StopLoginAsync();
         // 先收回重连任务所有权，防止正常关闭后由旧监视器重启一个新的 Host。
         // 取消仅作用于客户端重连；游戏的托管/独立运行仍由 Host 原关闭策略处理。
         await connectionStop.CancelAsync();
@@ -382,6 +325,8 @@ public sealed partial class LauncherSession : IAsyncDisposable, Pcl.Core.Contrac
 
     public async ValueTask DisposeAsync()
     {
+        stopping = true;
+        await StopLoginAsync();
         await connectionStop.CancelAsync();
         await Task.WhenAll(connectionMonitor, updateMonitor);
         await Client.DisposeAsync();
