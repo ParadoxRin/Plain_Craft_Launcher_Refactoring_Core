@@ -52,7 +52,19 @@ public sealed class HostAccountService(Pcl.Core.Ports.Accounts.IAccountBackend a
         }
     }
 
+    private AccountSnapshot? stableSnapshot;
     public AccountSnapshot Snapshot()
+    {
+        lock (gate)
+        {
+            // Authentication may be between index and credential commits. Expose the last
+            // complete public snapshot until the backend has completed the transaction.
+            if (IsBusy && stableSnapshot is not null) return stableSnapshot;
+            return stableSnapshot = ReadSnapshot();
+        }
+    }
+
+    private AccountSnapshot ReadSnapshot()
     {
         var index = accounts.Read();
         return new(
@@ -109,6 +121,7 @@ public sealed class HostAccountService(Pcl.Core.Ports.Accounts.IAccountBackend a
                 throw new OperationRejectedException("LOGIN_BUSY_OR_RETENTION_LIMIT");
             }
 
+            stableSnapshot = ReadSnapshot();
             var id = "op-" + Guid.NewGuid()
                 .ToString("N");
             var saved = new Saved(
@@ -154,6 +167,7 @@ public sealed class HostAccountService(Pcl.Core.Ports.Accounts.IAccountBackend a
                 .ConfigureAwait(false);
             lock (gate)
             {
+                stableSnapshot = ReadSnapshot();
                 Save(
                     rows[id] with
                     {
@@ -246,7 +260,15 @@ public sealed class HostAccountService(Pcl.Core.Ports.Accounts.IAccountBackend a
         }
     }
 
-    public void Logout(string id, bool remove) => accounts.Logout(id, remove);
+    public void Logout(string id, bool remove)
+    {
+        lock (gate)
+        {
+            if (stopping || IsBusy) throw new OperationRejectedException("ACCOUNT_OPERATION_BUSY");
+            accounts.Logout(id, remove);
+            stableSnapshot = ReadSnapshot();
+        }
+    }
     private readonly Dictionary<string, AppearanceSnapshot> appearances = new();
     public AppearanceSnapshot BeginAppearance(string id, string action, string? value, byte[]? png, bool slim)
     {
@@ -257,6 +279,7 @@ public sealed class HostAccountService(Pcl.Core.Ports.Accounts.IAccountBackend a
                 throw new OperationRejectedException("ACCOUNT_OPERATION_BUSY");
             }
 
+            stableSnapshot = ReadSnapshot();
             var operationId = "op-" + Guid.NewGuid()
                 .ToString("N");
             appearances[operationId] = new(operationId, "running");
