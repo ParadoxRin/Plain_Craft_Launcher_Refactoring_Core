@@ -5,7 +5,8 @@
     <ProjectReference Include="../../vendor/PCLCS/PCLCS.csproj" />
     <ProjectReference Include="../Pcl.Legacy/Pcl.Legacy.vbproj" />
   </ItemGroup>
-  <ItemGroup><EmbeddedResource Include="Compatibility/*.json" /></ItemGroup>
+  <ItemGroup><EmbeddedResource Include="Compatibility/*.json" />
+    <EmbeddedResource Include="../../vendor/PCLCS/Minecraft/OptifineHashes.json" LogicalName="Pcl.Core.Compatibility.pcl-optifine-hashes.json" /></ItemGroup>
   <!-- Use a developer-owned local application identity only when explicitly present.
        The tracked default contains the owner-authorized public client ID; no secret. -->
   <PropertyGroup>

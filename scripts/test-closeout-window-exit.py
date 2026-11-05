@@ -32,9 +32,9 @@ if env.get('PCL_DESKTOP_TEST_EXE'):
     for key in ('PCL_HOST_ASSEMBLY', 'PCL_DOTNET', 'DOTNET_ROOT'):
         env.pop(key, None)
 else:
-    env.update(PCL_HOST_ASSEMBLY=str(repo / 'src/Pcl.Host/bin/Debug/net10.0/Pcl.Host.dll'),
+    env.update(PCL_HOST_ASSEMBLY=str(repo / 'src/Pcl.Host/bin/Release/net10.0/Pcl.Host.dll'),
                PCL_DOTNET=str(repo / '.tooling/dotnet/dotnet'))
-    app_command = [env['PCL_DOTNET'], str(repo / 'src/Pcl.Desktop/bin/Debug/net10.0/PCL-MacPort.dll')]
+    app_command = [env['PCL_DOTNET'], str(repo / 'artifacts/desktop-acceptance/bin/Release/net10.0/PCL-MacPort.dll')]
 inner = report.with_suffix('.inner.json')
 checks = []
 result = {'status': 'running', 'mode': args.mode, 'checks': checks}

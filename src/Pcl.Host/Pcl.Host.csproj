@@ -3,7 +3,7 @@
   <ItemGroup><ProjectReference Include="../Pcl.Core/Pcl.Core.csproj" /></ItemGroup>
   <ItemGroup>
     <None Include="../../artifacts/native/libpclwindow.dylib" Link="libpclwindow.dylib" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Condition="Exists('../../artifacts/native/libpclwindow.dylib')" />
-    <None Include="../../artifacts/native/lwjgl-unsafe-agent-2.0.jar" Link="lwjgl-unsafe-agent-2.0.jar" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Condition="Exists('../../artifacts/native/lwjgl-unsafe-agent-2.0.jar')" />
+    <None Include="../../vendor/PCLCS/Launch/LwjglUnsafeAgent.jar" Link="lwjgl-unsafe-agent-2.0.jar" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup><ProjectReference Include="../Pcl.Contract/Pcl.Contract.csproj" /></ItemGroup>
   <ItemGroup><ProjectReference Include="../Pcl.Application/Pcl.Application.csproj" /></ItemGroup>

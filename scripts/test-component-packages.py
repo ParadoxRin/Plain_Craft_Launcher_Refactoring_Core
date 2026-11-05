@@ -35,6 +35,7 @@ class Packages(unittest.TestCase):
 
     def test_contents_and_integrity(self):
         manifest = self.run_package()
+        self.assertEqual(set(manifest['packages']), {'client', 'host'})
         self.assertEqual(manifest, json.loads((self.root / 'packages/release-manifest.json').read_text()))
         for name, part in manifest['packages'].items():
             path = self.root / 'packages' / part['file']
@@ -45,8 +46,6 @@ class Packages(unittest.TestCase):
                 self.assertIn('Legal/NOTICE.txt', contents)
                 if name == 'client':
                     self.assertFalse(any(x.startswith('host/') or x == 'Pcl.Host.dll' for x in contents))
-                if name == 'full':
-                    self.assertIn('host/Pcl.Host.dll', contents)
                 if name == 'host':
                     self.assertTrue((zipped.getinfo('Pcl.Host').external_attr >> 16) & 0o100)
         self.run_package('second')
@@ -85,6 +84,7 @@ class Packages(unittest.TestCase):
             self.run_package()
         self.probe['build']['sequence'] = 42100
         manifest = self.run_package()
+        self.assertEqual(set(manifest['packages']), {'client', 'host'})
         self.assertEqual(manifest['core']['commit'], 'a' * 40)
         self.assertEqual(manifest['packages']['host']['build']['sequence'], 42100)
 

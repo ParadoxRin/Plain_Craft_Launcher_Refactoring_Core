@@ -13,7 +13,7 @@ def alive(pid):
 pid=None
 try:
     with (output/'packaged-detached.log').open('w') as log:
-        launcher=subprocess.Popen([str(app/'Contents/MacOS/PCL-MacPort'),'--data-root',str(data),'--remote-desktop-smoke','--remote-detached','--remote-report',str(report)],stdout=log,stderr=subprocess.STDOUT,env=env)
+        launcher=subprocess.Popen([str(app if app.is_file() else app/'Contents/MacOS/PCL-MacPort'),'--data-root',str(data),'--remote-desktop-smoke','--remote-detached','--remote-report',str(report)],stdout=log,stderr=subprocess.STDOUT,env=env)
         launcher.wait(timeout=60)
     result=json.loads(report.read_text())
     assert launcher.returncode==0 and result['status']=='started'

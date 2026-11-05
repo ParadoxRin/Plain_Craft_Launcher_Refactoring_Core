@@ -483,7 +483,7 @@ Domain 不引用 Ports/Contract/Application/Host；Application 不引用 Core/Ad
 ## 16. 来源与维护
 
 - 讨论基线：`<developer-home>/Documents/deepseek-harness/default-workspace/notes/pcl-mac/five-layer-architecture.md`，落盘 v2。
-- 本规范所在工程：`output/pcl-mac-port`。规范最初整理仅包含源码阅读与文档修改；随后按用户授权实施阶段一，阶段一记录仅是历史；当前以 0.41.0 发布和收尾报告为准。
+- 本规范所在工程：`output/pcl-mac-port`。规范最初整理仅包含源码阅读与文档修改；随后按用户授权实施阶段一，阶段一记录仅是历史；当前发布状态以根目录 README 与 release.json 为准，历史阶段记录不作为当前验收依据。
 - 上游参照：[Microsoft — Common web application architectures](https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/common-web-application-architectures)、[JSON-RPC 2.0 specification](https://www.jsonrpc.org/specification)。外部参考帮助解释原则，不替代本项目明确选择的自定义协议与迁移规则。
 
 修改本规范时，优先更新具体职责、契约语义、迁移范围和完成条件。不要仅增加口号、接口数量或未经执行的成功标记。

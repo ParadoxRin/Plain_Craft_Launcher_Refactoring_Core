@@ -6,6 +6,7 @@ sdk="${DOTNET:-$project_root/.tooling/dotnet/dotnet}"
 python3 "$project_root/scripts/verify-core-baseline.py"
 rid="${1:-osx-arm64}"
 case "$rid" in osx-arm64|osx-x64|linux-x64|linux-arm64|win-x64|win-arm64) ;; *) echo 'Unsupported RID' >&2; exit 2;; esac
+if [ "$rid" = osx-arm64 ]; then bash "$project_root/scripts/build-native.sh"; fi
 version="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["version"])' "$project_root/release.json")"
 python3 - "$project_root" "$version" <<'PY'
 import pathlib, sys, xml.etree.ElementTree as ET
@@ -28,7 +29,7 @@ export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export AVALONIA_TELEMETRY_OPTOUT=1
 publish() {
     "$sdk" publish "$1" -c Release -r "$rid" --self-contained true -m:1 -nr:false \
-        -p:NuGetAudit=false -p:UsedAvaloniaProducts= -p:PublishTrimmed=false \
+        -p:NuGetAudit=false -p:EnableDesktopAcceptance=false -p:UsedAvaloniaProducts= -p:PublishTrimmed=false \
         -p:UseAppHost=true -p:UseSharedCompilation=false -p:BundleHost=false \
         -p:PathMap="$project_root=/src/Plain-Craft-Launcher-Refactoring" \
         -p:DebugType=None -p:DebugSymbols=false \

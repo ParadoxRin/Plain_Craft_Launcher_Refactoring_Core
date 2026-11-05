@@ -94,11 +94,6 @@ def package(client, host, probe, release, output, base_url=None):
         prefix, parts = f'pcl-{version}-{rid}', {}
         for name, directory in (('client', client), ('host', host)):
             parts[name] = archive(directory, stage / f'{prefix}-{name}.zip')
-        full = stage / 'full'
-        shutil.copytree(client, full)
-        shutil.copytree(host, full / 'host')
-        parts['full'] = archive(full, stage / f'{prefix}-full.zip')
-        shutil.rmtree(full)
         if base_url:
             for item in parts.values():
                 item['url'] = base_url.rstrip('/') + '/' + item['file']
@@ -107,7 +102,6 @@ def package(client, host, probe, release, output, base_url=None):
                                                   'requiredCapabilities': required_capabilities})
         parts['host'].update(build=build, protocol=probe['protocolVersion'],
                              capabilities=probe['capabilities'], entryPoint=entrypoint)
-        parts['full'].update(clientVersion=version, hostBuild=build)
         manifest = {'format': 1, 'version': version, 'channel': release['channel'], 'runtime': rid,
                     'packages': parts, 'trust': 'inventory-only; use a signed Host feed for automatic updates'}
         if 'coreCommit' in release:

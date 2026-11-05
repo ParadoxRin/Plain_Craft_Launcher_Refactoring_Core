@@ -5,6 +5,12 @@
     <AssemblyName>PCL-MacPort</AssemblyName>
     <Version>0.43.0</Version>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(EnableDesktopAcceptance)' == 'true'">
+    <DefineConstants>$(DefineConstants);PCL_DESKTOP_ACCEPTANCE</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(EnableDesktopAcceptance)' != 'true'">
+    <Compile Remove="TestSupport/**/*.cs" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="../../docs/windows-layout-baseline.json" LogicalName="windows-layout.json" />
     <EmbeddedResource Include="../../docs/data/PCL2完整功能矩阵.json" LogicalName="feature-matrix.json" />
@@ -17,7 +23,6 @@
     <None Include="../../artifacts/native/libpclwindow.dylib" Link="libpclwindow.dylib" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Condition="Exists('../../artifacts/native/libpclwindow.dylib')" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="../../artifacts/native/lwjgl-unsafe-agent-2.0.jar" Link="lwjgl-unsafe-agent-2.0.jar" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Condition="Exists('../../artifacts/native/lwjgl-unsafe-agent-2.0.jar')" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../Pcl.Contract/Pcl.Contract.csproj" Condition="'$(UsePclSdkPackages)' != 'true'" />

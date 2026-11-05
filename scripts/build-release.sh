@@ -20,6 +20,7 @@ sequence=ET.parse(root/'src/Pcl.Host/Pcl.Host.csproj').findtext('.//HostUpdateSe
 if int(sequence) != json.loads((root/'release.json').read_text())['hostSequence']:
     raise SystemExit('Host sequence does not match release.json')
 PY
+bash "$project_root/scripts/build-native.sh"
 artifact_dir="${PCL_RELEASE_OUTPUT:-$project_root/artifacts}"
 publish="$artifact_dir/publish-$version-osx-arm64"
 app="$artifact_dir/Plain Craft Launcher Refactoring $version.app"
@@ -29,7 +30,7 @@ if [ -e "$publish" ] || [ -e "$app" ]; then
 fi
 mkdir -p "$artifact_dir"
 "$sdk" publish "$project_root/src/Pcl.Desktop/Pcl.Desktop.csproj" -c Release -r osx-arm64 --self-contained true -m:1 -nr:false \
-  -p:NuGetAudit=false -p:UsedAvaloniaProducts= -p:PublishTrimmed=false -p:UseAppHost=true -p:UseSharedCompilation=false \
+  -p:NuGetAudit=false -p:EnableDesktopAcceptance=false -p:UsedAvaloniaProducts= -p:PublishTrimmed=false -p:UseAppHost=true -p:UseSharedCompilation=false \
   -p:PathMap="$project_root=/src/Plain-Craft-Launcher-Refactoring" -p:DebugType=None -p:DebugSymbols=false \
   -p:MicrosoftApplicationConfig="$project_root/src/Pcl.Core/Authentication/microsoft-application.json" -o "$publish"
 # Composition belongs to the installer pipeline, never to the Desktop project.

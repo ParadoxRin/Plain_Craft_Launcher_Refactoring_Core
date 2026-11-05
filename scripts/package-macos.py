@@ -33,17 +33,13 @@ for kind,size in [(b'ic08',256),(b'ic09',512),(b'ic10',1024)]:
 body=b''.join(parts)
 (app/'Contents/Resources/AppIcon.icns').write_bytes(b'icns'+struct.pack('>I',len(body)+8)+body)
 
-licenses=app/'Contents/Resources/Legal/Dependencies'
-for package in (root/'.cache/nuget').glob('*/*'):
-    if not package.is_dir():continue
-    for file in package.iterdir():
-        if file.is_file() and ('license' in file.name.lower() or 'notice' in file.name.lower()) and file.suffix.lower() in ('.txt','.md',''):
-            dest=licenses/package.parent.name/package.name;dest.mkdir(parents=True,exist_ok=True);shutil.copy2(file,dest/file.name)
-runtime_legal = root/'.tooling/dotnet/shared/Microsoft.NETCore.App'
-for version in runtime_legal.glob('*'):
-    for name in ('LICENSE.txt','THIRD-PARTY-NOTICES.TXT'):
-        f=version/name
-        if f.exists():shutil.copy2(f,app/'Contents/Resources/Legal'/('dotnet-'+name))
+# Use the same exact-dependency collector as component ZIPs, including updater and Host.
+import importlib.util
+spec = importlib.util.spec_from_file_location('component_legal', root/'scripts/prepare-component-legal.py')
+legal_module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(legal_module)
+legal_module.collect_dependencies(root, list((app/'Contents/MacOS').rglob('*.deps.json')),
+                                  app/'Contents/Resources/Legal')
 
 main = app/'Contents/MacOS/PCL-MacPort'
 for file in sorted((app/'Contents/MacOS').rglob('*')):
