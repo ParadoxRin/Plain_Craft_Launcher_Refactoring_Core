@@ -157,6 +157,10 @@ public partial class MainWindow : Window
             )
         );
         ResourcePanel.Content = resources;
+        ResourcePanel.PropertyChanged += (_, e) =>
+        {
+            if (e.Property == IsVisibleProperty && !ResourcePanel.IsVisible) resources.CancelIconPage();
+        };
         MicrosoftLoginInfo.Text = service.DesktopState.MicrosoftConfigured
             ? "在微软网页安全登录"
             : "微软登录准备中";
@@ -363,6 +367,7 @@ public partial class MainWindow : Window
         operation?.Cancel();
         loginCancellation?.Cancel();
         await Task.WhenAll(
+            resources.StopIconsAsync(),
             PendingLoginTask,
             PendingUiAction,
             navigationLifetime.StopAsync(true),

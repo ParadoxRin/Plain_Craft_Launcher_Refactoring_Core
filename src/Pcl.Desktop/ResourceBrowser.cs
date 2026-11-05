@@ -530,6 +530,7 @@ public sealed partial class ResourceBrowser : UserControl, IDisposable
         );
         mutating.AddRange(new Control[] { install, support, importPackButton, optionalFiles, manageBar });
         InitializeClassicResources();
+        DetachedFromVisualTree += (_, _) => CancelIconPage();
     }
 
     private async Task TextDialog(string heading, string text)
@@ -578,6 +579,7 @@ public sealed partial class ResourceBrowser : UserControl, IDisposable
 
     public async Task ShowAsync(ResourceKind selectedKind, bool installed = false)
     {
+        CancelIconPage();
         var revision = ++browseRevision;
         ++searchRevision;
         ++selectionRevision;
@@ -703,6 +705,7 @@ public sealed partial class ResourceBrowser : UserControl, IDisposable
                     ct
                 );
                 if (revision != searchRevision) return;
+                CancelIconPage();
                 projects.ItemsSource = results.Projects.Select(CreateClassicProjectRow)
                     .ToArray();
                 total = results.Total;
