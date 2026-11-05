@@ -6,7 +6,8 @@ using Pcl.Core.Contracts.Operations;
 
 if (args.FirstOrDefault() == "--data-root")
 {
-    await FixtureAsync(args[1]);
+    if (Path.GetFileName(args[1]) == "pages") await PageFixture.RunAsync(args[1]);
+    else await FixtureAsync(args[1]);
     return;
 }
 if (args.Length != 1) throw new ArgumentException("<fresh output directory>");
@@ -102,6 +103,23 @@ foreach (var scenarioName in new[] { "success", "callback" })
         await Throws<InvalidOperationException>(() => session.LoginAsync(false, _ => throw new InvalidOperationException("fixture presentation failure"), default), "session-presentation-failure-observed");
     var state = JsonDocument.Parse(await File.ReadAllTextAsync(Path.Combine(scenario, "fixture-result.json"))).RootElement;
     Check(state.GetProperty("snapshotAfterTerminal").GetBoolean(), "refresh-follows-host-terminal-" + scenarioName);
+    await session.ShutdownAsync();
+}
+{
+    var scenario = Path.Combine(root, "pages");Directory.CreateDirectory(scenario);
+    await using var session = new LauncherSession(new HostClient(Environment.ProcessPath!, Assembly.GetExecutingAssembly().Location, scenario));
+    await session.Client.HelloAsync();
+    using var cancelWrite = new CancellationTokenSource();
+    var write = session.Workspaces.ExecuteAsync("workspace.instances.backup", "fixture", "{}", ct: cancelWrite.Token);
+    while (!File.Exists(Path.Combine(scenario, "pages-fixture.json"))) await Task.Delay(10);
+    var read = await session.Workspaces.ExecuteAsync("workspace.settings.read", null, "{}").WaitAsync(TimeSpan.FromSeconds(5));
+    Check(read.Value.GetProperty("ok").GetBoolean() && !write.IsCompleted, "read-page-completes-while-write-is-running");
+    cancelWrite.Cancel();
+    Check(!write.IsCompleted, "write-cancel-does-not-complete-before-host-terminal");
+    await Throws<OperationCanceledException>(() => write.WaitAsync(TimeSpan.FromSeconds(5)), "write-terminal-cancellation-observed");
+    var state = JsonDocument.Parse(await File.ReadAllTextAsync(Path.Combine(scenario, "pages-fixture.json"))).RootElement;
+    Check(state.GetProperty("beginCount").GetInt32() == 2 && state.GetProperty("uniqueKeys").GetInt32() == 2, "concurrent-pages-have-distinct-admissions");
+    Check(state.GetProperty("refreshes").GetInt32() == 2 && state.GetProperty("refreshAfterCancel").GetBoolean(), "each-page-refreshes-after-its-terminal");
     await session.ShutdownAsync();
 }
 File.WriteAllText(Path.Combine(root, "result.json"), JsonSerializer.Serialize(new { status = "passed", checks }, new JsonSerializerOptions { WriteIndented = true }));

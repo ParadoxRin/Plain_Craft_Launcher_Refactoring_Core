@@ -172,7 +172,7 @@ public sealed partial class LauncherSession : IAsyncDisposable, Pcl.Core.Contrac
         return Task.CompletedTask;
     }
 
-    // UI 背景查询与安装/启动/登录共用受理门，避免尚未结束的页面读操作触发 HOST_WRITER_ACTIVE。
+    // Admission is serialized briefly; independent operations then observe Host resource decisions concurrently.
     // 取消只中断等待进入；请求发出后仍完整等待受理结果，不把未知提交当成未执行。
     private async Task<T> AdmitCommandAsync<T>(Func<Task<T>> submit, CancellationToken wait = default)
     {
@@ -305,6 +305,9 @@ public sealed partial class LauncherSession : IAsyncDisposable, Pcl.Core.Contrac
         // 取消仅作用于客户端重连；游戏的托管/独立运行仍由 Host 原关闭策略处理。
         await connectionStop.CancelAsync();
         await Task.WhenAll(connectionMonitor, updateMonitor);
+        // Drain in-flight admissions before taking the owned operation snapshot.
+        await pageGate.WaitAsync();
+        pageGate.Release();
         foreach (var id in activePages.Keys.ToArray())
         {
             await new HostPageOperations(Client).CancelAsync(id);
