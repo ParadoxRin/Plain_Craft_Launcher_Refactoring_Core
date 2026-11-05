@@ -23,9 +23,10 @@ File.WriteAllText(policyPath, JsonSerializer.Serialize(policy));
 var contentRoot = Path.Combine(root, "content");
 Environment.SetEnvironmentVariable("PCL_CONTENT_ROOT", contentRoot);
 Environment.SetEnvironmentVariable("PCL_CONTENT_POLICY", policyPath);
+var fixtureHostVersion = Version.Parse(HostBuildInfo.Build.Version);
 byte[] Package(long sequence, RSA? signer = null)
 {
-    var document = new ContentDocument(1, "wiki-project-index", "preview", sequence, "0.42.1", "0.42.99", "isolated integration fixture",
+    var document = new ContentDocument(1, "wiki-project-index", "preview", sequence, fixtureHostVersion.ToString(3), fixtureHostVersion.ToString(3), "isolated integration fixture",
         [new(10001, "自动更新验收", "fixture-mod", null, 1)]);
     var bytes = JsonSerializer.SerializeToUtf8Bytes(document);
     return JsonSerializer.SerializeToUtf8Bytes(new ContentEnvelope(Convert.ToBase64String(bytes),
@@ -58,18 +59,18 @@ using (var updates = new ContentUpdates(() => new Fixture { Bytes = Package(1) }
 using var wrong = RSA.Create(2048);
 using (var updates = new ContentUpdates(() => new Fixture { Bytes = Package(2, wrong) }))
 { updates.Begin(); Check(await Finish(updates) == "failed", "wrong-signature-preserves-installed-data"); }
-Check(ContentPack.Load(contentRoot, policy, new Version(0,42,1)).Sequence == 1, "failed-fetch-keeps-previous-selection");
+Check(ContentPack.Load(contentRoot, policy, fixtureHostVersion).Sequence == 1, "failed-fetch-keeps-previous-selection");
 var cancelled = new Fixture { Bytes = Package(2), Block = true };
 var cancelling = new ContentUpdates(() => cancelled); cancelling.Begin();
 await cancelled.Entered.Task.WaitAsync(TimeSpan.FromSeconds(5));
 cancelling.Dispose(); Check(true, "host-shutdown-cancels-background-download");
-ContentPack.Install(contentRoot, Package(2), policy, new Version(0,42,1));
-ContentPack.Install(contentRoot, Package(3), policy, new Version(0,42,1));
+ContentPack.Install(contentRoot, Package(2), policy, fixtureHostVersion);
+ContentPack.Install(contentRoot, Package(3), policy, fixtureHostVersion);
 File.WriteAllText(Path.Combine(contentRoot, "unrelated.json"), "keep");
 Check(ContentPack.Cleanup(contentRoot) == 1, "content-cleanup-removes-only-obsolete-package");
-ContentPack.Rollback(contentRoot, policy, new Version(0,42,1));
-Check(ContentPack.Load(contentRoot, policy, new Version(0,42,1)).Sequence == 2 && File.Exists(Path.Combine(contentRoot, "unrelated.json")), "content-cleanup-preserves-rollback-and-unrelated-files");
-try { ContentPack.Install(contentRoot, Package(3), policy, new Version(0,42,1)); throw new Exception("replay accepted"); }
+ContentPack.Rollback(contentRoot, policy, fixtureHostVersion);
+Check(ContentPack.Load(contentRoot, policy, fixtureHostVersion).Sequence == 2 && File.Exists(Path.Combine(contentRoot, "unrelated.json")), "content-cleanup-preserves-rollback-and-unrelated-files");
+try { ContentPack.Install(contentRoot, Package(3), policy, fixtureHostVersion); throw new Exception("replay accepted"); }
 catch (InvalidDataException) { Check(true, "cleanup-preserves-anti-replay-state"); }
 if (args.Length > 1)
 {
