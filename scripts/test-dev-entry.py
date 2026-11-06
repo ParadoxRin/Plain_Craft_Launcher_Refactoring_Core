@@ -53,6 +53,16 @@ class EntryTests(unittest.TestCase):
                 dev.main()
             self.assertEqual(run.call_count, 1)
 
+    def test_sources_does_not_start_host_probe_after_fixture_failure(self):
+        with patch.object(sys, 'argv', ['dev.py', 'test', 'sources']), \
+             patch.object(dev, 'sdk', return_value=('dotnet', '10.0.402')), \
+             patch.object(dev, 'build'), \
+             patch.object(dev, 'fresh', return_value=Path('/isolated')), \
+             patch.object(dev, 'run', side_effect=subprocess.CalledProcessError(8, ['fixture'])) as run:
+            with self.assertRaises(subprocess.CalledProcessError):
+                dev.main()
+            self.assertEqual(run.call_count, 1)
+
     def test_host_diagnostics_do_not_pollute_protocol_stdout(self):
         stdout = io.StringIO()
         with patch.object(sys, 'argv', ['dev.py', 'host']), \

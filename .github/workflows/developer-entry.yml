@@ -2,6 +2,7 @@ name: Developer entry
 on:
   pull_request:
     paths:
+      - 'tests/Pcl.CurseForge.Tests/**'
       - 'dev.py'
       - 'scripts/**'
       - 'README.md'
@@ -10,10 +11,13 @@ on:
   push:
     branches: [main]
     paths:
+      - 'tests/Pcl.CurseForge.Tests/**'
       - 'dev.py'
       - 'scripts/**'
       - '.github/workflows/developer-entry.yml'
   workflow_dispatch:
+env:
+  PYTHONUTF8: '1'
 permissions:
   contents: read
 jobs:
@@ -39,3 +43,5 @@ jobs:
         run: python3 dev.py test core
       - name: Execute real Host contract through the entry
         run: python3 dev.py test contract
+      - name: Run the documented feature extension example
+        run: python3 dev.py test sources

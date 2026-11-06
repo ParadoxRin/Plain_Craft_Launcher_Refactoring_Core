@@ -100,9 +100,11 @@ python3 dev.py example
 
 最小客户端会构建并启动独立 Host，自动创建新的隔离数据目录。输入 `accounts` 查看公开账户列表，输入 `exit` 正常退出。首次构建需还原 NuGet 包；setup 的自动 SDK 安装仅支持 Apple Silicon，其他平台见快速开始。
 
-统一入口支持 `build host/core/client/sdk/example`、`test quick/core/contract`。测试项目为控制台程序，入口会执行实际断言；`quick` 不包含 .NET 或游戏测试。完整命令、环境限制及按改动选测试的方法见 [测试指南](docs/测试指南.md)。
+统一入口支持 `build host/core/client/sdk/example`、`test quick/core/contract/sources`。测试项目为控制台程序，入口会执行实际断言；`quick` 不包含 .NET 或游戏测试。完整命令、环境限制及按改动选测试的方法见 [测试指南](docs/测试指南.md)。
 
 独立维护解决方案、SDK 导出、Desktop 接线和底层命令继续保留在 [开发指南](docs/开发指南.md)。所有现行文档按角色和用途列在 [文档导航](docs/README.md)。
+
+功能开发从 [功能导航](docs/功能实现导览.md)、[完整扩展示例](docs/扩展示例-搜索来源状态.md) 和 [公共接口边界](docs/公共接口与内部实现.md) 开始。
 
 ## 贡献、问题反馈与许可
 

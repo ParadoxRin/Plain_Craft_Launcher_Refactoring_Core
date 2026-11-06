@@ -15,7 +15,7 @@ HOST = 'src/Pcl.Host/Pcl.Host.csproj'
 EXAMPLE = 'examples/Pcl.MinimalClient/Pcl.MinimalClient.csproj'
 TARGETS = {'host': HOST, 'example': EXAMPLE, 'core': 'PCLCS.Core.slnx',
            'client': 'PCLCS.Clients.slnx', 'sdk': 'PCLCS.ClientSdk.slnx'}
-QUICK = ('test-module-boundaries.py', 'test-component-packages.py', 'test-core-baseline.py')
+QUICK = ('test-module-boundaries.py', 'test-component-packages.py', 'test-core-baseline.py', 'test-developer-docs.py')
 
 
 def environment():
@@ -107,7 +107,7 @@ def main():
     commands.add_parser('example', help='构建并运行最小交互客户端，由 SDK 管理隔离 Host')
     commands.add_parser('host', help='构建并运行隔离 stdio Host；普通开发请用 example')
     p = commands.add_parser('test', help='执行实际断言，失败返回非零')
-    p.add_argument('suite', choices=('quick', 'core', 'contract'), nargs='?', default='quick')
+    p.add_argument('suite', choices=('quick', 'core', 'contract', 'sources'), nargs='?', default='quick')
     args = parser.parse_args()
     if args.command == 'doctor':
         doctor()
@@ -144,6 +144,14 @@ def main():
         else:
             print('stdin/stdout 为 NDJSON 协议；Ctrl+D / EOF 结束。协议见 docs/开发指南.md。', file=sys.stderr)
             run([dotnet, dll(HOST), '--data-root', session / 'data'])
+    elif args.suite == 'sources':
+        project = 'tests/Pcl.CurseForge.Tests/Pcl.CurseForge.Tests.csproj'
+        build(dotnet, HOST)
+        build(dotnet, project)
+        session = fresh('sources')
+        run([dotnet, dll(project), session / 'fixtures'])
+        run([dotnet, dll(project), 'host-probe', dll(HOST), session / 'host-data'])
+        print('PASS: sources（来源错误夹具 + 真实 Host 状态；不验证真实 CurseForge 授权）')
     elif args.suite == 'core':
         project = 'tests/Pcl.Tests/Pcl.Tests.csproj'
         build(dotnet, project)
