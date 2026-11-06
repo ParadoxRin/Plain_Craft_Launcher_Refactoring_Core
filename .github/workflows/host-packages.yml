@@ -7,6 +7,7 @@ on:
       - 'vendor/**'
       - 'scripts/build-host-package.sh'
       - 'scripts/package-host.py'
+      - 'scripts/test-host-package.py'
       - 'scripts/*component*'
       - 'scripts/verify-core-baseline.py'
       - 'release.json'
@@ -21,9 +22,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - {os: macos-15, rid: osx-arm64}
-          - {os: ubuntu-latest, rid: linux-x64}
-          - {os: windows-latest, rid: win-x64}
+          - {os: macos-15, rid: osx-arm64, deployment: self-contained}
+          - {os: macos-15, rid: osx-arm64, deployment: framework-dependent}
+          - {os: ubuntu-latest, rid: linux-x64, deployment: self-contained}
+          - {os: ubuntu-latest, rid: linux-x64, deployment: framework-dependent}
+          - {os: windows-latest, rid: win-x64, deployment: self-contained}
+          - {os: windows-latest, rid: win-x64, deployment: framework-dependent}
     defaults:
       run:
         shell: bash
@@ -37,23 +41,24 @@ jobs:
           global-json-file: global.json
       - name: Check latest core baseline
         run: python3 scripts/verify-core-baseline.py --upstream-ref origin/main
-      - name: Rebuild macOS native bridge
-        if: runner.os == 'macOS'
-        run: bash scripts/build-native.sh
+      - name: Test deployment boundaries
+        run: python3 scripts/test-host-package.py
       - name: Build only Host and its core dependencies
-        run: DOTNET="$(command -v dotnet)" bash scripts/build-host-package.sh '${{ matrix.rid }}'
+        run: |
+          version=$(python3 -c 'import json; print(json.load(open("release.json"))["version"])')
+          PCL_HOST_PACKAGE_OUTPUT="$PWD/artifacts/host-package-$version-${{ matrix.rid }}-${{ matrix.deployment }}" DOTNET="$(command -v dotnet)" bash scripts/build-host-package.sh '${{ matrix.rid }}' '${{ matrix.deployment }}'
       - name: Verify shipped Core and private-pipe contract
         run: |
           version=$(python3 -c 'import json; print(json.load(open("release.json"))["version"])')
           dotnet build tests/Pcl.LogProtection.Tests/Pcl.LogProtection.Tests.csproj -c Release -m:1 -nr:false -p:UseSharedCompilation=false
-          python3 scripts/verify-component-delivery.py "artifacts/host-package-$version-${{ matrix.rid }}/packages" tests/Pcl.LogProtection.Tests/bin/Release/net10.0/Pcl.LogProtection.Tests.dll "$(command -v dotnet)" artifacts/host-delivery
+          python3 scripts/verify-component-delivery.py "artifacts/host-package-$version-${{ matrix.rid }}-${{ matrix.deployment }}/packages" tests/Pcl.LogProtection.Tests/bin/Release/net10.0/Pcl.LogProtection.Tests.dll "$(command -v dotnet)" artifacts/host-delivery
           dotnet build tests/Pcl.MinimalClient.Tests/Pcl.MinimalClient.Tests.csproj -c Release -m:1 -nr:false -p:UseSharedCompilation=false
           entry="$PWD/artifacts/host-delivery/host/Pcl.Host"
           if [ '${{ runner.os }}' = Windows ]; then entry="$entry.exe"; fi
           dotnet tests/Pcl.MinimalClient.Tests/bin/Release/net10.0/Pcl.MinimalClient.Tests.dll "$entry" - "$PWD/artifacts/host-contract-root" "$PWD/artifacts/host-contract.json" contract
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: host-${{ matrix.rid }}
+          name: host-${{ matrix.rid }}-${{ matrix.deployment }}
           path: |
             artifacts/host-package-*/packages/*
             artifacts/host-delivery/delivery-result.json
