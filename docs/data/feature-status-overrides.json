@@ -2859,11 +2859,11 @@
   },
   "RES-011": {
     "status": "已验收",
-    "macImplementation": "src/Pcl.Core/MacShaderCompatibility.cs; docs/支持范围.md",
+    "macImplementation": "src/Pcl.Core/MacShaderCompatibility.cs; https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core/blob/85f94bf010d6f642f7d97eb221cccaa3e61c1dbf/docs/Mac%E4%BE%9D%E8%B5%96%E4%B8%8E%E5%85%89%E5%BD%B1%E9%80%82%E9%85%8D.md",
     "ui": "光影页 / 1.21.1 光影",
     "implementationScope": "明确 Apple OpenGL/Iris 支持限制；已知 required GPU 功能拦截",
     "testEvidence": [
-      "docs/支持范围.md：0.3 用户已进入世界并确认画面正常；本轮未重复人工验收",
+      "https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core/blob/85f94bf010d6f642f7d97eb221cccaa3e61c1dbf/docs/Mac%E4%BE%9D%E8%B5%96%E4%B8%8E%E5%85%89%E5%BD%B1%E9%80%82%E9%85%8D.md：0.3 用户已进入世界并确认画面正常；本轮未重复人工验收",
       "artifacts/verification-0.35/final-transactions/results.json",
       "artifacts/verification-0.35/final-shaders.json",
       "artifacts/verification-0.36/final-environment-tests-v3/results.json",
@@ -2875,7 +2875,7 @@
     "evidenceLevels": {
       "source": true,
       "fixture": "未专门覆盖",
-      "realNetworkAndFiles": "docs/支持范围.md：0.3 用户已进入世界并确认画面正常；本轮未重复人工验收",
+      "realNetworkAndFiles": "https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core/blob/85f94bf010d6f642f7d97eb221cccaa3e61c1dbf/docs/Mac%E4%BE%9D%E8%B5%96%E4%B8%8E%E5%85%89%E5%BD%B1%E9%80%82%E9%85%8D.md：0.3 用户已进入世界并确认画面正常；本轮未重复人工验收",
       "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
       "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过",
       "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
@@ -3478,13 +3478,13 @@
     "ui": "整合包 → 搜索/版本 → 安装",
     "implementationScope": "Modrinth 项目搜索、对应游戏版本和包文件下载",
     "testEvidence": [
-      "docs/支持范围.md：0.4 Adrenaline 真实包下载与图形初始化历史证据",
+      "https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core/blob/85f94bf010d6f642f7d97eb221cccaa3e61c1dbf/docs/Forge-NeoForge%E4%B8%8E%E6%95%B4%E5%90%88%E5%8C%85%E9%80%82%E9%85%8D.md：0.4 Adrenaline 真实包下载与图形初始化历史证据",
       "artifacts/architecture-0.32/release-browser.json#live-default-catalog-search-Mod,live-default-catalog-search-Shader,live-default-catalog-search-ResourcePack,live-default-catalog-search-Modpack,live-catalog-pagination,live-catalog-version-and-loader-filter"
     ],
     "evidenceLevels": {
       "source": true,
       "fixture": "未专门覆盖",
-      "realNetworkAndFiles": "docs/支持范围.md：0.4 Adrenaline 真实包下载与图形初始化历史证据",
+      "realNetworkAndFiles": "https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core/blob/85f94bf010d6f642f7d97eb221cccaa3e61c1dbf/docs/Forge-NeoForge%E4%B8%8E%E6%95%B4%E5%90%88%E5%8C%85%E9%80%82%E9%85%8D.md：0.4 Adrenaline 真实包下载与图形初始化历史证据",
       "gui": "入口已接入；本模块未独立完成逐按钮真实 GUI 操作验收，最终 GUI 报告另列",
       "inGame": "本模块本轮未进入游戏世界验收；不得从文件安装或渲染初始化推定游玩通过",
       "automatedRegression": "artifacts/evidence-0.8/full-regression-7/test-results.json"
@@ -4967,7 +4967,7 @@
       "artifacts/evidence-0.8-compat/optifabric/service-result.json",
       "artifacts/evidence-0.8-compat/optifabric/probe-result.json",
       "tests/Pcl.Tests/OptiFabricTests.cs",
-      "docs/支持范围.md",
+      "https://github.com/ParadoxRin/Plain_Craft_Launcher_Refactoring_Core/blob/85f94bf010d6f642f7d97eb221cccaa3e61c1dbf/docs/OptiFabric%E5%9B%BA%E5%AE%9A%E7%BB%84%E5%90%88%E4%B8%8E%E6%96%87%E4%BB%B6%E5%8F%A6%E5%AD%98%E4%B8%BA.md",
       "artifacts/evidence-0.8-compat/optifabric/service-result.json",
       "artifacts/architecture-0.32/release-final-main.json#host-validates-existing-reviewed-optifabric-artifact,host-installs-real-optifabric-compatibility-instance",
       "docs/收尾第五批验收结果.json"
