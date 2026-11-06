@@ -6,7 +6,7 @@
   "verifiedPackageTarget": "osx-arm64",
   "hostSequence": 43001,
   "coreVersion": "0.43.1",
-  "coreCommit": "754fe61b07cfc7459349cd6c5480b4f2b0528c68",
+  "coreCommit": "72d2650b82820c8016ddfb09e4d28dbc62b62ac5",
   "contentIntegration": {},
   "contentSequence": 42102,
   "sdkVersion": "0.43.1",
@@ -14,5 +14,5 @@
   "displayVersion": "0.43.1",
   "automaticUpdates": false,
   "coreReleasePolicy": "unified",
-  "runtimeBuildCommit": "754fe61b07cfc7459349cd6c5480b4f2b0528c68"
+  "runtimeBuildCommit": "72d2650b82820c8016ddfb09e4d28dbc62b62ac5"
 }
