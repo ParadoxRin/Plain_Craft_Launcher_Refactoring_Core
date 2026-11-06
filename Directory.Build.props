@@ -5,7 +5,7 @@
     <DefaultItemExcludes>$(DefaultItemExcludes);bin/**;obj/**</DefaultItemExcludes>
   </PropertyGroup>
   <PropertyGroup>
-    <PclSdkVersion Condition="'$(PclSdkVersion)' == ''">0.43.1</PclSdkVersion>
+    <PclSdkVersion Condition="'$(PclSdkVersion)' == ''">0.44.0</PclSdkVersion>
     <Deterministic>true</Deterministic>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
