@@ -69,6 +69,27 @@ class BaselineTests(unittest.TestCase):
         self.check(True)
         self.check(False, '--upstream-ref', 'HEAD')
 
+    def test_module_docs_do_not_repin_runtime_but_other_content_stays_guarded(self):
+        readme = self.file.parent / 'README.md'
+        readme.write_text('developer entry\n')
+        self.check(True)
+        self.git('add', 'src')
+        self.git('-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.invalid', 'commit', '-qm', 'module docs')
+        readme.write_text('updated entry\n')
+        self.check(True, '--upstream-ref', 'HEAD')
+        self.file.write_text('unexpected runtime change\n')
+        self.check(False)
+        self.file.write_text('baseline\n')
+        for relative in ('src/Pcl.Core/Resources/README.md', 'vendor/README.md'):
+            resource = self.root / relative
+            resource.parent.mkdir(parents=True, exist_ok=True)
+            resource.write_text('runtime or vendor content\n')
+            self.check(False)
+            self.git('add', relative)
+            self.check(False)
+            self.git('reset', '-q', '--', relative)
+            resource.unlink()
+
     def unified(self):
         self.file.write_text('reviewed unified core change\n')
         self.release.update(version='0.43.0', coreVersion='0.43.0', coreReleasePolicy='unified')
