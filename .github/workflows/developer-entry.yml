@@ -1,0 +1,41 @@
+name: Developer entry
+on:
+  pull_request:
+    paths:
+      - 'dev.py'
+      - 'scripts/**'
+      - 'README.md'
+      - 'docs/**'
+      - '.github/workflows/developer-entry.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'dev.py'
+      - 'scripts/**'
+      - '.github/workflows/developer-entry.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  quick:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Test entry failure handling and isolation
+        run: python3 scripts/test-dev-entry.py
+      - name: Run SDK-free checks through the entry
+        run: python3 dev.py test quick
+      - uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1
+        with:
+          global-json-file: global.json
+      - name: Check development environment
+        run: python3 dev.py doctor
+      - name: Execute core assertions through the entry
+        run: python3 dev.py test core
+      - name: Execute real Host contract through the entry
+        run: python3 dev.py test contract

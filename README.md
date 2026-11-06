@@ -82,55 +82,27 @@ Mac 安全策略可能阻止未经公证的应用。确认来源与校验和后�
 
 客户端表达用户意图；Host 权威校验并执行。Domain 不依赖 I/O；Core 实现 Ports，Host 负责组装。不要为了 UI 便利绕过协议读取凭据或直接构造核心业务服务。
 
-## 构建与独立开发
+## 开发者从这里开始
+
+| 你的目标 | 第一步 | 后续参考 |
+|---|---|---|
+| 在核心上搭建自己的客户端 | [开发快速开始](docs/开发快速开始.md)，运行 `python3 dev.py example` | [客户端接入](docs/客户端接入指南.md)、[最小客户端](examples/Pcl.MinimalClient/README.md) |
+| 修改或修复核心 | 快速开始后运行 `python3 dev.py test core` | [功能实现导览](docs/功能实现导览.md)、[测试指南](docs/测试指南.md)、[架构规范](docs/architecture/PCL-Mac架构规范.md) |
+| 构建和发布产品 | [发布与维护](docs/发布与维护.md) | [分包构建与签名](docs/分包构建与签名.md)、[五类包连接规范](docs/五类包连接规范.md) |
 
 ```sh
-# 仓库根目录；macOS 原生构建还需要 Xcode Command Line Tools
-python3 scripts/bootstrap-dotnet.py
-export DOTNET="$PWD/.tooling/dotnet/dotnet"
-"$DOTNET" build PCLCS.Core.slnx -c Release
-"$DOTNET" build PCLCS.Clients.slnx -c Release
-
-# 构建 Mac 应用（首次构建需要网络；使用新的输出目录）
-PCL_RELEASE_OUTPUT="$PWD/artifacts/rc-build" bash scripts/build-macos.sh
+# 从仓库根目录执行；Python 3.9+。Windows 可用 python 替代 python3。
+python3 dev.py setup
+python3 dev.py doctor
+python3 dev.py test quick
+python3 dev.py example
 ```
 
-独立维护入口：`PCLCS.Core.slnx`、`PCLCS.ClientSdk.slnx`、`PCLCS.Clients.slnx`、`PCLCS.Tools.slnx`；`PCL-MacPort.sln` 为整仓集成入口。
+最小客户端会构建并启动独立 Host，自动创建新的隔离数据目录。输入 `accounts` 查看公开账户列表，输入 `exit` 正常退出。首次构建需还原 NuGet 包；setup 的自动 SDK 安装仅支持 Apple Silicon，其他平台见快速开始。
 
-```sh
-# 输出路径必须为尚不存在的绝对路径
-bash scripts/build-client-sdk.sh /absolute/fresh-sdk
-python3 scripts/export-core-workspace.py --output /absolute/fresh-core
-python3 scripts/export-client-workspace.py --output /absolute/fresh-client --sdk-feed /absolute/fresh-sdk
-```
+统一入口支持 `build host/core/client/sdk/example`、`test quick/core/contract`。测试项目为控制台程序，入口会执行实际断言；`quick` 不包含 .NET 或游戏测试。完整命令、环境限制及按改动选测试的方法见 [测试指南](docs/测试指南.md)。
 
-SDK 包是本地 NuGet 包，未发布到 NuGet.org。两端必须匹配 Contract/能力/协议/数据 epoch，不能仅按文件名或版本字符串判断兼容。非 .NET 客户端实现同等线协议语义；协议为 NDJSON RPC v1，不是 JSON-RPC 2.0。
-
-独立组件启动示例（先分别解压 client 与 Host）：
-
-```sh
-PCL_HOST_EXECUTABLE=/absolute/host/Pcl.Host \
-  /absolute/client/PCL-MacPort --data-root /absolute/new-data-root
-```
-
-使用 `pwd -P` 确认物理路径；客户端身份和 Host 路径必须一致。默认 Desktop 构建不包含 `TestSupport/` 验收代码；测试构建需显式启用 `EnableDesktopAcceptance`。完整开发说明见 [客户端接入](docs/客户端接入指南.md)、[调用指南](docs/开发指南.md)与 [包间协议](docs/五类包连接规范.md)。
-
-## 测试与发布
-
-```sh
-python3 scripts/test-module-boundaries.py
-python3 scripts/test-component-packages.py
-python3 scripts/test-core-baseline.py
-"$DOTNET" build tests/Pcl.Tests/Pcl.Tests.csproj -c Release
-"$DOTNET" tests/Pcl.Tests/bin/Release/net10.0/Pcl.Tests.dll /absolute/fresh-test-root
-bash scripts/test-independent-clients.sh /absolute/fresh-independent-test
-```
-
-测试项目多为控制台程序，不能把 `dotnet test` 的空成功当作断言已执行。CI 验证核心、真实 Host 协议、隔离凭据、签名更新、回退及模块边界；GUI、真实账户和游戏世界需要相应平台的实际验证。
-
-历史截图、测试结果和交接记录已从当前树移除；保留可复用测试、构建工具、必要编译资源与上游来源。新的测试结果写入忽略的 `artifacts/` 或短期 CI 附件，不重新堆入源码。Git 历史未重写。
-
-发布条件与稳定版门槛见 [发布与维护](docs/发布与维护.md)。未配置生产密钥、真实更新源和信任策略时，保持手动升级，不把示例策略当成生产配置。
+独立维护解决方案、SDK 导出、Desktop 接线和底层命令继续保留在 [开发指南](docs/开发指南.md)。所有现行文档按角色和用途列在 [文档导航](docs/README.md)。
 
 ## 贡献、问题反馈与许可
 

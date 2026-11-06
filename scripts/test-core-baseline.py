@@ -1,4 +1,5 @@
 """Exercise baseline/overlay rejection against an isolated Git repository."""
+import sys
 import hashlib
 import json
 import pathlib
@@ -29,7 +30,7 @@ class BaselineTests(unittest.TestCase):
         return subprocess.check_output(['git', '-C', str(self.root), *args], text=True)
     def save(self): (self.root / 'release.json').write_text(json.dumps(self.release))
     def check(self, expected, *args):
-        result = subprocess.run(['python3', str(self.root / 'scripts/verify-core-baseline.py'), *args], capture_output=True, text=True)
+        result = subprocess.run([sys.executable, str(self.root / 'scripts/verify-core-baseline.py'), *args], capture_output=True, text=True)
         self.assertEqual(result.returncode == 0, expected, result.stdout + result.stderr)
     def overlay(self):
         self.file.write_text('integrated\n')

@@ -1,7 +1,8 @@
 """Positive and fault-injected build-boundary checks without modifying the checkout."""
+import sys
 import pathlib,subprocess,tempfile,shutil,json
 root=pathlib.Path(__file__).resolve().parent.parent
-command=['python3',str(root/'scripts/check-module-boundaries.py')]
+command=[sys.executable,str(root/'scripts/check-module-boundaries.py')]
 subprocess.run(command,check=True,stdout=subprocess.DEVNULL)
 with tempfile.TemporaryDirectory() as temporary:
  stage=pathlib.Path(temporary)
