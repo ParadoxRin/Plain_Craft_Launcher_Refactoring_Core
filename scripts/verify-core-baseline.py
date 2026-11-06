@@ -14,6 +14,10 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 PATHS = ['src/Pcl.Core', 'src/Pcl.Host', 'src/Pcl.Application', 'src/Pcl.Domain',
          'src/Pcl.Ports', 'src/Pcl.Legacy', 'src/Pcl.Contract', 'src/SharedProtocol',
          'src/Pcl.Native', 'vendor']
+# These module landing pages are developer documentation, not runtime inputs.
+# Keep this exact: vendor files, nested Markdown and all other assets stay pinned.
+DEVELOPER_DOCS = {f'src/{name}/README.md' for name in (
+    'Pcl.Core', 'Pcl.Host', 'Pcl.Application', 'Pcl.Domain', 'Pcl.Ports', 'Pcl.Contract')}
 
 
 def git(*args):
@@ -80,14 +84,14 @@ if __name__ == '__main__':
         raise SystemExit('UNSUPPORTED_CORE_OVERLAY')
     def digest(name, content):
         return hashlib.sha256(normalize(name, content)).hexdigest()
-    current = set(git('ls-files', '-z', '--', *PATHS).decode().split('\0')) - {''}
+    current = set(git('ls-files', '-z', '--', *PATHS).decode().split('\0')) - {''} - DEVELOPER_DOCS
     if set(overlays) - current:
         raise SystemExit('UNTRACKED_CONTENT_INTEGRATION')
-    untracked = git('ls-files', '--others', '--exclude-standard', '-z', '--', *PATHS)
+    untracked = set(git('ls-files', '--others', '--exclude-standard', '-z', '--', *PATHS).decode().split('\0')) - {''} - DEVELOPER_DOCS
     if untracked:
         raise SystemExit('UNTRACKED_CORE_CONTENT: commit core work before packaging')
     for reference in references:
-        tracked = set(git('ls-tree', '-r', '--name-only', '-z', reference, '--', *PATHS).decode().split('\0')) - {''}
+        tracked = set(git('ls-tree', '-r', '--name-only', '-z', reference, '--', *PATHS).decode().split('\0')) - {''} - DEVELOPER_DOCS
         changed = []
         for name in sorted(current | tracked):
             path = ROOT / name

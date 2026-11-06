@@ -2,6 +2,7 @@
 import hashlib
 import importlib.util
 import json
+import os
 import pathlib
 import tempfile
 import unittest
@@ -47,7 +48,13 @@ class Packages(unittest.TestCase):
                 if name == 'client':
                     self.assertFalse(any(x.startswith('host/') or x == 'Pcl.Host.dll' for x in contents))
                 if name == 'host':
-                    self.assertTrue((zipped.getinfo('Pcl.Host').external_attr >> 16) & 0o100)
+                    mode = (zipped.getinfo('Pcl.Host').external_attr >> 16) & 0o777
+                    # Windows chmod cannot set Unix executable bits. Verify the
+                    # source mode is preserved there; Unix runners verify 0755.
+                    executable = bool((self.host / 'Pcl.Host').stat().st_mode & 0o100)
+                    self.assertEqual(mode, 0o755 if executable else 0o644)
+                    if os.name != 'nt':
+                        self.assertTrue(executable)
         self.run_package('second')
         self.assertEqual((self.root / 'packages/release-manifest.json').read_bytes(),
                          (self.root / 'second/release-manifest.json').read_bytes())

@@ -4,6 +4,8 @@
 
 这是一个可直接使用的交互式 .NET 命令行客户端。只引用 **Pcl.Client + Pcl.Contract**，不加载 Core、Application、Domain、Ports 或上游业务库。Host 是独立进程，包含业务实现；“客户端不依赖 Core”不代表 Host 也没有 Core。
 
+仓库内首次体验可直接运行 `python3 dev.py example`（从仓库根目录），它构建 Host 和本示例并分配全新隔离数据目录。环境准备见 [快速开始](../../docs/开发快速开始.md)。以下是手动构建和仓库外部署方式。
+
 ## 构建与独立运行
 
 仓库根目录使用 `global.json` 指定的 .NET 10 SDK：
