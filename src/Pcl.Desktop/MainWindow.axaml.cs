@@ -200,6 +200,7 @@ public partial class MainWindow : Window
                 return;
             }
 
+#if PCL_DESKTOP_ACCEPTANCE
             if (Program.Arguments.Contains("--unified-browser-smoke"))
             {
                 await UnifiedBrowserSmokeAsync();
@@ -307,6 +308,7 @@ public partial class MainWindow : Window
                 await RemoteDesktopSmokeAsync();
                 return;
             }
+#endif
         };
         Closing += async (_, e) =>
         {
