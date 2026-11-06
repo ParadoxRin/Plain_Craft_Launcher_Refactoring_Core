@@ -521,9 +521,7 @@ public sealed class PortableModpackService(MinecraftService service)
                 );
             }
 
-            using var curse = string.IsNullOrWhiteSpace(options.CurseForgeApiKey) && (DownloadTasks.For(service.Paths)
-                .Options.CurseForgeApiMirror.Length == 0 || DownloadTasks.For(service.Paths)
-                .Options.ResourceSource == "official")
+            using var curse = !CurseForgeAccess.HasConfiguration(options.CurseForgeApiKey, DownloadTasks.For(service.Paths).Options)
                 ? null
                 : new CurseForgeClient(options.CurseForgeApiKey ?? "", paths: service.Paths);
             var manualHashes = new JArray();
@@ -1056,39 +1054,31 @@ public sealed record CurseFile(string Name, string Folder, long Size, string Sha
 public sealed class CurseForgeClient : IDisposable
 {
     private readonly HttpClient http;
-    private readonly HttpClient mirrorHttp = new(
-        new HttpClientHandler
-        {
-            AllowAutoRedirect = false
-        }
-    );
+    private readonly HttpClient mirrorHttp;
     private readonly AppPaths? paths;
-    private readonly bool hasKey;
-    // [实现] CurseForgeClient 构造 的实现：按 string.IsNullOrWhiteSpace(apiKey) 分支处理；执行 http = handler is null ? new HttpClient(new HttpClientHandler { AllowAutoRedirect = false }) : new HttpClient(handler)；执行 http.BaseAddress = new Uri("https://api.curseforge.com/v1/")。
-    public CurseForgeClient(string apiKey, HttpMessageHandler? handler = null, AppPaths? paths = null)
+    private readonly Func<string?> keyProvider;
+    public CurseForgeClient(string apiKey, HttpMessageHandler? handler = null, AppPaths? paths = null, Func<string?>? keyProvider = null, HttpMessageHandler? mirrorHandler = null)
     {
         this.paths = paths;
-        hasKey = !string.IsNullOrWhiteSpace(apiKey);
+        this.keyProvider = keyProvider ?? (() => apiKey);
+        mirrorHttp = new HttpClient(mirrorHandler ?? new HttpClientHandler { AllowAutoRedirect = false, UseCookies = false });
         http = handler is null
             ? new HttpClient(
                 new HttpClientHandler
                 {
-                    AllowAutoRedirect = false
+                    AllowAutoRedirect = false,
+                    UseCookies = false
                 }
             )
             : new HttpClient(handler);
         http.BaseAddress = new Uri("https://api.curseforge.com/v1/");
-        if (hasKey)
-        {
-            http.DefaultRequestHeaders.Add("x-api-key", apiKey);
-        }
 
         http.Timeout = TimeSpan.FromSeconds(45);
     }
 
-    // [实现] Get 的实现：准备 var response = await http.GetAsync(path, ct)；执行 response.EnsureSuccessStatusCode()；返回 JObject.Parse( await response.Content.ReadAsStringAsync(ct) )["data"] ?? throw new InvalidDataE…。
     internal async Task<JToken> Get(string path, CancellationToken ct)
     {
+        ct.ThrowIfCancellationRequested();
         var options = paths is null
             ? new NetworkOptions()
             : DownloadTasks.For(paths)
@@ -1097,15 +1087,17 @@ public sealed class CurseForgeClient : IDisposable
         var mirror = options.CurseForgeApiMirror.Length == 0
             ? ""
             : options.CurseForgeApiMirror.TrimEnd('/') + "/" + path;
-        Exception? error = null;
+        CurseForgeRequestException? error = null;
         foreach (var url in MetadataSourcePolicy.Sources(official, mirror, options.ResourceSource))
         {
             try
             {
                 var isOfficial = url == official;
-                if (isOfficial && !hasKey)
+                string? key = null;
+                if (isOfficial)
                 {
-                    throw new InvalidOperationException("CurseForge 官方 API 需要自己的密钥；可在来源设置配置授权的兼容镜像。");
+                    key = CurseForgeAccess.Resolve(keyProvider());
+                    if (key.Length == 0) throw new CurseForgeRequestException("CURSEFORGE_KEY_REQUIRED");
                 }
 
                 // 镜像使用没有 API Key、Cookie、授权头的独立客户端，禁止自动跨站重定向。
@@ -1118,17 +1110,36 @@ public sealed class CurseForgeClient : IDisposable
                         ? http
                         : mirrorHttp,
                     url,
-                    timeout.Token
+                    timeout.Token,
+                    request => { if (isOfficial) request.Headers.Add("x-api-key", key); }
                 );
-                return JObject.Parse(text)["data"] ?? throw new InvalidDataException("CurseForge 返回空数据。");
+                var data = JObject.Parse(text)["data"];
+                if (data is not (JArray or JObject)) throw new CurseForgeRequestException("CURSEFORGE_RESPONSE_INVALID");
+                return data;
             }
-            catch (Exception ex)when (!ct.IsCancellationRequested && ex is HttpRequestException or TaskCanceledException or InvalidOperationException or Newtonsoft.Json.JsonException)
+            catch (OperationCanceledException) when (ct.IsCancellationRequested)
             {
-                error = ex;
+                throw new OperationCanceledException(ct);
+            }
+            catch (Exception ex) when (ex is HttpRequestException or IOException or InvalidDataException or OperationCanceledException or Newtonsoft.Json.JsonException or Pcl.Core.Ports.Operations.OperationInstallException)
+            {
+                var failure = ex switch
+                {
+                    CurseForgeRequestException safe => safe,
+                    Pcl.Core.Ports.Operations.OperationInstallException => new CurseForgeRequestException("SECRET_REENTRY_REQUIRED"),
+                    HttpRequestException { StatusCode: System.Net.HttpStatusCode.Unauthorized or System.Net.HttpStatusCode.Forbidden } => new CurseForgeRequestException("CURSEFORGE_KEY_REJECTED"),
+                    HttpRequestException { StatusCode: System.Net.HttpStatusCode.TooManyRequests } => new CurseForgeRequestException("CURSEFORGE_RATE_LIMITED"),
+                    HttpRequestException { StatusCode: null } => new CurseForgeRequestException("CURSEFORGE_NETWORK_ERROR"),
+                    HttpRequestException => new CurseForgeRequestException("CURSEFORGE_UNAVAILABLE"),
+                    OperationCanceledException => new CurseForgeRequestException("CURSEFORGE_TIMEOUT"),
+                    _ => new CurseForgeRequestException("CURSEFORGE_RESPONSE_INVALID")
+                };
+                // A skipped official endpoint must not hide a real mirror failure.
+                if (failure.Code != "CURSEFORGE_KEY_REQUIRED" || error is null) error = failure;
             }
         }
 
-        throw new IOException("配置的 CurseForge 来源均不可用。", error);
+        throw error ?? new CurseForgeRequestException("CURSEFORGE_UNAVAILABLE");
     }
 
     // [实现] FileAsync 的实现：按 project <= 0 || file <= 0 分支处理；准备 var json = await Get($"mods/{project}/files/{file}", ct)；准备 var mod = await Get($"mods/{project}", ct)。
@@ -1138,6 +1149,11 @@ public sealed class CurseForgeClient : IDisposable
             throw new ArgumentException("无效文件标识。");
         var json = await Get($"mods/{project}/files/{file}", ct);
         var mod = await Get($"mods/{project}", ct);
+        return CurseForgeAccess.ParseResponse(() => ParseFile(json, mod, project, file));
+    }
+
+    private static CurseFile ParseFile(JToken json, JToken mod, long project, long file)
+    {
         if ((long? )json["modId"] != project || (long? )json["id"] != file)
             throw new InvalidDataException("文件标识不匹配。");
         var name = (string? )json["fileName"] ?? "";

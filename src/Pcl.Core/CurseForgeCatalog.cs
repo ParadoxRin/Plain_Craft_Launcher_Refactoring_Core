@@ -35,9 +35,9 @@ public sealed record CurseResourceRelease(
 }
 
 /// <summary>Official CurseForge v1. The caller supplies its own key; this client does not persist it.</summary>
-public sealed class CurseForgeCatalog(string apiKey, HttpMessageHandler? handler = null, AppPaths? paths = null) : IDisposable
+public sealed class CurseForgeCatalog(string apiKey, HttpMessageHandler? handler = null, AppPaths? paths = null, Func<string?>? keyProvider = null, HttpMessageHandler? mirrorHandler = null) : IDisposable
 {
-    private readonly CurseForgeClient client = new(apiKey, handler, paths);
+    private readonly CurseForgeClient client = new(apiKey, handler, paths, keyProvider, mirrorHandler);
     // [实现] ClassId 的实现：计算并返回 kind switch { ResourceKind.Mod => 6, ResourceKind.ResourcePack => 12, ResourceKind.Shader => 65…。
     public static int ClassId(ResourceKind kind) => kind switch
     {
@@ -105,7 +105,10 @@ public sealed class CurseForgeCatalog(string apiKey, HttpMessageHandler? handler
     }
 
     // [实现] ParseProject 的实现：准备 var id = (long)json["id"]!；准备 var url = (string? )json["links"]?["websiteUrl"]；按 !Uri.TryCreate(url, UriKind.Absolute, out var uri) || uri.Scheme != "https" || uri.Host is not … 分支处理。
-    private static CurseResourceProject ParseProject(JToken json, ResourceKind kind)
+    private static CurseResourceProject ParseProject(JToken json, ResourceKind kind) =>
+        CurseForgeAccess.ParseResponse(() => ParseProjectCore(json, kind));
+
+    private static CurseResourceProject ParseProjectCore(JToken json, ResourceKind kind)
     {
         if (json is not JObject)
         {
@@ -188,7 +191,10 @@ public sealed class CurseForgeCatalog(string apiKey, HttpMessageHandler? handler
     }
 
     // [实现] ParseRelease 的实现：按 (long? )json["modId"] != project || (long? )json["id"] is not > 0 分支处理；准备 var id = (long)json["id"]!；准备 var name = (string? )json["fileName"] ?? ""。
-    public static CurseResourceRelease ParseRelease(JToken json, long project)
+    public static CurseResourceRelease ParseRelease(JToken json, long project) =>
+        CurseForgeAccess.ParseResponse(() => ParseReleaseCore(json, project));
+
+    private static CurseResourceRelease ParseReleaseCore(JToken json, long project)
     {
         if ((long? )json["modId"] != project || (long? )json["id"] is not > 0)
             throw new InvalidDataException("CurseForge 文件身份不匹配。");

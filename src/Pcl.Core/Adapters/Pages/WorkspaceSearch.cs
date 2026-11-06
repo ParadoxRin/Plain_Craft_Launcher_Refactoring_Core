@@ -115,9 +115,10 @@ public sealed partial class PageExecutionAdapter
                         profile,
                         q,
                         online,
-                        Secret(secretHandle),
+                        null,
                         token,
-                        provider == "mcmod"
+                        provider == "mcmod",
+                        () => Secret(secretHandle)
                     )
                 );
                 state = new(profile.Id, kind, session, DateTimeOffset.UtcNow);
@@ -168,10 +169,13 @@ public sealed partial class PageExecutionAdapter
                     x => x.Source + ": " + (x.Error ?? x.Hits.Count + " 项")
                 )
                     .ToArray(),
-                result.Sources.Any(
-                    x => x.Error is not null
-                )
-            );
+                result.Sources.Any(x => x.Error is not null)
+            )
+            {
+                Availability = result.Sources.Select(x => new Pcl.Core.Contracts.Workspaces.SearchSourceAvailability(
+                    x.Source, x.Error is null, x.ErrorCode ?? (x.Error is null ? "AVAILABLE" : "SOURCE_UNAVAILABLE"),
+                    x.Error ?? "来源可用", x.Retryable || (x.Error is not null && x.ErrorCode is null))).ToArray()
+            };
         }
 
         if (request.Method == "workspace.search.import")
@@ -215,13 +219,7 @@ public sealed partial class PageExecutionAdapter
             }
 
             using var catalog = new ResourceCatalog(paths: source.Paths);
-            var key = Secret(secretHandle) ?? "";
-            var network = DownloadTasks.For(source.Paths)
-                .Options;
-            var cfAvailable = key.Length > 0 || (network.CurseForgeApiMirror.Length > 0 && network.ResourceSource != "official");
-            using var curse = cfAvailable
-                ? new CurseForgeCatalog(key, paths: source.Paths)
-                : null;
+            using var curse = new CurseForgeCatalog("", paths: source.Paths, keyProvider: () => Secret(secretHandle));
             var candidates = await new UnifiedReleaseResolver(catalog, curse).ResolveAsync(hit, selected.Kind, profile.GameVersion, profile.Loader, selectedSource, ct);
             var mr = candidates.Modrinth;
             var cf = candidates.Curse;
