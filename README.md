@@ -48,7 +48,7 @@ python3 dev.py test sources  # 来源状态与错误隔离
 
 部署分为客户端、Host 核心、数据内容、外部运行环境、开发工具五类。客户端与 Host 各自携带匹配的 Contract；Host 内部依赖整体交付。独立客户端通过 `PCL_HOST_EXECUTABLE` 指向 Host 可执行文件。组件、SDK 与源码附件见 Releases，连接方式见[客户端接入](docs/客户端接入指南.md)和[五类包连接规范](docs/五类包连接规范.md)。
 
-开发者可预装 .NET 10，并运行 `bash scripts/build-host-package.sh osx-arm64 framework-dependent` 生成不携带运行时的轻量核心包。平台与接入说明见[分包构建](docs/分包构建与签名.md)。
+0.44.0 提供 macOS ARM64 轻量 Host、匹配 SDK 和源码。预装 ARM64 .NET 10 后即可使用 Host；也可运行 `bash scripts/build-host-package.sh osx-arm64 framework-dependent` 生成不携带运行时的轻量核心包。平台与接入说明见[分包构建](docs/分包构建与签名.md)。
 
 ## 扩展与贡献
 
